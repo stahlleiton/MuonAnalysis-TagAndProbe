@@ -64,7 +64,7 @@ process.muonMatchHLTL3.maxDeltaR = 0.1
 from MuonAnalysis.MuonAssociators.patMuonsWithTrigger_cff import *
 changeRecoMuonInput(process, "mergedMuons")
 
-process.patTriggerFull.l1GtReadoutRecordInputTag = cms.InputTag("gtDigis","","RECO")                 
+process.patTriggerFull.l1GtReadoutRecordInputTag = cms.InputTag("gtDigis","","RECO")
 process.patTrigger.collections.remove("hltL3MuonCandidates")
 process.patTrigger.collections.append("hltHIL3MuonCandidates")
 process.muonMatchHLTL3.matchedCuts = cms.string('coll("hltHIL3MuonCandidates")')
@@ -76,13 +76,14 @@ process.load("MuonAnalysis.TagAndProbe.common_modules_cff")
 InAcceptance = '(abs(eta)<2.4 && pt>=15)'
 TightId =  "isGlobalMuon && globalTrack.normalizedChi2 < 10 && globalTrack.hitPattern.numberOfValidMuonHits > 0 && numberOfMatchedStations > 1 && track.hitPattern.trackerLayersWithMeasurement > 5 && track.hitPattern.numberOfValidPixelHits > 0 && abs(dB) < 0.2"
 
+#Note: trigger names different for pp MC than for data or PbPb
 HighPtTriggerFlags = cms.PSet(
-   HIL2Mu7_NHitQ10 = cms.string("!triggerObjectMatchesByPath('HLT_HIL2Mu7_NHitQ10_v*',1,0).empty()"),
-   HIL3Mu7_NHitQ15 = cms.string("!triggerObjectMatchesByPath('HLT_HIL3Mu7_NHitQ15_v*',1,0).empty()"),
-   HIL2Mu15 = cms.string("!triggerObjectMatchesByPath('HLT_HIL2Mu15_v*',1,0).empty()"),
-   HIL3Mu15 = cms.string("!triggerObjectMatchesByPath('HLT_HIL3Mu15_v*',1,0).empty()"),
-   HIL2Mu20 = cms.string("!triggerObjectMatchesByPath('HLT_HIL2Mu20_v*',1,0).empty()"),
-   HIL3Mu20 = cms.string("!triggerObjectMatchesByPath('HLT_HIL3Mu20_v*',1,0).empty()"),
+   HIL2Mu7_NHitQ10 = cms.string("!triggerObjectMatchesByPath('HLT_HIL2Mu7_NHitQ10ForPPRef_v*',1,0).empty()"),
+   HIL3Mu7_NHitQ15 = cms.string("!triggerObjectMatchesByPath('HLT_HIL3Mu7_NHitQ15ForPPRef_v*',1,0).empty()"),
+   HIL2Mu15 = cms.string("!triggerObjectMatchesByPath('HLT_HIL2Mu15ForPPRef_v*',1,0).empty()"),
+   HIL3Mu15 = cms.string("!triggerObjectMatchesByPath('HLT_HIL3Mu15ForPPRef_v*',1,0).empty()"),
+   HIL2Mu20 = cms.string("!triggerObjectMatchesByPath('HLT_HIL2Mu20ForPPRef_v*',1,0).empty()"),
+   HIL3Mu20 = cms.string("!triggerObjectMatchesByPath('HLT_HIL3Mu20ForPPRef_v*',1,0).empty()"),
 )
 
 process.tagMuons = cms.EDFilter("PATMuonSelector",
