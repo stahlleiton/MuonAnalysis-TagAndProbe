@@ -201,6 +201,11 @@ bestPairByZMass = cms.EDProducer("BestPairByMass",
     mass  = cms.double(91.2),
 )
 
+bestPairByJpsiMass = cms.EDProducer("BestPairByMass",
+    pairs = cms.InputTag("tpPairs"),
+    mass  = cms.double(3.096),
+)
+
 splitTrackTagger = cms.EDProducer("NearbyCandCountComputer",
     probes = cms.InputTag("probeMuons"),
     objects = cms.InputTag("probeMuons"),
