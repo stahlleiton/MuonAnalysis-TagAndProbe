@@ -7,8 +7,7 @@ process.load('FWCore.MessageService.MessageLogger_cfi')
 process.options   = cms.untracked.PSet( wantSummary = cms.untracked.bool(True) )
 process.MessageLogger.cerr.FwkReport.reportEvery = 1000
 
-process.source = cms.Source("PoolSource", 
-    # fileNames = cms.untracked.vstring('file:Dimuon_Skim_Mass40_760.root'),
+process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring('root://cms-xrd-global.cern.ch//store/data/Run2015E/SingleMuLowPt/AOD/PromptReco-v1/000/262/204/00000/C27AD0CE-9894-E511-942F-02163E013475.root')
 )
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )    
@@ -43,6 +42,9 @@ process.fastFilter = cms.Sequence(process.goodVertexFilter + process.noScraping)
 ##   |_|  |_|\__,_|\___/|_| |_|___/
 ##                                 
 ## ==== Merge CaloMuons and Tracks into the collection of reco::Muons  ====
+
+InAcceptance = '((abs(eta)<1.2 && pt>=3.5) || (1.2<=abs(eta) && abs(eta)<2.1 && pt>=5.77-1.89*abs(eta)) || (2.1<=abs(eta) && abs(eta)<2.4 && pt>=1.8))'
+
 from RecoMuon.MuonIdentification.calomuons_cfi import calomuons;
 process.mergedMuons = cms.EDProducer("CaloMuonMerger",
     mergeTracks = cms.bool(True),
@@ -52,18 +54,27 @@ process.mergedMuons = cms.EDProducer("CaloMuonMerger",
     tracks    = cms.InputTag("generalTracks"),
     minCaloCompatibility = calomuons.minCaloCompatibility,
     ## Apply some minimal pt cut
-    muonsCut     = cms.string("pt > 3 && track.isNonnull"),
-    caloMuonsCut = cms.string("pt > 3"),
-    tracksCut    = cms.string("pt > 3"),
+    muonsCut     = cms.string(InAcceptance),
+    caloMuonsCut = cms.string(InAcceptance),
+    tracksCut    = cms.string(InAcceptance),
 )
 
 ## ==== Trigger matching
 process.load("MuonAnalysis.MuonAssociators.patMuonsWithTrigger_cff")
 ## with some customization
+process.muonL1Info.maxDeltaR = 0.3
+process.muonL1Info.fallbackToME1 = True
+process.muonMatchHLTL1.maxDeltaR = 0.3
+process.muonMatchHLTL1.fallbackToME1 = True
 process.muonMatchHLTL2.maxDeltaR = 0.3
+process.muonMatchHLTL2.maxDPtRel = 10.0
 process.muonMatchHLTL3.maxDeltaR = 0.1
+process.muonMatchHLTL3.maxDPtRel = 10.0
+
 from MuonAnalysis.MuonAssociators.patMuonsWithTrigger_cff import *
 changeRecoMuonInput(process, "mergedMuons")
+switchOffAmbiguityResolution(process) # Switch off ambiguity resolution: allow multiple reco muons to match to the same trigger muon
+addHLTL1Passthrough(process)
 
 process.patTriggerFull.l1GtReadoutRecordInputTag = cms.InputTag("gtDigis","","RECO")                 
 process.patTrigger.collections.remove("hltL3MuonCandidates")
@@ -74,7 +85,6 @@ process.muonMatchHLTL3.matchedCuts = cms.string('coll("hltHIL3MuonCandidates")')
 from MuonAnalysis.TagAndProbe.common_variables_cff import *
 process.load("MuonAnalysis.TagAndProbe.common_modules_cff")
 
-InAcceptance = '((abs(eta)<1.2 && pt>=3.5) || (1.2<=abs(eta) && abs(eta)<2.1 && pt>=5.77-1.89*abs(eta)) || (2.1<=abs(eta) && abs(eta)<2.4 && pt>=1.8))'
 TightId =  "isGlobalMuon && globalTrack.normalizedChi2 < 10 && globalTrack.hitPattern.numberOfValidMuonHits > 0 && numberOfMatchedStations > 1 && track.hitPattern.trackerLayersWithMeasurement > 5 && track.hitPattern.numberOfValidPixelHits > 0 && abs(dB) < 0.2"
 HybridSoftId = "isTrackerMuon && isGlobalMuon && muonID('TMOneStationTight') && track.hitPattern.trackerLayersWithMeasurement > 5 && track.hitPattern.numberOfValidPixelHits > 0 && abs(dB) < 0.3 && abs(track.dz) < 20"
 
@@ -100,14 +110,14 @@ TrigProbeFlags = cms.PSet(
 
 process.tagMuons = cms.EDFilter("PATMuonSelector",
     src = cms.InputTag("patMuonsWithTrigger"),
-    cut = cms.string(InAcceptance + ' && ' + TightId),
+    cut = cms.string(InAcceptance + '&&' + TightId),
 )
 
 process.oneTag  = cms.EDFilter("CandViewCountFilter", src = cms.InputTag("tagMuons"), minNumber = cms.uint32(1))
 
 process.probeMuons = cms.EDFilter("PATMuonSelector",
     src = cms.InputTag("patMuonsWithTrigger"),
-    cut = cms.string("track.isNonnull"),  # no real cut now
+    cut = cms.string("isGlobalMuon"), 
 )
 
 process.tpPairs = cms.EDProducer("CandViewShallowCloneCombiner",
@@ -123,9 +133,7 @@ process.tpTree = cms.EDAnalyzer("TagProbeFitTreeProducer",
     # probe variables: all useful ones
     variables = cms.PSet(
         KinematicVariables,
-	IsolationVariables,
 	MuonIDVariables,
-	MuonCaloVariables,
 	TrackQualityVariables,
 	GlobalTrackQualityVariables,
 	StaOnlyVariables,
@@ -141,9 +149,7 @@ process.tpTree = cms.EDAnalyzer("TagProbeFitTreeProducer",
     ),
     tagVariables = cms.PSet(
         KinematicVariables,
-	IsolationVariables,
 	MuonIDVariables,
-	MuonCaloVariables,
 	TrackQualityVariables,
 	GlobalTrackQualityVariables,
 	StaOnlyVariables,
@@ -160,7 +166,6 @@ process.tpTree = cms.EDAnalyzer("TagProbeFitTreeProducer",
         deltaR   = cms.string("deltaR(daughter(0).eta, daughter(0).phi, daughter(1).eta, daughter(1).phi)"), 
         probeMultiplicity = cms.InputTag("probeMultiplicity"),
         probeMultiplicity_TMGM = cms.InputTag("probeMultiplicityTMGM"),
-        probeMultiplicity_Pt10_M60140 = cms.InputTag("probeMultiplicityPt10M60140"),
     ),
     pairFlags = cms.PSet(
         BestJPsi = cms.InputTag("bestPairByJpsiMass"),
@@ -248,11 +253,6 @@ process.tpTreeSta = process.tpTree.clone(
         eta = cms.string("eta"),
         phi = cms.string("phi"),
         nVertices = cms.InputTag("nverticesModule"),
-        combRelIso = cms.string("(isolationR03.emEt + isolationR03.hadEt + isolationR03.sumPt)/pt"),
-        chargedHadIso04 = cms.string("pfIsolationR04().sumChargedHadronPt"),
-        neutralHadIso04 = cms.string("pfIsolationR04().sumNeutralHadronEt"),
-        photonIso04 = cms.string("pfIsolationR04().sumPhotonEt"),
-        combRelIsoPF04dBeta = IsolationVariables.combRelIsoPF04dBeta,
     ),
     tagFlags = cms.PSet(
         LowPtTriggerFlags,
