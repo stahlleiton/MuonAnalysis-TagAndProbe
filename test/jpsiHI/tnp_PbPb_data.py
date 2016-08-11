@@ -8,7 +8,7 @@ process.options   = cms.untracked.PSet( wantSummary = cms.untracked.bool(True) )
 process.MessageLogger.cerr.FwkReport.reportEvery = 1000
 
 process.source = cms.Source("PoolSource",
-    fileNames = cms.untracked.vstring('root://cms-xrd-global.cern.ch//store/data/Run2015E/HIOniaTnP/AOD/PromptReco-v1/000/261/348/00000/565FA391-318E-E511-92D1-02163E01239A.root'),
+    fileNames = cms.untracked.vstring('root://cms-xrd-global.cern.ch//store/hidata/HIRun2015/HIOniaTnP/AOD/PromptReco-v1/000/263/757/00000/5644B4D0-3CBC-E511-B07B-02163E013419.root'),
 )
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )    
 
@@ -90,6 +90,7 @@ process.load("MuonAnalysis.TagAndProbe.heavyIon_modules_cff")
 
 TightId =  "isGlobalMuon && globalTrack.normalizedChi2 < 10 && globalTrack.hitPattern.numberOfValidMuonHits > 0 && numberOfMatchedStations > 1 && track.hitPattern.trackerLayersWithMeasurement > 5 && track.hitPattern.numberOfValidPixelHits > 0 && abs(dB) < 0.2"
 HybridSoftId = "isTrackerMuon && isGlobalMuon && muonID('TMOneStationTight') && track.hitPattern.trackerLayersWithMeasurement > 5 && track.hitPattern.numberOfValidPixelHits > 0 && abs(dB) < 0.3 && abs(track.dz) < 20"
+TRACK_CUTS = "track.isNonnull && track.numberOfValidHits > 10 && track.normalizedChi2 < 4 && track.hitPattern.pixelLayersWithMeasurement > 0"
 
 HighPtTriggerFlags = cms.PSet(
    HIL2Mu7_NHitQ10 = cms.string("!triggerObjectMatchesByPath('HLT_HIL2Mu7_NHitQ10_v*',1,0).empty()"),
@@ -105,6 +106,8 @@ LowPtTriggerFlags = cms.PSet(
    HIL3Mu3_NHitQ15 = cms.string("!triggerObjectMatchesByPath('HLT_HIL3Mu3_NHitQ15_v*',1,0).empty()"),
 )
 
+TrigTagFlags = cms.PSet(HighPtTriggerFlags, LowPtTriggerFlags)
+
 TrigProbeFlags = cms.PSet(
       HLTL1v0 = cms.string("!triggerObjectMatchesByPath('HLT_HIL1DoubleMu0_v*',1,0).empty()"),
       HLTL1v1 = cms.string("!triggerObjectMatchesByFilter('hltHIDoubleMu0L1Filtered').empty()"),
@@ -113,7 +116,17 @@ TrigProbeFlags = cms.PSet(
 
 process.tagMuons = cms.EDFilter("PATMuonSelector",
     src = cms.InputTag("patMuonsWithTrigger"),
-    cut = cms.string(InAcceptance + ' && ' + TightId),
+    cut = cms.string(InAcceptance + ' && ' + HybridSoftId # Is this right????? 
+       + " && (!triggerObjectMatchesByPath('HLT_HIL2Mu3_NHitQ10_v*',1,0).empty()"
+       + "|| !triggerObjectMatchesByPath('HLT_HIL3Mu3_NHitQ15_v*',1,0).empty()"
+       + "|| !triggerObjectMatchesByPath('HLT_HIL2Mu7_NHitQ10_v*',1,0).empty()"
+       + "|| !triggerObjectMatchesByPath('HLT_HIL3Mu7_NHitQ15_v*',1,0).empty()"
+       + "|| !triggerObjectMatchesByPath('HLT_HIL2Mu15_v*',1,0).empty()"
+       + "|| !triggerObjectMatchesByPath('HLT_HIL3Mu15_v*',1,0).empty()"
+       + "|| !triggerObjectMatchesByPath('HLT_HIL2Mu20_v*',1,0).empty()"
+       + "|| !triggerObjectMatchesByPath('HLT_HIL3Mu20_v*',1,0).empty()"
+       + ")"
+       ),
 )
 
 process.oneTag  = cms.EDFilter("CandViewCountFilter", src = cms.InputTag("tagMuons"), minNumber = cms.uint32(1))
@@ -149,6 +162,8 @@ process.tpTree = cms.EDAnalyzer("TagProbeFitTreeProducer",
        TrigProbeFlags,
        TightHI = cms.string(TightId),
        HybridSoftHI = cms.string(HybridSoftId),
+       StaTkSameCharge = cms.string("outerTrack.isNonnull && innerTrack.isNonnull && (outerTrack.charge == innerTrack.charge)"),
+       outerValidHits = cms.string("outerTrack.isNonnull && outerTrack.numberOfValidHits > 0"),
     ),
     tagVariables = cms.PSet(
         KinematicVariables,
@@ -159,14 +174,14 @@ process.tpTree = cms.EDAnalyzer("TagProbeFitTreeProducer",
         CentralityVariables,
     ),
     tagFlags = cms.PSet(
-        LowPtTriggerFlags,
-        HighPtTriggerFlags,
+        TrigTagFlags  
     ),
     pairVariables = cms.PSet(
         dz      = cms.string("daughter(0).vz - daughter(1).vz"),
         pt      = cms.string("pt"), 
         rapidity = cms.string("rapidity"),
         deltaR   = cms.string("deltaR(daughter(0).eta, daughter(0).phi, daughter(1).eta, daughter(1).phi)"), 
+        #deltaPhi = cms.string("daughter(0).charge*TVector2::Phi_mpi_pi(daughter(0).phi-daughter(1).phi)"), FIX ME
         probeMultiplicity = cms.InputTag("probeMultiplicity"),
         probeMultiplicity_TMGM = cms.InputTag("probeMultiplicityTMGM"),
     ),
@@ -248,10 +263,11 @@ process.tpTreeSta = process.tpTree.clone(
         tk_deltaEta_NoJPsi = cms.InputTag("staToTkMatchNoJPsi","deltaEta"),
     ),
     flags = cms.PSet(
-        outerValidHits = cms.string("outerTrack.numberOfValidHits > 0"),
+        outerValidHits = cms.string("outerTrack.isNonnull && outerTrack.numberOfValidHits > 0"),
         TM  = cms.string("isTrackerMuon"),
         Glb = cms.string("isGlobalMuon"),
         Tk  = cms.string("track.isNonnull"),
+        isNonMuonSeeded = cms.string("innerTrack.isNonnull && innerTrack.originalAlgo<37"), #   hiRegitMuInitialStep = 37
         StaTkSameCharge = cms.string("outerTrack.isNonnull && innerTrack.isNonnull && (outerTrack.charge == innerTrack.charge)"),
     ),
     tagVariables = cms.PSet(
@@ -291,6 +307,86 @@ process.tagAndProbeSta = cms.Path(
     * process.muonsSta
     * process.patMuonsWithTriggerSequenceSta
     * process.tnpSimpleSequenceSta
+)
+
+
+#--------------------------------------------------------------------
+##    ____                   _____               _      ____            _               
+##   | __ )  __ _ _ __ ___  |_   _| __ __ _  ___| | __ |  _ \ _ __ ___ | |__   ___  ___ 
+##   |  _ \ / _` | '__/ _ \   | || '__/ _` |/ __| |/ / | |_) | '__/ _ \| '_ \ / _ \/ __|
+##   | |_) | (_| | | |  __/   | || | | (_| | (__|   <  |  __/| | | (_) | |_) |  __/\__ \
+##   |____/ \__,_|_|  \___|   |_||_|  \__,_|\___|_|\_\ |_|   |_|  \___/|_.__/ \___||___/
+##                                                                                      
+##   
+
+process.probeMuonsTrk = cms.EDFilter("PATMuonSelector",
+    src = cms.InputTag("patMuonsWithTrigger"),
+    cut = cms.string(TRACK_CUTS + ' && ' + InAcceptance + ' && ' + 'innerTrack.isNonnull && innerTrack.originalAlgo<37'), #   hiRegitMuInitialStep = 37              
+)
+
+process.tpTrkPairs = cms.EDProducer("CandViewShallowCloneCombiner",
+    cut = cms.string('2. < mass < 5.'),
+    decay = cms.string('tagMuons@+ probeMuonsTrk@-')
+)
+
+process.onePairTrk = cms.EDFilter("CandViewCountFilter",
+     src = cms.InputTag('tpTrkPairs'),
+     minNumber = cms.uint32(1),
+)
+
+process.tpTreeTrk = cms.EDAnalyzer("TagProbeFitTreeProducer",
+     # choice of tag and probe pairs, and arbitration
+     tagProbePairs = cms.InputTag("tpTrkPairs"),
+     arbitration   = cms.string("OneProbe"),
+     # probe variables: all useful ones
+     variables = cms.PSet(
+        KinematicVariables,
+        StaOnlyVariables,
+     ),
+     flags = cms.PSet(
+        isSTA = cms.string("isStandAloneMuon"),
+        outerValidHits  = cms.string("? outerTrack.isNull() ? 0 : outerTrack.numberOfValidHits > 0"),
+     ),
+     tagVariables = cms.PSet(
+        TrackQualityVariables,
+        GlobalTrackQualityVariables,
+        CentralityVariables,
+        pt  = cms.string("pt"),
+        eta = cms.string("eta"),
+        abseta = cms.string("abs(eta)"),
+        l2dr  = cms.string("? triggerObjectMatchesByCollection('hltL2MuonCandidates').empty() ? 999 : "+
+                           " deltaR( eta, phi, " +
+                           "         triggerObjectMatchesByCollection('hltL2MuonCandidates').at(0).eta, "+
+                           "         triggerObjectMatchesByCollection('hltL2MuonCandidates').at(0).phi ) "),
+
+     ),
+     tagFlags     = cms.PSet(
+        TrigTagFlags,
+     ),
+     pairVariables = cms.PSet(
+        pt  = cms.string("pt"),
+        y = cms.string("rapidity"),
+        absy = cms.string("abs(rapidity)"),
+     ),
+     pairFlags = cms.PSet(),
+     isMC           = cms.bool(False),
+     #addRunLumiInfo = cms.bool(True),
+     allProbes     = cms.InputTag("probeMuonsTrk")
+)
+
+process.tnpSimpleSequenceTrk = cms.Sequence(
+    process.probeMuonsTrk +
+    process.tpTrkPairs    +
+    process.onePairTrk + 
+    process.centralityInfo +
+    process.centralityBinInfo +
+    process.tpTreeTrk
+)
+
+process.tagAndProbeTrk = cms.Path(
+      process.fastFilter
+    * process.centralityBin
+    * process.tnpSimpleSequenceTrk
 )
 
 process.RandomNumberGeneratorService.tkTracksNoJPsi = cms.PSet( initialSeed = cms.untracked.uint32(81) )
