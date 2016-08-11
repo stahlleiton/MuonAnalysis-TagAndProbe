@@ -86,7 +86,9 @@ from MuonAnalysis.TagAndProbe.common_variables_cff import *
 process.load("MuonAnalysis.TagAndProbe.common_modules_cff")
 
 TightId =  "isGlobalMuon && globalTrack.normalizedChi2 < 10 && globalTrack.hitPattern.numberOfValidMuonHits > 0 && numberOfMatchedStations > 1 && track.hitPattern.trackerLayersWithMeasurement > 5 && track.hitPattern.numberOfValidPixelHits > 0 && abs(dB) < 0.2"
-HybridSoftId = "isTrackerMuon && isGlobalMuon && muonID('TMOneStationTight') && track.hitPattern.trackerLayersWithMeasurement > 5 && track.hitPattern.numberOfValidPixelHits > 0 && abs(dB) < 0.3 && abs(track.dz) < 20"
+
+HybridSoftId = "isTrackerMuon && isGlobalMuon && muonID('TMOneStationTight') && track.hitPattern.trackerLayersWithMeasurement > 5 && track.hitPattern.numberOfValidPixelHits > 0"
+
 TRACK_CUTS = "track.isNonnull && track.numberOfValidHits > 10 && track.normalizedChi2 < 4 && track.hitPattern.pixelLayersWithMeasurement > 0"
 
 HighPtTriggerFlags = cms.PSet(
@@ -113,7 +115,7 @@ TrigProbeFlags = cms.PSet(
 
 process.tagMuons = cms.EDFilter("PATMuonSelector",
     src = cms.InputTag("patMuonsWithTrigger"),
-    cut = cms.string(InAcceptance + ' && ' + HybridSoftId # Is this right????? 
+    cut = cms.string(InAcceptance + ' && ' + HybridSoftId
        + " && (!triggerObjectMatchesByPath('HLT_HIL2Mu3_NHitQ10_v*',1,0).empty()"
        + "|| !triggerObjectMatchesByPath('HLT_HIL3Mu3_NHitQ15_v*',1,0).empty()"
        + "|| !triggerObjectMatchesByPath('HLT_HIL2Mu7_NHitQ10_v*',1,0).empty()"
@@ -133,8 +135,12 @@ process.probeMuons = cms.EDFilter("PATMuonSelector",
     cut = cms.string("isGlobalMuon"), 
 )
 
+process.muonDxyPVdzMinID = cms.EDProducer("MuonDxyPVdzmin",
+    probes = cms.InputTag("probeMuons"),
+)
+
 process.tpPairs = cms.EDProducer("CandViewShallowCloneCombiner",
-    cut = cms.string('2.6 < mass < 3.5 && abs(daughter(0).vz - daughter(1).vz) < 4'),
+    cut = cms.string('2.5 < mass < 3.5'),
     decay = cms.string('tagMuons@+ probeMuons@-')
 )
 process.onePair = cms.EDFilter("CandViewCountFilter", src = cms.InputTag("tpPairs"), minNumber = cms.uint32(1))
@@ -150,6 +156,8 @@ process.tpTree = cms.EDAnalyzer("TagProbeFitTreeProducer",
 	TrackQualityVariables,
 	GlobalTrackQualityVariables,
 	StaOnlyVariables,
+        dxyPVdzmin = cms.InputTag("muonDxyPVdzMinID","dxyPVdzmin"),
+        dzPV       = cms.InputTag("muonDxyPVdzMinID","dzPV"),
     ),
     flags = cms.PSet(
        TrackQualityFlags,
@@ -187,12 +195,14 @@ process.tpTree = cms.EDAnalyzer("TagProbeFitTreeProducer",
     ),
     isMC           = cms.bool(False),
     addRunLumiInfo = cms.bool(True),
+    allProbes      = cms.InputTag("probeMuons")
 )
 
 process.tnpSimpleSequence = cms.Sequence(
     process.tagMuons +
     process.oneTag     +
     process.probeMuons +
+    process.muonDxyPVdzMinID +
     process.tpPairs    +
     process.onePair    +
     process.nverticesModule +
@@ -220,6 +230,7 @@ process.muonsSta = cms.EDProducer("RedefineMuonP4FromTrack",
     src   = cms.InputTag("muons"),
     track = cms.string("outer"),
 )
+
 ## Match to trigger, to measure the efficiency of HLT tracking
 from PhysicsTools.PatAlgos.tools.helpers import *
 process.patMuonsWithTriggerSequenceSta = cloneProcessingSnippet(process, process.patMuonsWithTriggerSequence, "Sta")
@@ -233,7 +244,7 @@ process.probeMuonsSta = cms.EDFilter("PATMuonSelector",
     cut = cms.string("outerTrack.isNonnull"), # no real cut now
 )
 
-process.tpPairsSta = process.tpPairs.clone(decay = "tagMuons@+ probeMuonsSta@-", cut = '1 < mass < 5')
+process.tpPairsSta = process.tpPairs.clone(decay = "tagMuons@+ probeMuonsSta@-", cut = '1. < mass < 6.')
 
 process.onePairSta = cms.EDFilter("CandViewCountFilter", src = cms.InputTag("tpPairsSta"), minNumber = cms.uint32(1))
 
@@ -250,6 +261,7 @@ process.tpTreeSta = process.tpTree.clone(
     variables = cms.PSet(
         KinematicVariables, 
         StaOnlyVariables,
+        staNumValidHits = cms.string("? outerTrack.isNull() ? -1 : outerTrack.hitPattern.numberOfValidMuonHits()"),
         ## track matching variables
         tk_deltaR     = cms.InputTag("staToTkMatch","deltaR"),
         tk_deltaEta   = cms.InputTag("staToTkMatch","deltaEta"),
@@ -280,6 +292,7 @@ process.tpTreeSta = process.tpTree.clone(
         deltaR   = cms.string("deltaR(daughter(0).eta, daughter(0).phi, daughter(1).eta, daughter(1).phi)"), 
     ),
     pairFlags = cms.PSet(),
+    allProbes     = cms.InputTag("probeMuonsSta")
 )
 
 process.tnpSimpleSequenceSta = cms.Sequence(
@@ -314,8 +327,12 @@ process.probeMuonsTrk = cms.EDFilter("PATMuonSelector",
     cut = cms.string(TRACK_CUTS + ' && ' + InAcceptance + ' && ' + 'innerTrack.isNonnull && innerTrack.originalAlgo<13'), #   muonSeededStepInOut = 13              
 )
 
+process.muonDxyPVdzMinTrk = cms.EDProducer("MuonDxyPVdzmin",
+    probes = cms.InputTag("probeMuonsTrk"),
+)
+
 process.tpTrkPairs = cms.EDProducer("CandViewShallowCloneCombiner",
-    cut = cms.string('2. < mass < 5.'),
+    cut = cms.string('2.5 < mass < 3.5'),
     decay = cms.string('tagMuons@+ probeMuonsTrk@-')
 )
 
@@ -332,6 +349,8 @@ process.tpTreeTrk = cms.EDAnalyzer("TagProbeFitTreeProducer",
      variables = cms.PSet(
         KinematicVariables,
         StaOnlyVariables,
+        dxyPVdzmin = cms.InputTag("muonDxyPVdzMinTrk","dxyPVdzmin"),
+        dzPV       = cms.InputTag("muonDxyPVdzMinTrk","dzPV"),
      ),
      flags = cms.PSet(
         isSTA = cms.string("isStandAloneMuon"),
@@ -365,6 +384,7 @@ process.tpTreeTrk = cms.EDAnalyzer("TagProbeFitTreeProducer",
 
 process.tnpSimpleSequenceTrk = cms.Sequence(
     process.probeMuonsTrk +
+    process.muonDxyPVdzMinTrk +
     process.tpTrkPairs    +
     process.onePairTrk +
     process.tpTreeTrk
