@@ -12,13 +12,12 @@ PDFName = "cbPlusPoly2nd"
 
 process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     # IO parameters:
-    # InputFileNames = cms.vstring("xrootd://eoscms//eos/cms/store/group/phys_heavyions/anstahll/TagAndProbe2015/TNP_SingleMuLowPt_Run2015E_PromptReco_v1_AOD_20160811/tnpJPsi_Data_pp5TeV_AOD.root"),
-    InputFileNames = cms.vstring("file:/afs/cern.ch/user/e/echapon/workspace/private/tag_and_probe_2015data/CMSSW_7_5_8_patch3/src/MuonAnalysis/TagAndProbe/test/jpsiHI/tnpJPsi_Data_pp5TeV_AOD_99.root"),
+    InputFileNames = cms.vstring("file:/afs/cern.ch/user/e/echapon/workspace/public/tag_and_probe_2015data/tnpJPsi_Data_pp5TeV_AOD.root"),
     InputDirectoryName = cms.string("tpTree"),
     InputTreeName = cms.string("fitter_tree"),
     OutputFileName = cms.string("tnp_Ana_RD_pp_MuonIDTrg_AllMB.root"),
     #numbrer of CPUs to use for fitting
-    NumCPU = cms.uint32(1),
+    NumCPU = cms.uint32(4),
     # specifies wether to save the RooWorkspace containing the data for each bin and
     # the pdf object with the initial and final state snapshots
     binnedFit = cms.bool(False),
@@ -57,12 +56,57 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     # defines a set of efficiency calculations, what PDF to use for fitting and how to bin the data;
     # there will be a separate output directory for each calculation that includes a simultaneous fit, side band subtraction and counting. 
     Efficiencies = cms.PSet(
-            PassingGlb_1bin = cms.PSet(
+            MuIdTrg_1bin = cms.PSet(
                 EfficiencyCategoryAndState = cms.vstring("HybridSoftHI","true","HLTL1v0","true","HLTL1v1","true","HLTL1v2","true","dxyPVdzmin","true","dzPV","true"),
                 UnbinnedVariables = cms.vstring("mass"),
                 BinnedVariables = cms.PSet(
                     pt = cms.vdouble(1.5, 30),
                     eta = cms.vdouble(-2.4, 2.4),
+                ),
+                BinToPDFmap = cms.vstring(PDFName)
+            ),
+            MuIdTrg_abseta00_09 = cms.PSet(
+                EfficiencyCategoryAndState = cms.vstring("HybridSoftHI","true","HLTL1v0","true","HLTL1v1","true","HLTL1v2","true","dxyPVdzmin","true","dzPV","true"),
+                UnbinnedVariables = cms.vstring("mass"),
+                BinnedVariables = cms.PSet(
+                    pt = cms.vdouble(3.5, 4, 4.5, 5, 5.5, 6.5, 30),
+                    eta = cms.vdouble(0, 0.9),
+                ),
+                BinToPDFmap = cms.vstring(PDFName)
+            ),
+            MuIdTrg_abseta09_16 = cms.PSet(
+                EfficiencyCategoryAndState = cms.vstring("HybridSoftHI","true","HLTL1v0","true","HLTL1v1","true","HLTL1v2","true","dxyPVdzmin","true","dzPV","true"),
+                UnbinnedVariables = cms.vstring("mass"),
+                BinnedVariables = cms.PSet(
+                    pt = cms.vdouble(2.75, 3, 3.5, 4, 4.5, 5, 6, 30),
+                    eta = cms.vdouble(0.9,1.6),
+                ),
+                BinToPDFmap = cms.vstring(PDFName)
+            ),
+            MuIdTrg_abseta16_21 = cms.PSet(
+                EfficiencyCategoryAndState = cms.vstring("HybridSoftHI","true","HLTL1v0","true","HLTL1v1","true","HLTL1v2","true","dxyPVdzmin","true","dzPV","true"),
+                UnbinnedVariables = cms.vstring("mass"),
+                BinnedVariables = cms.PSet(
+                    pt = cms.vdouble(1.8, 2, 2.5, 3, 3.5, 4, 4.5, 5.5, 30),
+                    eta = cms.vdouble(1.6,2.1),
+                ),
+                BinToPDFmap = cms.vstring(PDFName)
+            ),
+            MuIdTrg_abseta16_24 = cms.PSet(
+                EfficiencyCategoryAndState = cms.vstring("HybridSoftHI","true","HLTL1v0","true","HLTL1v1","true","HLTL1v2","true","dxyPVdzmin","true","dzPV","true"),
+                UnbinnedVariables = cms.vstring("mass"),
+                BinnedVariables = cms.PSet(
+                    pt = cms.vdouble(1.8, 2, 2.5, 3, 3.5, 4, 5, 30),
+                    eta = cms.vdouble(1.6,2.4),
+                ),
+                BinToPDFmap = cms.vstring(PDFName)
+            ),
+            MuIdTrg_etadep = cms.PSet(
+                EfficiencyCategoryAndState = cms.vstring("HybridSoftHI","true","HLTL1v0","true","HLTL1v1","true","HLTL1v2","true","dxyPVdzmin","true","dzPV","true"),
+                UnbinnedVariables = cms.vstring("mass"),
+                BinnedVariables = cms.PSet(
+                    pt = cms.vdouble(1.5, 30),
+                    eta = cms.vdouble(-2.4,-2.1,-1.6,-0.9,0,0.9,1.6,2.1,2.4),
                 ),
                 BinToPDFmap = cms.vstring(PDFName)
             ),
