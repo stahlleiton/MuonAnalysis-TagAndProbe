@@ -404,4 +404,4 @@ process.schedule = cms.Schedule(
    process.tagAndProbeTrk,
 )
 
-process.TFileService = cms.Service("TFileService", fileName = cms.string("tnpJPsi_Data_pp5TeV_AOD_v2.root"))
+process.TFileService = cms.Service("TFileService", fileName = cms.string("tnpJPsi_Data_pp5TeV_AOD.root"))
