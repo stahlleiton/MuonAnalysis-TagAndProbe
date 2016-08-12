@@ -94,6 +94,7 @@ StaOnlyVariables = cms.PSet(
     staQoverP      = cms.string("? outerTrack.isNull() ? 0 : outerTrack.qoverp"),
     staQoverPerror = cms.string("? outerTrack.isNull() ? 0 : outerTrack.qoverpError"),
     staValidStations = cms.string("? outerTrack.isNull() ? -1 : outerTrack.hitPattern.muonStationsWithValidHits()"),
+    staNumValidHits = cms.string("? outerTrack.isNull() ? -1 : outerTrack.hitPattern.numberOfValidMuonHits()"),
 )
 L1Variables = cms.PSet(
     l1pt = cms.string("? userCand('muonL1Info').isNull ? 0 : userCand('muonL1Info').pt"),
