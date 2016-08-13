@@ -92,6 +92,8 @@ HybridSoftId = "isTrackerMuon && isGlobalMuon && muonID('TMOneStationTight') && 
 TRACK_CUTS = "track.isNonnull && track.numberOfValidHits > 10 && track.normalizedChi2 < 4 && track.hitPattern.pixelLayersWithMeasurement > 0"
 
 HighPtTriggerFlags = cms.PSet(
+   HIL2Mu5_NHitQ10 = cms.string("!triggerObjectMatchesByPath('HLT_HIL2Mu5_NHitQ10_v*',1,0).empty()"),
+   HIL3Mu5_NHitQ15 = cms.string("!triggerObjectMatchesByPath('HLT_HIL3Mu5_NHitQ15_v*',1,0).empty()"),
    HIL2Mu7_NHitQ10 = cms.string("!triggerObjectMatchesByPath('HLT_HIL2Mu7_NHitQ10_v*',1,0).empty()"),
    HIL3Mu7_NHitQ15 = cms.string("!triggerObjectMatchesByPath('HLT_HIL3Mu7_NHitQ15_v*',1,0).empty()"),
    HIL2Mu15 = cms.string("!triggerObjectMatchesByPath('HLT_HIL2Mu15_v*',1,0).empty()"),
@@ -118,6 +120,8 @@ process.tagMuons = cms.EDFilter("PATMuonSelector",
     cut = cms.string(InAcceptance + ' && ' + HybridSoftId
        + " && (!triggerObjectMatchesByPath('HLT_HIL2Mu3_NHitQ10_v*',1,0).empty()"
        + "|| !triggerObjectMatchesByPath('HLT_HIL3Mu3_NHitQ15_v*',1,0).empty()"
+       + "|| !triggerObjectMatchesByPath('HLT_HIL2Mu5_NHitQ10_v*',1,0).empty()"
+       + "|| !triggerObjectMatchesByPath('HLT_HIL3Mu5_NHitQ15_v*',1,0).empty()"
        + "|| !triggerObjectMatchesByPath('HLT_HIL2Mu7_NHitQ10_v*',1,0).empty()"
        + "|| !triggerObjectMatchesByPath('HLT_HIL3Mu7_NHitQ15_v*',1,0).empty()"
        + "|| !triggerObjectMatchesByPath('HLT_HIL2Mu15_v*',1,0).empty()"
@@ -143,6 +147,11 @@ process.tpPairs = cms.EDProducer("CandViewShallowCloneCombiner",
     cut = cms.string('2.5 < mass < 3.5'),
     decay = cms.string('tagMuons@+ probeMuons@-')
 )
+
+process.tnPairsDeltaPhiID = cms.EDProducer("DiMuonDeltaPhi",
+    tagProbePairs = cms.InputTag("tpPairs"),
+)
+
 process.onePair = cms.EDFilter("CandViewCountFilter", src = cms.InputTag("tpPairs"), minNumber = cms.uint32(1))
 
 process.tpTree = cms.EDAnalyzer("TagProbeFitTreeProducer",
@@ -186,7 +195,7 @@ process.tpTree = cms.EDAnalyzer("TagProbeFitTreeProducer",
         pt      = cms.string("pt"), 
         rapidity = cms.string("rapidity"),
         deltaR   = cms.string("deltaR(daughter(0).eta, daughter(0).phi, daughter(1).eta, daughter(1).phi)"),
-        #deltaPhi = cms.string("daughter(0).charge*TVector2::Phi_mpi_pi(daughter(0).phi-daughter(1).phi)"), FIX ME
+        deltaPhi = cms.InputTag("tnPairsDeltaPhiID","deltaPhi"),
         probeMultiplicity = cms.InputTag("probeMultiplicity"),
         probeMultiplicity_TMGM = cms.InputTag("probeMultiplicityTMGM"),
     ),
@@ -205,6 +214,7 @@ process.tnpSimpleSequence = cms.Sequence(
     process.muonDxyPVdzMinID +
     process.tpPairs    +
     process.onePair    +
+    process.tnPairsDeltaPhiID +
     process.nverticesModule +
     process.probeMultiplicities + 
     process.bestPairByJpsiMass + 
@@ -246,6 +256,10 @@ process.probeMuonsSta = cms.EDFilter("PATMuonSelector",
 
 process.tpPairsSta = process.tpPairs.clone(decay = "tagMuons@+ probeMuonsSta@-", cut = '1. < mass < 6.')
 
+process.tnPairsDeltaPhiSta = cms.EDProducer("DiMuonDeltaPhi",
+    tagProbePairs = cms.InputTag("tpPairsSta"),
+)
+
 process.onePairSta = cms.EDFilter("CandViewCountFilter", src = cms.InputTag("tpPairsSta"), minNumber = cms.uint32(1))
 
 process.staToTkMatch.maxDeltaR     = 0.3
@@ -261,7 +275,6 @@ process.tpTreeSta = process.tpTree.clone(
     variables = cms.PSet(
         KinematicVariables, 
         StaOnlyVariables,
-        staNumValidHits = cms.string("? outerTrack.isNull() ? -1 : outerTrack.hitPattern.numberOfValidMuonHits()"),
         ## track matching variables
         tk_deltaR     = cms.InputTag("staToTkMatch","deltaR"),
         tk_deltaEta   = cms.InputTag("staToTkMatch","deltaEta"),
@@ -289,7 +302,8 @@ process.tpTreeSta = process.tpTree.clone(
         dz      = cms.string("daughter(0).vz - daughter(1).vz"),
         pt      = cms.string("pt"), 
         rapidity = cms.string("rapidity"),
-        deltaR   = cms.string("deltaR(daughter(0).eta, daughter(0).phi, daughter(1).eta, daughter(1).phi)"), 
+        deltaR   = cms.string("deltaR(daughter(0).eta, daughter(0).phi, daughter(1).eta, daughter(1).phi)"),
+        deltaPhi = cms.InputTag("tnPairsDeltaPhiSta","deltaPhi"),
     ),
     pairFlags = cms.PSet(),
     allProbes     = cms.InputTag("probeMuonsSta")
@@ -301,6 +315,7 @@ process.tnpSimpleSequenceSta = cms.Sequence(
     process.probeMuonsSta   +
     process.tpPairsSta      +
     process.onePairSta      +
+    process.tnPairsDeltaPhiSta +
     process.nverticesModule +
     process.staToTkMatchSequenceJPsi +
     process.tpTreeSta
@@ -331,19 +346,23 @@ process.muonDxyPVdzMinTrk = cms.EDProducer("MuonDxyPVdzmin",
     probes = cms.InputTag("probeMuonsTrk"),
 )
 
-process.tpTrkPairs = cms.EDProducer("CandViewShallowCloneCombiner",
+process.tpPairsTrk = cms.EDProducer("CandViewShallowCloneCombiner",
     cut = cms.string('2.5 < mass < 3.5'),
     decay = cms.string('tagMuons@+ probeMuonsTrk@-')
 )
 
+process.tnPairsDeltaPhiTrk = cms.EDProducer("DiMuonDeltaPhi",
+    tagProbePairs = cms.InputTag("tpPairsTrk"),
+)
+
 process.onePairTrk = cms.EDFilter("CandViewCountFilter",
-     src = cms.InputTag('tpTrkPairs'),
+     src = cms.InputTag('tpPairsTrk'),
      minNumber = cms.uint32(1),
 )
 
 process.tpTreeTrk = cms.EDAnalyzer("TagProbeFitTreeProducer",
      # choice of tag and probe pairs, and arbitration
-     tagProbePairs = cms.InputTag("tpTrkPairs"),
+     tagProbePairs = cms.InputTag("tpPairsTrk"),
      arbitration   = cms.string("OneProbe"),
      # probe variables: all useful ones
      variables = cms.PSet(
@@ -375,6 +394,8 @@ process.tpTreeTrk = cms.EDAnalyzer("TagProbeFitTreeProducer",
         pt  = cms.string("pt"),
         y = cms.string("rapidity"),
         absy = cms.string("abs(rapidity)"),
+        deltaR   = cms.string("deltaR(daughter(0).eta, daughter(0).phi, daughter(1).eta, daughter(1).phi)"),
+        deltaPhi = cms.InputTag("tnPairsDeltaPhiTrk","deltaPhi"),
      ),
      pairFlags = cms.PSet(),
      isMC           = cms.bool(False),
@@ -385,8 +406,9 @@ process.tpTreeTrk = cms.EDAnalyzer("TagProbeFitTreeProducer",
 process.tnpSimpleSequenceTrk = cms.Sequence(
     process.probeMuonsTrk +
     process.muonDxyPVdzMinTrk +
-    process.tpTrkPairs    +
+    process.tpPairsTrk    +
     process.onePairTrk +
+    process.tnPairsDeltaPhiTrk +
     process.tpTreeTrk
 )
 
