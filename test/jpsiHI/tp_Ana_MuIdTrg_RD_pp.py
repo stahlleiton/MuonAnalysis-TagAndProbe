@@ -8,16 +8,16 @@ process.source = cms.Source("EmptySource")
 
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1) )    
 
-PDFName = "cbPlusPoly2nd"
+PDFName = "dCBPlusPoly2nd"
 
 process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     # IO parameters:
-    InputFileNames = cms.vstring("file:/afs/cern.ch/user/e/echapon/workspace/public/tag_and_probe_2015data/tnpJPsi_Data_pp5TeV_AOD.root"),
+    InputFileNames = cms.vstring("file:/afs/cern.ch/user/a/anstahll/work/TNPStudy/TEST/CMSSW_7_5_8_patch3/src/MuonAnalysis/TagAndProbe/test/jpsiHI/tnpJPsi_Data_pp5TeV_AOD.root"),
     InputDirectoryName = cms.string("tpTree"),
     InputTreeName = cms.string("fitter_tree"),
     OutputFileName = cms.string("tnp_Ana_RD_pp_MuonIDTrg_AllMB.root"),
     #numbrer of CPUs to use for fitting
-    NumCPU = cms.uint32(4),
+    NumCPU = cms.uint32(8),
     # specifies wether to save the RooWorkspace containing the data for each bin and
     # the pdf object with the initial and final state snapshots
     binnedFit = cms.bool(False),
@@ -45,10 +45,12 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     # defines all the PDFs that will be available for the efficiency calculations; uses RooFit's "factory" syntax;
     # each pdf needs to define "signal", "backgroundPass", "backgroundFail" pdfs, "efficiency[0.9,0,1]" and "signalFractionInPassing[0.9]" are used for initial values  
     PDFs = cms.PSet(
-      cbPlusPoly2nd = cms.vstring(
-        "CBShape::signal(mass, mean[3.1,3.0,3.2], sigma[0.02, 0.01, 0.1], alpha[2.0, 0.2, 10.0], n[4, 0.5, 50.])",
-        "Chebychev::backgroundPass(mass, {cPass[0,-0.5,0.5], cPass2[0,-0.5,0.5]})",
-        "Chebychev::backgroundFail(mass, {cFail[0,-0.5,0.5], cFail2[0,-0.5,0.5]})",
+      dCBPlusPoly2nd = cms.vstring(
+        "CBShape::signal1(mass, mean[3.1,3.0,3.2], sigma1[0.02, 0.01, 0.1], alpha1[2.0, 0.2, 10.0], n[4, 0.5, 50.])",
+        "CBShape::signal2(mass, mean, RooFormulaVar::sigma2('@0*@1',{sigma1,rSigma21[2.0, 1.0, 3.0]}), alpha2[2.0, 0.2, 10.0], n)",
+        "SUM::signal(vFrac[0.9,0.,1]*signal1, signal2)",
+        "Chebychev::backgroundPass(mass, {cPass[0,-1.0,1.0], cPass2[0,-1.0,1.0]})",
+        "Chebychev::backgroundFail(mass, {cFail[0,-1.0,1.0], cFail2[0,-1.0,1.0]})",
         "efficiency[0.9,0,1]",
         "signalFractionInPassing[0.9]"
       ),
@@ -92,12 +94,12 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
                 ),
                 BinToPDFmap = cms.vstring(PDFName)
             ),
-            MuIdTrg_abseta16_24 = cms.PSet(
+            MuIdTrg_abseta21_24 = cms.PSet(
                 EfficiencyCategoryAndState = cms.vstring("HybridSoftHI","true","HLTL1v0","true","HLTL1v1","true","HLTL1v2","true","dxyPVdzmin","true","dzPV","true"),
                 UnbinnedVariables = cms.vstring("mass"),
                 BinnedVariables = cms.PSet(
                     pt = cms.vdouble(1.8, 2, 2.5, 3, 3.5, 4, 5, 30),
-                    eta = cms.vdouble(1.6,2.4),
+                    eta = cms.vdouble(2.1,2.4),
                 ),
                 BinToPDFmap = cms.vstring(PDFName)
             ),

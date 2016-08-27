@@ -12,7 +12,7 @@ PDFName = "twoGaussPlusPoly3"
 
 process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     # IO parameters:
-    InputFileNames = cms.vstring("file:/afs/cern.ch/user/e/echapon/workspace/public/tag_and_probe_2015data/tnpJPsi_Data_pp5TeV_AOD.root"),
+    InputFileNames = cms.vstring("file:/afs/cern.ch/user/a/anstahll/work/TNPStudy/TEST/CMSSW_7_5_8_patch3/src/MuonAnalysis/TagAndProbe/test/jpsiHI/tnpJPsi_Data_pp5TeV_AOD.root"),
     InputDirectoryName = cms.string("tpTreeSta"),
     InputTreeName = cms.string("fitter_tree"),
     #numbrer of CPUs to use for fitting
@@ -33,6 +33,7 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
         p                = cms.vstring("Probe p", "0", "1000", "GeV/c"),
         eta              = cms.vstring("Probe #eta", "-2.4", "2.4", ""),
         abseta           = cms.vstring("Probe |#eta|", "0", "2.5", ""),
+        staValidStations = cms.vstring("Probe STA valid stations", "0", "15", ""),
     ),
     # defines all the Flags on which one can test the probe against (if true, is 'pass', if false is 'failed')
     Categories = cms.PSet(
@@ -46,7 +47,7 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
           "Gaussian::signal1(mass, mean[3.1,3.0,3.2], sigma[0.10,0.05,0.3])",
           "Gaussian::signal2(mass, mean1[3.5,3.3,3.7], sigma2[0.15,0.07,0.3])",
           "SUM::signal(vFrac[0.9,0.6,1]*signal1, signal2)",
-          "Chebychev::backgroundPass(mass, {cP[0,-0.4,0.4], cP2[0.0,-0.04,0.04], cP3[-0.031,-0.3,0.3]})", ### good
+          "Chebychev::backgroundPass(mass, {cP[0,-1.0,1.0], cP2[0.0,-1.0,1.0], cP3[-0.031,-1.0,1.0]})", ### good
           "Chebychev::backgroundFail(mass, {cF[-0.33,-1.0,1.0], cF2[0.05,-1.0,1.0], cF3[0.02,-1.0,1.0]})", ### good
           "efficiency[0.9,0,1]",
           "signalFractionInPassing[0.9]"
