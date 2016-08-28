@@ -12,18 +12,18 @@ PDFName = "twoGaussPlusPoly6v1"
 
 process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     # IO parameters:
-    InputFileNames = cms.vstring(" /afs/cern.ch/user/c/chflores/work/public/TnP_2015/TP_Prod_Samples/MC/tnp_Prod_MC_PbPb_AllMB_08092015.root "),
-    InputDirectoryName = cms.string("MuonTrk"),
+    InputFileNames = cms.vstring("file:/home/llr/cms/chapon/data_CMS/tag_and_probe_2015data/tnpJpsi_MC_PbPb_merged_pt03inf_wtNcoll.root"),
+    InputDirectoryName = cms.string("tpTreeSta"),
     InputTreeName = cms.string("fitter_tree"),
     #numbrer of CPUs to use for fitting
-    OutputFileName = cms.string("tnp_Ana_MC_PbPb_MuonTrk_AllMB_2abseta.root"),
+    OutputFileName = cms.string("tnp_Ana_MC_PbPb_MuonTrk_AllMB_isGlb.root"),
     NumCPU = cms.uint32(25),
     # specifies wether to save the RooWorkspace containing the data for each bin and
     # the pdf object with the initial and final state snapshots
     SaveWorkspace = cms.bool(True),
     binsForMassPlots = cms.uint32(50),
-    #binnedFit = cms.bool(False),
-    #binsForFit = cms.uint32(45),
+    binnedFit = cms.bool(True),
+    binsForFit = cms.uint32(50),
     WeightVariable = cms.string("weight"),
     
     # defines all the real variables of the probes available in the input tree; can be used to select a subset of the probes
@@ -33,54 +33,18 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
         p                = cms.vstring("Probe p", "0", "1000", "GeV/c"),
         eta              = cms.vstring("Probe #eta", "-2.4", "2.4", ""),
         abseta           = cms.vstring("Probe |#eta|", "0", "2.5", ""),
-        staQoverP        = cms.vstring("Probe Q/p", "-200", "200", ""),
-        staQoverPerror   = cms.vstring("Probe Q/p error", "0", "650", ""),
-        staValidStations = cms.vstring("Probe ValidStations", "0", "5", ""),
-
-        tag_pt           = cms.vstring("Tag p_{T}", "0.0", "1000", "GeV/c"),
-        tag_eta          = cms.vstring("Tag #eta", "-2.4", "2.4", ""),
-        tag_abseta       = cms.vstring("Tag |#eta|", "0", "2.5", ""),
-        pair_pt          = cms.vstring("Pair p_{T}", "0.0", "1000", "GeV/c"),
-        pair_absy        = cms.vstring("Pair |Y|", "-2.4", "2.4", ""),
-        pair_y           = cms.vstring("Pair Y", "0", "2.5", ""),
-        weight           = cms.vstring("weight","0","1000",""),
+        staValidStations = cms.vstring("Probe ValidStations", "0", "15", ""),
+        tag_hiBin        = cms.vstring("Centrality bin", "0", "200", ""),
+        weight           = cms.vstring("Weight", "0", "100000", ""),
     ),
     # defines all the Flags on which one can test the probe against (if true, is 'pass', if false is 'failed')
     Categories = cms.PSet(
-        GlobalCuts      = cms.vstring("GlobalCuts", "dummy[true=1,false=0]"),
-        GlobalMu        = cms.vstring("GlobalMu", "dummy[true=1,false=0]"),
-        PassingSta      = cms.vstring("PassingSta", "dummy[true=1,false=0]"),
-        QualityMu       = cms.vstring("QualityMu", "dummy[true=1,false=0]"),
-        StaTkSameCharge = cms.vstring("StaTkSameCharge", "dummy[true=1,false=0]"),
-        TMA             = cms.vstring("TMA", "dummy[true=1,false=0]"),
-        TMLSAT          = cms.vstring("TMLSAT", "dummy[true=1,false=0]"),
-        Tk              = cms.vstring("Tk", "dummy[true=1,false=0]"),
-        TrackCuts       = cms.vstring("TrackCuts", "dummy[true=1,false=0]"),
-        TrackerMu       = cms.vstring("TrackerMu", "dummy[true=1,false=0]"),
-        OuterValidHits  = cms.vstring("OuterValidHits", "dummy[true=1,false=0]"),
+        Glb        = cms.vstring("Glb", "dummy[true=1,false=0]"),
     ),
 
     # defines all the PDFs that will be available for the efficiency calculations; uses RooFit's "factory" syntax;
     # each pdf needs to define "signal", "backgroundPass", "backgroundFail" pdfs, "efficiency[0.9,0,1]" and "signalFractionInPassing[0.9]" are used for initial values  
     PDFs = cms.PSet(
-      cbPlusExpo = cms.vstring(
-        #"CBShape::signal(mass, mean[3.1,3.0,3.2], sigma[0.5], alpha[2.0, 0.2, 4.0], n[4, 0.5, 100.])",
-        "CBShape::signal(mass, mean[3.1,3.0,3.2], sigma[0.02,0.02,0.1], alpha[1.0, 0.2, 3.0], n[4, 0.5, 100.])",
-        "Exponential::backgroundPass(mass, lp[0,-5,5])",
-        "Exponential::backgroundFail(mass, lf[0,-5,5])",
-        "efficiency[0.9,0,1]",
-        "signalFractionInPassing[0.9]"
-      ),
-      cbGausPlusExpo = cms.vstring(
-        "Gaussian::signal1(mass, mean[3.1,3.0,3.2], sigma[0.02, 0.01, 0.1])",
-        "CBShape::signal2(mass, mean, sigma2[0.02, 0.02, 0.3], alpha[2.0, 1.0, 10.0], n[4, 0.5, 100.])",
-        "SUM::signalPass(fracP[0.8,0,1]*signal1,signal2)",
-        "SUM::signalFail(fracF[0.8,0,1]*signal1,signal2)",
-        "Exponential::backgroundPass(mass, lp[0,-5,5])",
-        "Exponential::backgroundFail(mass, lf[0,-5,5])",
-        "efficiency[0.9,0,1]",
-        "signalFractionInPassing[0.9]"
-      ),
       twoGaussPlusPoly6v1 = cms.vstring(
           "Gaussian::signal1(mass, mean[3.15,3.05,3.25], sigma[0.10,0.05,1.0])",
           "Gaussian::signal2(mass, mean1[3.2,3.1,3.3], sigma2[0.15,0.05,1.00])",
@@ -96,18 +60,18 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     Efficiencies = cms.PSet(
         #the name of the parameter set becomes the name of the directory
         # for multiple passing flags in EfficiencyCategorAndState = cms.vstring("flag1","state","flag2","state",...),
-            PassingGlb_1bin = cms.PSet(
-                EfficiencyCategoryAndState = cms.vstring("GlobalMu","true"),
-                UnbinnedVariables = cms.vstring("mass","weight"),
+            Trk_1bin = cms.PSet(
+                EfficiencyCategoryAndState = cms.vstring("Glb","true"),
+                UnbinnedVariables = cms.vstring("mass"),
                 BinnedVariables = cms.PSet(
                     pt  = cms.vdouble(0,30),
                     eta = cms.vdouble(-2.4,2.4),
                 ),
                 BinToPDFmap = cms.vstring(PDFName)
             ),
-            PassingGlb_1binSeg = cms.PSet(
-                EfficiencyCategoryAndState = cms.vstring("GlobalMu","true"),
-                UnbinnedVariables = cms.vstring("mass","weight"),
+            Trk_1binSeg = cms.PSet(
+                EfficiencyCategoryAndState = cms.vstring("Glb","true"),
+                UnbinnedVariables = cms.vstring("mass"),
                 BinnedVariables = cms.PSet(
                     pt  = cms.vdouble(0,30),
                     eta = cms.vdouble(-2.4,2.4),
@@ -115,41 +79,62 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
                 ),
                 BinToPDFmap = cms.vstring(PDFName)
             ),
-            # PassingGlb_pt = cms.PSet(
-            #     EfficiencyCategoryAndState = cms.vstring("GlobalMu","true"),
-            #     UnbinnedVariables = cms.vstring("mass","weight"),
-            #     BinnedVariables = cms.PSet(
-            #         pt = cms.vdouble(0, 3.5, 7., 10.5, 30.0),
-            #         eta = cms.vdouble(-2.4,2.4),
-            #     ),
-            #     BinToPDFmap = cms.vstring(PDFName)
-            # ),
-            # PassingGlb_ptSeg = cms.PSet(
-            #     EfficiencyCategoryAndState = cms.vstring("GlobalMu","true"),
-            #     UnbinnedVariables = cms.vstring("mass","weight"),
-            #     BinnedVariables = cms.PSet(
-            #         pt = cms.vdouble(0, 3.5, 7., 10.5, 30.0),
-            #         eta = cms.vdouble(-2.4,2.4),
-            #         staValidStations= cms.vdouble(1,10),
-            #     ),
-            #     BinToPDFmap = cms.vstring(PDFName)
-            # ),
-            PassingGlb_abseta = cms.PSet(
-                EfficiencyCategoryAndState = cms.vstring("GlobalMu","true"),
-                UnbinnedVariables = cms.vstring("mass","weight"),
+            Trk_pt = cms.PSet(
+                EfficiencyCategoryAndState = cms.vstring("Glb","true"),
+                UnbinnedVariables = cms.vstring("mass"),
                 BinnedVariables = cms.PSet(
-                    abseta = cms.vdouble(0,1.6,2.4),
+                    pt = cms.vdouble(0, 3.5, 7., 10.5, 30.0),
+                    eta = cms.vdouble(-2.4,2.4),
+                ),
+                BinToPDFmap = cms.vstring(PDFName)
+            ),
+            Trk_ptSeg = cms.PSet(
+                EfficiencyCategoryAndState = cms.vstring("Glb","true"),
+                UnbinnedVariables = cms.vstring("mass"),
+                BinnedVariables = cms.PSet(
+                    pt = cms.vdouble(0, 3.5, 7., 10.5, 30.0),
+                    eta = cms.vdouble(-2.4,2.4),
+                    staValidStations= cms.vdouble(1,10),
+                ),
+                BinToPDFmap = cms.vstring(PDFName)
+            ),
+            Trk_eta = cms.PSet(
+                EfficiencyCategoryAndState = cms.vstring("Glb","true"),
+                UnbinnedVariables = cms.vstring("mass"),
+                BinnedVariables = cms.PSet(
+                    eta = cms.vdouble(-2.4,-1.6,-1.2,-0.9,0.9,1.2,1.6,2.4),
                     pt = cms.vdouble(0.,30.0),
                 ),
                 BinToPDFmap = cms.vstring(PDFName)
             ),
-            PassingGlb_absetaSeg = cms.PSet(
-                    EfficiencyCategoryAndState = cms.vstring("GlobalMu","true"),
-                    UnbinnedVariables = cms.vstring("mass","weight"),
+            Trk_etaSeg = cms.PSet(
+                    EfficiencyCategoryAndState = cms.vstring("Glb","true"),
+                    UnbinnedVariables = cms.vstring("mass"),
                     BinnedVariables = cms.PSet(
-                        abseta = cms.vdouble(0,1.6,2.4),
+                        eta = cms.vdouble(-2.4,-1.6,-1.2,-0.9,0.9,1.2,1.6,2.4),
                         pt = cms.vdouble(0.,30.0),
                         staValidStations= cms.vdouble(1,10),
+                    ),
+                    BinToPDFmap = cms.vstring(PDFName)
+            ),
+            Trk_cent = cms.PSet(
+                EfficiencyCategoryAndState = cms.vstring("Glb","true"),
+                UnbinnedVariables = cms.vstring("mass"),
+                BinnedVariables = cms.PSet(
+                    eta = cms.vdouble(-2.4,2.4),
+                    pt = cms.vdouble(0.,30.0),
+                    tag_hiBin = cms.vdouble(0,10,20,40,60,80,100,150,200),
+                ),
+                BinToPDFmap = cms.vstring(PDFName)
+            ),
+            Trk_centSeg = cms.PSet(
+                    EfficiencyCategoryAndState = cms.vstring("Glb","true"),
+                    UnbinnedVariables = cms.vstring("mass"),
+                    BinnedVariables = cms.PSet(
+                       eta = cms.vdouble(-2.4,2.4),
+                       pt = cms.vdouble(0.,30.0),
+                       tag_hiBin = cms.vdouble(0,10,20,40,60,80,100,150,200),
+                       staValidStations= cms.vdouble(1,10),
                     ),
                     BinToPDFmap = cms.vstring(PDFName)
             ),
