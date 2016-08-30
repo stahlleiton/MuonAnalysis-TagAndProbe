@@ -75,7 +75,7 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
                 BinnedVariables = cms.PSet(
                     pt  = cms.vdouble(0,30),
                     eta = cms.vdouble(-2.4,2.4),
-                    staValidStations= cms.vdouble(1,10),
+                    staValidStations= cms.vdouble(1,15),
                 ),
                 BinToPDFmap = cms.vstring(PDFName)
             ),
@@ -94,7 +94,7 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
                 BinnedVariables = cms.PSet(
                     pt = cms.vdouble(0, 3.5, 7., 10.5, 30.0),
                     eta = cms.vdouble(-2.4,2.4),
-                    staValidStations= cms.vdouble(1,10),
+                    staValidStations= cms.vdouble(1,15),
                 ),
                 BinToPDFmap = cms.vstring(PDFName)
             ),
@@ -113,7 +113,7 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
                     BinnedVariables = cms.PSet(
                         eta = cms.vdouble(-2.4,-1.6,-1.2,-0.9,0.9,1.2,1.6,2.4),
                         pt = cms.vdouble(0.,30.0),
-                        staValidStations= cms.vdouble(1,10),
+                        staValidStations= cms.vdouble(1,15),
                     ),
                     BinToPDFmap = cms.vstring(PDFName)
             ),
@@ -134,7 +134,7 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
                        eta = cms.vdouble(-2.4,2.4),
                        pt = cms.vdouble(0.,30.0),
                        tag_hiBin = cms.vdouble(0,10,20,40,60,80,100,150,200),
-                       staValidStations= cms.vdouble(1,10),
+                       staValidStations= cms.vdouble(1,15),
                     ),
                     BinToPDFmap = cms.vstring(PDFName)
             ),

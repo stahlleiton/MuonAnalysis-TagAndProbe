@@ -110,12 +110,22 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
                 ),
                 BinToPDFmap = cms.vstring(PDFName)
             ),
+            MuIdTrg_absetadep = cms.PSet(
+                # EfficiencyCategoryAndState = cms.vstring("HybridSoftHI","true","HLTL1v0","true","HLTL1v1","true","HLTL1v2","true","dxyPVdzmin","true","dzPV","true"),
+                EfficiencyCategoryAndState = cms.vstring("HybridSoftHI","true","HLTL1v1","true","dxyPVdzmin","true","dzPV","true"),
+                UnbinnedVariables = cms.vstring("mass"),
+                BinnedVariables = cms.PSet(
+                    pt = cms.vdouble(1.8, 30),
+                    abseta = cms.vdouble(0,0.9,1.6,2.1,2.4),
+                ),
+                BinToPDFmap = cms.vstring(PDFName)
+            ),
             MuIdTrg_etadep = cms.PSet(
                 # EfficiencyCategoryAndState = cms.vstring("HybridSoftHI","true","HLTL1v0","true","HLTL1v1","true","HLTL1v2","true","dxyPVdzmin","true","dzPV","true"),
                 EfficiencyCategoryAndState = cms.vstring("HybridSoftHI","true","HLTL1v1","true","dxyPVdzmin","true","dzPV","true"),
                 UnbinnedVariables = cms.vstring("mass"),
                 BinnedVariables = cms.PSet(
-                    pt = cms.vdouble(1.5, 30),
+                    pt = cms.vdouble(1.8, 30),
                     eta = cms.vdouble(-2.4,-2.1,-1.6,-0.9,0,0.9,1.6,2.1,2.4),
                 ),
                 BinToPDFmap = cms.vstring(PDFName)
@@ -125,7 +135,7 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
                 EfficiencyCategoryAndState = cms.vstring("HybridSoftHI","true","HLTL1v1","true","dxyPVdzmin","true","dzPV","true"),
                 UnbinnedVariables = cms.vstring("mass"),
                 BinnedVariables = cms.PSet(
-                    pt = cms.vdouble(1.5, 30),
+                    pt = cms.vdouble(1.8, 30),
                     eta = cms.vdouble(-2.4,2.4),
                     tag_hiBin = cms.vdouble(0,10,20,40,60,80,100,150,200)
                 ),
