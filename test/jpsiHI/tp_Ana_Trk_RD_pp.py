@@ -8,21 +8,22 @@ process.source = cms.Source("EmptySource")
 
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1) )    
 
-PDFName = "twoGaussPlusPoly3"
+PDFName = "triGaussPlusPoly3"
 
 process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     # IO parameters:
-    InputFileNames = cms.vstring("file:/afs/cern.ch/user/a/anstahll/work/TNPStudy/TEST/CMSSW_7_5_8_patch3/src/MuonAnalysis/TagAndProbe/test/jpsiHI/tnpJPsi_Data_pp5TeV_AOD.root"),
+    #InputFileNames = cms.vstring("root://cms-xrd-global.cern.ch//store/group/phys_heavyions/dileptons/TNPTagAndProbe2015/Data2015/pp502TeV/TTrees/tnpJPsi_Data_pp5TeV_AOD.root"),
+    InputFileNames = cms.vstring("tnpJPsi_Data_pp5TeV_AOD.root"),
     InputDirectoryName = cms.string("tpTreeSta"),
     InputTreeName = cms.string("fitter_tree"),
     #numbrer of CPUs to use for fitting
-    OutputFileName = cms.string("tnp_Ana_RD_pp_MuonTrk_AllMB.root"),
-    NumCPU = cms.uint32(4),
+    OutputFileName = cms.string("tnp_Ana_Trk_RD_pp.root"),
+    NumCPU = cms.uint32(32),
     # specifies wether to save the RooWorkspace containing the data for each bin and
     # the pdf object with the initial and final state snapshots
-    SaveWorkspace = cms.bool(True),
+    SaveWorkspace = cms.bool(False),
     binsForMassPlots = cms.uint32(50),
-    #binnedFit = cms.bool(True),
+    binnedFit = cms.bool(False),
     #binsForFit = cms.uint32(45),
     #WeightVariable = cms.string("weight"),
     
@@ -43,12 +44,14 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     # defines all the PDFs that will be available for the efficiency calculations; uses RooFit's "factory" syntax;
     # each pdf needs to define "signal", "backgroundPass", "backgroundFail" pdfs, "efficiency[0.9,0,1]" and "signalFractionInPassing[0.9]" are used for initial values  
     PDFs = cms.PSet(
-      twoGaussPlusPoly3 = cms.vstring(
-          "Gaussian::signal1(mass, mean[3.1,3.0,3.2], sigma[0.10,0.05,0.3])",
-          "Gaussian::signal2(mass, mean1[3.5,3.3,3.7], sigma2[0.15,0.07,0.3])",
-          "SUM::signal(vFrac[0.9,0.6,1]*signal1, signal2)",
-          "Chebychev::backgroundPass(mass, {cP[0,-1.0,1.0], cP2[0.0,-1.0,1.0], cP3[-0.031,-1.0,1.0]})", ### good
-          "Chebychev::backgroundFail(mass, {cF[-0.33,-1.0,1.0], cF2[0.05,-1.0,1.0], cF3[0.02,-1.0,1.0]})", ### good
+      triGaussPlusPoly3 = cms.vstring(
+          "Gaussian::signal1(mass, m1[3.1,2.8,3.3], sigma1[0.1,0.005,0.3])",
+          "Gaussian::signal2(mass, m1, sigma2[0.1,0.005,0.3])",
+          "SUM::signalJpsi(vFrac[0.9,0.0,1.0]*signal1, signal2)",
+          "Gaussian::signal3(mass, m2[3.5,3.3,3.9], sigma3[0.1,0.005,0.3])",
+          "SUM::signal(vFracJpsi[0.9,0.0,1.0]*signalJpsi, signal3)",
+          "Chebychev::backgroundPass(mass, {zP[0.0,-1.0,1.0], zP2[0.0,-1.0,1.0], zP3[0.0,-1.0,1.0]})", ### good
+          "Chebychev::backgroundFail(mass, {zF[-0.0,-1.0,1.0], zF2[0.0,-1.0,1.0], zF3[0.0,-1.0,1.0]})", ### good
           "efficiency[0.9,0,1]",
           "signalFractionInPassing[0.9]"
       ),
@@ -121,4 +124,3 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
 process.fitness = cms.Path(
         process.TagProbeFitTreeAnalyzer
 )
-

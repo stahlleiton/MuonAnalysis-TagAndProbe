@@ -8,178 +8,108 @@ process.source = cms.Source("EmptySource")
 
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1) )    
 
-#PDFName = "twoGaussPlusPoly6v1"
-PDFName = "cbGausPlusPoly"
-#PDFName = "cbPlusPoly"
-#PDFName = "cbPlusExpo"
-#PDFName = "cbGausPlusExpo"
+PDFName = "twoGaussPlusPoly2"
 
 process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     # IO parameters:
-    # InputFileNames = cms.vstring("tnp_Prod_PbPb_MC_STA_Cent40100.root"),
-    InputFileNames = cms.vstring("/afs/cern.ch/user/c/chflores/work/public/TnP_2015/TP_Prod_Samples/pp_STA/tnp_Prod_pp_STA_MC_02182016.root"),
-    InputDirectoryName = cms.string("fitTkFromSta"),
+    #InputFileNames = cms.vstring("root://cms-xrd-global.cern.ch//store/group/phys_heavyions/dileptons/TNPTagAndProbe2015/Data2015/pp502TeV/TTrees/tnpJPsi_Data_pp5TeV_AOD.root"),
+    InputFileNames = cms.vstring("tnpJPsi_MC_pp5TeV_AOD.root"),
+    InputDirectoryName = cms.string("tpTreeTrk"),
     InputTreeName = cms.string("fitter_tree"),
-    #numbrer of CPUs to use for fitting
-    # OutputFileName = cms.string("tnp_Ana_PbPb_MC_STA_Cent40100.root"),
-    OutputFileName = cms.string("tnp_Ana_pp_MC_GLB.root"),
-    #OutputFileName = cms.string("tnp_Ana_PbPb_MC_STA_AllMB_CBGausExp_08102015.root"),
+    OutputFileName = cms.string("tnp_Ana_STA_pp_MC.root"),
     NumCPU = cms.uint32(25),
     # specifies wether to save the RooWorkspace containing the data for each bin and
     # the pdf object with the initial and final state snapshots
-    SaveWorkspace = cms.bool(True),
-    binsForMassPlots = cms.uint32(40),
-    #binnedFit = cms.bool(True),
+    SaveWorkspace = cms.bool(False),
+    binsForMassPlots = cms.uint32(50),
+    binnedFit = cms.bool(False),
     #binsForFit = cms.uint32(45),
-    WeightVariable = cms.string("weight"),
+    #WeightVariable = cms.string("weight"),
     
     # defines all the real variables of the probes available in the input tree and intended for use in the efficiencies
     Variables = cms.PSet(
         mass = cms.vstring("Tag-Probe Mass", "2.8", "3.4", "GeV/c^{2}"),
         pt = cms.vstring("Probe p_{T}", "0", "1000", "GeV/c"),
-        p = cms.vstring("Probe p", "0", "1000", "GeV/c"),
+        pair_pt = cms.vstring("Dimuon p_{T}", "0", "1000", "GeV/c"),
         eta = cms.vstring("Probe #eta", "-2.4", "2.4", ""),
         abseta = cms.vstring("Probe |#eta|", "0", "2.4", ""),
-        tag_pt = cms.vstring("Tag p_{T}", "0", "1000", "GeV/c"),
-        weight = cms.vstring("weight","0.0","1500.0",""),
     ),
     # defines all the discrete variables of the probes available in the input tree and intended for use in the efficiency calculations
     Categories = cms.PSet(
-        #mcTrue = cms.vstring("MC true", "dummy[true=1,false=0]"),
-        isGlb001 = cms.vstring("isGlb001", "dummy[true=1,false=0]"),
+        isSTA = cms.vstring("isSTA", "dummy[true=1,false=0]"),
     ),
 
     # defines all the PDFs that will be available for the efficiency calculations; uses RooFit's "factory" syntax;
     # each pdf needs to define "signal", "backgroundPass", "backgroundFail" pdfs, "efficiency[0.9,0,1]" and "signalFractionInPassing[0.9]" are used for initial values  
     PDFs = cms.PSet(
-      cbPlusExpo = cms.vstring(
-        "CBShape::signal(mass, mean[3.08,3.0,3.2], sigma[0.01,0.0,0.2], alpha[2.0, 0.2, 10.0], n[4, 0.5, 100.])",
-       # "CBShape::signal(mass, mean[3.1,3.0,3.2], sigma[0.02,0.02,0.1], alpha[1.0, 0.2, 3.0], n[4, 0.5, 100.])",
-        "Exponential::backgroundPass(mass, lp[0,-5,5])",
-        "Exponential::backgroundFail(mass, lf[0,-5,5])",
-        "efficiency[0.9,0,1]",
-        "signalFractionInPassing[0.9]"
-      ),
-      cbGausPlusExpo = cms.vstring(
-       "Gaussian::signal1(mass, mean[3.08,3.05,3.2], sigma[0.02, 0.01, 0.1])",
-       "CBShape::signal2(mass, mean1[3.1,3.0,3.2], sigma2[0.1, 0.02, 0.3], alpha[2.0, 1.0, 10.0], n[4, 0.5, 100.])",
-        "SUM::signalPass(fracP[0.8,0,1]*signal1,signal2)",
-        "SUM::signalFail(fracF[0.8,0,1]*signal1,signal2)",
-        "Exponential::backgroundPass(mass, lp[0,-5,5])",
-        "Exponential::backgroundFail(mass, lf[0,-5,5])",
-        "efficiency[0.9,0,1]",
-        "signalFractionInPassing[0.9]"
-      ),
-      twoGaussPlusPoly6v1 = cms.vstring(
-          "Gaussian::signal(mass, mean[3.09,3.0,3.2], sigma[0.1,0.01,1.00])",
-         # "Gaussian::signal2(mass, mean1[3.1,3.05,3.2], sigma2[0.01,0.05,1.00])",
-         # "SUM::signal(vFrac[0.8,0,1]*signal1, signal2)",
-          "Chebychev::backgroundPass(mass, {cP[0,-1,1]})",
-          "Chebychev::backgroundFail(mass, {cF[0,-1,1]})",
-          "efficiency[0.9,0,1]",
-          "signalFractionInPassing[0.9]"
-      ),
-       cbPlusPoly = cms.vstring(
-        "CBShape::signal(mass, mean[3.07,3.0,3.2], sigma[0.01, 0.0, 0.2], alpha[2.0, 1.0, 10.0], n[4, 0.5, 100.])",
-        #"CBShape::signal(mass, mean[3.1,3.0,3.2], sigma[0.02, 0.01, 0.1], alpha[1.0, 0.5, 4.0], n[1, 0.5, 100.])",
-        #"Chebychev::backgroundPass(mass, {cPass[0,-.6,.6]})",
-        #"Chebychev::backgroundFail(mass, {cFail[0,-.6,.6]})",
-        #"Chebychev::backgroundPass(mass, {cPass[0,-0.5,0.5], cPass2[0,-0.5,0.5]})",
-        #"Chebychev::backgroundFail(mass, {cFail[0,-0.5,0.5], cFail2[0,-0.5,0.5]})",
-        "efficiency[0.9,0,1]",
-        "signalFractionInPassing[0.9]"
-      ),
-       cbGausPlusPoly = cms.vstring(
-        "CBShape::signal1(mass, mean[3.095,3.0,3.15], sigma[0.02, 0.01, 0.1], alpha[1.56, 0.2, 10.0], n[2, 0.5, 100.])",
-        "Gaussian::signal2(mass, mean, sigma2[0.1,0.02,1.00])",
-        "SUM::signal(frac[0.8,0,1]*signal1, signal2)",
-        # "SUM::signalPass(fracP[0.8,0,1]*signal1, signal2)",
-        # "SUM::signalFail(fracF[0.8,0,1]*signal1,signal2)",
-        #"Chebychev::backgroundPass(mass, {cPass[0,-1,1], cPass2[0,-1,1]})",
-        #"Chebychev::backgroundFail(mass, {cFail[0,-1,1], cFail2[0,-1,1]})",
-        "Chebychev::backgroundPass(mass, {cPass[0,-10,10]})",
-        "Chebychev::backgroundFail(mass, {cFail[0,-10,10]})",
-        "efficiency[0.9,0,1]",
-        "signalFractionInPassing[0.9]"
-      ),
+       twoGaussPlusPoly2 = cms.vstring(
+             "Gaussian::signal1(mass, mean[3.1,3.0,3.2], sigma1[0.025, 0.005, 0.08])",
+             "Gaussian::signal2(mass, mean, sigma2[0.035, 0.008, 0.09])",
+             "SUM::signal(vFrac[0.9,0.0,1.0]*signal1, signal2)",
+             "Chebychev::backgroundPass(mass, {cP[0.0,-1.0,1.0], cP2[0.0,-1.0,1.0]})", ### good
+             "Chebychev::backgroundFail(mass, {cF[0.0,-1.0,1.0], cF2[0.0,-1.0,1.0]})", ### good
+             "efficiency[0.9,0.0,1.0]",
+             "signalFractionInPassing[0.9]"
+             ),
     ),
     # defines a set of efficiency calculations, what PDF to use for fitting and how to bin the data;
     # there will be a separate output directory for each calculation that includes a simultaneous fit, side band subtraction and counting. 
     Efficiencies = cms.PSet(
         #the name of the parameter set becomes the name of the directory
-        PassingSTA_pt1 = cms.PSet(
-            EfficiencyCategoryAndState = cms.vstring("isGlb001","true"),
-            UnbinnedVariables = cms.vstring("mass","weight"),
+        STA_pt1 = cms.PSet(
+            EfficiencyCategoryAndState = cms.vstring("isSTA","true"),
+            UnbinnedVariables = cms.vstring("mass"),
             BinnedVariables = cms.PSet(
-              # pt = cms.vdouble(3.4,3.75,4,4.25,5, 6.5, 8.5, 30),
-              pt = cms.vdouble(2.1,2.5,3,3.5, 4,4.5, 5,6, 7,10, 30),
-              abseta = cms.vdouble(0, 1.6), 
+              pt = cms.vdouble(2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 6.0, 7.0, 10.0, 30.0),
+              pair_pt = cms.vdouble(3., 30),
+              abseta = cms.vdouble(0.0, 1.6), 
             ),
             BinToPDFmap = cms.vstring(PDFName)
         ),
-        #  PassingSTA_pt2 = cms.PSet(
-        #     EfficiencyCategoryAndState = cms.vstring("isGlb001","true"),
-        #     UnbinnedVariables = cms.vstring("mass","weight"),
-        #     BinnedVariables = cms.PSet(
-        #        pt = cms.vdouble(2.1,3.5,4.5,5.5,6.5,30),
-        #        abseta = cms.vdouble(0.9, 1.6),    
-        # ),
-        #     BinToPDFmap = cms.vstring(PDFName)
-        # ),
-         PassingSTA_pt2 = cms.PSet(
-            EfficiencyCategoryAndState = cms.vstring("isGlb001","true"),
-            UnbinnedVariables = cms.vstring("mass","weight"),
+        STA_pt2 = cms.PSet(
+            EfficiencyCategoryAndState = cms.vstring("isSTA","true"),
+            UnbinnedVariables = cms.vstring("mass"),
             BinnedVariables = cms.PSet(
-               # pt = cms.vdouble(1.7,2.5,3,3.5,4.5,5.5,6.5,30),
-               pt = cms.vdouble(1.5,2,2.5,3,3.5,4, 5,8, 30),
+               pt = cms.vdouble(1.8,2,2.5,3,3.5,4, 5,8, 30),
+               pair_pt = cms.vdouble(3.,30),
                abseta = cms.vdouble(1.6, 2.4),
             ),
             BinToPDFmap = cms.vstring(PDFName)
         ),
-       # PassingSTA_pt4 = cms.PSet(
-       #      EfficiencyCategoryAndState = cms.vstring("isGlb001","true"),
-       #      UnbinnedVariables = cms.vstring("mass","weight"),
-       #      BinnedVariables = cms.PSet(
-       #        pt = cms.vdouble(1.5,2,2.5,3.5,4.5,5.5,30),
-       #        abseta = cms.vdouble(2.1, 2.4),
-       #      ),
-       #      BinToPDFmap = cms.vstring(PDFName)
-       #  ),
-
-        PassingSTA_1bin = cms.PSet(
-            EfficiencyCategoryAndState = cms.vstring("isGlb001","true"),
-            UnbinnedVariables = cms.vstring("mass","weight"),
+        STA_1bin = cms.PSet(
+            EfficiencyCategoryAndState = cms.vstring("isSTA","true"),
+            UnbinnedVariables = cms.vstring("mass"),
             BinnedVariables = cms.PSet(
-                pt = cms.vdouble(1.5,30.),
+                pt = cms.vdouble(1.8,30.),
                 eta = cms.vdouble(-2.4,2.4),
             ),
             BinToPDFmap = cms.vstring(PDFName)
         ),
-        PassingSTA_eta = cms.PSet(
-            EfficiencyCategoryAndState = cms.vstring("isGlb001","true"),
-            UnbinnedVariables = cms.vstring("mass","weight"),
+        STA_eta = cms.PSet(
+            EfficiencyCategoryAndState = cms.vstring("isSTA","true"),
+            UnbinnedVariables = cms.vstring("mass"),
             BinnedVariables = cms.PSet(
                eta = cms.vdouble(-2.4,-1.6,0,1.6,2.4),
-               pt = cms.vdouble(1.5,30.),
+               pair_pt = cms.vdouble(3.,30),
+               pt = cms.vdouble(1.8,30.),
             ),
             BinToPDFmap = cms.vstring(PDFName)
         ),
-        PassingSTA_abseta = cms.PSet(
-            EfficiencyCategoryAndState = cms.vstring("isGlb001","true"),
-            UnbinnedVariables = cms.vstring("mass","weight"),
+        STA_abseta = cms.PSet(
+            EfficiencyCategoryAndState = cms.vstring("isSTA","true"),
+            UnbinnedVariables = cms.vstring("mass"),
             BinnedVariables = cms.PSet(
                 abseta = cms.vdouble(0.,1.6,2.4),
-                pt = cms.vdouble(1.5,30),
+                pair_pt = cms.vdouble(3.,30),
+                pt = cms.vdouble(1.8,30),
             ),
             BinToPDFmap = cms.vstring(PDFName)
         ),
-
-
 
     )
 )
 
+
 process.fitness = cms.Path(
     process.TagProbeFitTreeAnalyzer
 )
-

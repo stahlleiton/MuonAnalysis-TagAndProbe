@@ -41,77 +41,41 @@ using namespace std;
 /////////////////////////////////////////////////
 
 // Choose the efficiency type.
-// Possible values: MUIDTRG, MUID, TRG, TRK, STA
-#define MUIDTRG
+// Possible values: MUIDTRG, TRK, STA
+#define TRK
 
 // pp or PbPb?
-bool isPbPb = false; // if true, will compute the centrality dependence
-TString collTag = "pp"; // isPbPb ? "PbPb" : "pp";
+bool isPbPb = true; // if true, will compute the centrality dependence
+TString collTag = "PbPb"; // isPbPb ? "PbPb" : "pp";
 
 // do the toy study for the correction factors? (only applies if MUIDTRG)
 bool doToys = true;
 
 // Location of the files
-const int nCentBins = 7;
-const char* fCentMCNames[nCentBins] = 
-{
-   "fitmc/MuIDTrg_cent_20150909/res_Cent0005_/MuIDTrg_cent_20150909_Cent0005_.root",
-   "fitmc/MuIDTrg_cent_20150909/res_Cent0510_/MuIDTrg_cent_20150909_Cent0510_.root",
-   "fitmc/MuIDTrg_cent_20150909/res_Cent1020_/MuIDTrg_cent_20150909_Cent1020_.root",
-   "fitmc/MuIDTrg_cent_20150909/res_Cent2040_/MuIDTrg_cent_20150909_Cent2040_.root",
-   "fitmc/MuIDTrg_cent_20150909/res_Cent4050_/MuIDTrg_cent_20150909_Cent4050_.root",
-   "fitmc/MuIDTrg_cent_20150909/res_Cent5060_/MuIDTrg_cent_20150909_Cent5060_.root",
-   "fitmc/MuIDTrg_cent_20150909/res_Cent60100_/MuIDTrg_cent_20150909_Cent60100_.root",
-};
-const char* fCentDataNames[nCentBins] = 
-{
-   "fitdata/MuIdTrg_cent_20150911/res_Cent0005_/muidtrg_Cent0005_.root",
-   "fitdata/MuIdTrg_cent_20150911/res_Cent0510_/muidtrg_Cent0510_.root",
-   "fitdata/MuIdTrg_cent_20150911/res_Cent1020_/muidtrg_Cent1020_.root",
-   "fitdata/MuIdTrg_cent_20150911/res_Cent2040_/muidtrg_Cent2040_.root",
-   "fitdata/MuIdTrg_cent_20150911/res_Cent4050_/muidtrg_Cent4050_.root",
-   "fitdata/MuIdTrg_cent_20150911/res_Cent5060_/muidtrg_Cent5060_.root",
-   "fitdata/MuIdTrg_cent_20150911/res_Cent60100_/muidtrg_Cent60100_.root",
-};
-
-const int nSyst = 5;
+const int nSyst = 1;//5;
 // the first file is for the nominal case, the following ones are for the systematics
 const char* fDataName[nSyst] = {
-   "/home/emilien/Documents/Postdoc_LLR/TagAndProbe/systs/nominal/pbpb_data/tnp_Ana_RD_PbPb_MuonIDTrg_AllMB.root",
-   "/home/emilien/Documents/Postdoc_LLR/TagAndProbe/systs/massrange/pbpb_data/tnp_Ana_RD_PbPb_MuonIDTrg_AllMB.root",
-   "/home/emilien/Documents/Postdoc_LLR/TagAndProbe/systs/signalfcn/pbpb_data/tnp_Ana_RD_PbPb_MuonIDTrg_AllMB.root",
-   "/home/emilien/Documents/Postdoc_LLR/TagAndProbe/systs/bkgdfcn/pbpb_data/tnp_Ana_RD_PbPb_MuonIDTrg_AllMB.root",
-   "/home/emilien/Documents/Postdoc_LLR/TagAndProbe/systs/tagsel/pbpb_data/tnp_Ana_RD_PbPb_MuonIDTrg_AllMB.root",
+   "tnp_Ana_RD_PbPb_MuonTrk_AllMB_isGlb.root",
+   // "/home/emilien/Documents/Postdoc_LLR/TagAndProbe/systs/massrange/pbpb_data/tnp_Ana_RD_PbPb_MuonIDTrg_AllMB.root",
+   // "/home/emilien/Documents/Postdoc_LLR/TagAndProbe/systs/signalfcn/pbpb_data/tnp_Ana_RD_PbPb_MuonIDTrg_AllMB.root",
+   // "/home/emilien/Documents/Postdoc_LLR/TagAndProbe/systs/bkgdfcn/pbpb_data/tnp_Ana_RD_PbPb_MuonIDTrg_AllMB.root",
+   // "/home/emilien/Documents/Postdoc_LLR/TagAndProbe/systs/tagsel/pbpb_data/tnp_Ana_RD_PbPb_MuonIDTrg_AllMB.root",
 };
 const char* fMCName[nSyst] = {
-   "/home/emilien/Documents/Postdoc_LLR/TagAndProbe/systs/nominal/pbpb_mc/tnp_Ana_MC_PbPb_MuonIDTrg_AllMB.root",
-   "/home/emilien/Documents/Postdoc_LLR/TagAndProbe/systs/massrange/pbpb_mc/tnp_Ana_MC_PbPb_MuonIDTrg_AllMB.root",
-   "/home/emilien/Documents/Postdoc_LLR/TagAndProbe/systs/signalfcn/pbpb_mc/tnp_Ana_MC_PbPb_MuonIDTrg_AllMB.root",
-   "/home/emilien/Documents/Postdoc_LLR/TagAndProbe/systs/bkgdfcn/pbpb_mc/tnp_Ana_MC_PbPb_MuonIDTrg_AllMB.root",
-   "/home/emilien/Documents/Postdoc_LLR/TagAndProbe/systs/tagsel/pbpb_mc/tnp_Ana_MC_PbPb_MuonIDTrg_AllMB.root",
+   "tnp_Ana_MC_PbPb_MuonTrk_AllMB_isGlb.root",
+   // "/home/emilien/Documents/Postdoc_LLR/TagAndProbe/systs/massrange/pbpb_mc/tnp_Ana_MC_PbPb_MuonIDTrg_AllMB.root",
+   // "/home/emilien/Documents/Postdoc_LLR/TagAndProbe/systs/signalfcn/pbpb_mc/tnp_Ana_MC_PbPb_MuonIDTrg_AllMB.root",
+   // "/home/emilien/Documents/Postdoc_LLR/TagAndProbe/systs/bkgdfcn/pbpb_mc/tnp_Ana_MC_PbPb_MuonIDTrg_AllMB.root",
+   // "/home/emilien/Documents/Postdoc_LLR/TagAndProbe/systs/tagsel/pbpb_mc/tnp_Ana_MC_PbPb_MuonIDTrg_AllMB.root",
 };
-// const char* fDataName[nSyst] = {
-//    "/home/emilien/Documents/Postdoc_LLR/TagAndProbe/systs/nominal/pp_data/tnp_Ana_RD_pp_MuonIDTrg_AllMB.root",
-//    "/home/emilien/Documents/Postdoc_LLR/TagAndProbe/systs/massrange/pp_data/tnp_Ana_RD_pp_MuonIDTrg_AllMB.root",
-//    "/home/emilien/Documents/Postdoc_LLR/TagAndProbe/systs/signalfcn/pp_data/tnp_Ana_RD_pp_MuonIDTrg_AllMB.root",
-//    "/home/emilien/Documents/Postdoc_LLR/TagAndProbe/systs/bkgdfcn/pp_data/tnp_Ana_RD_pp_MuonIDTrg_AllMB.root",
-//    "/home/emilien/Documents/Postdoc_LLR/TagAndProbe/systs/tagsel/pp_data/tnp_Ana_RD_pp_MuonIDTrg_AllMB.root",
-// };
-// const char* fMCName[nSyst] = {
-//    "/home/emilien/Documents/Postdoc_LLR/TagAndProbe/systs/nominal/pp_mc/tnp_Ana_MC_pp_MuonIDTrg_AllMB.root",
-//    "/home/emilien/Documents/Postdoc_LLR/TagAndProbe/systs/massrange/pp_mc/tnp_Ana_MC_pp_MuonIDTrg_AllMB.root",
-//    "/home/emilien/Documents/Postdoc_LLR/TagAndProbe/systs/signalfcn/pp_mc/tnp_Ana_MC_pp_MuonIDTrg_AllMB.root",
-//    "/home/emilien/Documents/Postdoc_LLR/TagAndProbe/systs/bkgdfcn/pp_mc/tnp_Ana_MC_pp_MuonIDTrg_AllMB.root",
-//    "/home/emilien/Documents/Postdoc_LLR/TagAndProbe/systs/tagsel/pp_mc/tnp_Ana_MC_pp_MuonIDTrg_AllMB.root",
-// };
 
 // names for systematics
 const char* systName[nSyst] = {
    "nominal",
-   "massrange",
-   "signalfcn",
-   "bkgfcn",
-   "tagsel"
+   // "massrange",
+   // "signalfcn",
+   // "bkgfcn",
+   // "tagsel"
 };
 
 
@@ -119,62 +83,53 @@ const char* systName[nSyst] = {
 //////////////////////////////////////////////////////////////////////////
 
 // Other parameters
-const double tx[nCentBins]={381.23,330.35,261.37,158.7,86.3,53.5,16.2};
-#ifdef STA
-TString etaTag("PassingSTA_eta");
-TString ptTag("PassingSTA_pt");
-TString allTag("PassingSTA_1bin");
-#else
-TString etaTag("PassingGlb_eta");
-TString ptTag("PassingGlb_pt");
-TString allTag("PassingGlb_1bin");
-#endif // ifdef STA
-
-// Automatic parameters (shouldn't require modification by the user)
-#if defined MUIDTRG || defined STA
-TString absetaVar("abseta");
-ofstream file_sfs("correction_functions.txt");
 #ifdef MUIDTRG
+TString etaTag("MuIdTrg_etadep");
+TString absetaTag("MuIdTrg_absetadep");
+TString centTag("MuIdTrg_centdep");
 const int nAbsEtaBins = 4;
-TString absetaTag("PassingGlb_abseta");
-TString cutTag("MuonIDTrg"); 
+TString ptTag[nAbsEtaBins] = {"MuIdTrg_abseta00_09", "MuIdTrg_abseta09_16", "MuIdTrg_abseta16_21", "MuIdTrg_abseta21_24"};
+TString allTag("MuIdTrg_1bin");
+TString absetaVar("abseta");
+TString centVar("tag_hiBin");
+ofstream file_sfs("correction_functions.txt");
+TString cutTag("tpTree"); 
 TString cutLegend("Muon ID + trigger");
-#else
-const int nAbsEtaBins = 2;//4;
-TString absetaTag("PassingSTA_abseta");
-TString cutTag = collTag=="PbPb" ? TString("fitTkFromSta") : TString("tpTree"); 
-TString cutLegend("STA muon");
-#endif // ifdef MUIDTRG
-#else
-TString absetaVar("eta");
-TString absetaTag("PassingGlb_1bin");
-const int nAbsEtaBins = 1;
-#ifdef TRG
-TString cutTag("MuonTrg"); 
-TString cutLegend("Muon trigger");
-#else
-#ifdef TRK
-TString cutTag("MuonTrk"); 
-TString cutLegend("Inner tracking");
-#else
-TString cutTag("MuonIDTrg"); 
-TString cutLegend("Muon ID");
-#endif // ifdef TRK
-#endif // ifdef TRG
-#endif // ifdef MUIDTRG
-
-#ifdef TRK
-const double effmin = 0.8;
-const double sfrange = 0.08;
-#else
-#ifdef MUID
-const double effmin = 0.8;
-const double sfrange = 0.08;
-#else
 const double effmin = 0.;
 const double sfrange = 0.55;
-#endif // ifdef MUID
-#endif // ifdef TRK
+#endif
+
+#ifdef STA
+TString etaTag("STA_etadep");
+TString absetaTag("STA_etadep");
+TString centTag("STA_centdep");
+const int nAbsEtaBins = 2;
+TString ptTag[nAbsEtaBins] = {"MuIdTrg_abseta00_16", "MuIdTrg_abseta16_24"};
+TString allTag("STA_1bin");
+TString absetaVar("abseta");
+TString centVar("tag_hiBin");
+ofstream file_sfs("correction_functions.txt");
+TString cutTag("tpTreeTrk"); 
+TString cutLegend("Standalone");
+const double effmin = 0.;
+const double sfrange = 0.55;
+#endif
+
+#ifdef TRK
+TString etaTag("Trk_etaSeg");
+TString absetaTag("Trk_1binSeg");
+TString centTag("Trk_centSeg");
+const int nAbsEtaBins = 1;
+TString ptTag[nAbsEtaBins] = {"Trk_ptSeg"};
+TString allTag("Trk_1binSeg");
+TString absetaVar("eta");
+TString centVar("tag_hiBin");
+ofstream file_sfs("correction_functions.txt");
+TString cutTag("tpTreeSta"); 
+TString cutLegend("Standalone");
+const double effmin = 0.8;
+const double sfrange = 0.08;
+#endif
 
 // Function Define
 TH2F *plotEff2D(RooDataSet *a, TString b);
@@ -200,25 +155,13 @@ void TnPEffDraw_syst() {
   gStyle->SetTitleYOffset(1.0);
 
 
-  //centrallity root files
-  TFile* fCentMC[nCentBins];
-  TFile* fCentData[nCentBins];
-
-  if (isPbPb) {
-     for (int i=0; i<nCentBins; i++)
-     {
-        fCentMC[i] = new TFile(fCentMCNames[i]);
-        fCentData[i] = new TFile(fCentDataNames[i]);
-     }
-  }
-  
   //data and MC root files as well as single bin for integrated efficiency
-  TFile* f9[nSyst];
-  TFile* f10[nSyst];
+  TFile* fMC[nSyst];
+  TFile* fData[nSyst];
 
   for (int i=0; i<nSyst; i++) {
-     f9[i] = new TFile(fMCName[i]);
-     f10[i] = new TFile(fDataName[i]);
+     fMC[i] = new TFile(fMCName[i]);
+     fData[i] = new TFile(fDataName[i]);
   }
 
   TCanvas *c1 = new TCanvas("c1","",700,600);
@@ -226,18 +169,10 @@ void TnPEffDraw_syst() {
   vector<RooDataSet*> daPtData0[nSyst], daPtData1[nSyst];
 
   for (int k=0; k<nSyst; k++) {
-     if (nAbsEtaBins==1)
+     for (int i=0; i<nAbsEtaBins; i++)
      {
-        daPtData0[k].push_back((RooDataSet*)f9[k]->Get(cutTag + "/" + ptTag + "/fit_eff")); 
-        daPtData1[k].push_back((RooDataSet*)f10[k]->Get(cutTag + "/" + ptTag + "/fit_eff")); 
-     }
-     else
-     {
-        for (int i=0; i<nAbsEtaBins; i++)
-        {
-           daPtData0[k].push_back((RooDataSet*)f9[k]->Get(cutTag + "/" + ptTag + Form("%i/fit_eff",i+1))); 
-           daPtData1[k].push_back((RooDataSet*)f10[k]->Get(cutTag + "/" + ptTag + Form("%i/fit_eff",i+1))); 
-        }
+        daPtData0[k].push_back((RooDataSet*)fMC[k]->Get(cutTag + "/" + ptTag[i] + "/fit_eff")); 
+        daPtData1[k].push_back((RooDataSet*)fData[k]->Get(cutTag + "/" + ptTag[i] + "/fit_eff")); 
      }
   }
 
@@ -246,6 +181,7 @@ void TnPEffDraw_syst() {
   for (int k=0; k<nSyst; k++) {
      for (unsigned int i=0; i<daPtData0[k].size(); i++)
      {
+        cout << k << " " << i <<  " " << daPtData1[k][i] << endl;
         ComPt0[k].push_back(plotEff_1bin(daPtData0[k][i], 1, "pt"));
         cout << k << " " << i <<  " " << daPtData1[k][i] << endl;
         ComPt1[k].push_back(plotEff_1bin(daPtData1[k][i], 1, "pt"));
@@ -257,8 +193,8 @@ void TnPEffDraw_syst() {
   RooDataSet* daEtaData1[nSyst];
 
   for (int i=0; i<nSyst; i++) {
-     daEtaData0[i] = (RooDataSet*)f9[i]->Get(cutTag + "/" + etaTag + "/fit_eff"); 
-     daEtaData1[i] = (RooDataSet*)f10[i]->Get(cutTag + "/" + etaTag + "/fit_eff"); 
+     daEtaData0[i] = (RooDataSet*)fMC[i]->Get(cutTag + "/" + etaTag + "/fit_eff"); 
+     daEtaData1[i] = (RooDataSet*)fData[i]->Get(cutTag + "/" + etaTag + "/fit_eff"); 
   }
 
   TGraphAsymmErrors* ComEta0[nSyst];
@@ -269,42 +205,42 @@ void TnPEffDraw_syst() {
      ComEta1[i] = plotEff_1bin(daEtaData1[i], 1, "eta");
   }
 
-  RooDataSet *daCentMC1Bin[nCentBins];
-  RooDataSet *daCentData1Bin[nCentBins];
-  if (isPbPb) {
-     for (int i=0; i<nCentBins; i++)
-     {
-        daCentMC1Bin[i] = (RooDataSet*) fCentMC[i]->Get(cutTag + "/" + allTag + "/fit_eff");
-        daCentData1Bin[i] = (RooDataSet*) fCentData[i]->Get(cutTag + "/" + allTag + "/fit_eff");
-     }
-  }
-
   RooDataSet* daPtMC1Bin0[nSyst];
   RooDataSet* daPtData1Bin0[nSyst];
   RooDataSet* daAbsEtaMC1[nSyst];
   RooDataSet* daAbsEtaData1[nSyst];
+  RooDataSet* daCentMC1[nSyst];
+  RooDataSet* daCentData1[nSyst];
 
   for (int i=0; i<nSyst; i++) {
-     daPtMC1Bin0[i] = (RooDataSet*)f9[i]->Get(cutTag + "/" + allTag + "/fit_eff"); 
-     daPtData1Bin0[i] = (RooDataSet*)f10[i]->Get(cutTag + "/" + allTag + "/fit_eff"); 
-     daAbsEtaMC1[i] = (RooDataSet*)f9[i]->Get(cutTag + "/" + absetaTag + "/fit_eff"); 
-     daAbsEtaData1[i] = (RooDataSet*)f10[i]->Get(cutTag + "/" + absetaTag + "/fit_eff"); 
+     daPtMC1Bin0[i] = (RooDataSet*)fMC[i]->Get(cutTag + "/" + allTag + "/fit_eff"); 
+     daPtData1Bin0[i] = (RooDataSet*)fData[i]->Get(cutTag + "/" + allTag + "/fit_eff"); 
+     daAbsEtaMC1[i] = (RooDataSet*)fMC[i]->Get(cutTag + "/" + absetaTag + "/fit_eff"); 
+     daAbsEtaData1[i] = (RooDataSet*)fData[i]->Get(cutTag + "/" + absetaTag + "/fit_eff"); 
+     if (isPbPb) {
+        daCentMC1[i] = (RooDataSet*)fMC[i]->Get(cutTag + "/" + centTag + "/fit_eff"); 
+        daCentData1[i] = (RooDataSet*)fData[i]->Get(cutTag + "/" + centTag + "/fit_eff"); 
+     }
   }
 
-  TGraphAsymmErrors* Com0Pt0[nSyst];
-  TGraphAsymmErrors* Com0Pt1[nSyst];
-  vector<TGraphAsymmErrors*> Com0AbsEta0[nSyst];
-  vector<TGraphAsymmErrors*> Com0AbsEta1[nSyst];
+  TGraphAsymmErrors* effPtMC[nSyst];
+  TGraphAsymmErrors* effPtData[nSyst];
+  vector<TGraphAsymmErrors*> effAbsEtaMC[nSyst];
+  vector<TGraphAsymmErrors*> effAbsEtaData[nSyst];
+  TGraphAsymmErrors* effCentMC = NULL;
+  TGraphAsymmErrors* effCentData = NULL;
 
   for (int k=0; k<nSyst; k++) {
-     Com0Pt0[k] = plotEff_1bin(daPtMC1Bin0[k],0,"eta");
-     Com0Pt1[k] = plotEff_1bin(daPtData1Bin0[k],0,"eta");
-     Com0AbsEta0[k] = plotEff_Nbins(daAbsEtaMC1[k],0,"pt",absetaVar);
-     Com0AbsEta1[k] = plotEff_Nbins(daAbsEtaData1[k],0,"pt",absetaVar);
+     effPtMC[k] = plotEff_1bin(daPtMC1Bin0[k],0,"eta");
+     effPtData[k] = plotEff_1bin(daPtData1Bin0[k],0,"eta");
+     effAbsEtaMC[k] = plotEff_Nbins(daAbsEtaMC1[k],0,"pt",absetaVar);
+     effAbsEtaData[k] = plotEff_Nbins(daAbsEtaData1[k],0,"pt",absetaVar);
+     if (isPbPb && k==0) {
+        effCentMC = plotEff_1bin(daCentMC1[k],0,"tag_hiBin");
+        effCentData = plotEff_1bin(daCentData1[k],0,"tag_hiBin");
+     }
   }
 
-  TGraphAsymmErrors *effCentMC = isPbPb ? plotEffCent(daCentMC1Bin, 1) : NULL;
-  TGraphAsymmErrors *effCentData = isPbPb ? plotEffCent(daCentData1Bin, 1) : NULL;
 
   if (isPbPb) {
      effCentMC->SetMarkerStyle(20);
@@ -356,10 +292,10 @@ void TnPEffDraw_syst() {
         TrkAbsEta0[k][i] = new double[4];
         TrkAbsEta1[k][i] = new double[4];
      }
-     CalEffErr(Com0Pt0[k], Trk0[k]);
-     CalEffErr(Com0Pt1[k], Trk1[k]);
-     CalEffErr(Com0AbsEta0[k], TrkAbsEta0[k]);
-     CalEffErr(Com0AbsEta1[k], TrkAbsEta1[k]);
+     CalEffErr(effPtMC[k], Trk0[k]);
+     CalEffErr(effPtData[k], Trk1[k]);
+     CalEffErr(effAbsEtaMC[k], TrkAbsEta0[k]);
+     CalEffErr(effAbsEtaData[k], TrkAbsEta1[k]);
   }
 
 
@@ -382,8 +318,8 @@ void TnPEffDraw_syst() {
 
 
   TH1F *hPad = new TH1F("hPad",";p^{#mu}_{T} [GeV/c];Single #mu Efficiency",5,0,30);
-  TH1F *hPad1 = new TH1F("hPad1",";#eta^{#mu} ;Single #mu Efficiency",5,-2.4,2.4);
-  TH1F *hPad2 = new TH1F("hPad2",";N_{part} ;Single #mu Efficiency",5,0,400);
+  TH1F *hPad1 = new TH1F("hPad1",";#eta^{#mu};Single #mu Efficiency",5,-2.4,2.4);
+  TH1F *hPad2 = new TH1F("hPad2",";Centrality bin;Single #mu Efficiency",5,0,200);
   hPad->GetXaxis()->CenterTitle();
   hPad1->GetXaxis()->CenterTitle();
   hPad2->GetXaxis()->CenterTitle();
@@ -488,8 +424,7 @@ void TnPEffDraw_syst() {
 
         lt1->SetTextSize(0.05);
         lt1->DrawLatex(0.43,0.60,"CMS Preliminary");
-        //lt1->DrawLatex(0.43,0.54,"pp  #sqrt{s} = 2.76 TeV");
-        lt1->DrawLatex(0.43,0.54,collTag + "  #sqrt{s_{NN}} = 2.76 TeV");
+        lt1->DrawLatex(0.43,0.54,collTag + "  #sqrt{s_{NN}} = 5.02 TeV");
 
         // now take care of the data/mc ratio panel
         c1->cd();
@@ -515,16 +450,16 @@ void TnPEffDraw_syst() {
            double* tntot = new double[nbins_mc];
            TString tag = absetaVar + "_bin0__pt_bin";
            for (int j=0; j<nbins_mc; j++) {
-              RooFitResult *fitres = (RooFitResult*) f9[0]->Get(cutTag + "/" + ptTag + Form("%i/",i+1) + tag + Form("%i__cbGausPlusExpo/fitresults",j));
-              if (!fitres) fitres = (RooFitResult*) f9[0]->Get(cutTag + "/" + ptTag + Form("%i/",i+1) + tag + Form("%i__cbPlusPoly1/fitresults",j));
-              if (!fitres) fitres = (RooFitResult*) f9[0]->Get(cutTag + "/" + ptTag + Form("%i/",i+1) + tag + Form("%i__cbPlusPoly2/fitresults",j));
-              if (!fitres) fitres = (RooFitResult*) f9[0]->Get(cutTag + "/" + ptTag + Form("%i/",i+1) + tag + Form("%i__cbGausPlusPoly/fitresults",j));
-              if (!fitres) fitres = (RooFitResult*) f9[0]->Get(cutTag + "/" + ptTag + Form("%i/",i+1) + tag + Form("%i__cbPlusPoly2nd/fitresults",j));
-              if (!fitres) fitres = (RooFitResult*) f9[0]->Get(cutTag + "/" + ptTag + Form("%i/",i+1) + tag + Form("%i__cbPlusPoly3rd/fitresults",j));
-              if (!fitres) fitres = (RooFitResult*) f9[0]->Get(cutTag + "/" + ptTag + Form("%i/",i+1) + tag + Form("%i__cbPlusExpo/fitresults",j));
-              if (!fitres) fitres = (RooFitResult*) f9[0]->Get(cutTag + "/" + ptTag + Form("%i/",i+1) + tag + Form("%i__GaussPlusExpo/fitresults",j));
-              if (!fitres) fitres = (RooFitResult*) f9[0]->Get(cutTag + "/" + ptTag + Form("%i/",i+1) + tag + Form("%i__GaussPlusPoly/fitresults",j));
-              if (!fitres) fitres = (RooFitResult*) f9[0]->Get(cutTag + "/" + ptTag + Form("%i/",i+1) + tag + Form("%i__GaussPlusPoly2/fitresults",j));
+              RooFitResult *fitres = (RooFitResult*) fMC[0]->Get(cutTag + "/" + ptTag[i] + "/" + tag + Form("%i__cbGausPlusExpo/fitresults",j));
+              if (!fitres) fitres = (RooFitResult*) fMC[0]->Get(cutTag + "/" + ptTag[i] + "/" + tag + Form("%i__cbPlusPoly1/fitresults",j));
+              if (!fitres) fitres = (RooFitResult*) fMC[0]->Get(cutTag + "/" + ptTag[i] + "/" + tag + Form("%i__cbPlusPoly2/fitresults",j));
+              if (!fitres) fitres = (RooFitResult*) fMC[0]->Get(cutTag + "/" + ptTag[i] + "/" + tag + Form("%i__cbGausPlusPoly/fitresults",j));
+              if (!fitres) fitres = (RooFitResult*) fMC[0]->Get(cutTag + "/" + ptTag[i] + "/" + tag + Form("%i__cbPlusPoly2nd/fitresults",j));
+              if (!fitres) fitres = (RooFitResult*) fMC[0]->Get(cutTag + "/" + ptTag[i] + "/" + tag + Form("%i__cbPlusPoly3rd/fitresults",j));
+              if (!fitres) fitres = (RooFitResult*) fMC[0]->Get(cutTag + "/" + ptTag[i] + "/" + tag + Form("%i__cbPlusExpo/fitresults",j));
+              if (!fitres) fitres = (RooFitResult*) fMC[0]->Get(cutTag + "/" + ptTag[i] + "/" + tag + Form("%i__GaussPlusExpo/fitresults",j));
+              if (!fitres) fitres = (RooFitResult*) fMC[0]->Get(cutTag + "/" + ptTag[i] + "/" + tag + Form("%i__GaussPlusPoly/fitresults",j));
+              if (!fitres) fitres = (RooFitResult*) fMC[0]->Get(cutTag + "/" + ptTag[i] + "/" + tag + Form("%i__GaussPlusPoly2/fitresults",j));
               if (!fitres) cerr << "ERROR I couldn't find the fit results! Expect a crash soon..." << endl;
               tntot[j] = ((RooRealVar*) fitres->floatParsFinal().find("numSignalAll"))->getVal();
               delete fitres;
@@ -644,6 +579,8 @@ void TnPEffDraw_syst() {
 
      // toys study 
      if (doToys) toyStudy(nSyst, graphssyst_data, graphssyst_mc, fdata, fmc, cutTag + Form("toys%i_",i) + collTag + "_RD_MC_PT", 2);
+#else
+     }
 #endif // ifdef MUIDTRG or STA
   }
 
@@ -675,8 +612,8 @@ void TnPEffDraw_syst() {
 
      lt1->SetTextSize(0.05);
      lt1->DrawLatex(0.43,0.60,"CMS Preliminary");
-     //lt1->DrawLatex(0.43,0.54,"pp  #sqrt{s} = 2.76 TeV");
-     lt1->DrawLatex(0.43,0.54,collTag + "  #sqrt{s_{NN}} = 2.76 TeV");
+     //lt1->DrawLatex(0.43,0.54,"pp  #sqrt{s} = 5.02 TeV");
+     lt1->DrawLatex(0.43,0.54,collTag + "  #sqrt{s_{NN}} = 5.02 TeV");
 
      // now take care of the data/mc ratio panel
      c1->cd();
@@ -735,8 +672,8 @@ void TnPEffDraw_syst() {
 
      lt1->SetTextSize(0.05);
      lt1->DrawLatex(0.43,0.60,"CMS Preliminary");
-     //lt1->DrawLatex(0.43,0.54,"pp  #sqrt{s} = 2.76 TeV");
-     lt1->DrawLatex(0.43,0.54,collTag + "  #sqrt{s_{NN}} = 2.76 TeV");
+     //lt1->DrawLatex(0.43,0.54,"pp  #sqrt{s} = 5.02 TeV");
+     lt1->DrawLatex(0.43,0.54,collTag + "  #sqrt{s_{NN}} = 5.02 TeV");
 
      // now take care of the data/mc ratio panel
      c1->cd();
@@ -776,10 +713,7 @@ void TnPEffDraw_syst() {
   }
 
 
-  // close the file for correction functions
-#if defined MUIDTRG || defined STA
   file_sfs.close();
-#endif
 }
 
 void formatTH1F(TH1* a, int b, int c, int d){
@@ -994,55 +928,6 @@ vector<TGraphAsymmErrors*> plotEff_Nbins(RooDataSet *a, int aa, const char* varx
 
 }
 
-TGraphAsymmErrors *plotEffCent(RooDataSet **a1,int aa){
-  const RooArgSet *setn[nCentBins];
-  RooRealVar *effn[nCentBins];
-  for (int i=0; i<nCentBins; i++)
-  {
-     setn[i] = a1[i]->get();
-     effn[i] = (RooRealVar*)setn[i]->find("efficiency");
-  }
-
-  const int nbins = nCentBins;
-
-  double ty[nCentBins], tyhi[nCentBins], tylo[nCentBins];
-
-  for (int i=0; i<nCentBins; i++)
-  {
-     ty[i] = effn[i]->getVal();
-     tyhi[i] = fabs(effn[i]->getErrorHi());
-     tylo[i] = fabs(effn[i]->getErrorLo());
-  }
-
-  const double *x = tx;
-  const double *y = ty;
-  const double *yhi = tyhi;
-  const double *ylo = tylo;
-
-  TGraphAsymmErrors *b = new TGraphAsymmErrors();
-  if(aa == 1) {*b = TGraphAsymmErrors(nbins,x,y,0,0,ylo,yhi);}
-  if(aa == 0) {*b = TGraphAsymmErrors(nbins,x,y,0,0,ylo,yhi);}
-  b->SetMaximum(1.1);
-  b->SetMinimum(0.0);
-  b->SetMarkerStyle(20);
-  b->SetMarkerColor(kRed+2);
-  b->SetMarkerSize(1.0);
-  b->SetTitle("");
-  b->GetXaxis()->SetTitleSize(0.05);
-  b->GetYaxis()->SetTitleSize(0.05);
-  b->GetXaxis()->SetTitle("centrality");
-  b->GetYaxis()->SetTitle("efficiency");
-  b->GetXaxis()->CenterTitle();
-  //b->Draw("apz");
-
-  for (int i=0; i<nbins; i++) {
-    cout << x[i] << " " << y[i] << " " << yhi[i] << " " << ylo[i] << endl;
-  }
-
-  return b;
-
-}
-
 
 
 TH2F *plotEff2D(RooDataSet *a, TString b){
@@ -1169,8 +1054,8 @@ void plotSysts(TGraphAsymmErrors *graphs[nSyst], TCanvas *c1, TPad *p1, TH1F *h1
 
    // lt1->SetTextSize(0.05);
    // lt1->DrawLatex(0.43,0.60,"CMS Preliminary");
-   // //lt1->DrawLatex(0.43,0.54,"pp  #sqrt{s} = 2.76 TeV");
-   // lt1->DrawLatex(0.43,0.54,collTag + "  #sqrt{s_{NN}} = 2.76 TeV");
+   // //lt1->DrawLatex(0.43,0.54,"pp  #sqrt{s} = 5.02 TeV");
+   // lt1->DrawLatex(0.43,0.54,collTag + "  #sqrt{s_{NN}} = 5.02 TeV");
 
    // now take care of the data/mc ratio panel
    c1->cd();

@@ -8,20 +8,21 @@ process.source = cms.Source("EmptySource")
 
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1) )    
 
-PDFName = "twoGaussPlusPoly"
+PDFName = "twoGaussPlusPoly2"
 
 process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     # IO parameters:
-    InputFileNames = cms.vstring("file:/afs/cern.ch/user/e/echapon/workspace/public/tag_and_probe_2015data/tnpJPsi_Data_pp5TeV_AOD.root"),
+    #InputFileNames = cms.vstring("root://cms-xrd-global.cern.ch//store/group/phys_heavyions/dileptons/TNPTagAndProbe2015/Data2015/pp502TeV/TTrees/tnpJPsi_Data_pp5TeV_AOD.root"),
+    InputFileNames = cms.vstring("tnpJPsi_Data_pp5TeV_AOD.root"),
     InputDirectoryName = cms.string("tpTreeTrk"),
     InputTreeName = cms.string("fitter_tree"),
     OutputFileName = cms.string("tnp_Ana_STA_pp_RD.root"),
-    NumCPU = cms.uint32(4),
+    NumCPU = cms.uint32(25),
     # specifies wether to save the RooWorkspace containing the data for each bin and
     # the pdf object with the initial and final state snapshots
-    SaveWorkspace = cms.bool(True),
-    binsForMassPlots = cms.uint32(40),
-    #binnedFit = cms.bool(True),
+    SaveWorkspace = cms.bool(False),
+    binsForMassPlots = cms.uint32(50),
+    binnedFit = cms.bool(False),
     #binsForFit = cms.uint32(45),
     #WeightVariable = cms.string("weight"),
     
@@ -29,6 +30,7 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     Variables = cms.PSet(
         mass = cms.vstring("Tag-Probe Mass", "2.8", "3.4", "GeV/c^{2}"),
         pt = cms.vstring("Probe p_{T}", "0", "1000", "GeV/c"),
+        pair_pt = cms.vstring("Dimuon p_{T}", "0", "1000", "GeV/c"),
         eta = cms.vstring("Probe #eta", "-2.4", "2.4", ""),
         abseta = cms.vstring("Probe |#eta|", "0", "2.4", ""),
     ),
@@ -40,13 +42,13 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     # defines all the PDFs that will be available for the efficiency calculations; uses RooFit's "factory" syntax;
     # each pdf needs to define "signal", "backgroundPass", "backgroundFail" pdfs, "efficiency[0.9,0,1]" and "signalFractionInPassing[0.9]" are used for initial values  
     PDFs = cms.PSet(
-       twoGaussPlusPoly = cms.vstring(
-             "Gaussian::signal1(mass, mean[3.09,3.0,3.2], sigma[0.1,0.0,.3])",
-             "Gaussian::signal2(mass, mean1[3.1,3.05,3.25], sigma2[0.1,0.05,1.00])",
-             "SUM::signal(vFrac[0.8,0,1]*signal1, signal2)",
-             "Chebychev::backgroundPass(mass, {cP[0,-.5,.5], cP2[0,-.5,.5]})",
-             "Chebychev::backgroundFail(mass, {cF[0,-.5,.5], cF2[0,-.5,.5]})",
-             "efficiency[0.9,0,1]",
+       twoGaussPlusPoly2 = cms.vstring(
+             "Gaussian::signal1(mass, mean[3.1,3.0,3.2], sigma1[0.025, 0.005, 0.08])",
+             "Gaussian::signal2(mass, mean, sigma2[0.035, 0.008, 0.09])",
+             "SUM::signal(vFrac[0.9,0.0,1.0]*signal1, signal2)",
+             "Chebychev::backgroundPass(mass, {cP[0.0,-1.0,1.0], cP2[0.0,-1.0,1.0]})", ### good
+             "Chebychev::backgroundFail(mass, {cF[0.0,-1.0,1.0], cF2[0.0,-1.0,1.0]})", ### good
+             "efficiency[0.9,0.0,1.0]",
              "signalFractionInPassing[0.9]"
              ),
     ),
@@ -58,18 +60,16 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
             EfficiencyCategoryAndState = cms.vstring("isSTA","true"),
             UnbinnedVariables = cms.vstring("mass"),
             BinnedVariables = cms.PSet(
-              pt = cms.vdouble(2.1,2.5,3,3.5, 4,4.5, 5,6, 7,10, 30),
-              pair_pt = cms.vdouble(3.,30),
-              abseta = cms.vdouble(0, 1.6), 
+              pt = cms.vdouble(2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 6.0, 7.0, 10.0, 30.0),
+              pair_pt = cms.vdouble(3., 30),
+              abseta = cms.vdouble(0.0, 1.6), 
             ),
             BinToPDFmap = cms.vstring(PDFName)
         ),
-         STA_pt2 = cms.PSet(
+        STA_pt2 = cms.PSet(
             EfficiencyCategoryAndState = cms.vstring("isSTA","true"),
             UnbinnedVariables = cms.vstring("mass"),
             BinnedVariables = cms.PSet(
-               # pt = cms.vdouble(1.8,2.5,3.5, 4.5, 5.5, 30),
-               # pt = cms.vdouble(1.8,2.5,3.5, 5, 30),
                pt = cms.vdouble(1.8,2,2.5,3,3.5,4, 5,8, 30),
                pair_pt = cms.vdouble(3.,30),
                abseta = cms.vdouble(1.6, 2.4),
@@ -109,7 +109,7 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     )
 )
 
+
 process.fitness = cms.Path(
     process.TagProbeFitTreeAnalyzer
 )
-
