@@ -8,7 +8,7 @@ process.options   = cms.untracked.PSet( wantSummary = cms.untracked.bool(True) )
 process.MessageLogger.cerr.FwkReport.reportEvery = 1000
 
 process.source = cms.Source("PoolSource",
-    fileNames = cms.untracked.vstring('root://cms-xrd-global.cern.ch//store/hidata/HIRun2015/HIOniaTnP/AOD/PromptReco-v1/000/263/757/00000/5644B4D0-3CBC-E511-B07B-02163E013419.root'),
+    fileNames = cms.untracked.vstring('file:02324CA3-4799-E511-9865-02163E0134AB.root'),
 )
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )    
 
@@ -112,10 +112,16 @@ LowPtTriggerFlags = cms.PSet(
 TrigTagFlags = cms.PSet(HighPtTriggerFlags, LowPtTriggerFlags)
 
 TrigProbeFlags = cms.PSet(
-      HLTL1v0 = cms.string("!triggerObjectMatchesByPath('HLT_HIL1DoubleMu0_v*',1,0).empty()"),
+      HLTL1v0 = cms.string("(!triggerObjectMatchesByPath('HLT_HIL1DoubleMu0_v*',1,0).empty() || !triggerObjectMatchesByPath('HLT_HIL1DoubleMu0_part*',1,0).empty())"),
       HLTL1v1 = cms.string("!triggerObjectMatchesByFilter('hltHIDoubleMu0L1Filtered').empty()"),
-      HLTL1v2 = cms.string("(!triggerObjectMatchesByPath('HLT_HIL1DoubleMu0_v*',1,0).empty() && !triggerObjectMatchesByFilter('hltHIDoubleMu0L1Filtered').empty())"),
+      HLTL1v2 = cms.string("((!triggerObjectMatchesByPath('HLT_HIL1DoubleMu0_v*',1,0).empty() || !triggerObjectMatchesByPath('HLT_HIL1DoubleMu0_part*',1,0).empty()) && !triggerObjectMatchesByFilter('hltHIDoubleMu0L1Filtered').empty())"),
+      L1Seed = cms.string("!triggerObjectMatchesByCollection('hltL1extraParticles').empty() && triggerObjectMatchesByCollection('hltL1extraParticles').at(0).hasFilterLabel('hltL1sL1DoubleMu0BptxAND')"),
       )
+
+L1SeedVariables = cms.PSet(
+    l1SeedEta = cms.string("? !triggerObjectMatchesByCollection('hltL1extraParticles').empty() && triggerObjectMatchesByCollection('hltL1extraParticles').at(0).hasFilterLabel('hltL1sL1DoubleMu0BptxAND') ? triggerObjectMatchesByCollection('hltL1extraParticles').at(0).eta : -999"),
+    l1SeedPt = cms.string("? !triggerObjectMatchesByCollection('hltL1extraParticles').empty() && triggerObjectMatchesByCollection('hltL1extraParticles').at(0).hasFilterLabel('hltL1sL1DoubleMu0BptxAND') ? triggerObjectMatchesByCollection('hltL1extraParticles').at(0).pt : -999"),
+    )
 
 process.tagMuons = cms.EDFilter("PATMuonSelector",
     src = cms.InputTag("patMuonsWithTrigger"),
@@ -169,6 +175,8 @@ process.tpTree = cms.EDAnalyzer("TagProbeFitTreeProducer",
     arbitration   = cms.string("None"),
     # probe variables: all useful ones
     variables = cms.PSet(
+        L1Variables,
+        L1SeedVariables,
         KinematicVariables,
 	MuonIDVariables,
 	TrackQualityVariables,
@@ -189,6 +197,8 @@ process.tpTree = cms.EDAnalyzer("TagProbeFitTreeProducer",
        outerValidHits = cms.string("outerTrack.isNonnull && outerTrack.numberOfValidHits > 0"),
     ),
     tagVariables = cms.PSet(
+        L1Variables,
+        L1SeedVariables,
         KinematicVariables,
 	MuonIDVariables,
 	TrackQualityVariables,
@@ -284,6 +294,8 @@ process.tpTreeSta = process.tpTree.clone(
     tagProbePairs = "tpPairsSta",
     arbitration   = "OneProbe",
     variables = cms.PSet(
+        L1SeedVariables,
+        L1Variables,
         KinematicVariables, 
         StaOnlyVariables,
         ## track matching variables
@@ -301,6 +313,8 @@ process.tpTreeSta = process.tpTree.clone(
         StaTkSameCharge = cms.string("outerTrack.isNonnull && innerTrack.isNonnull && (outerTrack.charge == innerTrack.charge)"),
     ),
     tagVariables = cms.PSet(
+        L1SeedVariables,
+        L1Variables,
         CentralityVariables,
         pt = cms.string("pt"),
         eta = cms.string("eta"),
@@ -381,6 +395,8 @@ process.tpTreeTrk = cms.EDAnalyzer("TagProbeFitTreeProducer",
      arbitration   = cms.string("OneProbe"),
      # probe variables: all useful ones
      variables = cms.PSet(
+        L1SeedVariables,
+        L1Variables,
         KinematicVariables,
         StaOnlyVariables,
         dxyPVdzmin = cms.InputTag("muonDxyPVdzMinTrk","dxyPVdzmin"),
@@ -391,6 +407,8 @@ process.tpTreeTrk = cms.EDAnalyzer("TagProbeFitTreeProducer",
         outerValidHits  = cms.string("? outerTrack.isNull() ? 0 : outerTrack.numberOfValidHits > 0"),
      ),
      tagVariables = cms.PSet(
+        L1SeedVariables,
+        L1Variables,
         TrackQualityVariables,
         GlobalTrackQualityVariables,
         CentralityVariables,
