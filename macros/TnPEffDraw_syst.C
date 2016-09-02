@@ -42,27 +42,27 @@ using namespace std;
 
 // Choose the efficiency type.
 // Possible values: MUIDTRG, TRK, STA
-#define TRK
+#define MUIDTRG
 
 // pp or PbPb?
 bool isPbPb = true; // if true, will compute the centrality dependence
 TString collTag = "PbPb"; // isPbPb ? "PbPb" : "pp";
 
 // do the toy study for the correction factors? (only applies if MUIDTRG)
-bool doToys = true;
+bool doToys = false;
 
 // Location of the files
 const int nSyst = 1;//5;
 // the first file is for the nominal case, the following ones are for the systematics
 const char* fDataName[nSyst] = {
-   "tnp_Ana_RD_PbPb_MuonTrk_AllMB_isGlb.root",
+   "fits_PbPb/MuIdTrg/RD/tnp_Ana_RD_PbPb_MuonIDTrg_AllMB.root",
    // "/home/emilien/Documents/Postdoc_LLR/TagAndProbe/systs/massrange/pbpb_data/tnp_Ana_RD_PbPb_MuonIDTrg_AllMB.root",
    // "/home/emilien/Documents/Postdoc_LLR/TagAndProbe/systs/signalfcn/pbpb_data/tnp_Ana_RD_PbPb_MuonIDTrg_AllMB.root",
    // "/home/emilien/Documents/Postdoc_LLR/TagAndProbe/systs/bkgdfcn/pbpb_data/tnp_Ana_RD_PbPb_MuonIDTrg_AllMB.root",
    // "/home/emilien/Documents/Postdoc_LLR/TagAndProbe/systs/tagsel/pbpb_data/tnp_Ana_RD_PbPb_MuonIDTrg_AllMB.root",
 };
 const char* fMCName[nSyst] = {
-   "tnp_Ana_MC_PbPb_MuonTrk_AllMB_isGlb.root",
+   "fits_PbPb/MuIdTrg/MC/tnp_Ana_MC_PbPb_MuonIDTrg_AllMB.root",
    // "/home/emilien/Documents/Postdoc_LLR/TagAndProbe/systs/massrange/pbpb_mc/tnp_Ana_MC_PbPb_MuonIDTrg_AllMB.root",
    // "/home/emilien/Documents/Postdoc_LLR/TagAndProbe/systs/signalfcn/pbpb_mc/tnp_Ana_MC_PbPb_MuonIDTrg_AllMB.root",
    // "/home/emilien/Documents/Postdoc_LLR/TagAndProbe/systs/bkgdfcn/pbpb_mc/tnp_Ana_MC_PbPb_MuonIDTrg_AllMB.root",
@@ -87,8 +87,8 @@ const char* systName[nSyst] = {
 TString etaTag("MuIdTrg_etadep");
 TString absetaTag("MuIdTrg_absetadep");
 TString centTag("MuIdTrg_centdep");
-const int nAbsEtaBins = 4;
-TString ptTag[nAbsEtaBins] = {"MuIdTrg_abseta00_09", "MuIdTrg_abseta09_16", "MuIdTrg_abseta16_21", "MuIdTrg_abseta21_24"};
+const int nAbsEtaBins = 3;
+TString ptTag[nAbsEtaBins] = {"MuIdTrg_abseta00_12", "MuIdTrg_abseta12_21", "MuIdTrg_abseta21_24"};
 TString allTag("MuIdTrg_1bin");
 TString absetaVar("abseta");
 TString centVar("tag_hiBin");
@@ -100,11 +100,11 @@ const double sfrange = 0.55;
 #endif
 
 #ifdef STA
-TString etaTag("STA_etadep");
-TString absetaTag("STA_etadep");
-TString centTag("STA_centdep");
+TString etaTag("STA_eta");
+TString absetaTag("STA_abseta");
+TString centTag("STA_cent");
 const int nAbsEtaBins = 2;
-TString ptTag[nAbsEtaBins] = {"MuIdTrg_abseta00_16", "MuIdTrg_abseta16_24"};
+TString ptTag[nAbsEtaBins] = {"STA_pt1", "STA_pt2"};
 TString allTag("STA_1bin");
 TString absetaVar("abseta");
 TString centVar("tag_hiBin");
