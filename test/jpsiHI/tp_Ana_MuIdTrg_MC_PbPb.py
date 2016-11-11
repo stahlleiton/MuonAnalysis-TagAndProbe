@@ -12,35 +12,35 @@ PDFName = "cbGausPlusPol2"
 
 process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     # IO parameters:
-    InputFileNames = cms.vstring("file:/home/llr/cms/chapon/data_CMS/tag_and_probe_2015data/tnpJpsi_MC_PbPb_merged_pt03inf_wtNcoll.root"),
+    InputFileNames = cms.vstring("file:/afs/cern.ch/work/j/jmartinb/DataSets/HIRun2015/TagAndProbe/MC/PbPb/tnpJpsi_MC_PbPb_merged_pt03inf_wtNcoll_norm.root"),
     InputDirectoryName = cms.string("tpTree"),
     InputTreeName = cms.string("fitter_tree"),
     OutputFileName = cms.string("tnp_Ana_MC_PbPb_MuonIDTrg_AllMB.root"),
     #numbrer of CPUs to use for fitting
-    NumCPU = cms.uint32(25),
+    NumCPU = cms.uint32(16),
     # specifies wether to save the RooWorkspace containing the data for each bin and
     # the pdf object with the initial and final state snapshots
-    #binnedFit = cms.bool(True),
-    #binsForFit = cms.uint32(30),
-    #binsForMassPlots = cms.uint32(50),
-    binsForMassPlots = cms.uint32(50),
-    #binnedFit = cms.bool(True),
-    #binsForFit = cms.uint32(50),
-    WeightVariable = cms.string("weight"),
     SaveWorkspace = cms.bool(False),
+    binsForMassPlots = cms.uint32(50),
+    binnedFit = cms.bool(False),
+    #binsForFit = cms.uint32(50),
+    WeightVariable = cms.string("weight_norm"),
+    
     
     # defines all the real variables of the probes available in the input tree and intended for use in the efficiencies
     Variables = cms.PSet(
-                         mass             = cms.vstring("Tag-Probe Mass", "2.6", "3.4", "GeV/c^{2}"),
+                         mass             = cms.vstring("Tag-Probe Mass", "2.6", "3.5", "GeV/c^{2}"),
                          pt               = cms.vstring("Probe p_{T}", "0.0", "1000", "GeV/c"),
                          eta              = cms.vstring("Probe #eta", "-2.4", "2.4", ""),
                          abseta           = cms.vstring("Probe |#eta|", "0", "2.5", ""),
                          tag_hiBin        = cms.vstring("Centrality", "0", "200", ""),
-                         weight     = cms.vstring("weight","0","100000",""),
+                         weight_norm     = cms.vstring("weight_norm","0","100000",""),
     ),
     # defines all the discrete variables of the probes available in the input tree and intended for use in the efficiency calculations
     Categories = cms.PSet(
                           HybridSoftHI = cms.vstring("HybridSoftHI", "dummy[true=1,false=0]"),
+                          L1Filter  = cms.vstring("L1Filter", "dummy[true=1,false=0]"),
+                          L1Seed    = cms.vstring("L1Seed", "dummy[true=1,false=0]"),
                           HLTL1v0   = cms.vstring("HLTL1v0", "dummy[true=1,false=0]"),
                           HLTL1v1   = cms.vstring("HLTL1v1", "dummy[true=1,false=0]"),
                           HLTL1v2   = cms.vstring("HLTL1v2", "dummy[true=1,false=0]"),
@@ -51,23 +51,30 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     # defines all the PDFs that will be available for the efficiency calculations; uses RooFit's "factory" syntax;
     # each pdf needs to define "signal", "backgroundPass", "backgroundFail" pdfs, "efficiency[0.9,0,1]" and "signalFractionInPassing[0.9]" are used for initial values  
     PDFs = cms.PSet(
-      cbGausPlusPol2 = cms.vstring(
-        "Gaussian::signal1(mass, mean[3.1,3.0,3.2], sigma[0.02, 0.01, 0.1])",
-        "CBShape::signal2(mass, mean, sigma2[0.05, 0.005, 0.1], alpha[1.9, 0.2, 4.0], n[1.7, 0.5, 20.])",
-        "SUM::signal(frac[0.2,0,1]*signal1,signal2)",
-        "Chebychev::backgroundPass(mass, {cPass[0,-1.0,1.0], cPass2[0,-1.0,1.0]})",
-        "Chebychev::backgroundFail(mass, {cFail[0,-1.0,1.0], cFail2[0,-1.0,1.0]})",
-        "efficiency[0.8,0,1]",
+      cbPlusPol2 = cms.vstring(
+        "CBShape::signal(mass, mean[3.08,3.06,3.1], sigma[0.03, 0.01, 0.06], alpha[1.85, 1.1, 2.7], n[1.7, 1.2, 3.5])",
+        "Chebychev::backgroundPass(mass, {cPass[0.,-1.1,1.1], cPass2[0.,-1.1,1.1]})",
+        "Chebychev::backgroundFail(mass, {cFail[0.,-1.1,1.1], cFail2[0.,-1.1,1.1]})",
+        "efficiency[0.9,0,1]",
         "signalFractionInPassing[0.9]"
       ),
+      cbGausPlusPol2 = cms.vstring(
+        "CBShape::signal1(mass, mean[3.08,3.06,3.1], sigma1[0.03, 0.01, 0.06], alpha[1.85, 1.1, 2.7], n[1.7, 1.2, 3.5])",
+        "RooFormulaVar::sigma2('@0*@1',{fracS[1.8,1.2,2.4],sigma1})",
+        "Gaussian::signal2(mass, mean, sigma2)",
+        "SUM::signal(frac[0.8,0.5,1.]*signal1,signal2)",
+        "Chebychev::backgroundPass(mass, {cPass[0.,-1.1,1.1], cPass2[0.,-1.1,1.1]})",
+        "Chebychev::backgroundFail(mass, {cFail[0.,-1.1,1.1], cFail2[0.,-1.1,1.1]})",
+        "efficiency[0.9,0,1]",
+        "signalFractionInPassing[0.9]"
+                                                 ),
     ),
     # defines a set of efficiency calculations, what PDF to use for fitting and how to bin the data;
     # there will be a separate output directory for each calculation that includes a simultaneous fit, side band subtraction and counting. 
     Efficiencies = cms.PSet(
             MuIdTrg_1bin = cms.PSet(
                 EfficiencyCategoryAndState = cms.vstring("HybridSoftHI","true","HLTL1v0","true","HLTL1v1","true","HLTL1v2","true","dxyPVdzmin","true","dzPV","true"),
-                # EfficiencyCategoryAndState = cms.vstring("HybridSoftHI","true","dxyPVdzmin","true","dzPV","true"),
-                UnbinnedVariables = cms.vstring("mass"),
+                UnbinnedVariables = cms.vstring("mass","weight_norm"),
                 BinnedVariables = cms.PSet(
                     pt = cms.vdouble(1.8, 30),
                     eta = cms.vdouble(-2.4, 2.4),
@@ -76,58 +83,61 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
             ),
             MuIdTrg_abseta00_12 = cms.PSet(
                 EfficiencyCategoryAndState = cms.vstring("HybridSoftHI","true","HLTL1v0","true","HLTL1v1","true","HLTL1v2","true","dxyPVdzmin","true","dzPV","true"),
-                # EfficiencyCategoryAndState = cms.vstring("HybridSoftHI","true","dxyPVdzmin","true","dzPV","true"),
-                UnbinnedVariables = cms.vstring("mass"),
+                UnbinnedVariables = cms.vstring("mass","weight_norm"),
                 BinnedVariables = cms.PSet(
-                    pt = cms.vdouble(3.5, 4, 4.5, 5, 5.5, 6.5, 30),
-                    eta = cms.vdouble(0, 1.2),
+                    pt = cms.vdouble(3.5, 4, 4.5, 5, 5.5, 6.5, 8., 10.5, 12.5, 30.),
+                    abseta = cms.vdouble(0, 1.2),
                 ),
                 BinToPDFmap = cms.vstring(PDFName)
             ),
-            MuIdTrg_abseta12_21 = cms.PSet(
+            MuIdTrg_abseta12_18 = cms.PSet(
                 EfficiencyCategoryAndState = cms.vstring("HybridSoftHI","true","HLTL1v0","true","HLTL1v1","true","HLTL1v2","true","dxyPVdzmin","true","dzPV","true"),
-                # EfficiencyCategoryAndState = cms.vstring("HybridSoftHI","true","dxyPVdzmin","true","dzPV","true"),
-                UnbinnedVariables = cms.vstring("mass"),
+                UnbinnedVariables = cms.vstring("mass","weight_norm"),
                 BinnedVariables = cms.PSet(
-                    pt = cms.vdouble(1.8, 2, 2.5, 3, 3.5, 4, 4.5, 5.5, 30),
-                    eta = cms.vdouble(1.2,2.1),
+                    pt = cms.vdouble(2.37, 3.0, 3.5, 4, 4.5, 5., 6., 7.5, 12.5, 30),
+                    abseta = cms.vdouble(1.2,1.8),
+                 ),
+                 BinToPDFmap = cms.vstring(PDFName)
+            ),
+            MuIdTrg_abseta18_21 = cms.PSet(
+               EfficiencyCategoryAndState = cms.vstring("HybridSoftHI","true","HLTL1v0","true","HLTL1v1","true","HLTL1v2","true","dxyPVdzmin","true","dzPV","true"),
+                UnbinnedVariables = cms.vstring("mass","weight_norm"),
+                BinnedVariables = cms.PSet(
+                    pt = cms.vdouble(1.8, 2, 2.5, 3, 3.5, 4, 4.5, 5.5, 7., 12.5, 30),
+                    abseta = cms.vdouble(1.8,2.1),
                 ),
                 BinToPDFmap = cms.vstring(PDFName)
             ),
             MuIdTrg_abseta21_24 = cms.PSet(
                 EfficiencyCategoryAndState = cms.vstring("HybridSoftHI","true","HLTL1v0","true","HLTL1v1","true","HLTL1v2","true","dxyPVdzmin","true","dzPV","true"),
-                # EfficiencyCategoryAndState = cms.vstring("HybridSoftHI","true","dxyPVdzmin","true","dzPV","true"),
-                UnbinnedVariables = cms.vstring("mass"),
+                UnbinnedVariables = cms.vstring("mass","weight_norm"),
                 BinnedVariables = cms.PSet(
-                    pt = cms.vdouble(1.8, 2, 2.5, 3, 3.5, 4, 5, 30),
-                    eta = cms.vdouble(2.1,2.4),
+                    pt = cms.vdouble(1.8, 2.2, 2.7, 3.2, 3.7, 4.7, 8., 30.),
+                    abseta = cms.vdouble(2.1,2.4),
                 ),
                 BinToPDFmap = cms.vstring(PDFName)
             ),
             MuIdTrg_absetadep = cms.PSet(
                 EfficiencyCategoryAndState = cms.vstring("HybridSoftHI","true","HLTL1v0","true","HLTL1v1","true","HLTL1v2","true","dxyPVdzmin","true","dzPV","true"),
-                # EfficiencyCategoryAndState = cms.vstring("HybridSoftHI","true","dxyPVdzmin","true","dzPV","true"),
-                UnbinnedVariables = cms.vstring("mass"),
+                UnbinnedVariables = cms.vstring("mass","weight_norm"),
                 BinnedVariables = cms.PSet(
                     pt = cms.vdouble(1.8, 30),
-                    abseta = cms.vdouble(0,1.2,2.1,2.4),
+                    abseta = cms.vdouble(0,1.2,1.8,2.1,2.4),
                 ),
                 BinToPDFmap = cms.vstring(PDFName)
             ),
             MuIdTrg_etadep = cms.PSet(
                 EfficiencyCategoryAndState = cms.vstring("HybridSoftHI","true","HLTL1v0","true","HLTL1v1","true","HLTL1v2","true","dxyPVdzmin","true","dzPV","true"),
-                # EfficiencyCategoryAndState = cms.vstring("HybridSoftHI","true","dxyPVdzmin","true","dzPV","true"),
-                UnbinnedVariables = cms.vstring("mass"),
+                UnbinnedVariables = cms.vstring("mass","weight_norm"),
                 BinnedVariables = cms.PSet(
                     pt = cms.vdouble(1.8, 30),
-                    eta = cms.vdouble(-2.4,-2.1,-1.6,-1.2,-0.9,0,0.9,1.2,1.6,2.1,2.4),
+                    eta = cms.vdouble(-2.4,-2.1,-1.6,-1.2,-0.9,-0.6,-0.3,0,0.3,0.6,0.9,1.2,1.6,2.1,2.4),
                 ),
                 BinToPDFmap = cms.vstring(PDFName)
             ),
             MuIdTrg_centdep = cms.PSet(
                 EfficiencyCategoryAndState = cms.vstring("HybridSoftHI","true","HLTL1v0","true","HLTL1v1","true","HLTL1v2","true","dxyPVdzmin","true","dzPV","true"),
-                # EfficiencyCategoryAndState = cms.vstring("HybridSoftHI","true","dxyPVdzmin","true","dzPV","true"),
-                UnbinnedVariables = cms.vstring("mass"),
+                UnbinnedVariables = cms.vstring("mass","weight_norm"),
                 BinnedVariables = cms.PSet(
                     pt = cms.vdouble(1.8, 30),
                     eta = cms.vdouble(-2.4,2.4),
