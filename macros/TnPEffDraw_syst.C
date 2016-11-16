@@ -461,7 +461,7 @@ void TnPEffDraw_syst() {
               if (!fitres) fitres = (RooFitResult*) fMC[0]->Get(cutTag + "/" + ptTag[i] + "/" + tag + Form("%i__GaussPlusPoly/fitresults",j));
               if (!fitres) fitres = (RooFitResult*) fMC[0]->Get(cutTag + "/" + ptTag[i] + "/" + tag + Form("%i__GaussPlusPoly2/fitresults",j));
               if (!fitres) cerr << "ERROR I couldn't find the fit results! Expect a crash soon..." << endl;
-              tntot[j] = ((RooRealVar*) fitres->floatParsFinal().find("numSignalAll"))->getVal();
+              tntot[j] = ((RooRealVar*) fitres->floatParsFinal().find("numTot"))->getVal() * (((RooRealVar*) fitres->floatParsFinal().find("fSigAll"))->getVal());
               delete fitres;
            }
            ComPt0_forRatio = plotEff_1bin(daPtData0[k][i], 1, "pt", nbins_mc/nbins, tntot);
