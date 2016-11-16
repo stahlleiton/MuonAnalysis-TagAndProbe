@@ -8,11 +8,11 @@ process.source = cms.Source("EmptySource")
 
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1) )    
 
-PDFName = "cbGausPlusPol2"
+PDFName = "cbPlusPol1"
 
 process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     # IO parameters:
-    InputFileNames = cms.vstring("file:/afs/cern.ch/work/j/jmartinb/DataSets/HIRun2015/TagAndProbe/Data/PbPb/tnpJPsi_Data_PbPb_AOD.root"),
+    InputFileNames = cms.vstring("file:/afs/cern.ch/user/o/okukral/TnP/Data/tnpJPsi_Data_PbPb_AOD.root"),
     InputDirectoryName = cms.string("tpTree"),
     InputTreeName = cms.string("fitter_tree"),
     OutputFileName = cms.string("tnp_Ana_RD_PbPb_MuonIDTrg_AllMB.root"),
@@ -65,6 +65,23 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
         "SUM::signal(frac[0.8,0.5,1.]*signal1,signal2)",
         "Chebychev::backgroundPass(mass, {cPass[0.,-1.1,1.1], cPass2[0.,-1.1,1.1]})",
         "Chebychev::backgroundFail(mass, {cFail[0.,-1.1,1.1], cFail2[0.,-1.1,1.1]})",
+        "efficiency[0.9,0,1]",
+        "signalFractionInPassing[0.9]"
+      ),
+      cbPlusPol1 = cms.vstring(
+        "CBShape::signal(mass, mean[3.08,3.06,3.1], sigma[0.03, 0.01, 0.06], alpha[1.85, 1.1, 2.7], n[1.7, 1.2, 3.5])",
+        "Chebychev::backgroundPass(mass, {cPass[0.,-1.1,1.1]})",
+        "Chebychev::backgroundFail(mass, {cFail[0.,-1.1,1.1]})",
+        "efficiency[0.9,0,1]",
+        "signalFractionInPassing[0.9]"
+      ),
+      cbGausPlusPol1 = cms.vstring(
+        "CBShape::signal1(mass, mean[3.08,3.06,3.1], sigma1[0.03, 0.01, 0.06], alpha[1.85, 1.1, 2.7], n[1.7, 1.2, 3.5])",
+        "RooFormulaVar::sigma2('@0*@1',{fracS[1.8,1.2,2.4],sigma1})",
+        "Gaussian::signal2(mass, mean, sigma2)",
+        "SUM::signal(frac[0.8,0.5,1.]*signal1,signal2)",
+        "Chebychev::backgroundPass(mass, {cPass[0.,-1.1,1.1]})",
+        "Chebychev::backgroundFail(mass, {cFail[0.,-1.1,1.1]})",
         "efficiency[0.9,0,1]",
         "signalFractionInPassing[0.9]"
       ),
