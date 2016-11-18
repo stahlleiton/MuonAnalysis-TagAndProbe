@@ -42,27 +42,34 @@ using namespace std;
 
 // Choose the efficiency type.
 // Possible values: MUIDTRG, TRK, STA
-#define MUIDTRG
+#define STA
 
 // pp or PbPb?
-bool isPbPb = true; // if true, will compute the centrality dependence
+bool isPbPb = false; // if true, will compute the centrality dependence
 TString collTag = "PbPb"; // isPbPb ? "PbPb" : "pp";
 
 // do the toy study for the correction factors? (only applies if MUIDTRG)
 bool doToys = false;
 
+// how to fit efficiencies?
+// 0 = [0]*Erf((x-[1])/[2])
+// 1 = [0]*Erf((x-[1])/[2]) + [3]
+// 2 = ([0]*Erf((x-[1])/[2]) + [3])*Exp(x/[4])
+int fitfcn = 2;
+
 // Location of the files
 const int nSyst = 1;//5;
 // the first file is for the nominal case, the following ones are for the systematics
 const char* fDataName[nSyst] = {
-   "fits_PbPb/MuIdTrg/RD/tnp_Ana_RD_PbPb_MuonIDTrg_AllMB.root",
+   "/afs/cern.ch/user/v/vabdulla/public/TnPCheck/tnp_Ana_STA_pp_RD_18eta_12Nov2016_less.root",
    // "/home/emilien/Documents/Postdoc_LLR/TagAndProbe/systs/massrange/pbpb_data/tnp_Ana_RD_PbPb_MuonIDTrg_AllMB.root",
    // "/home/emilien/Documents/Postdoc_LLR/TagAndProbe/systs/signalfcn/pbpb_data/tnp_Ana_RD_PbPb_MuonIDTrg_AllMB.root",
    // "/home/emilien/Documents/Postdoc_LLR/TagAndProbe/systs/bkgdfcn/pbpb_data/tnp_Ana_RD_PbPb_MuonIDTrg_AllMB.root",
    // "/home/emilien/Documents/Postdoc_LLR/TagAndProbe/systs/tagsel/pbpb_data/tnp_Ana_RD_PbPb_MuonIDTrg_AllMB.root",
 };
 const char* fMCName[nSyst] = {
-   "fits_PbPb/MuIdTrg/MC/tnp_Ana_MC_PbPb_MuonIDTrg_AllMB.root",
+   // "fits_PbPb/MuIdTrg/MC/tnp_Ana_MC_PbPb_MuonIDTrg_AllMB.root",
+   "/afs/cern.ch/user/v/vabdulla/public/TnPCheck/tnp_Ana_STA_pp_MC_18eta_15Nov2016_2xpT.root",
    // "/home/emilien/Documents/Postdoc_LLR/TagAndProbe/systs/massrange/pbpb_mc/tnp_Ana_MC_PbPb_MuonIDTrg_AllMB.root",
    // "/home/emilien/Documents/Postdoc_LLR/TagAndProbe/systs/signalfcn/pbpb_mc/tnp_Ana_MC_PbPb_MuonIDTrg_AllMB.root",
    // "/home/emilien/Documents/Postdoc_LLR/TagAndProbe/systs/bkgdfcn/pbpb_mc/tnp_Ana_MC_PbPb_MuonIDTrg_AllMB.root",
@@ -87,8 +94,8 @@ const char* systName[nSyst] = {
 TString etaTag("MuIdTrg_etadep");
 TString absetaTag("MuIdTrg_absetadep");
 TString centTag("MuIdTrg_centdep");
-const int nAbsEtaBins = 3;
-TString ptTag[nAbsEtaBins] = {"MuIdTrg_abseta00_12", "MuIdTrg_abseta12_21", "MuIdTrg_abseta21_24"};
+const int nAbsEtaBins = 4;
+TString ptTag[nAbsEtaBins] = {"MuIdTrg_abseta00_12", "MuIdTrg_abseta12_18", "MuIdTrg_abseta18_21", "MuIdTrg_abseta21_24"};
 TString allTag("MuIdTrg_1bin");
 TString absetaVar("abseta");
 TString centVar("tag_hiBin");
@@ -103,8 +110,8 @@ const double sfrange = 0.55;
 TString etaTag("STA_eta");
 TString absetaTag("STA_abseta");
 TString centTag("STA_cent");
-const int nAbsEtaBins = 2;
-TString ptTag[nAbsEtaBins] = {"STA_pt1", "STA_pt2"};
+const int nAbsEtaBins = 4;
+TString ptTag[nAbsEtaBins] = {"STA_pt1", "STA_pt2", "STA_pt3", "STA_pt4"};
 TString allTag("STA_1bin");
 TString absetaVar("abseta");
 TString centVar("tag_hiBin");
@@ -142,6 +149,9 @@ void formatTLeg(TLegend* a);
 void CalEffErr(TGraph *a, double *b);
 void CalEffErr(vector<TGraphAsymmErrors*> a, double **b);
 void plotSysts(TGraphAsymmErrors *graphs[nSyst], TCanvas *c1, TPad *p1, TH1F *h1, TPad *pr, TH1F *hr, TString header, TString tag);
+TString formula(TF1 *f);
+TF1 *initfcn(const char* fname, int ifcn, double ptmin, double ptmax, double effguess);
+TF1 *ratiofunc(const char* fname, TF1 *fnum, TF1 *fden);
 
 // From here you need to set up your environments.
 void TnPEffDraw_syst() {
@@ -445,21 +455,21 @@ void TnPEffDraw_syst() {
         TGraphAsymmErrors* ComPt0_forRatio = NULL;
         if (nbins_mc == nbins) {
            ComPt0_forRatio = ComPt0[k][i];
-        }
-        else {
+        } else {
            double* tntot = new double[nbins_mc];
            TString tag = absetaVar + "_bin0__pt_bin";
            for (int j=0; j<nbins_mc; j++) {
-              RooFitResult *fitres = (RooFitResult*) fMC[0]->Get(cutTag + "/" + ptTag[i] + "/" + tag + Form("%i__cbGausPlusExpo/fitresults",j));
-              if (!fitres) fitres = (RooFitResult*) fMC[0]->Get(cutTag + "/" + ptTag[i] + "/" + tag + Form("%i__cbPlusPoly1/fitresults",j));
-              if (!fitres) fitres = (RooFitResult*) fMC[0]->Get(cutTag + "/" + ptTag[i] + "/" + tag + Form("%i__cbPlusPoly2/fitresults",j));
-              if (!fitres) fitres = (RooFitResult*) fMC[0]->Get(cutTag + "/" + ptTag[i] + "/" + tag + Form("%i__cbGausPlusPoly/fitresults",j));
-              if (!fitres) fitres = (RooFitResult*) fMC[0]->Get(cutTag + "/" + ptTag[i] + "/" + tag + Form("%i__cbPlusPoly2nd/fitresults",j));
-              if (!fitres) fitres = (RooFitResult*) fMC[0]->Get(cutTag + "/" + ptTag[i] + "/" + tag + Form("%i__cbPlusPoly3rd/fitresults",j));
-              if (!fitres) fitres = (RooFitResult*) fMC[0]->Get(cutTag + "/" + ptTag[i] + "/" + tag + Form("%i__cbPlusExpo/fitresults",j));
-              if (!fitres) fitres = (RooFitResult*) fMC[0]->Get(cutTag + "/" + ptTag[i] + "/" + tag + Form("%i__GaussPlusExpo/fitresults",j));
-              if (!fitres) fitres = (RooFitResult*) fMC[0]->Get(cutTag + "/" + ptTag[i] + "/" + tag + Form("%i__GaussPlusPoly/fitresults",j));
-              if (!fitres) fitres = (RooFitResult*) fMC[0]->Get(cutTag + "/" + ptTag[i] + "/" + tag + Form("%i__GaussPlusPoly2/fitresults",j));
+              RooFitResult *fitres = NULL;
+              // Loop on the directories to find the one we are looking for
+              TDirectory *tdir = (TDirectory*) fMC[0]->Get(cutTag + "/" + ptTag[i]);
+              TIter next(tdir->GetListOfKeys()); TObject *obj;
+              while ((obj = next())) {
+                 obj = ((TKey*) obj)->ReadObj();
+                 if (TString(obj->ClassName()) != "TDirectoryFile") continue;
+                 if (TString(obj->GetName()).Contains(Form("__pt_bin%i",j))) {tdir = (TDirectory*) obj; break;}
+              }
+
+              fitres = (RooFitResult*) tdir->Get("fitresults");
               if (!fitres) cerr << "ERROR I couldn't find the fit results! Expect a crash soon..." << endl;
               tntot[j] = ((RooRealVar*) fitres->floatParsFinal().find("numTot"))->getVal() * (((RooRealVar*) fitres->floatParsFinal().find("fSigAll"))->getVal());
               delete fitres;
@@ -502,17 +512,11 @@ void TnPEffDraw_syst() {
 
         if (k==0) {
            // fit data
-           fdata = new TF1("fdata","[0]*TMath::Erf((x-[1])/[2])",ptmin,ptmax);
-           fdata->SetParNames("eff0","x0","m");
-           // Initialize the normalization to the efficiency in the last point
-           fdata->SetParameters(ComPt1[k][i]->GetX()[ComPt1[k][i]->GetN()-1],0.1,1.0);
-           fdata->SetParLimits(0,0,1);
-           fdata->SetParLimits(1,0.,10.);
-           fdata->SetParLimits(2,0,10.);
+           fdata = initfcn("fdata",fitfcn,ptmin,ptmax,ComPt1[k][i]->GetX()[ComPt1[k][i]->GetN()-1]);
            fdata->SetLineWidth(2);
            fdata->SetLineColor(kBlue);
-           ComPt1[k][i]->Fit(fdata,"WRME");
-           leg1->AddEntry(fdata,Form("%0.2f*TMath::Erf((x-%0.2f)/%0.2f)",fdata->GetParameter(0),fdata->GetParameter(1),fdata->GetParameter(2)),"pl");
+           ComPt1[k][i]->Fit(fdata,"RME");
+           leg1->AddEntry(fdata,formula(fdata),"pl");
 
            chi2 = ComPt1[k][i]->Chisquare(fdata);
            dof = ComPt1[k][i]->GetN() - fdata->GetNpar();
@@ -526,8 +530,8 @@ void TnPEffDraw_syst() {
            if (isPbPb) fmc->SetParameters(ComPt0[k][i]->GetX()[ComPt0[k][i]->GetN()-1],0.5,2.5); 
            else fmc->SetParameters(ComPt0[k][i]->GetX()[ComPt0[k][i]->GetN()-1],2.2,1.5); 
            fmc->SetLineColor(kRed);
-           ComPt0[k][i]->Fit(fmc,"WRME");
-           leg1->AddEntry(fmc,Form("%0.2f*TMath::Erf((x-%0.2f)/%0.2f)",fmc->GetParameter(0),fmc->GetParameter(1),fmc->GetParameter(2)),"pl");
+           ComPt0[k][i]->Fit(fmc,"RME");
+           leg1->AddEntry(fmc,formula(fmc),"pl");
 
            chi2 = ComPt0[k][i]->Chisquare(fmc);
            dof = ComPt0[k][i]->GetN() - fmc->GetNpar();
@@ -540,11 +544,7 @@ void TnPEffDraw_syst() {
            // now the bottom panel
            pad2->cd();
            // hPadr->Draw();
-           TF1 *fratio = new TF1("fratio","[0]*TMath::Erf((x-[1])/[2])/([3]*TMath::Erf((x-[4])/[5]))",ptmin,ptmax);
-           fratio->SetParameters(
-                 fdata->GetParameter(0),fdata->GetParameter(1),fdata->GetParameter(2),
-                 fmc->GetParameter(0),fmc->GetParameter(1),fmc->GetParameter(2)
-                 );
+           TF1 *fratio = ratiofunc("fratio",fdata,fmc);
            fratio->Draw("same");
 
            chi2 = gratio->Chisquare(fratio);
@@ -560,9 +560,9 @@ void TnPEffDraw_syst() {
 
            // print the fit results to file
            file_sfs << "Data " << etamin << " " << etamax << endl;
-           file_sfs << Form("%0.4f*TMath::Erf((x-%0.4f)/%0.4f)",fdata->GetParameter(0),fdata->GetParameter(1),fdata->GetParameter(2)) << endl;
+           file_sfs << formula(fdata)  << endl;
            file_sfs << "MC " << etamin << " " << etamax << endl;
-           file_sfs << Form("%0.4f*TMath::Erf((x-%0.4f)/%0.4f)",fmc->GetParameter(0),fmc->GetParameter(1),fmc->GetParameter(2)) << endl;
+           file_sfs << formula(fmc) << endl;
            file_sfs << endl;
         }
      }
@@ -1111,4 +1111,67 @@ void plotSysts(TGraphAsymmErrors *graphs[nSyst], TCanvas *c1, TPad *p1, TH1F *h1
    // save
    c1->SaveAs(tag + ".root");
    c1->SaveAs(tag + ".pdf");
+}
+
+TString formula(TF1 *f) {
+   TString ans = f->GetExpFormula();
+   for (int i=0; i<f->GetNpar(); i++) {
+      ans = ans.ReplaceAll(Form("[p%i]",i),Form("%.2f",f->GetParameter(i)));
+      ans = ans.ReplaceAll(Form("[%i]",i),Form("%.2f",f->GetParameter(i)));
+   }
+   return ans;
+}
+
+TF1 *initfcn(const char* fname, int ifcn, double ptmin, double ptmax, double effguess) {
+   TString formula;
+   if (ifcn==0) formula = "[0]*TMath::Erf((x-[1])/[2])";
+   else if (ifcn==1) formula = "[0]*TMath::Erf((x-[1])/[2])+[3]";
+   else formula = "[0]*TMath::Erf((x-[1])/[2])*(1.-[4]*TMath::Erf((x-[5])/[6]))+[3]";
+   TF1 *ans = new TF1(fname,formula,ptmin,ptmax);
+   if (ifcn==0) {
+      ans->SetParNames("eff0","x0","m");
+      // Initialize the normalization to the efficiency in the last point
+      ans->SetParLimits(0,0,1);
+      ans->SetParLimits(1,0.,10.);
+      ans->SetParLimits(2,0,10.);
+      ans->SetParameters(effguess,0.1,1.0);
+   } else if (ifcn==1) {
+      ans->SetParNames("eff0","x0","m","cst");
+      // Initialize the normalization to the efficiency in the last point
+      ans->SetParLimits(0,0,1);
+      ans->SetParLimits(1,0.,10.);
+      ans->SetParLimits(2,0,10.);
+      ans->SetParLimits(3,-1.,1.);
+      ans->SetParameters(effguess,0.1,1.0,0.);
+   } else if (ifcn==2) {
+      ans->SetParNames("eff0","x0","m","cst","fall0","fallx0","fallm");
+      // Initialize the normalization to the efficiency in the last point
+      ans->SetParLimits(0,0,1);
+      ans->SetParLimits(1,0.,10.);
+      ans->SetParLimits(2,0,10.);
+      ans->SetParLimits(3,-1.,1.);
+      ans->SetParLimits(4,0,1.);
+      ans->SetParLimits(5,0,100);
+      ans->SetParLimits(6,0,100);
+      ans->SetParameters(effguess,0.1,1.0,0.,0.1,15.,5.);
+   }
+   return ans;
+}
+
+TF1 *ratiofunc(const char* fname, TF1 *fnum, TF1 *fden) {
+   TString formnum = fnum->GetExpFormula();
+   TString formden = fden->GetExpFormula();
+   int nparnum = fnum->GetNpar();
+   int nparden = fden->GetNpar();
+   int npartot = nparnum+nparden;
+   // replace the names of the parameters of the denominator
+   for (int i=0; i<nparden; i++) {
+      formden.ReplaceAll(Form("[p%i]",i),Form("[%i]",i+nparnum));
+      formden.ReplaceAll(Form("[%i]",i),Form("[%i]",i+nparnum));
+   }
+   double xmin, xmax; fnum->GetRange(xmin,xmax);
+   TF1 *ans = new TF1(fname,formnum + "/" + formden, xmin,xmax);
+   for (int i=0; i<nparnum; i++) ans->SetParameter(i,fnum->GetParameter(i));
+   for (int i=0; i<nparden; i++) ans->SetParameter(i+nparnum, fden->GetParameter(i));
+   return ans;
 }
