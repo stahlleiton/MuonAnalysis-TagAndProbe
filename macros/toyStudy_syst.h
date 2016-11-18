@@ -18,6 +18,8 @@
 
 const int nToys = 100;
 
+TString formula(TF1 *f);
+
 double assym_gaus(double *x, double *par) {
    double mean = par[0];
    double sigmal = par[1];
@@ -298,5 +300,14 @@ void toyStudy(int nsyst, TGraphAsymmErrors **gdata, TGraphAsymmErrors **gmc, TF1
    delete cdata, cmc;
    delete cdata_dists, cmc_dists;
 };
+
+TString formula(TF1 *f) {
+   TString ans = f->GetExpFormula();
+   for (int i=0; i<f->GetNpar(); i++) {
+      ans = ans.ReplaceAll(Form("[p%i]",i),Form("%.2f",f->GetParameter(i)));
+      ans = ans.ReplaceAll(Form("[%i]",i),Form("%.2f",f->GetParameter(i)));
+   }
+   return ans;
+}
 
 #endif // #ifndef toyStudy_h

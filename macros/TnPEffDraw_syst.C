@@ -55,7 +55,7 @@ bool doToys = false;
 // 0 = [0]*Erf((x-[1])/[2])
 // 1 = [0]*Erf((x-[1])/[2]) + [3]
 // 2 = ([0]*Erf((x-[1])/[2]) + [3])*Exp(x/[4])
-int fitfcn = 2;
+int fitfcn = 0;
 
 // Location of the files
 const int nSyst = 1;//5;
@@ -149,7 +149,6 @@ void formatTLeg(TLegend* a);
 void CalEffErr(TGraph *a, double *b);
 void CalEffErr(vector<TGraphAsymmErrors*> a, double **b);
 void plotSysts(TGraphAsymmErrors *graphs[nSyst], TCanvas *c1, TPad *p1, TH1F *h1, TPad *pr, TH1F *hr, TString header, TString tag);
-TString formula(TF1 *f);
 TF1 *initfcn(const char* fname, int ifcn, double ptmin, double ptmax, double effguess);
 TF1 *ratiofunc(const char* fname, TF1 *fnum, TF1 *fden);
 
@@ -1111,15 +1110,6 @@ void plotSysts(TGraphAsymmErrors *graphs[nSyst], TCanvas *c1, TPad *p1, TH1F *h1
    // save
    c1->SaveAs(tag + ".root");
    c1->SaveAs(tag + ".pdf");
-}
-
-TString formula(TF1 *f) {
-   TString ans = f->GetExpFormula();
-   for (int i=0; i<f->GetNpar(); i++) {
-      ans = ans.ReplaceAll(Form("[p%i]",i),Form("%.2f",f->GetParameter(i)));
-      ans = ans.ReplaceAll(Form("[%i]",i),Form("%.2f",f->GetParameter(i)));
-   }
-   return ans;
 }
 
 TF1 *initfcn(const char* fname, int ifcn, double ptmin, double ptmax, double effguess) {
