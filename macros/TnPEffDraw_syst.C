@@ -42,7 +42,7 @@ using namespace std;
 
 // Choose the efficiency type.
 // Possible values: MUIDTRG, TRK, STA
-#define STA
+#define MUIDTRG
 
 // pp or PbPb?
 bool isPbPb = false; // if true, will compute the centrality dependence
@@ -61,7 +61,7 @@ int fitfcn = 0;
 const int nSyst = 1;//5;
 // the first file is for the nominal case, the following ones are for the systematics
 const char* fDataName[nSyst] = {
-   "/afs/cern.ch/user/v/vabdulla/public/TnPCheck/tnp_Ana_STA_pp_RD_18eta_12Nov2016_less.root",
+   "/tmp/chapon/tnp_Ana_RD_PbPb_MuonIDTrg_AllMB.root",
    // "/home/emilien/Documents/Postdoc_LLR/TagAndProbe/systs/massrange/pbpb_data/tnp_Ana_RD_PbPb_MuonIDTrg_AllMB.root",
    // "/home/emilien/Documents/Postdoc_LLR/TagAndProbe/systs/signalfcn/pbpb_data/tnp_Ana_RD_PbPb_MuonIDTrg_AllMB.root",
    // "/home/emilien/Documents/Postdoc_LLR/TagAndProbe/systs/bkgdfcn/pbpb_data/tnp_Ana_RD_PbPb_MuonIDTrg_AllMB.root",
@@ -69,7 +69,7 @@ const char* fDataName[nSyst] = {
 };
 const char* fMCName[nSyst] = {
    // "fits_PbPb/MuIdTrg/MC/tnp_Ana_MC_PbPb_MuonIDTrg_AllMB.root",
-   "/afs/cern.ch/user/v/vabdulla/public/TnPCheck/tnp_Ana_STA_pp_MC_18eta_15Nov2016_2xpT.root",
+   "/tmp/chapon/tnp_Ana_MC_PbPb_MuonIDTrg_AllMB_Pol1.root",
    // "/home/emilien/Documents/Postdoc_LLR/TagAndProbe/systs/massrange/pbpb_mc/tnp_Ana_MC_PbPb_MuonIDTrg_AllMB.root",
    // "/home/emilien/Documents/Postdoc_LLR/TagAndProbe/systs/signalfcn/pbpb_mc/tnp_Ana_MC_PbPb_MuonIDTrg_AllMB.root",
    // "/home/emilien/Documents/Postdoc_LLR/TagAndProbe/systs/bkgdfcn/pbpb_mc/tnp_Ana_MC_PbPb_MuonIDTrg_AllMB.root",
@@ -1160,7 +1160,7 @@ TF1 *ratiofunc(const char* fname, TF1 *fnum, TF1 *fden) {
       formden.ReplaceAll(Form("[%i]",i),Form("[%i]",i+nparnum));
    }
    double xmin, xmax; fnum->GetRange(xmin,xmax);
-   TF1 *ans = new TF1(fname,formnum + "/" + formden, xmin,xmax);
+   TF1 *ans = new TF1(fname,TString("(") + formnum + ")/(" + formden + ")", xmin,xmax);
    for (int i=0; i<nparnum; i++) ans->SetParameter(i,fnum->GetParameter(i));
    for (int i=0; i<nparden; i++) ans->SetParameter(i+nparnum, fden->GetParameter(i));
    return ans;
