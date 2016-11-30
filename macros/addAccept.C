@@ -13,8 +13,8 @@ TTree* copyTree(TTree* told,int type) {
    int nentries = told->GetEntries();
    for (int i=0; i<nentries; i++) {
       told->GetEntry(i);
-      accept = ((abseta<1.2 && pt>3.5) ||(abseta>=1.2 && abseta<2.4 && pt>=4.5-1.25*abseta));
-      tag_accept = ((tag_abseta<1.2 && tag_pt>3.5) ||(tag_abseta>=1.2 && tag_abseta<2.4 && tag_pt>=4.5-1.25*tag_abseta));
+      accept = ((abseta<1.2 && pt>=3.5) || (1.2<=abseta && abseta<2.1 && pt>=5.77-1.89*abseta) || (2.1<=abseta && abseta<2.4 && pt>=1.8));
+      tag_accept = ((tag_abseta<1.2 && tag_pt>=3.5) || (1.2<=tag_abseta && tag_abseta<2.1 && tag_pt>=5.77-1.89*tag_abseta) || (2.1<=tag_abseta && tag_abseta<2.4 && tag_pt>=1.8));
       if(tag_accept && accept && type){tnew->Fill();}
       if(tag_accept && !type){tnew->Fill();}
    }
@@ -26,15 +26,15 @@ void addAccept(const char *filein, const char *fileout) {
    TFile *fin = new TFile(filein);
    TFile *fout = new TFile(fileout,"RECREATE");
 
-   fout->cd();
-   TDirectory *tdir_trk = fout->mkdir("MuonTrk");
-   tdir_trk->cd();
-   TTree *tr_trk = copyTree((TTree*) fin->Get("MuonTrk/fitter_tree"),0);
+   // fout->cd();
+   // TDirectory *tdir_trk = fout->mkdir("MuonTrk");
+   // tdir_trk->cd();
+   // TTree *tr_trk = copyTree((TTree*) fin->Get("MuonTrk/fitter_tree"),0);
 
-   fout->cd();
-   TDirectory *tdir_mutrg = fout->mkdir("MuonTrg");
-   tdir_mutrg->cd();
-   TTree *tr_mutrg = copyTree((TTree*) fin->Get("MuonTrg/fitter_tree"),1);
+   // fout->cd();
+   // TDirectory *tdir_mutrg = fout->mkdir("MuonTrg");
+   // tdir_mutrg->cd();
+   // TTree *tr_mutrg = copyTree((TTree*) fin->Get("MuonTrg/fitter_tree"),1);
 
    fout->cd();
    TDirectory *tdir_muidtrg = fout->mkdir("MuonIDTrg");

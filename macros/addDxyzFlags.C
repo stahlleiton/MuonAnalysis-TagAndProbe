@@ -2,10 +2,12 @@
 #include "TFile.h"
 
 #define DXYCUT 3
-#define DZCUT 15
+#define DZCUT 20
 
 TTree* copyTree(TTree* told) {
    TTree *tnew = told->CloneTree(0);
+   tnew->SetAutoSave(-9999999999);
+   tnew->SetAutoFlush(0);
    int dxyzPVCuts; float dzPV, dxyPVdzmin;
    told->SetBranchAddress("dzPV",&dzPV);
    told->SetBranchAddress("dxyPVdzmin",&dxyPVdzmin);
@@ -26,19 +28,19 @@ void addDxyzFlags(const char *filein, const char *fileout) {
    TFile *fout = new TFile(fileout,"RECREATE");
 
    fout->cd();
-   TDirectory *tdir_trk = fout->mkdir("MuonTrk");
+   TDirectory *tdir_trk = fout->mkdir("tpTreeSta");
    tdir_trk->cd();
-   TTree *tr_trk = ((TTree*) fin->Get("MuonTrk/fitter_tree"))->CloneTree();
+   TTree *tr_trk = ((TTree*) fin->Get("tpTreeSta/fitter_tree"))->CloneTree();
 
    fout->cd();
-   TDirectory *tdir_muidtrg = fout->mkdir("MuonIDTrg");
+   TDirectory *tdir_muidtrg = fout->mkdir("tpTree");
    tdir_muidtrg->cd();
-   TTree *tr_muidtrg = copyTree((TTree*) fin->Get("MuonIDTrg/fitter_tree"));
+   TTree *tr_muidtrg = copyTree((TTree*) fin->Get("tpTree/fitter_tree"));
 
    fout->cd();
-   TDirectory *tdir_trg = fout->mkdir("MuonTrg");
+   TDirectory *tdir_trg = fout->mkdir("tpTreeTrk");
    tdir_trg->cd();
-   TTree *tr_trg = ((TTree*) fin->Get("MuonTrg/fitter_tree"))->CloneTree();
+   TTree *tr_trg = ((TTree*) fin->Get("tpTreeTrk/fitter_tree"))->CloneTree();
 
 
    fout->Write();
