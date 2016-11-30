@@ -18,7 +18,7 @@
 
 const int nToys = 100;
 
-TString formula(TF1 *f);
+TString formula(TF1 *f, int digits=2);
 
 double assym_gaus(double *x, double *par) {
    double mean = par[0];
@@ -171,8 +171,7 @@ void toyStudy(int nsyst, TGraphAsymmErrors **gdata, TGraphAsymmErrors **gmc, TF1
 
          // print results to file
          if (systmode2==systmode) {
-            fileout << Form("%0.4f*TMath::Erf((x-%0.4f)/%0.4f)",ftoydata->GetParameter(0),ftoydata->GetParameter(1),ftoydata->GetParameter(2)) << endl;
-            // fileout << Form("%0.4f*TMath::Erf((x-%0.4f)/%0.4f)",ftoymc->GetParameter(0),ftoymc->GetParameter(1),ftoymc->GetParameter(2)) << endl;
+            fileout << formula(ftoydata,5) << endl;
             tr->Fill();
          }
       }
@@ -301,11 +300,13 @@ void toyStudy(int nsyst, TGraphAsymmErrors **gdata, TGraphAsymmErrors **gmc, TF1
    delete cdata_dists, cmc_dists;
 };
 
-TString formula(TF1 *f) {
+TString formula(TF1 *f, int digits) {
+   TString cs = TString("%") + Form(".%if",digits);
    TString ans = f->GetExpFormula();
    for (int i=0; i<f->GetNpar(); i++) {
-      ans = ans.ReplaceAll(Form("[p%i]",i),Form("%.2f",f->GetParameter(i)));
-      ans = ans.ReplaceAll(Form("[%i]",i),Form("%.2f",f->GetParameter(i)));
+      ans = ans.ReplaceAll(Form("[p%i]",i),Form(cs,f->GetParameter(i)));
+      ans = ans.ReplaceAll(Form("[%i]",i),Form(cs,f->GetParameter(i)));
+      ans = ans.ReplaceAll(Form("[%s]",f->GetParName(i)),Form(cs,f->GetParameter(i)));
    }
    return ans;
 }

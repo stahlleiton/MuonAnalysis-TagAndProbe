@@ -49,39 +49,36 @@ bool isPbPb = false; // if true, will compute the centrality dependence
 TString collTag = "PbPb"; // isPbPb ? "PbPb" : "pp";
 
 // do the toy study for the correction factors? (only applies if MUIDTRG)
-bool doToys = false;
+bool doToys = true;
 
 // how to fit efficiencies?
 // 0 = [0]*Erf((x-[1])/[2])
 // 1 = [0]*Erf((x-[1])/[2]) + [3]
 // 2 = ([0]*Erf((x-[1])/[2]) + [3])*Exp(x/[4])
-int fitfcn = 0;
+int fitfcn = 2;
 
 // Location of the files
-const int nSyst = 1;//5;
+const int nSyst = 4;//5;
 // the first file is for the nominal case, the following ones are for the systematics
 const char* fDataName[nSyst] = {
-   "/tmp/chapon/tnp_Ana_RD_PbPb_MuonIDTrg_AllMB.root",
-   // "/home/emilien/Documents/Postdoc_LLR/TagAndProbe/systs/massrange/pbpb_data/tnp_Ana_RD_PbPb_MuonIDTrg_AllMB.root",
-   // "/home/emilien/Documents/Postdoc_LLR/TagAndProbe/systs/signalfcn/pbpb_data/tnp_Ana_RD_PbPb_MuonIDTrg_AllMB.root",
-   // "/home/emilien/Documents/Postdoc_LLR/TagAndProbe/systs/bkgdfcn/pbpb_data/tnp_Ana_RD_PbPb_MuonIDTrg_AllMB.root",
-   // "/home/emilien/Documents/Postdoc_LLR/TagAndProbe/systs/tagsel/pbpb_data/tnp_Ana_RD_PbPb_MuonIDTrg_AllMB.root",
+   "/home/emilien/Documents/Postdoc_LLR/TagAndProbe_2015data/MuonAnalysis-TagAndProbe/macros/input/pp/Trg/tnp_Ana_Trg_RD_pp_23112016_pol1_v2.root",
+   "/home/emilien/Documents/Postdoc_LLR/TagAndProbe_2015data/MuonAnalysis-TagAndProbe/macros/input/pp/Trg/Syst/tnp_Ana_Trg_RD_pp_28112016_Mass2834.root",
+   "/home/emilien/Documents/Postdoc_LLR/TagAndProbe_2015data/MuonAnalysis-TagAndProbe/macros/input/pp/Trg/Syst/tnp_Ana_Trg_RD_pp_28112016_CB.root",
+   "/home/emilien/Documents/Postdoc_LLR/TagAndProbe_2015data/MuonAnalysis-TagAndProbe/macros/input/pp/Trg/Syst/tnp_Ana_Trg_RD_pp_28112016_pol2.root"
 };
 const char* fMCName[nSyst] = {
-   // "fits_PbPb/MuIdTrg/MC/tnp_Ana_MC_PbPb_MuonIDTrg_AllMB.root",
-   "/tmp/chapon/tnp_Ana_MC_PbPb_MuonIDTrg_AllMB_Pol1.root",
-   // "/home/emilien/Documents/Postdoc_LLR/TagAndProbe/systs/massrange/pbpb_mc/tnp_Ana_MC_PbPb_MuonIDTrg_AllMB.root",
-   // "/home/emilien/Documents/Postdoc_LLR/TagAndProbe/systs/signalfcn/pbpb_mc/tnp_Ana_MC_PbPb_MuonIDTrg_AllMB.root",
-   // "/home/emilien/Documents/Postdoc_LLR/TagAndProbe/systs/bkgdfcn/pbpb_mc/tnp_Ana_MC_PbPb_MuonIDTrg_AllMB.root",
-   // "/home/emilien/Documents/Postdoc_LLR/TagAndProbe/systs/tagsel/pbpb_mc/tnp_Ana_MC_PbPb_MuonIDTrg_AllMB.root",
+   "/home/emilien/Documents/Postdoc_LLR/TagAndProbe_2015data/MuonAnalysis-TagAndProbe/macros/input/pp/Trg/tnp_Ana_Trg_MC_pp_28112016_pol1.root",
+   "/home/emilien/Documents/Postdoc_LLR/TagAndProbe_2015data/MuonAnalysis-TagAndProbe/macros/input/pp/Trg/tnp_Ana_Trg_MC_pp_28112016_pol1.root",
+   "/home/emilien/Documents/Postdoc_LLR/TagAndProbe_2015data/MuonAnalysis-TagAndProbe/macros/input/pp/Trg/tnp_Ana_Trg_MC_pp_28112016_pol1.root",
+   "/home/emilien/Documents/Postdoc_LLR/TagAndProbe_2015data/MuonAnalysis-TagAndProbe/macros/input/pp/Trg/tnp_Ana_Trg_MC_pp_28112016_pol1.root"
 };
 
 // names for systematics
 const char* systName[nSyst] = {
    "nominal",
-   // "massrange",
-   // "signalfcn",
-   // "bkgfcn",
+   "M2834",
+   "CB",
+   "pol2",
    // "tagsel"
 };
 
@@ -101,7 +98,8 @@ TString absetaVar("abseta");
 TString centVar("tag_hiBin");
 ofstream file_sfs("correction_functions.txt");
 TString cutTag("tpTree"); 
-TString cutLegend("Muon ID + trigger");
+// TString cutLegend("Muon ID + trigger");
+TString cutLegend("Trigger");
 const double effmin = 0.;
 const double sfrange = 0.55;
 #endif
@@ -137,6 +135,8 @@ TString cutLegend("Standalone");
 const double effmin = 0.8;
 const double sfrange = 0.08;
 #endif
+
+ofstream file_binnedsfs("correction_binned.txt");
 
 // Function Define
 TH2F *plotEff2D(RooDataSet *a, TString b);
@@ -514,8 +514,9 @@ void TnPEffDraw_syst() {
            fdata = initfcn("fdata",fitfcn,ptmin,ptmax,ComPt1[k][i]->GetX()[ComPt1[k][i]->GetN()-1]);
            fdata->SetLineWidth(2);
            fdata->SetLineColor(kBlue);
+           ComPt1[k][i]->Fit(fdata,"WRME");
            ComPt1[k][i]->Fit(fdata,"RME");
-           leg1->AddEntry(fdata,formula(fdata),"pl");
+           leg1->AddEntry(fdata,formula(fdata,2),"pl");
 
            chi2 = ComPt1[k][i]->Chisquare(fdata);
            dof = ComPt1[k][i]->GetN() - fdata->GetNpar();
@@ -529,8 +530,8 @@ void TnPEffDraw_syst() {
            if (isPbPb) fmc->SetParameters(ComPt0[k][i]->GetX()[ComPt0[k][i]->GetN()-1],0.5,2.5); 
            else fmc->SetParameters(ComPt0[k][i]->GetX()[ComPt0[k][i]->GetN()-1],2.2,1.5); 
            fmc->SetLineColor(kRed);
-           ComPt0[k][i]->Fit(fmc,"RME");
-           leg1->AddEntry(fmc,formula(fmc),"pl");
+           ComPt0[k][i]->Fit(fmc,"WRME");
+           leg1->AddEntry(fmc,formula(fmc,2),"pl");
 
            chi2 = ComPt0[k][i]->Chisquare(fmc);
            dof = ComPt0[k][i]->GetN() - fmc->GetNpar();
@@ -559,10 +560,18 @@ void TnPEffDraw_syst() {
 
            // print the fit results to file
            file_sfs << "Data " << etamin << " " << etamax << endl;
-           file_sfs << formula(fdata)  << endl;
+           file_sfs << formula(fdata,5)  << endl;
            file_sfs << "MC " << etamin << " " << etamax << endl;
-           file_sfs << formula(fmc) << endl;
+           file_sfs << formula(fmc,5) << endl;
            file_sfs << endl;
+
+           // print the binned ratio to the other file
+           file_binnedsfs << "// " << etamin << " < |eta| < " << etamax << endl;
+           for (int i=0; i<gratio->GetN(); i++) {
+              if (i>0) file_binnedsfs << "else ";
+              file_binnedsfs << "if (pt<" << gratio->GetX()[i] + gratio->GetEXhigh()[i] << ") return " << gratio->GetY()[i] << ";" << endl;
+           }
+           file_binnedsfs << endl;
         }
      }
 
@@ -577,7 +586,7 @@ void TnPEffDraw_syst() {
      plotSysts(graphssyst_mc, c1, pad1, hPad_syst, pad2, hPadr_syst, header, Form("syst_mc_pt_%i",i));
 
      // toys study 
-     if (doToys) toyStudy(nSyst, graphssyst_data, graphssyst_mc, fdata, fmc, cutTag + Form("toys%i_",i) + collTag + "_RD_MC_PT", 2);
+     if (doToys) toyStudy(nSyst, graphssyst_data, graphssyst_mc, fdata, fmc, cutTag + Form("toys%i_",i) + collTag + "_RD_MC_PT", 1);
 #else
      }
 #endif // ifdef MUIDTRG or STA
@@ -713,6 +722,7 @@ void TnPEffDraw_syst() {
 
 
   file_sfs.close();
+  file_binnedsfs.close();
 }
 
 void formatTH1F(TH1* a, int b, int c, int d){
@@ -1093,7 +1103,7 @@ void plotSysts(TGraphAsymmErrors *graphs[nSyst], TCanvas *c1, TPad *p1, TH1F *h1
          xrlo[k][j] = graphs[k]->GetErrorXlow(j);
          xrhi[k][j] = graphs[k]->GetErrorXhigh(j);
          yr[k][j] = graphs[k]->GetY()[j]/ComPt0_forRatio->GetY()[j];
-         maxvar = max(maxvar, yr[k][j]);
+         maxvar = max(maxvar, yr[k][j]); maxvar = max(maxvar,1./yr[k][j]);
          yrlo[k][j] = graphs[k]->GetErrorYlow(j)/ComPt0_forRatio->GetY()[j];
          yrhi[k][j] = graphs[k]->GetErrorYhigh(j)/ComPt0_forRatio->GetY()[j];
       }
@@ -1116,34 +1126,32 @@ TF1 *initfcn(const char* fname, int ifcn, double ptmin, double ptmax, double eff
    TString formula;
    if (ifcn==0) formula = "[0]*TMath::Erf((x-[1])/[2])";
    else if (ifcn==1) formula = "[0]*TMath::Erf((x-[1])/[2])+[3]";
-   else formula = "[0]*TMath::Erf((x-[1])/[2])*(1.-[4]*TMath::Erf((x-[5])/[6]))+[3]";
+   else formula = "[0]*(TMath::Erf((x-[1])/[2])*TMath::Exp([4]*x)) + [3]";
    TF1 *ans = new TF1(fname,formula,ptmin,ptmax);
    if (ifcn==0) {
       ans->SetParNames("eff0","x0","m");
       // Initialize the normalization to the efficiency in the last point
-      ans->SetParLimits(0,0,1);
-      ans->SetParLimits(1,0.,10.);
+      ans->SetParLimits(0,0,1.5);
+      ans->SetParLimits(1,-10.,10.);
       ans->SetParLimits(2,0,10.);
       ans->SetParameters(effguess,0.1,1.0);
    } else if (ifcn==1) {
       ans->SetParNames("eff0","x0","m","cst");
       // Initialize the normalization to the efficiency in the last point
-      ans->SetParLimits(0,0,1);
-      ans->SetParLimits(1,0.,10.);
+      ans->SetParLimits(0,0,1.5);
+      ans->SetParLimits(1,-10.,10.);
       ans->SetParLimits(2,0,10.);
       ans->SetParLimits(3,-1.,1.);
       ans->SetParameters(effguess,0.1,1.0,0.);
    } else if (ifcn==2) {
-      ans->SetParNames("eff0","x0","m","cst","fall0","fallx0","fallm");
+      ans->SetParNames("eff0","x0","m","cst","fall");
       // Initialize the normalization to the efficiency in the last point
-      ans->SetParLimits(0,0,1);
-      ans->SetParLimits(1,0.,10.);
+      ans->SetParLimits(0,0,1.5);
+      ans->SetParLimits(1,-10.,10.);
       ans->SetParLimits(2,0,10.);
       ans->SetParLimits(3,-1.,1.);
-      ans->SetParLimits(4,0,1.);
-      ans->SetParLimits(5,0,100);
-      ans->SetParLimits(6,0,100);
-      ans->SetParameters(effguess,0.1,1.0,0.,0.1,15.,5.);
+      ans->SetParLimits(4,-50.,0.);
+      ans->SetParameters(effguess,2.,1.,0.,0.);
    }
    return ans;
 }
@@ -1154,10 +1162,16 @@ TF1 *ratiofunc(const char* fname, TF1 *fnum, TF1 *fden) {
    int nparnum = fnum->GetNpar();
    int nparden = fden->GetNpar();
    int npartot = nparnum+nparden;
+   // replace the names of the parameters of the numerator
+   for (int i=0; i<nparnum; i++) {
+      formnum.ReplaceAll(Form("[p%i]",i),Form("[%i]",i));
+      formnum.ReplaceAll(Form("[%s]",fnum->GetParName(i)),Form("[%i]",i));
+   }
    // replace the names of the parameters of the denominator
    for (int i=0; i<nparden; i++) {
       formden.ReplaceAll(Form("[p%i]",i),Form("[%i]",i+nparnum));
       formden.ReplaceAll(Form("[%i]",i),Form("[%i]",i+nparnum));
+      formden.ReplaceAll(Form("[%s]",fden->GetParName(i)),Form("[%i]",i+nparnum));
    }
    double xmin, xmax; fnum->GetRange(xmin,xmax);
    TF1 *ans = new TF1(fname,TString("(") + formnum + ")/(" + formden + ")", xmin,xmax);
