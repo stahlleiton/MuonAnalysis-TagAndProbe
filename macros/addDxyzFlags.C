@@ -6,7 +6,7 @@
 
 TTree* copyTree(TTree* told) {
    TTree *tnew = told->CloneTree(0);
-   tnew->SetAutoSave(-9999999999);
+   tnew->SetAutoSave(0);
    tnew->SetAutoFlush(0);
    int dxyzPVCuts; float dzPV, dxyPVdzmin;
    told->SetBranchAddress("dzPV",&dzPV);
@@ -23,6 +23,19 @@ TTree* copyTree(TTree* told) {
    return tnew;
 }
 
+TTree* justCopyTree(TTree* told) {
+	TTree *tnew = told->CloneTree(0);
+	tnew->SetAutoSave(0);
+	tnew->SetAutoFlush(0);
+
+	int nentries = told->GetEntries();
+	for (int i = 0; i<nentries; i++) {
+		told->GetEntry(i);
+		tnew->Fill();
+	}
+	return tnew;
+}
+
 void addDxyzFlags(const char *filein, const char *fileout) {
    TFile *fin = new TFile(filein);
    TFile *fout = new TFile(fileout,"RECREATE");
@@ -30,7 +43,7 @@ void addDxyzFlags(const char *filein, const char *fileout) {
    fout->cd();
    TDirectory *tdir_trk = fout->mkdir("tpTreeSta");
    tdir_trk->cd();
-   TTree *tr_trk = ((TTree*) fin->Get("tpTreeSta/fitter_tree"))->CloneTree();
+   TTree *tr_trk = justCopyTree((TTree*)fin->Get("tpTreeSta/fitter_tree"));
 
    fout->cd();
    TDirectory *tdir_muidtrg = fout->mkdir("tpTree");
@@ -40,7 +53,7 @@ void addDxyzFlags(const char *filein, const char *fileout) {
    fout->cd();
    TDirectory *tdir_trg = fout->mkdir("tpTreeTrk");
    tdir_trg->cd();
-   TTree *tr_trg = ((TTree*) fin->Get("tpTreeTrk/fitter_tree"))->CloneTree();
+   TTree *tr_trg = justCopyTree((TTree*)fin->Get("tpTreeTrk/fitter_tree"));
 
 
    fout->Write();
