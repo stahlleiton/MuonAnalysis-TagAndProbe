@@ -132,7 +132,9 @@ void toyStudy(int nsyst, TGraphAsymmErrors **gdata, TGraphAsymmErrors **gmc, TF1
             if (systmode2==0) tfAsyGauss->SetParameters(ydata[j],eyldata[j],eyhdata[j]);
             else tfAsyGauss->SetParameters(ydata[j],sqrt(pow(eyldata[j],2)+pow(eyldata_syst[j],2)),sqrt(pow(eyhdata[j],2)+pow(eyhdata_syst[j],2)));
             effdata[j] = tfAsyGauss->GetRandom();
-            gtoydata->SetPoint(j,xdata[j],effdata[j]);
+            gtoydata->SetPoint(j,xdata[j],effdata[j]); // nominal
+            // gtoydata->SetPoint(j,xdata[j],min(ydata[j]+fabs(eyhdata_syst[j]),1.)); // shift UP by 1 sigma syst, keep eff. below 1
+            // gtoydata->SetPoint(j,xdata[j],max(ydata[j]-fabs(eyhdata_syst[j]),0.)); // shift DOWN by 1 sigma syst, keep eff. above 0
          }
 
          // mc
