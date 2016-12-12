@@ -46,7 +46,7 @@ using namespace std;
 
 // pp or PbPb?
 bool isPbPb = false; // if true, will compute the centrality dependence
-TString collTag = "PbPb"; // isPbPb ? "PbPb" : "pp";
+TString collTag = "pp"; // isPbPb ? "PbPb" : "pp";
 
 // do the toy study for the correction factors? (only applies if MUIDTRG)
 bool doToys = true;
@@ -61,12 +61,26 @@ int fitfcn = 2;
 const int nSyst = 4;//5;
 // the first file is for the nominal case, the following ones are for the systematics
 const char* fDataName[nSyst] = {
+   // PBPB
+   // "/home/emilien/Documents/Postdoc_LLR/TagAndProbe_2015data/MuonAnalysis-TagAndProbe/macros/input/pbpb/Trg/tnp_Ana_RD_PbPb_Trg_AllMB.root",
+   // "/home/emilien/Documents/Postdoc_LLR/TagAndProbe_2015data/MuonAnalysis-TagAndProbe/macros/input/pbpb/Trg/syst/tnp_Ana_RD_PbPb_Trg_AllMB_mass.root",
+   // "/home/emilien/Documents/Postdoc_LLR/TagAndProbe_2015data/MuonAnalysis-TagAndProbe/macros/input/pbpb/Trg/syst/tnp_Ana_RD_PbPb_Trg_AllMB_sig.root",
+   // "/home/emilien/Documents/Postdoc_LLR/TagAndProbe_2015data/MuonAnalysis-TagAndProbe/macros/input/pbpb/Trg/syst/tnp_Ana_RD_PbPb_Trg_AllMB_bkg.root"
+
+   // PP
    "/home/emilien/Documents/Postdoc_LLR/TagAndProbe_2015data/MuonAnalysis-TagAndProbe/macros/input/pp/Trg/tnp_Ana_Trg_RD_pp_23112016_pol1_v2.root",
    "/home/emilien/Documents/Postdoc_LLR/TagAndProbe_2015data/MuonAnalysis-TagAndProbe/macros/input/pp/Trg/Syst/tnp_Ana_Trg_RD_pp_28112016_Mass2834.root",
    "/home/emilien/Documents/Postdoc_LLR/TagAndProbe_2015data/MuonAnalysis-TagAndProbe/macros/input/pp/Trg/Syst/tnp_Ana_Trg_RD_pp_28112016_CB.root",
    "/home/emilien/Documents/Postdoc_LLR/TagAndProbe_2015data/MuonAnalysis-TagAndProbe/macros/input/pp/Trg/Syst/tnp_Ana_Trg_RD_pp_28112016_pol2.root"
 };
 const char* fMCName[nSyst] = {
+   // PBPB
+   // "/home/emilien/Documents/Postdoc_LLR/TagAndProbe_2015data/MuonAnalysis-TagAndProbe/macros/input/pbpb/Trg/tnp_Ana_MC_PbPb_Trg_AllMB.root",
+   // "/home/emilien/Documents/Postdoc_LLR/TagAndProbe_2015data/MuonAnalysis-TagAndProbe/macros/input/pbpb/Trg/tnp_Ana_MC_PbPb_Trg_AllMB.root",
+   // "/home/emilien/Documents/Postdoc_LLR/TagAndProbe_2015data/MuonAnalysis-TagAndProbe/macros/input/pbpb/Trg/tnp_Ana_MC_PbPb_Trg_AllMB.root",
+   // "/home/emilien/Documents/Postdoc_LLR/TagAndProbe_2015data/MuonAnalysis-TagAndProbe/macros/input/pbpb/Trg/tnp_Ana_MC_PbPb_Trg_AllMB.root"
+
+   // PP
    "/home/emilien/Documents/Postdoc_LLR/TagAndProbe_2015data/MuonAnalysis-TagAndProbe/macros/input/pp/Trg/tnp_Ana_Trg_MC_pp_28112016_pol1.root",
    "/home/emilien/Documents/Postdoc_LLR/TagAndProbe_2015data/MuonAnalysis-TagAndProbe/macros/input/pp/Trg/tnp_Ana_Trg_MC_pp_28112016_pol1.root",
    "/home/emilien/Documents/Postdoc_LLR/TagAndProbe_2015data/MuonAnalysis-TagAndProbe/macros/input/pp/Trg/tnp_Ana_Trg_MC_pp_28112016_pol1.root",
@@ -514,15 +528,14 @@ void TnPEffDraw_syst() {
            fdata = initfcn("fdata",fitfcn,ptmin,ptmax,ComPt1[k][i]->GetX()[ComPt1[k][i]->GetN()-1]);
            fdata->SetLineWidth(2);
            fdata->SetLineColor(kBlue);
-           ComPt1[k][i]->Fit(fdata,"WRME");
-           ComPt1[k][i]->Fit(fdata,"RME");
-           leg1->AddEntry(fdata,formula(fdata,2),"pl");
 
-           chi2 = ComPt1[k][i]->Chisquare(fdata);
-           dof = ComPt1[k][i]->GetN() - fdata->GetNpar();
-           pval = TMath::Prob(chi2,dof);
-           tchi.SetTextColor(kBlue);
-           tchi.DrawLatex(0.6,0.92,Form("#chi^{2}/dof = %.1f/%d (p-value: %.2f)",chi2,dof,pval));
+           // in the case of the exponential fall at high pt, do the fit first without it
+           if (fitfcn==2) {
+              fdata->FixParameter(4,0);
+              ComPt1[k][i]->Fit(fdata,"WRME");
+              fdata->SetParLimits(4,-1.5,0);
+           }
+           ComPt1[k][i]->Fit(fdata,"WRME");
 
            // fit mc
            fmc = (TF1*) fdata->Clone("fmc");;
@@ -531,7 +544,21 @@ void TnPEffDraw_syst() {
            else fmc->SetParameters(ComPt0[k][i]->GetX()[ComPt0[k][i]->GetN()-1],2.2,1.5); 
            fmc->SetLineColor(kRed);
            ComPt0[k][i]->Fit(fmc,"WRME");
+
+           // fit data again, based on MC parameters
+           for (int ipar=0; ipar<fmc->GetNpar(); ipar++) fdata->SetParameter(ipar,fmc->GetParameter(ipar));
+           ComPt1[k][i]->Fit(fdata,"RME");
+           ComPt1[k][i]->Fit(fdata,"WRME");
+
+           // print info
            leg1->AddEntry(fmc,formula(fmc,2),"pl");
+           leg1->AddEntry(fdata,formula(fdata,2),"pl");
+
+           chi2 = ComPt1[k][i]->Chisquare(fdata);
+           dof = ComPt1[k][i]->GetN() - fdata->GetNpar();
+           pval = TMath::Prob(chi2,dof);
+           tchi.SetTextColor(kBlue);
+           tchi.DrawLatex(0.6,0.92,Form("#chi^{2}/dof = %.1f/%d (p-value: %.2f)",chi2,dof,pval));
 
            chi2 = ComPt0[k][i]->Chisquare(fmc);
            dof = ComPt0[k][i]->GetN() - fmc->GetNpar();
@@ -548,7 +575,7 @@ void TnPEffDraw_syst() {
            fratio->Draw("same");
 
            chi2 = gratio->Chisquare(fratio);
-           dof = gratio->GetN() - fratio->GetNpar();
+           dof = gratio->GetN();// - fratio->GetNpar();
            pval = TMath::Prob(chi2,dof);
            tchi.SetTextColor(kBlack);
            tchi.SetTextSize(0.035*0.7/0.3);
@@ -586,7 +613,7 @@ void TnPEffDraw_syst() {
      plotSysts(graphssyst_mc, c1, pad1, hPad_syst, pad2, hPadr_syst, header, Form("syst_mc_pt_%i",i));
 
      // toys study 
-     if (doToys) toyStudy(nSyst, graphssyst_data, graphssyst_mc, fdata, fmc, cutTag + Form("toys%i_",i) + collTag + "_RD_MC_PT", 1);
+     if (doToys) toyStudy(nSyst, graphssyst_data, graphssyst_mc, fdata, fmc, cutTag + Form("toys%i_",i) + collTag + "_RD_MC_PT", 0);
 #else
      }
 #endif // ifdef MUIDTRG or STA
@@ -1131,26 +1158,26 @@ TF1 *initfcn(const char* fname, int ifcn, double ptmin, double ptmax, double eff
    if (ifcn==0) {
       ans->SetParNames("eff0","x0","m");
       // Initialize the normalization to the efficiency in the last point
-      ans->SetParLimits(0,0,1.5);
+      ans->SetParLimits(0,0,9.5);
       ans->SetParLimits(1,-10.,10.);
-      ans->SetParLimits(2,0,10.);
-      ans->SetParameters(effguess,0.1,1.0);
+      ans->SetParLimits(2,0,50.);
+      ans->SetParameters(effguess,2.,1.0);
    } else if (ifcn==1) {
       ans->SetParNames("eff0","x0","m","cst");
       // Initialize the normalization to the efficiency in the last point
-      ans->SetParLimits(0,0,1.5);
+      ans->SetParLimits(0,0,9.5);
       ans->SetParLimits(1,-10.,10.);
-      ans->SetParLimits(2,0,10.);
-      ans->SetParLimits(3,-1.,1.);
-      ans->SetParameters(effguess,0.1,1.0,0.);
+      ans->SetParLimits(2,0,50.);
+      ans->SetParLimits(3,-2.,2.);
+      ans->SetParameters(effguess,2.,1.0,0.);
    } else if (ifcn==2) {
       ans->SetParNames("eff0","x0","m","cst","fall");
       // Initialize the normalization to the efficiency in the last point
-      ans->SetParLimits(0,0,1.5);
+      ans->SetParLimits(0,0,95);
       ans->SetParLimits(1,-10.,10.);
-      ans->SetParLimits(2,0,10.);
-      ans->SetParLimits(3,-1.,1.);
-      ans->SetParLimits(4,-50.,0.);
+      ans->SetParLimits(2,0,50.);
+      ans->SetParLimits(3,-2.,2.);
+      ans->SetParLimits(4,-1.5,0.);
       ans->SetParameters(effguess,2.,1.,0.,0.);
    }
    return ans;

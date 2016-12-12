@@ -6,6 +6,7 @@
 //type is added because muonTrk should only have the tags in accept
 TTree* copyTree(TTree* told) {
   TTree *tnew = told->CloneTree(0);
+  tnew->SetAutoSave(0);
   float weight_norm = 1.;
   float weight = 1.;
   told->SetBranchAddress("weight",&weight);
@@ -29,15 +30,15 @@ TTree* copyTree(TTree* told) {
   return tnew;
 }
 
-void addMCWeight(const char *filein, const char *fileout) {
+void addMCWeight_norm(const char *filein, const char *fileout) {
   TFile *fin = new TFile(filein);
   TFile *fout = new TFile(fileout,"RECREATE");
-  
+
   fout->cd();
   TDirectory *tdir = fout->mkdir("tpTree");
   tdir->cd();
-  TTree *tr = copyTree((TTree*) fin->Get("tpTree/fitter_tree"));
-  
+  TTree *tr= copyTree((TTree*)fin->Get("tpTree/fitter_tree"));
+
   fout->cd();
   TDirectory *tdirSta = fout->mkdir("tpTreeSta");
   tdirSta->cd();
