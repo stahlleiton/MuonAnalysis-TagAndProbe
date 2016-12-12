@@ -1006,4 +1006,30 @@ double tnp_weight_trg_pp(double x, double eta, int idx)
    return num/den;
 }
 
+///////////////////////////////////////////////////
+//             M U I D    P b P b                //
+///////////////////////////////////////////////////
+
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// !!  ONLY FOR SYSTEMATICS! DO NOT APPLY FOR THE NOMINAL CORRECTION!!! !!
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+double tnp_weight_muid_pbpb(double x, double eta) {
+   // denominator (from MC)
+   double den=1;
+   if (fabs(eta)<1.2) den = 0.99*TMath::Erf((x+1.16)/3.49);
+   else if (fabs(eta)<1.8) den = 0.99*TMath::Erf((x+3.63)/4.27);
+   else if (fabs(eta)<2.1) den = 1.00*TMath::Erf((x+4.64)/6.08);
+   else den = 0.99*TMath::Erf((x+3.17)/4.98);
+
+   // numerator (from data)
+   double num=1;
+   if (fabs(eta)<1.2) num = 0.98*TMath::Erf((x+0.39)/2.94);
+   else if (fabs(eta)<1.8) num = 0.99*TMath::Erf((x+4.38)/5.03);
+   else if (fabs(eta)<2.1) num = 1.00*TMath::Erf((x+5.26)/6.31);
+   else num = 1.00*TMath::Erf((x+3.34)/5.38);
+
+   return num/den;
+}
+
 #endif //#ifndef tnp_weight_h
