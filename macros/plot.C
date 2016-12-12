@@ -70,6 +70,10 @@ void plot(const char *filename)
                         if (!canv) continue;
                         canv->SaveAs(dir2name + "/" + TString(obj3->GetName()) + ".pdf");
                         canv->SaveAs(dir2name + "/" + TString(obj3->GetName()) + ".png");
+                        canv = (TCanvas*) gDirectory->Get("pull_canvas");
+                        if (!canv) continue;
+                        canv->SaveAs(dir2name + "/" + TString(obj3->GetName()) + "_pulls.pdf");
+                        canv->SaveAs(dir2name + "/" + TString(obj3->GetName()) + "_pulls.png");
                      }
                   }
                   if ((print_fiteff && TString(obj3->GetTitle()) == "fit_eff_plots") || (print_cuteff && TString(obj3->GetTitle()) == "cnt_eff_plots"))
