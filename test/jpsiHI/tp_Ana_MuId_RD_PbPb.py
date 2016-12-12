@@ -99,7 +99,8 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
             EfficiencyCategoryAndState = cms.vstring("HybridSoftHI","true","dxyzPVCuts","true"),
             UnbinnedVariables = cms.vstring("mass"),
             BinnedVariables = cms.PSet(
-                pt = cms.vdouble(3.5, 4, 4.5, 5, 5.5, 6.5, 8., 10.5, 12.5, 30.),
+                pt = cms.vdouble(3.5, 4, 4.5, 5, 5.5, 6.5, 8., 10.5, 14, 18, 30.),
+               # pt = cms.vdouble(3.5, 4, 4.5, 5, 5.5, 6.5, 8., 10.5, 12.5, 30.),
                 abseta = cms.vdouble(0, 1.2),
             ),
             BinToPDFmap = cms.vstring(PDFName)
@@ -110,7 +111,8 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
              EfficiencyCategoryAndState = cms.vstring("HybridSoftHI","true","dxyzPVCuts","true"),
              UnbinnedVariables = cms.vstring("mass"),
              BinnedVariables = cms.PSet(
-                 pt = cms.vdouble(2.37, 3.0, 3.5, 4, 4.5, 5., 6., 7.5, 12.5, 30),
+                 pt = cms.vdouble(2.37, 3.0, 3.5, 4, 4.5, 5., 6., 7.5, 10, 15, 30),
+               # pt = cms.vdouble(2.37, 3.0, 3.5, 4, 4.5, 5., 6., 7.5, 12.5, 30),
                  abseta = cms.vdouble(1.2,1.8),
              ),
              BinToPDFmap = cms.vstring(PDFName)
@@ -120,7 +122,8 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
              EfficiencyCategoryAndState = cms.vstring("HybridSoftHI","true","dxyzPVCuts","true"),
              UnbinnedVariables = cms.vstring("mass"),
              BinnedVariables = cms.PSet(
-                 pt = cms.vdouble(1.8, 2.5, 3, 3.5, 4, 4.5, 5.5, 7., 12.5, 30),
+                 pt = cms.vdouble(1.8, 2.5, 3, 3.5, 4, 4.5, 5.5, 7., 9, 12, 16, 30),
+                # pt = cms.vdouble(1.8, 2.5, 3, 3.5, 4, 4.5, 5.5, 7., 12.5, 30),
                  abseta = cms.vdouble(1.8,2.1),
              ),
              BinToPDFmap = cms.vstring(PDFName)
@@ -130,7 +133,8 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
              EfficiencyCategoryAndState = cms.vstring("HybridSoftHI","true","dxyzPVCuts","true"),
              UnbinnedVariables = cms.vstring("mass"),
              BinnedVariables = cms.PSet(
-                 pt = cms.vdouble(1.8, 2.2, 2.7, 3.2, 3.7, 4.7, 8., 30.),
+                 pt = cms.vdouble(1.8, 2.2, 2.7, 3.2, 3.7, 4.7, 8.,11, 14, 30.),
+                # pt = cms.vdouble(1.8, 2.2, 2.7, 3.2, 3.7, 4.7, 8., 30.),
                  abseta = cms.vdouble(2.1,2.4),
              ),
              BinToPDFmap = cms.vstring(PDFName)
