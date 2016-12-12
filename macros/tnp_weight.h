@@ -6,12 +6,20 @@
 // IN THIS FILE YOU WILL FIND:
 // ++++++++++++++
 //
-// - MuIdTrg:
+// - Trigger:
 //   * idx = 0:  nominal
 //   * idx = 1..100: toy variations, stat. only
 //   * idx = -1: syst variation, "new_MAX", +1 sigma
 //   * idx = -2: syst variation, "new_MAX", -1 sigma
 //   * idx = -10: binned
+// - MuID, STA: 
+//   * only one SF (for systematic uncertainty only)
+
+double tnp_weight_trg_pbpb(double x, double eta, int idx);
+double tnp_weight_trg_pp(double x, double eta, int idx);
+double tnp_weight_muid_pbpb(double x, double eta);
+double tnp_weight_muid_pp(double x, double eta);
+double tnp_weight_sta_pp(double x, double eta);
 
 ///////////////////////////////////////////////////
 //               T R G    P b P b                //
