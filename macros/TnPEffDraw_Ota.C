@@ -49,7 +49,7 @@ bool isPbPb = true; // if true, will compute the centrality dependence
 TString collTag = "PbPb"; // isPbPb ? "PbPb" : "pp";
 
 // do the toy study for the correction factors? (only applies if MUIDTRG)
-bool doToys = false;
+bool doToys = true;
 
 // how to fit efficiencies?
 // 0 = [0]*Erf((x-[1])/[2])
@@ -58,32 +58,30 @@ bool doToys = false;
 int fitfcn = 0;
 
 // Location of the files
-const int nSyst = 1;//5;
+const int nSyst = 4;//5;
 // the first file is for the nominal case, the following ones are for the systematics
-/*const char* fDataName[nSyst] = {
-	"tnp_Ana_RD_PbPb_MuIDTrg_AllMB.root",
+const char* fDataName[nSyst] = {
 	//"tnp_Ana_RD_PbPb_MuonIDTrg_AllMB.root",
-   //"/afs/cern.ch/user/v/vabdulla/public/TnPCheck/tnp_Ana_RD_PbPb_MuonIDTrg_AllMB.root",
-   // "/home/emilien/Documents/Postdoc_LLR/TagAndProbe/systs/massrange/pbpb_data/tnp_Ana_RD_PbPb_MuonIDTrg_AllMB.root",
-   // "/home/emilien/Documents/Postdoc_LLR/TagAndProbe/systs/signalfcn/pbpb_data/tnp_Ana_RD_PbPb_MuonIDTrg_AllMB.root",
-   // "/home/emilien/Documents/Postdoc_LLR/TagAndProbe/systs/bkgdfcn/pbpb_data/tnp_Ana_RD_PbPb_MuonIDTrg_AllMB.root",
-   // "/home/emilien/Documents/Postdoc_LLR/TagAndProbe/systs/tagsel/pbpb_data/tnp_Ana_RD_PbPb_MuonIDTrg_AllMB.root",
+	"tnp_Ana_RD_PbPb_Trg_AllMB.root",
+	"tnp_Ana_RD_PbPb_Trg_AllMB_mass.root",
+	"tnp_Ana_RD_PbPb_Trg_AllMB_sig.root",
+	"tnp_Ana_RD_PbPb_Trg_AllMB_bkg.root",
+  
 };
 const char* fMCName[nSyst] = {
-   // "fits_PbPb/MuIdTrg/MC/tnp_Ana_MC_PbPb_MuonIDTrg_AllMB.root",
-   "tnp_Ana_MC_PbPb_MuIDTrg_AllMB.root",
-   // "/home/emilien/Documents/Postdoc_LLR/TagAndProbe/systs/massrange/pbpb_mc/tnp_Ana_MC_PbPb_MuonIDTrg_AllMB.root",
-   // "/home/emilien/Documents/Postdoc_LLR/TagAndProbe/systs/signalfcn/pbpb_mc/tnp_Ana_MC_PbPb_MuonIDTrg_AllMB.root",
-   // "/home/emilien/Documents/Postdoc_LLR/TagAndProbe/systs/bkgdfcn/pbpb_mc/tnp_Ana_MC_PbPb_MuonIDTrg_AllMB.root",
-   // "/home/emilien/Documents/Postdoc_LLR/TagAndProbe/systs/tagsel/pbpb_mc/tnp_Ana_MC_PbPb_MuonIDTrg_AllMB.root",
-};*/
+   //"tnp_Ana_MC_PbPb_MuonIDTrg_AllMB.root",
+	"tnp_Ana_MC_PbPb_Trg_AllMB.root",
+	"tnp_Ana_MC_PbPb_Trg_AllMB_mass.root",
+	"tnp_Ana_MC_PbPb_Trg_AllMB_sig.root",
+	"tnp_Ana_MC_PbPb_Trg_AllMB_bkg.root",
+};//*/
 
 // names for systematics
 const char* systName[nSyst] = {
    "nominal",
-   // "massrange",
-   // "signalfcn",
-   // "bkgfcn",
+   "M2834",
+   "CB",
+   "pol2",
    // "tagsel"
 };
 
@@ -148,8 +146,8 @@ TString cutTag("tpTree");
 TString cutLegend("Trigger");
 const double effmin = 0.;
 const double sfrange = 0.35;
-const char* fDataName[nSyst] = { "tnp_Ana_RD_PbPb_Trg_AllMB.root" };
-const char* fMCName[nSyst] = { "tnp_Ana_MC_PbPb_Trg_AllMB.root" };
+//const char* fDataName[nSyst] = { "tnp_Ana_RD_PbPb_Trg_AllMB.root" };
+//const char* fMCName[nSyst] = { "tnp_Ana_MC_PbPb_Trg_AllMB.root" };
 #endif
 
 
@@ -198,6 +196,8 @@ void CalEffErr(vector<TGraphAsymmErrors*> a, double **b);
 void plotSysts(TGraphAsymmErrors *graphs[nSyst], TCanvas *c1, TPad *p1, TH1F *h1, TPad *pr, TH1F *hr, TString header, TString tag);
 TF1 *initfcn(const char* fname, int ifcn, double ptmin, double ptmax, double effguess);
 TF1 *ratiofunc(const char* fname, TF1 *fnum, TF1 *fden);
+
+ofstream file_binnedsfs("correction_binned.txt");
 
 // From here you need to set up your environments.
 void TnPEffDraw_Ota() {
@@ -595,9 +595,8 @@ void TnPEffDraw_Ota() {
 				//draw
 
 
-				leg1->AddEntry(fmc, formula(fmc), "pl");
-
-				leg1->AddEntry(fdata, formula(fdata), "pl");
+				leg1->AddEntry(fmc, formula(fmc,2), "pl");
+				leg1->AddEntry(fdata, formula(fdata,2), "pl");
 
 				chi2 = ComPt1[k][i]->Chisquare(fdata);
 				dof = ComPt1[k][i]->GetN() - fdata->GetNpar();
@@ -634,10 +633,18 @@ void TnPEffDraw_Ota() {
 
 				// print the fit results to file
 				file_sfs << "Data " << etamin << " " << etamax << endl;
-				file_sfs << formula(fdata) << endl;
+				file_sfs << formula(fdata, 5) << endl;
 				file_sfs << "MC " << etamin << " " << etamax << endl;
-				file_sfs << formula(fmc) << endl;
+				file_sfs << formula(fmc, 5) << endl;
 				file_sfs << endl;
+
+				// print the binned ratio to the other file
+				file_binnedsfs << "// " << etamin << " < |eta| < " << etamax << endl;
+				for (int i = 0; i<gratio->GetN(); i++) {
+					if (i>0) file_binnedsfs << "else ";
+					file_binnedsfs << "if (pt<" << gratio->GetX()[i] + gratio->GetEXhigh()[i] << ") return " << gratio->GetY()[i] << ";" << endl;
+				}
+				file_binnedsfs << endl;
 			}
 		}
 
@@ -652,7 +659,7 @@ void TnPEffDraw_Ota() {
 		plotSysts(graphssyst_mc, c1, pad1, hPad_syst, pad2, hPadr_syst, header, Form("syst_mc_pt_%i", i));
 
 		// toys study 
-		if (doToys) toyStudy(nSyst, graphssyst_data, graphssyst_mc, fdata, fmc, cutTag + Form("toys%i_", i) + collTag + "_RD_MC_PT", 2);
+		if (doToys) toyStudy(nSyst, graphssyst_data, graphssyst_mc, fdata, fmc, cutTag + Form("toys%i_", i) + collTag + "_RD_MC_PT", 0);
 #else
 	}
 #endif // ifdef MUIDTRG or STA
@@ -837,6 +844,7 @@ void TnPEffDraw_Ota() {
 
 
 	file_sfs.close();
+	file_binnedsfs.close();
 }
 
 void formatTH1F(TH1* a, int b, int c, int d) {
@@ -1223,7 +1231,7 @@ void plotSysts(TGraphAsymmErrors *graphs[nSyst], TCanvas *c1, TPad *p1, TH1F *h1
 			xrlo[k][j] = graphs[k]->GetErrorXlow(j);
 			xrhi[k][j] = graphs[k]->GetErrorXhigh(j);
 			yr[k][j] = graphs[k]->GetY()[j] / ComPt0_forRatio->GetY()[j];
-			maxvar = max(maxvar, yr[k][j]);
+			maxvar = max(maxvar, yr[k][j]); maxvar = max(maxvar, 1. / yr[k][j]);
 			yrlo[k][j] = graphs[k]->GetErrorYlow(j) / ComPt0_forRatio->GetY()[j];
 			yrhi[k][j] = graphs[k]->GetErrorYhigh(j) / ComPt0_forRatio->GetY()[j];
 		}
@@ -1284,15 +1292,20 @@ TF1 *ratiofunc(const char* fname, TF1 *fnum, TF1 *fden) {
 	int nparnum = fnum->GetNpar();
 	int nparden = fden->GetNpar();
 	int npartot = nparnum + nparden;
+	// replace the names of the parameters of the numerator
+	for (int i = 0; i<nparnum; i++) {
+		formnum.ReplaceAll(Form("[p%i]", i), Form("[%i]", i));
+		formnum.ReplaceAll(Form("[%s]", fnum->GetParName(i)), Form("[%i]", i));
+	}
 	// replace the names of the parameters of the denominator
-	for (int i = 0; i < nparden; i++) {
+	for (int i = 0; i<nparden; i++) {
 		formden.ReplaceAll(Form("[p%i]", i), Form("[%i]", i + nparnum));
 		formden.ReplaceAll(Form("[%i]", i), Form("[%i]", i + nparnum));
+		formden.ReplaceAll(Form("[%s]", fden->GetParName(i)), Form("[%i]", i + nparnum));
 	}
 	double xmin, xmax; fnum->GetRange(xmin, xmax);
 	TF1 *ans = new TF1(fname, TString("(") + formnum + ")/(" + formden + ")", xmin, xmax);
-	for (int i = 0; i < nparnum; i++) ans->SetParameter(i, fnum->GetParameter(i));
-	for (int i = 0; i < nparden; i++) ans->SetParameter(i + nparnum, fden->GetParameter(i));
+	for (int i = 0; i<nparnum; i++) ans->SetParameter(i, fnum->GetParameter(i));
+	for (int i = 0; i<nparden; i++) ans->SetParameter(i + nparnum, fden->GetParameter(i));
 	return ans;
 }
-
