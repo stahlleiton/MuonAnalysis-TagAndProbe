@@ -37,6 +37,7 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     # defines all the discrete variables of the probes available in the input tree and intended for use in the efficiency calculations
     Categories = cms.PSet(
         isSTA = cms.vstring("isSTA", "dummy[true=1,false=0]"),
+         outerValidHits = cms.vstring("outerValidHits", "dummy[true=1,false=0]"),
     ),
 
     # defines all the PDFs that will be available for the efficiency calculations; uses RooFit's "factory" syntax;
@@ -66,7 +67,7 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     Efficiencies = cms.PSet(
         #the name of the parameter set becomes the name of the directory
         STA_pt1 = cms.PSet(
-            EfficiencyCategoryAndState = cms.vstring("isSTA","true"),
+            EfficiencyCategoryAndState = cms.vstring("isSTA","true","outerValidHits","true"),
             UnbinnedVariables = cms.vstring("mass"),
             BinnedVariables = cms.PSet(
                 #pt = cms.vdouble(3.5, 3.65, 3.8, 4, 4.25, 4.5, 5, 5.5, 6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10.5, 11.5, 13, 16, 30),
@@ -77,7 +78,7 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
             BinToPDFmap = cms.vstring(PDFName)
         ),
         STA_pt2 = cms.PSet(
-            EfficiencyCategoryAndState = cms.vstring("isSTA","true"),
+            EfficiencyCategoryAndState = cms.vstring("isSTA","true","outerValidHits","true"),
             UnbinnedVariables = cms.vstring("mass"),
             BinnedVariables = cms.PSet(
                 #pt = cms.vdouble(2.4, 2.55, 2.7, 2.85, 3, 3.25, 3.5, 4, 4.5, 5, 5.5, 6, 6.5, 7, 8, 9.5, 15, 30),
@@ -88,7 +89,7 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
             BinToPDFmap = cms.vstring(PDFName)
         ),
         STA_pt3 = cms.PSet(
-            EfficiencyCategoryAndState = cms.vstring("isSTA","true"),
+            EfficiencyCategoryAndState = cms.vstring("isSTA","true","outerValidHits","true"),
             UnbinnedVariables = cms.vstring("mass"),
             BinnedVariables = cms.PSet(
                 #pt = cms.vdouble(1.8, 2, 2.25, 2.5, 2.75, 3, 3.25, 3.5, 4, 4.5, 5, 5.5, 6, 6.5, 7, 8, 9.5, 15, 30),
@@ -99,7 +100,7 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
             BinToPDFmap = cms.vstring(PDFName)
         ),
         STA_pt4 = cms.PSet(
-            EfficiencyCategoryAndState = cms.vstring("isSTA","true"),
+            EfficiencyCategoryAndState = cms.vstring("isSTA","true","outerValidHits","true"),
             UnbinnedVariables = cms.vstring("mass"),
             BinnedVariables = cms.PSet(
                 #pt = cms.vdouble(1.8, 2, 2.25, 2.5, 2.75, 3, 3.25, 3.5, 4, 4.5, 5, 5.5, 6, 7.5, 12, 30),
@@ -110,7 +111,7 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
             BinToPDFmap = cms.vstring(PDFName)
         ),
         STA_1bin = cms.PSet(
-            EfficiencyCategoryAndState = cms.vstring("isSTA","true"),
+            EfficiencyCategoryAndState = cms.vstring("isSTA","true","outerValidHits","true"),
             UnbinnedVariables = cms.vstring("mass"),
             BinnedVariables = cms.PSet(
                 pt = cms.vdouble(1.8,30.),
@@ -119,7 +120,7 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
             BinToPDFmap = cms.vstring(PDFName)
         ),
         STA_eta = cms.PSet(
-            EfficiencyCategoryAndState = cms.vstring("isSTA","true"),
+            EfficiencyCategoryAndState = cms.vstring("isSTA","true","outerValidHits","true"),
             UnbinnedVariables = cms.vstring("mass"),
             BinnedVariables = cms.PSet(
                eta = cms.vdouble(-2.4,-2.1,-1.8,-1.2,0,1.2,1.8,2.1,2.4),
@@ -129,7 +130,7 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
             BinToPDFmap = cms.vstring(PDFName)
         ),
         STA_abseta = cms.PSet(
-            EfficiencyCategoryAndState = cms.vstring("isSTA","true"),
+            EfficiencyCategoryAndState = cms.vstring("isSTA","true","outerValidHits","true"),
             UnbinnedVariables = cms.vstring("mass"),
             BinnedVariables = cms.PSet(
                 abseta = cms.vdouble(0,1.2,1.8,2.1,2.4),
