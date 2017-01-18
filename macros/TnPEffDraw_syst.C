@@ -546,9 +546,9 @@ void TnPEffDraw_syst() {
            ComPt0[k][i]->Fit(fmc,"WRME");
 
            // fit data again, based on MC parameters
-           for (int ipar=0; ipar<fmc->GetNpar(); ipar++) fdata->SetParameter(ipar,fmc->GetParameter(ipar));
-           ComPt1[k][i]->Fit(fdata,"RME");
-           ComPt1[k][i]->Fit(fdata,"WRME");
+           //for (int ipar=0; ipar<fmc->GetNpar(); ipar++) fdata->SetParameter(ipar,fmc->GetParameter(ipar));
+           //ComPt1[k][i]->Fit(fdata,"RME");
+           //ComPt1[k][i]->Fit(fdata,"WRME");
 
            // print info
            leg1->AddEntry(fmc,formula(fmc,2),"pl");
@@ -1168,17 +1168,17 @@ TF1 *initfcn(const char* fname, int ifcn, double ptmin, double ptmax, double eff
       ans->SetParLimits(0,0,9.5);
       ans->SetParLimits(1,-10.,10.);
       ans->SetParLimits(2,0,50.);
-      ans->SetParLimits(3,-2.,2.);
-      ans->SetParameters(effguess,2.,1.0,0.);
+      ans->SetParLimits(3,0.,50.);
+      ans->SetParameters(effguess,0.1,1.0,0.);
    } else if (ifcn==2) {
       ans->SetParNames("eff0","x0","m","cst","fall");
       // Initialize the normalization to the efficiency in the last point
-      ans->SetParLimits(0,0,95);
+      ans->SetParLimits(0,0,9.5);
       ans->SetParLimits(1,-10.,10.);
       ans->SetParLimits(2,0,50.);
-      ans->SetParLimits(3,-2.,2.);
-      ans->SetParLimits(4,-1.5,0.);
-      ans->SetParameters(effguess,2.,1.,0.,0.);
+      ans->SetParLimits(3,0.,50.);
+      ans->SetParLimits(4,-2.5,0.);
+      ans->SetParameters(effguess,0.1,1.,0.,0.);
    }
    return ans;
 }
