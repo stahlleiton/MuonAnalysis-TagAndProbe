@@ -89,7 +89,7 @@ Double_t findNcoll(int hiBin) {
    return Ncoll[hiBin];
 };
 
-TH1F *g2h(TGraphAsymmErrors *g) {
+TH1F *g2h(TGraphAsymmErrors *g, double def=1e-3) {
    int n = g->GetN();
    double *x = g->GetX();
    double *y = g->GetY();
@@ -102,11 +102,12 @@ TH1F *g2h(TGraphAsymmErrors *g) {
    for (int i=0; i<n; i++) bins[i+1] = x[i]-exl[i];
    bins[n+1] = x[n-1]+exh[n-1];
    TH1F *ans = new TH1F(Form("tmp%i",gRandom->Integer(1e9)),"tmp",n+1,bins);
+   ans->SetBinContent(1,def);
+   ans->SetBinError(1,def/5.);
    for (int i=0; i<n; i++) {
       ans->SetBinContent(i+2,y[i]);
       ans->SetBinError(i+2,(eyl[i]+eyh[i])/2);
    }
-   cout << ans->GetBinLowEdge(n+1) + ans->GetBinWidth(n+1) << endl;
    ans->SetLineColor(g->GetLineColor());
    ans->SetMarkerColor(g->GetMarkerColor());
    ans->SetMarkerStyle(g->GetMarkerStyle());
@@ -124,7 +125,9 @@ void setTRatioPlotStyle(TRatioPlot *tr) {
    tr->SetLowBottomMargin(0.4);
    tr->SetRightMargin(0.05);
    tr->GetUpperRefYaxis()->SetRangeUser(0,1.1);
+   tr->GetUpperRefXaxis()->SetRangeUser(0,30);
    tr->GetLowerRefYaxis()->SetRangeUser(0.89,1.11);
+   tr->GetLowerRefXaxis()->SetRangeUser(0,30);
    tr->GetLowerRefYaxis()->SetNdivisions(503,kFALSE);
    tr->GetUpperRefYaxis()->SetTitle("Efficiency");
    tr->GetLowerRefYaxis()->SetTitle("trd / tnp");

@@ -68,27 +68,26 @@ void closure2016pp() {
    tleg->SetBorderSize(0); tleg->SetFillColor(0);
 
    // 0<|y|<1.2
-   // THIS IS CRASHING??? WHY???
-   // c1->cd(); c1->Clear();
-   // da_trg = (RooDataSet*)ftnp_trg->Get("tpTree/MuIdTrg_abseta00_12/fit_eff");
-   // gtrg = plotEff(da_trg,1,"pt");
-   // gtrg->SetLineColor(kRed);
-   // gtrg->SetMarkerColor(kRed);
-   // hnum = (TH1D*) f->Get("hnumglbIDtrg_00_12");
-   // hden = (TH1D*) f->Get("hnumglbID_00_12");
-   // eff->Divide(hnum,hden,"pois");
-   // eff->SetLineColor(kBlack);
-   // eff->SetMarkerColor(kBlack);
-   // tleg->AddEntry(gtrg,"Tag and probe","lp");
-   // tleg->AddEntry(eff,"Traditional","lp");
-   // tleg->SetHeader("pp, trigger, 0<|y|<1.2");
-   // tr = new TRatioPlot(g2h(eff),g2h(gtrg));
-   // tr->Draw();
-   // setTRatioPlotStyle(tr);
-   // c1->Update();
-   // tr->GetUpperPad()->cd();
-   // tleg->Draw();
-   // c1->SaveAs("pp_trg_binned_00_12.pdf");
+   c1->cd(); c1->Clear();
+   da_trg = (RooDataSet*)ftnp_trg->Get("tpTree/MuIdTrg_abseta00_12/fit_eff");
+   gtrg = plotEff(da_trg,1,"pt");
+   gtrg->SetLineColor(kRed);
+   gtrg->SetMarkerColor(kRed);
+   hnum = (TH1D*) f->Get("hnumglbIDtrg_00_12");
+   hden = (TH1D*) f->Get("hnumglbID_00_12");
+   eff->Divide(hnum,hden,"pois");
+   eff->SetLineColor(kBlack);
+   eff->SetMarkerColor(kBlack);
+   tleg->AddEntry(gtrg,"Tag and probe","lp");
+   tleg->AddEntry(eff,"Traditional","lp");
+   tleg->SetHeader("pp, trigger, 0<|y|<1.2");
+   tr = new TRatioPlot(g2h(eff,20),g2h(gtrg,2));
+   tr->Draw();
+   setTRatioPlotStyle(tr);
+   c1->Update();
+   tr->GetUpperPad()->cd();
+   tleg->Draw();
+   c1->SaveAs("pp_trg_binned_00_12.pdf");
 
    // 1.2<|y|<1.8
    c1->cd(); c1->Clear();
@@ -102,7 +101,7 @@ void closure2016pp() {
    eff->SetLineColor(kBlack);
    eff->SetMarkerColor(kBlack);
    tleg->SetHeader("pp, trigger, 1.2<|y|<1.8");
-   tr = new TRatioPlot(g2h(eff),g2h(gtrg));
+   tr = new TRatioPlot(g2h(eff,20),g2h(gtrg,2));
    setTRatioPlotStyle(tr);
    c1->Update();
    tr->GetUpperPad()->cd();
@@ -121,7 +120,7 @@ void closure2016pp() {
    eff->SetLineColor(kBlack);
    eff->SetMarkerColor(kBlack);
    tleg->SetHeader("pp, trigger, 1.8<|y|<2.1");
-   tr = new TRatioPlot(g2h(eff),g2h(gtrg));
+   tr = new TRatioPlot(g2h(eff,20),g2h(gtrg,2));
    setTRatioPlotStyle(tr);
    c1->Update();
    tr->GetUpperPad()->cd();
@@ -140,7 +139,7 @@ void closure2016pp() {
    eff->SetLineColor(kBlack);
    eff->SetMarkerColor(kBlack);
    tleg->SetHeader("pp, trigger, 2.1<|y|<2.4");
-   tr = new TRatioPlot(g2h(eff),g2h(gtrg));
+   tr = new TRatioPlot(g2h(eff,20),g2h(gtrg,2));
    setTRatioPlotStyle(tr);
    c1->Update();
    tr->GetUpperPad()->cd();
@@ -167,7 +166,7 @@ void closure2016pp() {
    eff2->SetMarkerColor(kMagenta);
    tleg->AddEntry(eff2,"Tag and probe (weights)","lp");
    tleg->SetHeader("pp, trigger (fitted), 0<|y|<1.2");
-   tr = new TRatioPlot(g2h(eff),g2h(eff2));
+   tr = new TRatioPlot(g2h(eff,20),g2h(eff2,2));
    setTRatioPlotStyle(tr);
    c1->Update();
    tr->GetUpperPad()->cd();
@@ -192,7 +191,7 @@ void closure2016pp() {
    eff2->SetLineColor(kMagenta);
    eff2->SetMarkerColor(kMagenta);
    tleg->SetHeader("pp, trigger (fitted), 1.2<|y|<1.8");
-   tr = new TRatioPlot(g2h(eff),g2h(eff2));
+   tr = new TRatioPlot(g2h(eff,20),g2h(eff2,2));
    setTRatioPlotStyle(tr);
    c1->Update();
    tr->GetUpperPad()->cd();
@@ -217,7 +216,7 @@ void closure2016pp() {
    eff2->SetLineColor(kMagenta);
    eff2->SetMarkerColor(kMagenta);
    tleg->SetHeader("pp, trigger (fitted), 1.8<|y|<2.1");
-   tr = new TRatioPlot(g2h(eff),g2h(eff2));
+   tr = new TRatioPlot(g2h(eff,20),g2h(eff2,2));
    setTRatioPlotStyle(tr);
    c1->Update();
    tr->GetUpperPad()->cd();
@@ -242,7 +241,7 @@ void closure2016pp() {
    eff2->SetLineColor(kMagenta);
    eff2->SetMarkerColor(kMagenta);
    tleg->SetHeader("pp, trigger (fitted), 2.1<|y|<2.4");
-   tr = new TRatioPlot(g2h(eff),g2h(eff2));
+   tr = new TRatioPlot(g2h(eff,20),g2h(eff2,2));
    setTRatioPlotStyle(tr);
    c1->Update();
    tr->GetUpperPad()->cd();
@@ -269,7 +268,7 @@ void closure2016pp() {
    eff2->SetLineColor(kMagenta);
    eff2->SetMarkerColor(kMagenta);
    tleg->SetHeader("pp, full eff, 0<|y|<1.2");
-   tr = new TRatioPlot(g2h(eff),g2h(eff2));
+   tr = new TRatioPlot(g2h(eff,20),g2h(eff2,2));
    setTRatioPlotStyle(tr);
    c1->Update();
    tr->GetUpperPad()->cd();
@@ -294,7 +293,7 @@ void closure2016pp() {
    eff2->SetLineColor(kMagenta);
    eff2->SetMarkerColor(kMagenta);
    tleg->SetHeader("pp, full eff, 1.2<|y|<1.8");
-   tr = new TRatioPlot(g2h(eff),g2h(eff2));
+   tr = new TRatioPlot(g2h(eff,20),g2h(eff2,2));
    setTRatioPlotStyle(tr);
    c1->Update();
    tr->GetUpperPad()->cd();
@@ -319,7 +318,7 @@ void closure2016pp() {
    eff2->SetLineColor(kMagenta);
    eff2->SetMarkerColor(kMagenta);
    tleg->SetHeader("pp, full eff, 1.8<|y|<2.1");
-   tr = new TRatioPlot(g2h(eff),g2h(eff2));
+   tr = new TRatioPlot(g2h(eff,20),g2h(eff2,2));
    setTRatioPlotStyle(tr);
    c1->Update();
    tr->GetUpperPad()->cd();
@@ -344,7 +343,7 @@ void closure2016pp() {
    eff2->SetLineColor(kMagenta);
    eff2->SetMarkerColor(kMagenta);
    tleg->SetHeader("pp, full eff, 2.1<|y|<2.4");
-   tr = new TRatioPlot(g2h(eff),g2h(eff2));
+   tr = new TRatioPlot(g2h(eff,20),g2h(eff2,2));
    setTRatioPlotStyle(tr);
    c1->Update();
    tr->GetUpperPad()->cd();

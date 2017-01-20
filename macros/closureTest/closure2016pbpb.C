@@ -81,7 +81,7 @@ void closure2016pbpb() {
    tleg->AddEntry(gtrg,"Tag and probe","lp");
    tleg->AddEntry(eff,"Traditional","lp");
    tleg->SetHeader("pbpb, trigger, 0<|y|<1.2");
-   tr = new TRatioPlot(g2h(eff),g2h(gtrg));
+   tr = new TRatioPlot(g2h(eff,20),g2h(gtrg,2));
    tr->Draw();
    setTRatioPlotStyle(tr);
    c1->Update();
@@ -101,7 +101,7 @@ void closure2016pbpb() {
    eff->SetLineColor(kBlack);
    eff->SetMarkerColor(kBlack);
    tleg->SetHeader("pbpb, trigger, 1.2<|y|<1.8");
-   tr = new TRatioPlot(g2h(eff),g2h(gtrg));
+   tr = new TRatioPlot(g2h(eff,20),g2h(gtrg,2));
    setTRatioPlotStyle(tr);
    c1->Update();
    tr->GetUpperPad()->cd();
@@ -120,7 +120,7 @@ void closure2016pbpb() {
    eff->SetLineColor(kBlack);
    eff->SetMarkerColor(kBlack);
    tleg->SetHeader("pbpb, trigger, 1.8<|y|<2.1");
-   tr = new TRatioPlot(g2h(eff),g2h(gtrg));
+   tr = new TRatioPlot(g2h(eff,20),g2h(gtrg,2));
    setTRatioPlotStyle(tr);
    c1->Update();
    tr->GetUpperPad()->cd();
@@ -139,7 +139,7 @@ void closure2016pbpb() {
    eff->SetLineColor(kBlack);
    eff->SetMarkerColor(kBlack);
    tleg->SetHeader("pbpb, trigger, 2.1<|y|<2.4");
-   tr = new TRatioPlot(g2h(eff),g2h(gtrg));
+   tr = new TRatioPlot(g2h(eff,20),g2h(gtrg,2));
    setTRatioPlotStyle(tr);
    c1->Update();
    tr->GetUpperPad()->cd();
@@ -165,13 +165,13 @@ void closure2016pbpb() {
    eff2->SetMarkerColor(kMagenta);
    tleg->AddEntry(eff2,"Tag and probe (weights)","lp");
    tleg->SetHeader("pbpb, trigger (fitted), 0<|y|<1.2");
-   tr = new TRatioPlot(g2h(eff),g2h(eff2));
+   tr = new TRatioPlot(g2h(eff,20),g2h(eff2,2));
    setTRatioPlotStyle(tr);
    c1->Update();
    tr->GetUpperPad()->cd();
    fpbpb_trg->Draw("same");
    tleg->Draw();
-   c1->SaveAs("pbpb_trg_binned_00_12.pdf");
+   c1->SaveAs("pbpb_trg_00_12.pdf");
 
    // 1.2<|y|<1.8
    c1->cd(); c1->Clear();
@@ -190,13 +190,13 @@ void closure2016pbpb() {
    eff2->SetLineColor(kMagenta);
    eff2->SetMarkerColor(kMagenta);
    tleg->SetHeader("pbpb, trigger (fitted), 1.2<|y|<1.8");
-   tr = new TRatioPlot(g2h(eff),g2h(eff2));
+   tr = new TRatioPlot(g2h(eff,20),g2h(eff2,2));
    setTRatioPlotStyle(tr);
    c1->Update();
    tr->GetUpperPad()->cd();
    fpbpb_trg->Draw("same");
    tleg->Draw();
-   c1->SaveAs("pbpb_trg_binned_12_18.pdf");
+   c1->SaveAs("pbpb_trg_12_18.pdf");
 
    // 1.8<|y|<2.1
    c1->cd(); c1->Clear();
@@ -215,13 +215,13 @@ void closure2016pbpb() {
    eff2->SetLineColor(kMagenta);
    eff2->SetMarkerColor(kMagenta);
    tleg->SetHeader("pbpb, trigger (fitted), 1.8<|y|<2.1");
-   tr = new TRatioPlot(g2h(eff),g2h(eff2));
+   tr = new TRatioPlot(g2h(eff,20),g2h(eff2,2));
    setTRatioPlotStyle(tr);
    c1->Update();
    tr->GetUpperPad()->cd();
    fpbpb_trg->Draw("same");
    tleg->Draw();
-   c1->SaveAs("pbpb_trg_binned_18_21.pdf");
+   c1->SaveAs("pbpb_trg_18_21.pdf");
 
    // 2.1<|y|<2.4
    c1->cd(); c1->Clear();
@@ -240,13 +240,13 @@ void closure2016pbpb() {
    eff2->SetLineColor(kMagenta);
    eff2->SetMarkerColor(kMagenta);
    tleg->SetHeader("pbpb, trigger (fitted), 2.1<|y|<2.4");
-   tr = new TRatioPlot(g2h(eff),g2h(eff2));
+   tr = new TRatioPlot(g2h(eff,20),g2h(eff2,2));
    setTRatioPlotStyle(tr);
    c1->Update();
    tr->GetUpperPad()->cd();
    fpbpb_trg->Draw("same");
    tleg->Draw();
-   c1->SaveAs("pbpb_trg_binned_21_24.pdf");
+   c1->SaveAs("pbpb_trg_21_24.pdf");
 
 
    // Full eff comparison: Trd vs Tnp (functions)
@@ -267,7 +267,7 @@ void closure2016pbpb() {
    eff2->SetLineColor(kMagenta);
    eff2->SetMarkerColor(kMagenta);
    tleg->SetHeader("pbpb, full eff, 0<|y|<1.2");
-   tr = new TRatioPlot(g2h(eff),g2h(eff2));
+   tr = new TRatioPlot(g2h(eff,20),g2h(eff2,2));
    setTRatioPlotStyle(tr);
    c1->Update();
    tr->GetUpperPad()->cd();
@@ -292,7 +292,7 @@ void closure2016pbpb() {
    eff2->SetLineColor(kMagenta);
    eff2->SetMarkerColor(kMagenta);
    tleg->SetHeader("pbpb, full eff, 1.2<|y|<1.8");
-   tr = new TRatioPlot(g2h(eff),g2h(eff2));
+   tr = new TRatioPlot(g2h(eff,20),g2h(eff2,2));
    setTRatioPlotStyle(tr);
    c1->Update();
    tr->GetUpperPad()->cd();
@@ -317,7 +317,7 @@ void closure2016pbpb() {
    eff2->SetLineColor(kMagenta);
    eff2->SetMarkerColor(kMagenta);
    tleg->SetHeader("pbpb, full eff, 1.8<|y|<2.1");
-   tr = new TRatioPlot(g2h(eff),g2h(eff2));
+   tr = new TRatioPlot(g2h(eff,20),g2h(eff2,2));
    setTRatioPlotStyle(tr);
    c1->Update();
    tr->GetUpperPad()->cd();
@@ -342,7 +342,7 @@ void closure2016pbpb() {
    eff2->SetLineColor(kMagenta);
    eff2->SetMarkerColor(kMagenta);
    tleg->SetHeader("pbpb, full eff, 2.1<|y|<2.4");
-   tr = new TRatioPlot(g2h(eff),g2h(eff2));
+   tr = new TRatioPlot(g2h(eff,20),g2h(eff2,2));
    setTRatioPlotStyle(tr);
    c1->Update();
    tr->GetUpperPad()->cd();
