@@ -100,6 +100,7 @@ void closure2016pp() {
    eff->Divide(hnum,hden,"pois");
    eff->SetLineColor(kBlack);
    eff->SetMarkerColor(kBlack);
+   eff->SetMarkerStyle(kFullSquare);
    tleg->SetHeader("pp, trigger, 1.2<|y|<1.8");
    tr = new TRatioPlot(g2h(eff,20),g2h(gtrg,2));
    setTRatioPlotStyle(tr);
@@ -119,6 +120,7 @@ void closure2016pp() {
    eff->Divide(hnum,hden,"pois");
    eff->SetLineColor(kBlack);
    eff->SetMarkerColor(kBlack);
+   eff->SetMarkerStyle(kFullSquare);
    tleg->SetHeader("pp, trigger, 1.8<|y|<2.1");
    tr = new TRatioPlot(g2h(eff,20),g2h(gtrg,2));
    setTRatioPlotStyle(tr);
@@ -138,6 +140,7 @@ void closure2016pp() {
    eff->Divide(hnum,hden,"pois");
    eff->SetLineColor(kBlack);
    eff->SetMarkerColor(kBlack);
+   eff->SetMarkerStyle(kFullSquare);
    tleg->SetHeader("pp, trigger, 2.1<|y|<2.4");
    tr = new TRatioPlot(g2h(eff,20),g2h(gtrg,2));
    setTRatioPlotStyle(tr);
@@ -159,6 +162,7 @@ void closure2016pp() {
    eff->Divide(hnum,hden,"pois");
    eff->SetLineColor(kBlack);
    eff->SetMarkerColor(kBlack);
+   eff->SetMarkerStyle(kFullSquare);
    hnum2 = (TH1D*) f->Get("hden_staIDtrgwt_00_12");
    hden2 = (TH1D*) f->Get("hden_staIDwt_00_12");
    eff2->Divide(hnum2,hden2,"pois");
@@ -185,6 +189,7 @@ void closure2016pp() {
    eff->Divide(hnum,hden,"pois");
    eff->SetLineColor(kBlack);
    eff->SetMarkerColor(kBlack);
+   eff->SetMarkerStyle(kFullSquare);
    hnum2 = (TH1D*) f->Get("hden_staIDtrgwt_12_18");
    hden2 = (TH1D*) f->Get("hden_staIDwt_12_18");
    eff2->Divide(hnum2,hden2,"pois");
@@ -210,6 +215,7 @@ void closure2016pp() {
    eff->Divide(hnum,hden,"pois");
    eff->SetLineColor(kBlack);
    eff->SetMarkerColor(kBlack);
+   eff->SetMarkerStyle(kFullSquare);
    hnum2 = (TH1D*) f->Get("hden_staIDtrgwt_18_21");
    hden2 = (TH1D*) f->Get("hden_staIDwt_18_21");
    eff2->Divide(hnum2,hden2,"pois");
@@ -235,6 +241,7 @@ void closure2016pp() {
    eff->Divide(hnum,hden,"pois");
    eff->SetLineColor(kBlack);
    eff->SetMarkerColor(kBlack);
+   eff->SetMarkerStyle(kFullSquare);
    hnum2 = (TH1D*) f->Get("hden_staIDtrgwt_21_24");
    hden2 = (TH1D*) f->Get("hden_staIDwt_21_24");
    eff2->Divide(hnum2,hden2,"pois");
@@ -262,6 +269,7 @@ void closure2016pp() {
    eff->Divide(hnum,hden,"pois");
    eff->SetLineColor(kBlack);
    eff->SetMarkerColor(kBlack);
+   eff->SetMarkerStyle(kFullSquare);
    hnum2 = (TH1D*) f->Get("hden_staIDtrgwt_00_12");
    hden2 = (TH1D*) f->Get("hden_00_12");
    eff2->Divide(hnum2,hden2,"pois");
@@ -287,6 +295,7 @@ void closure2016pp() {
    eff->Divide(hnum,hden,"pois");
    eff->SetLineColor(kBlack);
    eff->SetMarkerColor(kBlack);
+   eff->SetMarkerStyle(kFullSquare);
    hnum2 = (TH1D*) f->Get("hden_staIDtrgwt_12_18");
    hden2 = (TH1D*) f->Get("hden_12_18");
    eff2->Divide(hnum2,hden2,"pois");
@@ -312,6 +321,7 @@ void closure2016pp() {
    eff->Divide(hnum,hden,"pois");
    eff->SetLineColor(kBlack);
    eff->SetMarkerColor(kBlack);
+   eff->SetMarkerStyle(kFullSquare);
    hnum2 = (TH1D*) f->Get("hden_staIDtrgwt_18_21");
    hden2 = (TH1D*) f->Get("hden_18_21");
    eff2->Divide(hnum2,hden2,"pois");
@@ -337,6 +347,7 @@ void closure2016pp() {
    eff->Divide(hnum,hden,"pois");
    eff->SetLineColor(kBlack);
    eff->SetMarkerColor(kBlack);
+   eff->SetMarkerStyle(kFullSquare);
    hnum2 = (TH1D*) f->Get("hden_staIDtrgwt_21_24");
    hden2 = (TH1D*) f->Get("hden_21_24");
    eff2->Divide(hnum2,hden2,"pois");

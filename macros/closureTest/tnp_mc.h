@@ -30,10 +30,10 @@ double tnp_mc_trg_pp(double x, double eta)
 {
    // denominator (from MC)
    double den=1;
-   if (fabs(eta)<1.2) den = (34.38245*(TMath::Erf((x-5.78815)/2.97251)*TMath::Exp(-1.37492*x)))+0.97770;
-   else if (fabs(eta)<1.8) den = (52.18025*(TMath::Erf((x-6.06559)/6.11135)*TMath::Exp(-1.42980*x)))+0.94384;
-   else if (fabs(eta)<2.1) den = (7.30528*(TMath::Erf((x-5.21429)/11.40230)*TMath::Exp(-0.76187*x)))+0.89352;
-   else den = (17.36511*(TMath::Erf((x-5.04177)/41.72924)*TMath::Exp(-0.79676*x)))+0.87670;
+   if (fabs(eta)<1.2) den = (0.51387*(TMath::Erf((x-2.95780)/1.01717)*TMath::Exp(-0.00001*x)))+0.46186;
+   else if (fabs(eta)<1.8) den = (0.87963*(TMath::Erf((x-2.33663)/1.22198)*TMath::Exp(-0.00013*x)))+0.06241;
+   else if (fabs(eta)<2.1) den = (0.53171*(TMath::Erf((x-1.80661)/1.67849)*TMath::Exp(-0.00000*x)))+0.36279;
+   else den = (0.38994*(TMath::Erf((x-1.55863)/1.70815)*TMath::Exp(-0.00003*x)))+0.48718;
    return den;
 }
 
@@ -66,10 +66,10 @@ double tnp_mc_muid_pbpb(double x, double eta) {
 double tnp_mc_muid_pp(double x, double eta) {
    // denominator (from MC)
    double den=1;
-   if (fabs(eta)<1.2) den = (0.17208*TMath::Erf((x-1.91314)/2.21047))+0.81832;
-   else if (fabs(eta)<1.8) den = (0.02468*TMath::Erf((x+5.04947)/15.26842))+0.97444;
-   else if (fabs(eta)<2.1) den = (0.01153*TMath::Erf((x-1.49227)/2.99647))+0.98563;
-   else den = (0.02998*TMath::Erf((x+9.82571)/17.70087))+0.96778;
+   if (fabs(eta)<1.2) den = (0.98383*TMath::Erf((x+0.47673)/2.94587))+0.00653;
+   else if (fabs(eta)<1.8) den = (0.02768*TMath::Erf((x+8.66696)/28.28792))+0.97612;
+   else if (fabs(eta)<2.1) den = (0.74373*TMath::Erf((x-0.30826)/1.07049))+0.25156;
+   else den = (0.82009*TMath::Erf((x-1.22789)/0.48924))+0.17143;
    return den;
 }
 
@@ -84,10 +84,10 @@ double tnp_mc_muid_pp(double x, double eta) {
 double tnp_mc_sta_pp(double x, double eta) {
    // denominator (from MC)
    double den=1;
-   if (fabs(eta)<1.2) den = (1.16795*TMath::Erf((x-2.70934)/1.14920))-0.18306;
-   else if (fabs(eta)<1.8) den = (0.06821*TMath::Erf((x-2.40814)/1.06603))+0.90716;
-   else if (fabs(eta)<2.1) den = (0.02081*TMath::Erf((x-2.07575)/0.86473))+0.96405;
-   else den = (0.03392*TMath::Erf((x-2.61705)/0.01196))+0.94859;
+   if (fabs(eta)<1.2) den = (0.58746*TMath::Erf((x-3.17585)/0.96599))+0.39714;
+   else if (fabs(eta)<1.8) den = (0.51632*TMath::Erf((x-0.56984)/1.78604))+0.45932;
+   else if (fabs(eta)<2.1) den = (0.51122*TMath::Erf((x-0.01449)/1.43367))+0.47344;
+   else den = (0.43706*TMath::Erf((x-0.50936)/1.62531))+0.54785;
    return den;
 }
 

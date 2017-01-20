@@ -24,42 +24,49 @@ float ptmin(float etamax) {
 void plotSFs() {
    TCanvas *c1 = new TCanvas();
    TH1F *haxes = new TH1F("haxes",";p_{T} [GeV/c];Scale factor",1,0,30);
+   TH1F *haxes20 = new TH1F("haxes20",";p_{T} [GeV/c];Scale factor",1,0,20);
 
    float *etamin=NULL, *etamax=NULL;
-   float eta, ptminval;
+   float eta, ptminval, ptmaxval;
 
    // trg, pbpb
    etamin = new float[4]; etamin[0]=0.; etamin[1]=1.2; etamin[2]=1.8; etamin[3]=2.1;
    etamax = new float[4]; etamax[0]=1.2; etamax[1]=1.8; etamax[2]=2.1; etamax[3] = 2.4;
 
    for (int i=0; i<4; i++) {
-      haxes->GetYaxis()->SetRangeUser(0.5,1.5);
-      haxes->Draw();
+      if (i<2) {
+         haxes->GetYaxis()->SetRangeUser(0.5,1.5);
+         haxes->Draw();
+      } else {
+         haxes20->GetYaxis()->SetRangeUser(0.5,1.5);
+         haxes20->Draw();
+      }
 
       TLegend *tleg = new TLegend(0.18,0.16,0.51,0.47);
       tleg->SetBorderSize(0);
 
       eta = (etamax[i]+etamin[i])/2.;
       ptminval = ptmin(etamax[i]);
+      ptmaxval = (i<2) ? 30 : 20;
       for (int i=1; i<=100; i++) {
-         TF1 *fnom = new TF1(Form("f%i",i),tnp_weight_trg_pbpb_wrapper,ptminval,30,2);
+         TF1 *fnom = new TF1(Form("f%i",i),tnp_weight_trg_pbpb_wrapper,ptminval,ptmaxval,2);
          fnom->SetParameters(eta,i);
          fnom->SetLineColor(kBlack);
          fnom->Draw("same");
       }
-      TF1 *fp = new TF1("fp",tnp_weight_trg_pbpb_wrapper,ptminval,30,2);
+      TF1 *fp = new TF1("fp",tnp_weight_trg_pbpb_wrapper,ptminval,ptmaxval,2);
       fp->SetParameters(eta,-1);
       fp->SetLineColor(kCyan);
       fp->Draw("same");
-      TF1 *fm = new TF1("fm",tnp_weight_trg_pbpb_wrapper,ptminval,30,2);
+      TF1 *fm = new TF1("fm",tnp_weight_trg_pbpb_wrapper,ptminval,ptmaxval,2);
       fm->SetParameters(eta,-2);
       fm->SetLineColor(kCyan);
       fm->Draw("same");
-      TF1 *fbinned = new TF1("fbinned",tnp_weight_trg_pbpb_wrapper,ptminval,30,2);
+      TF1 *fbinned = new TF1("fbinned",tnp_weight_trg_pbpb_wrapper,ptminval,ptmaxval,2);
       fbinned->SetParameters(eta,-10);
       fbinned->SetLineColor(kGreen+2);
       fbinned->Draw("same");
-      TF1 *fnom = new TF1("fnom",tnp_weight_trg_pbpb_wrapper,ptminval,30,2);
+      TF1 *fnom = new TF1("fnom",tnp_weight_trg_pbpb_wrapper,ptminval,ptmaxval,2);
       fnom->SetParameters(eta,0);
       fnom->SetLineColor(kRed);
       fnom->Draw("same");
@@ -76,33 +83,39 @@ void plotSFs() {
 
    // trg, pp
    for (int i=0; i<4; i++) {
-      haxes->GetYaxis()->SetRangeUser(0.5,1.5);
-      haxes->Draw();
+      if (i<2) {
+         haxes->GetYaxis()->SetRangeUser(0.5,1.5);
+         haxes->Draw();
+      } else {
+         haxes20->GetYaxis()->SetRangeUser(0.5,1.5);
+         haxes20->Draw();
+      }
 
       TLegend *tleg = new TLegend(0.18,0.16,0.51,0.47);
       tleg->SetBorderSize(0);
 
       eta = (etamax[i]+etamin[i])/2.;
       ptminval = ptmin(etamax[i]);
+      ptmaxval = (i<2) ? 30 : 20;
       for (int i=1; i<=100; i++) {
-         TF1 *fnom = new TF1(Form("f%i",i),tnp_weight_trg_pp_wrapper,ptminval,30,2);
+         TF1 *fnom = new TF1(Form("f%i",i),tnp_weight_trg_pp_wrapper,ptminval,ptmaxval,2);
          fnom->SetParameters(eta,i);
          fnom->SetLineColor(kBlack);
          fnom->Draw("same");
       }
-      TF1 *fp = new TF1("fp",tnp_weight_trg_pp_wrapper,ptminval,30,2);
+      TF1 *fp = new TF1("fp",tnp_weight_trg_pp_wrapper,ptminval,ptmaxval,2);
       fp->SetParameters(eta,-1);
       fp->SetLineColor(kCyan);
       fp->Draw("same");
-      TF1 *fm = new TF1("fm",tnp_weight_trg_pp_wrapper,ptminval,30,2);
+      TF1 *fm = new TF1("fm",tnp_weight_trg_pp_wrapper,ptminval,ptmaxval,2);
       fm->SetParameters(eta,-2);
       fm->SetLineColor(kCyan);
       fm->Draw("same");
-      TF1 *fbinned = new TF1("fbinned",tnp_weight_trg_pp_wrapper,ptminval,30,2);
+      TF1 *fbinned = new TF1("fbinned",tnp_weight_trg_pp_wrapper,ptminval,ptmaxval,2);
       fbinned->SetParameters(eta,-10);
       fbinned->SetLineColor(kGreen+2);
       fbinned->Draw("same");
-      TF1 *fnom = new TF1("fnom",tnp_weight_trg_pp_wrapper,ptminval,30,2);
+      TF1 *fnom = new TF1("fnom",tnp_weight_trg_pp_wrapper,ptminval,ptmaxval,2);
       fnom->SetParameters(eta,0);
       fnom->SetLineColor(kRed);
       fnom->Draw("same");
