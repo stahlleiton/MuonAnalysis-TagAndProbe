@@ -1,12 +1,12 @@
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
-// Thu Jan 19 12:02:42 2017 by ROOT version 6.08/04
+// Tue Jan 17 15:39:08 2017 by ROOT version 6.08/04
 // from TTree myTree/My TTree of dimuons
-// found on file: root://eoscms//eos/cms/store/group/phys_heavyions/dileptons/MC2015/PbPb502TeV/TTrees/OniaTree_Pythia8_JpsiMM_ptJpsi_03_06_Hydjet_MB_HINPbPbWinter16DR-75X_mcRun2_HeavyIon_v13-v1_Extended.root
+// found on file: root://xrootd.unl.edu//store/group/phys_heavyions/dileptons/MC2015/pp502TeV/TTrees/OniaTree_JpsiMM_5p02TeV_TuneCUETP8M1_HINppWinter16DR-75X_mcRun2_asymptotic_ppAt5TeV_v3-v1.root
 //////////////////////////////////////////////////////////
 
-#ifndef ClosureTestPbPb_h
-#define ClosureTestPbPb_h
+#ifndef ClosureTestPP_h
+#define ClosureTestPP_h
 
 #include <TROOT.h>
 #include <TChain.h>
@@ -16,7 +16,7 @@
 #include "TClonesArray.h"
 #include "TLorentzVector.h"
 
-class ClosureTestPbPb {
+class ClosureTestPP {
 public :
    TTree          *fChain;   //!pointer to the analyzed TTree or TChain
    Int_t           fCurrent; //!current Tree number in a TChain
@@ -31,7 +31,7 @@ public :
    Float_t         nPV;
    Int_t           Centrality;
    Int_t           nTrig;
-   Int_t           trigPrescale[43];   //[nTrig]
+   Int_t           trigPrescale[15];   //[nTrig]
    ULong64_t       HLTriggers;
    Int_t           Npix;
    Int_t           NpixelTracks;
@@ -49,110 +49,103 @@ public :
    Float_t         SumET_ZDC;
    Float_t         SumET_ZDCplus;
    Float_t         SumET_ZDCminus;
-   Int_t           nEP;
-   Float_t         rpAng[29];   //[nEP]
-   Float_t         rpSin[29];   //[nEP]
-   Float_t         rpCos[29];   //[nEP]
    Int_t           Reco_QQ_size;
-   Int_t           Reco_QQ_type[99];   //[Reco_QQ_size]
-   Int_t           Reco_QQ_sign[99];   //[Reco_QQ_size]
+   Int_t           Reco_QQ_type[10];   //[Reco_QQ_size]
+   Int_t           Reco_QQ_sign[10];   //[Reco_QQ_size]
    TClonesArray    *Reco_QQ_4mom;
    TClonesArray    *Reco_QQ_mupl_4mom;
    TClonesArray    *Reco_QQ_mumi_4mom;
-   ULong64_t       Reco_QQ_trig[99];   //[Reco_QQ_size]
-   ULong64_t       Reco_QQ_mupl_trig[99];   //[Reco_QQ_size]
-   ULong64_t       Reco_QQ_mumi_trig[99];   //[Reco_QQ_size]
-   Bool_t          Reco_QQ_isCowboy[99];   //[Reco_QQ_size]
-   Float_t         Reco_QQ_ctau[99];   //[Reco_QQ_size]
-   Float_t         Reco_QQ_ctauErr[99];   //[Reco_QQ_size]
-   Float_t         Reco_QQ_ctau3D[99];   //[Reco_QQ_size]
-   Float_t         Reco_QQ_ctauErr3D[99];   //[Reco_QQ_size]
-   Float_t         Reco_QQ_ctauTrue[99];   //[Reco_QQ_size]
-   Float_t         Reco_QQ_ctauTrue3D[99];   //[Reco_QQ_size]
-   Float_t         Reco_QQ_VtxProb[99];   //[Reco_QQ_size]
-   Float_t         Reco_QQ_dca[99];   //[Reco_QQ_size]
-   Float_t         Reco_QQ_MassErr[99];   //[Reco_QQ_size]
+   ULong64_t       Reco_QQ_trig[10];   //[Reco_QQ_size]
+   ULong64_t       Reco_QQ_mupl_trig[10];   //[Reco_QQ_size]
+   ULong64_t       Reco_QQ_mumi_trig[10];   //[Reco_QQ_size]
+   Bool_t          Reco_QQ_isCowboy[10];   //[Reco_QQ_size]
+   Float_t         Reco_QQ_ctau[10];   //[Reco_QQ_size]
+   Float_t         Reco_QQ_ctauErr[10];   //[Reco_QQ_size]
+   Float_t         Reco_QQ_ctau3D[10];   //[Reco_QQ_size]
+   Float_t         Reco_QQ_ctauErr3D[10];   //[Reco_QQ_size]
+   Float_t         Reco_QQ_ctauTrue[10];   //[Reco_QQ_size]
+   Float_t         Reco_QQ_ctauTrue3D[10];   //[Reco_QQ_size]
+   Float_t         Reco_QQ_VtxProb[10];   //[Reco_QQ_size]
+   Float_t         Reco_QQ_dca[10];   //[Reco_QQ_size]
+   Float_t         Reco_QQ_MassErr[10];   //[Reco_QQ_size]
    TClonesArray    *Reco_QQ_vtx;
-   Int_t           Reco_QQ_Ntrk[99];   //[Reco_QQ_size]
-   Int_t           Reco_QQ_mupl_SelectionType[99];   //[Reco_QQ_size]
-   Int_t           Reco_QQ_mumi_SelectionType[99];   //[Reco_QQ_size]
-   Bool_t          Reco_QQ_mupl_isGoodMuon[99];   //[Reco_QQ_size]
-   Bool_t          Reco_QQ_mumi_isGoodMuon[99];   //[Reco_QQ_size]
-   Bool_t          Reco_QQ_mupl_highPurity[99];   //[Reco_QQ_size]
-   Bool_t          Reco_QQ_mumi_highPurity[99];   //[Reco_QQ_size]
-   Bool_t          Reco_QQ_mupl_TrkMuArb[99];   //[Reco_QQ_size]
-   Bool_t          Reco_QQ_mumi_TrkMuArb[99];   //[Reco_QQ_size]
-   Bool_t          Reco_QQ_mupl_TMOneStaTight[99];   //[Reco_QQ_size]
-   Bool_t          Reco_QQ_mumi_TMOneStaTight[99];   //[Reco_QQ_size]
-   Int_t           Reco_QQ_mupl_nPixValHits[99];   //[Reco_QQ_size]
-   Int_t           Reco_QQ_mumi_nPixValHits[99];   //[Reco_QQ_size]
-   Int_t           Reco_QQ_mupl_nMuValHits[99];   //[Reco_QQ_size]
-   Int_t           Reco_QQ_mumi_nMuValHits[99];   //[Reco_QQ_size]
-   Int_t           Reco_QQ_mupl_nTrkHits[99];   //[Reco_QQ_size]
-   Int_t           Reco_QQ_mumi_nTrkHits[99];   //[Reco_QQ_size]
-   Float_t         Reco_QQ_mupl_normChi2_inner[99];   //[Reco_QQ_size]
-   Float_t         Reco_QQ_mumi_normChi2_inner[99];   //[Reco_QQ_size]
-   Float_t         Reco_QQ_mupl_normChi2_global[99];   //[Reco_QQ_size]
-   Float_t         Reco_QQ_mumi_normChi2_global[99];   //[Reco_QQ_size]
-   Int_t           Reco_QQ_mupl_nPixWMea[99];   //[Reco_QQ_size]
-   Int_t           Reco_QQ_mumi_nPixWMea[99];   //[Reco_QQ_size]
-   Int_t           Reco_QQ_mupl_nTrkWMea[99];   //[Reco_QQ_size]
-   Int_t           Reco_QQ_mumi_nTrkWMea[99];   //[Reco_QQ_size]
-   Int_t           Reco_QQ_mupl_StationsMatched[99];   //[Reco_QQ_size]
-   Int_t           Reco_QQ_mumi_StationsMatched[99];   //[Reco_QQ_size]
-   Float_t         Reco_QQ_mupl_dxy[99];   //[Reco_QQ_size]
-   Float_t         Reco_QQ_mumi_dxy[99];   //[Reco_QQ_size]
-   Float_t         Reco_QQ_mupl_dxyErr[99];   //[Reco_QQ_size]
-   Float_t         Reco_QQ_mumi_dxyErr[99];   //[Reco_QQ_size]
-   Float_t         Reco_QQ_mupl_dz[99];   //[Reco_QQ_size]
-   Float_t         Reco_QQ_mumi_dz[99];   //[Reco_QQ_size]
-   Float_t         Reco_QQ_mupl_dzErr[99];   //[Reco_QQ_size]
-   Float_t         Reco_QQ_mumi_dzErr[99];   //[Reco_QQ_size]
-   Float_t         Reco_QQ_mupl_pt_inner[99];   //[Reco_QQ_size]
-   Float_t         Reco_QQ_mumi_pt_inner[99];   //[Reco_QQ_size]
-   Float_t         Reco_QQ_mupl_pt_global[99];   //[Reco_QQ_size]
-   Float_t         Reco_QQ_mumi_pt_global[99];   //[Reco_QQ_size]
-   Float_t         Reco_QQ_mupl_ptErr_inner[99];   //[Reco_QQ_size]
-   Float_t         Reco_QQ_mumi_ptErr_inner[99];   //[Reco_QQ_size]
-   Float_t         Reco_QQ_mupl_ptErr_global[99];   //[Reco_QQ_size]
-   Float_t         Reco_QQ_mumi_ptErr_global[99];   //[Reco_QQ_size]
+   Int_t           Reco_QQ_Ntrk[10];   //[Reco_QQ_size]
+   Bool_t          Reco_QQ_mupl_isGoodMuon[10];   //[Reco_QQ_size]
+   Bool_t          Reco_QQ_mumi_isGoodMuon[10];   //[Reco_QQ_size]
+   Bool_t          Reco_QQ_mupl_highPurity[10];   //[Reco_QQ_size]
+   Bool_t          Reco_QQ_mumi_highPurity[10];   //[Reco_QQ_size]
+   Bool_t          Reco_QQ_mupl_TrkMuArb[10];   //[Reco_QQ_size]
+   Bool_t          Reco_QQ_mumi_TrkMuArb[10];   //[Reco_QQ_size]
+   Bool_t          Reco_QQ_mupl_TMOneStaTight[10];   //[Reco_QQ_size]
+   Bool_t          Reco_QQ_mumi_TMOneStaTight[10];   //[Reco_QQ_size]
+   Int_t           Reco_QQ_mupl_nPixValHits[10];   //[Reco_QQ_size]
+   Int_t           Reco_QQ_mumi_nPixValHits[10];   //[Reco_QQ_size]
+   Int_t           Reco_QQ_mupl_nMuValHits[10];   //[Reco_QQ_size]
+   Int_t           Reco_QQ_mumi_nMuValHits[10];   //[Reco_QQ_size]
+   Int_t           Reco_QQ_mupl_nTrkHits[10];   //[Reco_QQ_size]
+   Int_t           Reco_QQ_mumi_nTrkHits[10];   //[Reco_QQ_size]
+   Float_t         Reco_QQ_mupl_normChi2_inner[10];   //[Reco_QQ_size]
+   Float_t         Reco_QQ_mumi_normChi2_inner[10];   //[Reco_QQ_size]
+   Float_t         Reco_QQ_mupl_normChi2_global[10];   //[Reco_QQ_size]
+   Float_t         Reco_QQ_mumi_normChi2_global[10];   //[Reco_QQ_size]
+   Int_t           Reco_QQ_mupl_nPixWMea[10];   //[Reco_QQ_size]
+   Int_t           Reco_QQ_mumi_nPixWMea[10];   //[Reco_QQ_size]
+   Int_t           Reco_QQ_mupl_nTrkWMea[10];   //[Reco_QQ_size]
+   Int_t           Reco_QQ_mumi_nTrkWMea[10];   //[Reco_QQ_size]
+   Int_t           Reco_QQ_mupl_StationsMatched[10];   //[Reco_QQ_size]
+   Int_t           Reco_QQ_mumi_StationsMatched[10];   //[Reco_QQ_size]
+   Float_t         Reco_QQ_mupl_dxy[10];   //[Reco_QQ_size]
+   Float_t         Reco_QQ_mumi_dxy[10];   //[Reco_QQ_size]
+   Float_t         Reco_QQ_mupl_dxyErr[10];   //[Reco_QQ_size]
+   Float_t         Reco_QQ_mumi_dxyErr[10];   //[Reco_QQ_size]
+   Float_t         Reco_QQ_mupl_dz[10];   //[Reco_QQ_size]
+   Float_t         Reco_QQ_mumi_dz[10];   //[Reco_QQ_size]
+   Float_t         Reco_QQ_mupl_dzErr[10];   //[Reco_QQ_size]
+   Float_t         Reco_QQ_mumi_dzErr[10];   //[Reco_QQ_size]
+   Float_t         Reco_QQ_mupl_pt_inner[10];   //[Reco_QQ_size]
+   Float_t         Reco_QQ_mumi_pt_inner[10];   //[Reco_QQ_size]
+   Float_t         Reco_QQ_mupl_pt_global[10];   //[Reco_QQ_size]
+   Float_t         Reco_QQ_mumi_pt_global[10];   //[Reco_QQ_size]
+   Float_t         Reco_QQ_mupl_ptErr_inner[10];   //[Reco_QQ_size]
+   Float_t         Reco_QQ_mumi_ptErr_inner[10];   //[Reco_QQ_size]
+   Float_t         Reco_QQ_mupl_ptErr_global[10];   //[Reco_QQ_size]
+   Float_t         Reco_QQ_mumi_ptErr_global[10];   //[Reco_QQ_size]
    Int_t           Reco_mu_size;
-   Int_t           Reco_mu_type[99];   //[Reco_mu_size]
-   Int_t           Reco_mu_SelectionType[99];   //[Reco_mu_size]
-   Int_t           Reco_mu_charge[99];   //[Reco_mu_size]
+   Int_t           Reco_mu_type[5];   //[Reco_mu_size]
+   Int_t           Reco_mu_charge[5];   //[Reco_mu_size]
    TClonesArray    *Reco_mu_4mom;
-   ULong64_t       Reco_mu_trig[99];   //[Reco_mu_size]
-   Bool_t          Reco_mu_isGoodMuon[99];   //[Reco_mu_size]
-   Bool_t          Reco_mu_highPurity[99];   //[Reco_mu_size]
-   Bool_t          Reco_mu_TrkMuArb[99];   //[Reco_mu_size]
-   Bool_t          Reco_mu_TMOneStaTight[99];   //[Reco_mu_size]
-   Int_t           Reco_mu_nPixValHits[99];   //[Reco_mu_size]
-   Int_t           Reco_mu_nMuValHits[99];   //[Reco_mu_size]
-   Int_t           Reco_mu_nTrkHits[99];   //[Reco_mu_size]
-   Float_t         Reco_mu_normChi2_inner[99];   //[Reco_mu_size]
-   Float_t         Reco_mu_normChi2_global[99];   //[Reco_mu_size]
-   Int_t           Reco_mu_nPixWMea[99];   //[Reco_mu_size]
-   Int_t           Reco_mu_nTrkWMea[99];   //[Reco_mu_size]
-   Int_t           Reco_mu_StationsMatched[99];   //[Reco_mu_size]
-   Float_t         Reco_mu_dxy[99];   //[Reco_mu_size]
-   Float_t         Reco_mu_dxyErr[99];   //[Reco_mu_size]
-   Float_t         Reco_mu_dz[99];   //[Reco_mu_size]
-   Float_t         Reco_mu_dzErr[99];   //[Reco_mu_size]
-   Float_t         Reco_mu_pt_inner[99];   //[Reco_mu_size]
-   Float_t         Reco_mu_pt_global[99];   //[Reco_mu_size]
-   Float_t         Reco_mu_ptErr_inner[99];   //[Reco_mu_size]
-   Float_t         Reco_mu_ptErr_global[99];   //[Reco_mu_size]
+   ULong64_t       Reco_mu_trig[5];   //[Reco_mu_size]
+   Bool_t          Reco_mu_isGoodMuon[5];   //[Reco_mu_size]
+   Bool_t          Reco_mu_highPurity[5];   //[Reco_mu_size]
+   Bool_t          Reco_mu_TrkMuArb[5];   //[Reco_mu_size]
+   Bool_t          Reco_mu_TMOneStaTight[5];   //[Reco_mu_size]
+   Int_t           Reco_mu_nPixValHits[5];   //[Reco_mu_size]
+   Int_t           Reco_mu_nMuValHits[5];   //[Reco_mu_size]
+   Int_t           Reco_mu_nTrkHits[5];   //[Reco_mu_size]
+   Float_t         Reco_mu_normChi2_inner[5];   //[Reco_mu_size]
+   Float_t         Reco_mu_normChi2_global[5];   //[Reco_mu_size]
+   Int_t           Reco_mu_nPixWMea[5];   //[Reco_mu_size]
+   Int_t           Reco_mu_nTrkWMea[5];   //[Reco_mu_size]
+   Int_t           Reco_mu_StationsMatched[5];   //[Reco_mu_size]
+   Float_t         Reco_mu_dxy[5];   //[Reco_mu_size]
+   Float_t         Reco_mu_dxyErr[5];   //[Reco_mu_size]
+   Float_t         Reco_mu_dz[5];   //[Reco_mu_size]
+   Float_t         Reco_mu_dzErr[5];   //[Reco_mu_size]
+   Float_t         Reco_mu_pt_inner[5];   //[Reco_mu_size]
+   Float_t         Reco_mu_pt_global[5];   //[Reco_mu_size]
+   Float_t         Reco_mu_ptErr_inner[5];   //[Reco_mu_size]
+   Float_t         Reco_mu_ptErr_global[5];   //[Reco_mu_size]
    Int_t           Gen_QQ_size;
-   Int_t           Gen_QQ_type[99];   //[Gen_QQ_size]
+   Int_t           Gen_QQ_type[4];   //[Gen_QQ_size]
    TClonesArray    *Gen_QQ_4mom;
-   Int_t           Gen_QQ_momId[99];   //[Gen_QQ_size]
-   Float_t         Gen_QQ_ctau[99];   //[Gen_QQ_size]
-   Float_t         Gen_QQ_ctau3D[99];   //[Gen_QQ_size]
+   Int_t           Gen_QQ_momId[4];   //[Gen_QQ_size]
+   Float_t         Gen_QQ_ctau[4];   //[Gen_QQ_size]
+   Float_t         Gen_QQ_ctau3D[4];   //[Gen_QQ_size]
    TClonesArray    *Gen_QQ_mupl_4mom;
    TClonesArray    *Gen_QQ_mumi_4mom;
    Int_t           Gen_mu_size;
-   Int_t           Gen_mu_type[99];   //[Gen_mu_size]
-   Int_t           Gen_mu_charge[99];   //[Gen_mu_size]
+   Int_t           Gen_mu_type[9];   //[Gen_mu_size]
+   Int_t           Gen_mu_charge[9];   //[Gen_mu_size]
    TClonesArray    *Gen_mu_4mom;
 
    // List of branches
@@ -181,10 +174,6 @@ public :
    TBranch        *b_SumET_ZDC;   //!
    TBranch        *b_SumET_ZDCplus;   //!
    TBranch        *b_SumET_ZDCminus;   //!
-   TBranch        *b_nEP;   //!
-   TBranch        *b_rpAng;   //!
-   TBranch        *b_rpSin;   //!
-   TBranch        *b_rpCos;   //!
    TBranch        *b_Reco_QQ_size;   //!
    TBranch        *b_Reco_QQ_type;   //!
    TBranch        *b_Reco_QQ_sign;   //!
@@ -206,8 +195,6 @@ public :
    TBranch        *b_Reco_QQ_MassErr;   //!
    TBranch        *b_Reco_QQ_vtx;   //!
    TBranch        *b_Reco_QQ_Ntrk;   //!
-   TBranch        *b_Reco_QQ_mupl_SelectionType;   //!
-   TBranch        *b_Reco_QQ_mumi_SelectionType;   //!
    TBranch        *b_Reco_QQ_mupl_isGoodMuon;   //!
    TBranch        *b_Reco_QQ_mumi_isGoodMuon;   //!
    TBranch        *b_Reco_QQ_mupl_highPurity;   //!
@@ -250,7 +237,6 @@ public :
    TBranch        *b_Reco_QQ_mumi_ptErr_global;   //!
    TBranch        *b_Reco_mu_size;   //!
    TBranch        *b_Reco_mu_type;   //!
-   TBranch        *b_Reco_mu_SelectionType;   //!
    TBranch        *b_Reco_mu_charge;   //!
    TBranch        *b_Reco_mu_4mom;   //!
    TBranch        *b_Reco_mu_trig;   //!
@@ -287,8 +273,8 @@ public :
    TBranch        *b_Gen_mu_charge;   //!
    TBranch        *b_Gen_mu_4mom;   //!
 
-   ClosureTestPbPb(TTree *tree=0);
-   virtual ~ClosureTestPbPb();
+   ClosureTestPP(TTree *tree=0);
+   virtual ~ClosureTestPP();
    virtual Int_t    Cut(Long64_t entry);
    virtual Bool_t   isGlobalMuonInAccept2015 (TLorentzVector* Muon);
    virtual Bool_t   areMuonsInAcceptance2015 (Int_t iRecoQQ);
@@ -298,43 +284,43 @@ public :
    virtual Int_t    GetEntry(Long64_t entry);
    virtual Long64_t LoadTree(Long64_t entry);
    virtual void     Init(TTree *tree);
-   virtual void     Loop(const char* filename, int centmin=0, int centmax=200);
+   virtual void     Loop(const char* filename);
    virtual Bool_t   Notify();
    virtual void     Show(Long64_t entry = -1);
 };
 
 #endif
 
-#ifdef ClosureTestPbPb_cxx
-ClosureTestPbPb::ClosureTestPbPb(TTree *tree) : fChain(0) 
+#ifdef ClosureTestPP_cxx
+ClosureTestPP::ClosureTestPP(TTree *tree) : fChain(0) 
 {
 // if parameter tree is not specified (or zero), connect the file
 // used to generate this class and read the Tree.
    if (tree == 0) {
-      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("root://eoscms//eos/cms/store/group/phys_heavyions/dileptons/MC2015/PbPb502TeV/TTrees/OniaTree_Pythia8_JpsiMM_ptJpsi_03_06_Hydjet_MB_HINPbPbWinter16DR-75X_mcRun2_HeavyIon_v13-v1_Extended.root");
+      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("root://xrootd.unl.edu//store/group/phys_heavyions/dileptons/MC2015/pp502TeV/TTrees/OniaTree_JpsiMM_5p02TeV_TuneCUETP8M1_HINppWinter16DR-75X_mcRun2_asymptotic_ppAt5TeV_v3-v1.root");
       if (!f || !f->IsOpen()) {
-         f = new TFile("root://eoscms//eos/cms/store/group/phys_heavyions/dileptons/MC2015/PbPb502TeV/TTrees/OniaTree_Pythia8_JpsiMM_ptJpsi_03_06_Hydjet_MB_HINPbPbWinter16DR-75X_mcRun2_HeavyIon_v13-v1_Extended.root");
+         f = new TFile("root://xrootd.unl.edu//store/group/phys_heavyions/dileptons/MC2015/pp502TeV/TTrees/OniaTree_JpsiMM_5p02TeV_TuneCUETP8M1_HINppWinter16DR-75X_mcRun2_asymptotic_ppAt5TeV_v3-v1.root");
       }
-      TDirectory * dir = (TDirectory*)f->Get("root://eoscms//eos/cms/store/group/phys_heavyions/dileptons/MC2015/PbPb502TeV/TTrees/OniaTree_Pythia8_JpsiMM_ptJpsi_03_06_Hydjet_MB_HINPbPbWinter16DR-75X_mcRun2_HeavyIon_v13-v1_Extended.root:/hionia");
+      TDirectory * dir = (TDirectory*)f->Get("root://xrootd.unl.edu//store/group/phys_heavyions/dileptons/MC2015/pp502TeV/TTrees/OniaTree_JpsiMM_5p02TeV_TuneCUETP8M1_HINppWinter16DR-75X_mcRun2_asymptotic_ppAt5TeV_v3-v1.root:/hionia");
       dir->GetObject("myTree",tree);
 
    }
    Init(tree);
 }
 
-ClosureTestPbPb::~ClosureTestPbPb()
+ClosureTestPP::~ClosureTestPP()
 {
    if (!fChain) return;
    delete fChain->GetCurrentFile();
 }
 
-Int_t ClosureTestPbPb::GetEntry(Long64_t entry)
+Int_t ClosureTestPP::GetEntry(Long64_t entry)
 {
 // Read contents of entry.
    if (!fChain) return 0;
    return fChain->GetEntry(entry);
 }
-Long64_t ClosureTestPbPb::LoadTree(Long64_t entry)
+Long64_t ClosureTestPP::LoadTree(Long64_t entry)
 {
 // Set the environment to read one entry
    if (!fChain) return -5;
@@ -347,7 +333,7 @@ Long64_t ClosureTestPbPb::LoadTree(Long64_t entry)
    return centry;
 }
 
-void ClosureTestPbPb::Init(TTree *tree)
+void ClosureTestPP::Init(TTree *tree)
 {
    // The Init() function is called when the selector needs to initialize
    // a new tree or chain. Typically here the branch addresses and branch
@@ -398,10 +384,6 @@ void ClosureTestPbPb::Init(TTree *tree)
    fChain->SetBranchAddress("SumET_ZDC", &SumET_ZDC, &b_SumET_ZDC);
    fChain->SetBranchAddress("SumET_ZDCplus", &SumET_ZDCplus, &b_SumET_ZDCplus);
    fChain->SetBranchAddress("SumET_ZDCminus", &SumET_ZDCminus, &b_SumET_ZDCminus);
-   fChain->SetBranchAddress("nEP", &nEP, &b_nEP);
-   fChain->SetBranchAddress("rpAng", rpAng, &b_rpAng);
-   fChain->SetBranchAddress("rpSin", rpSin, &b_rpSin);
-   fChain->SetBranchAddress("rpCos", rpCos, &b_rpCos);
    fChain->SetBranchAddress("Reco_QQ_size", &Reco_QQ_size, &b_Reco_QQ_size);
    fChain->SetBranchAddress("Reco_QQ_type", Reco_QQ_type, &b_Reco_QQ_type);
    fChain->SetBranchAddress("Reco_QQ_sign", Reco_QQ_sign, &b_Reco_QQ_sign);
@@ -423,8 +405,6 @@ void ClosureTestPbPb::Init(TTree *tree)
    fChain->SetBranchAddress("Reco_QQ_MassErr", Reco_QQ_MassErr, &b_Reco_QQ_MassErr);
    fChain->SetBranchAddress("Reco_QQ_vtx", &Reco_QQ_vtx, &b_Reco_QQ_vtx);
    fChain->SetBranchAddress("Reco_QQ_Ntrk", Reco_QQ_Ntrk, &b_Reco_QQ_Ntrk);
-   fChain->SetBranchAddress("Reco_QQ_mupl_SelectionType", Reco_QQ_mupl_SelectionType, &b_Reco_QQ_mupl_SelectionType);
-   fChain->SetBranchAddress("Reco_QQ_mumi_SelectionType", Reco_QQ_mumi_SelectionType, &b_Reco_QQ_mumi_SelectionType);
    fChain->SetBranchAddress("Reco_QQ_mupl_isGoodMuon", Reco_QQ_mupl_isGoodMuon, &b_Reco_QQ_mupl_isGoodMuon);
    fChain->SetBranchAddress("Reco_QQ_mumi_isGoodMuon", Reco_QQ_mumi_isGoodMuon, &b_Reco_QQ_mumi_isGoodMuon);
    fChain->SetBranchAddress("Reco_QQ_mupl_highPurity", Reco_QQ_mupl_highPurity, &b_Reco_QQ_mupl_highPurity);
@@ -467,7 +447,6 @@ void ClosureTestPbPb::Init(TTree *tree)
    fChain->SetBranchAddress("Reco_QQ_mumi_ptErr_global", Reco_QQ_mumi_ptErr_global, &b_Reco_QQ_mumi_ptErr_global);
    fChain->SetBranchAddress("Reco_mu_size", &Reco_mu_size, &b_Reco_mu_size);
    fChain->SetBranchAddress("Reco_mu_type", Reco_mu_type, &b_Reco_mu_type);
-   fChain->SetBranchAddress("Reco_mu_SelectionType", Reco_mu_SelectionType, &b_Reco_mu_SelectionType);
    fChain->SetBranchAddress("Reco_mu_charge", Reco_mu_charge, &b_Reco_mu_charge);
    fChain->SetBranchAddress("Reco_mu_4mom", &Reco_mu_4mom, &b_Reco_mu_4mom);
    fChain->SetBranchAddress("Reco_mu_trig", Reco_mu_trig, &b_Reco_mu_trig);
@@ -506,7 +485,7 @@ void ClosureTestPbPb::Init(TTree *tree)
    Notify();
 }
 
-Bool_t ClosureTestPbPb::Notify()
+Bool_t ClosureTestPP::Notify()
 {
    // The Notify() function is called when a new file is opened. This
    // can be either for a new TTree in a TChain or when when a new TTree
@@ -517,14 +496,14 @@ Bool_t ClosureTestPbPb::Notify()
    return kTRUE;
 }
 
-void ClosureTestPbPb::Show(Long64_t entry)
+void ClosureTestPP::Show(Long64_t entry)
 {
 // Print contents of entry.
 // If entry is not specified, print current entry
    if (!fChain) return;
    fChain->Show(entry);
 }
-Int_t ClosureTestPbPb::Cut(Long64_t irec)
+Int_t ClosureTestPP::Cut(Long64_t irec)
 {
 // This function may be called from Loop.
 // returns  1 if entry is accepted.
@@ -544,7 +523,7 @@ Int_t ClosureTestPbPb::Cut(Long64_t irec)
       return 0;
 }
 
-Bool_t ClosureTestPbPb::isGlobalMuonInAccept2015 (TLorentzVector* Muon) 
+Bool_t ClosureTestPP::isGlobalMuonInAccept2015 (TLorentzVector* Muon) 
 {
    return (fabs(Muon->Eta()) < 2.4 &&
          ((fabs(Muon->Eta()) < 1.2 && Muon->Pt() >= 3.5) ||
@@ -552,14 +531,14 @@ Bool_t ClosureTestPbPb::isGlobalMuonInAccept2015 (TLorentzVector* Muon)
           (2.1 <= fabs(Muon->Eta()) && Muon->Pt() >= 1.8)));
 };
 
-Bool_t ClosureTestPbPb::areMuonsInAcceptance2015 (Int_t iRecoQQ)
+Bool_t ClosureTestPP::areMuonsInAcceptance2015 (Int_t iRecoQQ)
 {
    TLorentzVector *RecoQQmupl = (TLorentzVector*) Reco_QQ_mupl_4mom->At(iRecoQQ);
    TLorentzVector *RecoQQmumi = (TLorentzVector*) Reco_QQ_mumi_4mom->At(iRecoQQ);
    return ( isGlobalMuonInAccept2015(RecoQQmupl) && isGlobalMuonInAccept2015(RecoQQmumi) );
 };  
 
-Bool_t ClosureTestPbPb::passQualityCuts2015 (Int_t iRecoQQ) 
+Bool_t ClosureTestPP::passQualityCuts2015 (Int_t iRecoQQ) 
 {
    Bool_t cond = true;
 
@@ -571,7 +550,7 @@ Bool_t ClosureTestPbPb::passQualityCuts2015 (Int_t iRecoQQ)
    return cond;
 }; 
 
-Bool_t ClosureTestPbPb::Cut_mupl (Int_t iRecoQQ) 
+Bool_t ClosureTestPP::Cut_mupl (Int_t iRecoQQ) 
 {
    Bool_t cond = true;
 
@@ -585,7 +564,7 @@ Bool_t ClosureTestPbPb::Cut_mupl (Int_t iRecoQQ)
    return cond;
 }; 
 
-Bool_t ClosureTestPbPb::Cut_mumi (Int_t iRecoQQ) 
+Bool_t ClosureTestPP::Cut_mumi (Int_t iRecoQQ) 
 {
    Bool_t cond = true;
 
@@ -599,10 +578,4 @@ Bool_t ClosureTestPbPb::Cut_mumi (Int_t iRecoQQ)
    return cond;
 }; 
 
-Double_t findNcoll(int hiBin) {
-   const int nbins = 200;
-   const Double_t Ncoll[nbins] = {1976.95, 1944.02, 1927.29, 1891.9, 1845.3, 1807.2, 1760.45, 1729.18, 1674.8, 1630.3, 1590.52, 1561.72, 1516.1, 1486.5, 1444.68, 1410.88, 1376.4, 1347.32, 1309.71, 1279.98, 1255.31, 1219.89, 1195.13, 1165.96, 1138.92, 1113.37, 1082.26, 1062.42, 1030.6, 1009.96, 980.229, 955.443, 936.501, 915.97, 892.063, 871.289, 847.364, 825.127, 806.584, 789.163, 765.42, 751.187, 733.001, 708.31, 690.972, 677.711, 660.682, 640.431, 623.839, 607.456, 593.307, 576.364, 560.967, 548.909, 530.475, 519.575, 505.105, 490.027, 478.133, 462.372, 451.115, 442.642, 425.76, 416.364, 405.154, 392.688, 380.565, 371.167, 360.28, 348.239, 340.587, 328.746, 320.268, 311.752, 300.742, 292.172, 281.361, 274.249, 267.025, 258.625, 249.931, 240.497, 235.423, 228.63, 219.854, 214.004, 205.425, 199.114, 193.618, 185.644, 180.923, 174.289, 169.641, 161.016, 157.398, 152.151, 147.425, 140.933, 135.924, 132.365, 127.017, 122.127, 117.817, 113.076, 109.055, 105.16, 101.323, 98.098, 95.0548, 90.729, 87.6495, 84.0899, 80.2237, 77.2201, 74.8848, 71.3554, 68.7745, 65.9911, 63.4136, 61.3859, 58.1903, 56.4155, 53.8486, 52.0196, 49.2921, 47.0735, 45.4345, 43.8434, 41.7181, 39.8988, 38.2262, 36.4435, 34.8984, 33.4664, 31.8056, 30.351, 29.2074, 27.6924, 26.7754, 25.4965, 24.2802, 22.9651, 22.0059, 21.0915, 19.9129, 19.1041, 18.1487, 17.3218, 16.5957, 15.5323, 14.8035, 14.2514, 13.3782, 12.8667, 12.2891, 11.61, 11.0026, 10.3747, 9.90294, 9.42648, 8.85324, 8.50121, 7.89834, 7.65197, 7.22768, 6.7755, 6.34855, 5.98336, 5.76555, 5.38056, 5.11024, 4.7748, 4.59117, 4.23247, 4.00814, 3.79607, 3.68702, 3.3767, 3.16309, 2.98282, 2.8095, 2.65875, 2.50561, 2.32516, 2.16357, 2.03235, 1.84061, 1.72628, 1.62305, 1.48916, 1.38784, 1.28366, 1.24693, 1.18552, 1.16085, 1.12596, 1.09298, 1.07402, 1.06105, 1.02954};
-   return Ncoll[hiBin];
-};
-
-#endif // #ifdef ClosureTestPbPb_cxx
+#endif // #ifdef ClosureTestPP_cxx
