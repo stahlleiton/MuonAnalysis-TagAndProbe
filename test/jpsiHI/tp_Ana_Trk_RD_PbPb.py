@@ -8,20 +8,20 @@ process.source = cms.Source("EmptySource")
 
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1) )    
 
-PDFName = "twoGausPlusPol3"
+PDFName = "twoGausPlusPol2"
 
 process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     # IO parameters:
-    InputFileNames = cms.vstring("file:/afs/cern.ch/work/j/jmartinb/DataSets/HIRun2015/TagAndProbe/Data/PbPb/tnpJPsi_Data_PbPb_AOD.root"),
+    InputFileNames = cms.vstring("file:/afs/cern.ch/user/o/okukral/TnP/Data/tnpJPsi_Data_PbPb_AOD.root"),
     InputDirectoryName = cms.string("tpTreeSta"),
     InputTreeName = cms.string("fitter_tree"),
-    OutputFileName = cms.string("tnp_Ana_RD_PbPb_MuonTrk_AllMB_isGlb.root"),
+    OutputFileName = cms.string("tnp_Ana_RD_PbPb_MuonTrk_AllMB.root"),
     #numbrer of CPUs to use for fitting
     NumCPU = cms.uint32(16),
     # specifies wether to save the RooWorkspace containing the data for each bin and
     # the pdf object with the initial and final state snapshots
-    SaveWorkspace = cms.bool(True),
-    binsForMassPlots = cms.uint32(50),
+    SaveWorkspace = cms.bool(False),
+    binsForMassPlots = cms.uint32(45),
     binnedFit = cms.bool(False),
     #binsForFit = cms.uint32(50),
     #WeightVariable = cms.string("weight"),
@@ -62,6 +62,15 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
           "efficiency[0.9,0,1]",
           "signalFractionInPassing[0.9]"
        ),
+      twoGausPlusPol2 = cms.vstring(
+          "Gaussian::signal1(mass, mean1[3.08,2.9,3.4], sigma1[0.02, 0.009, 0.4])",
+          "Gaussian::signal2(mass, mean2[3.11,2.9,3.4], sigma2[0.025, 0.009, 0.4])",
+          "SUM::signal(vFrac[0.8,0.5,1]*signal1, signal2)",
+          "Chebychev::backgroundPass(mass, {cPass[0.,-1.1,1.1], cPass2[0.,-1.1,1.1]})", ### good
+          "Chebychev::backgroundFail(mass, {cFail[0.,-1.1,1.1], cFail2[0.,-1.1,1.1]})", ### good
+          "efficiency[0.9,0,1]",
+          "signalFractionInPassing[0.9]"
+      ),
     ),
    # defines a set of efficiency calculations, what PDF to use for fitting and how to bin the data;
     # there will be a separate output directory for each calculation that includes a simultaneous fit, side band subtraction and counting. 
@@ -83,7 +92,7 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
                 BinnedVariables = cms.PSet(
                     pt  = cms.vdouble(0,30),
                     eta = cms.vdouble(-2.4,2.4),
-                    staValidStations= cms.vdouble(1,15),
+                    staValidStations= cms.vdouble(1,10),
                 ),
                 BinToPDFmap = cms.vstring(PDFName)
             ),
@@ -102,7 +111,7 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
                 BinnedVariables = cms.PSet(
                     pt = cms.vdouble(0, 3.5, 7., 10.5, 14.5, 30.0),
                     eta = cms.vdouble(-2.4,2.4),
-                    staValidStations= cms.vdouble(1,15),
+                    staValidStations= cms.vdouble(1,10),
                 ),
                 BinToPDFmap = cms.vstring(PDFName)
             ),
@@ -121,7 +130,7 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
                     BinnedVariables = cms.PSet(
                         eta = cms.vdouble(-2.4,-1.6,-1.2,-0.9,-0.6,-0.3,0.3,0.6,0.9,1.2,1.6,2.4),
                         pt = cms.vdouble(0.,30.0),
-                        staValidStations= cms.vdouble(1,15),
+                        staValidStations= cms.vdouble(1,10),
                     ),
                     BinToPDFmap = cms.vstring(PDFName)
             ),
@@ -142,7 +151,7 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
                        eta = cms.vdouble(-2.4,2.4),
                        pt = cms.vdouble(0.,30.0),
                        tag_hiBin = cms.vdouble(0,10,20,40,60,80,100,150,200),
-                       staValidStations = cms.vdouble(1,15),
+                       staValidStations = cms.vdouble(1,10),
                     ),
                     BinToPDFmap = cms.vstring(PDFName)
             ),

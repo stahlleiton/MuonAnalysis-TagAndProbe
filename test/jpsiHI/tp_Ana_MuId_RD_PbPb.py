@@ -17,12 +17,12 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     InputTreeName = cms.string("fitter_tree"),
     OutputFileName = cms.string("tnp_Ana_RD_PbPb_MuonID_AllMB.root"),
     #numbrer of CPUs to use for fitting
-    NumCPU = cms.uint32(25),
+    NumCPU = cms.uint32(1),
     # specifies whether to save the RooWorkspace containing the data for each bin and
     # the pdf object with the initial and final state snapshots
     binnedFit = cms.bool(False),
     #binsForFit = cms.uint32(30),
-    binsForMassPlots = cms.uint32(50),
+    binsForMassPlots = cms.uint32(27),
     SaveWorkspace = cms.bool(False),
     
     # defines all the real variables of the probes available in the input tree and intended for use in the efficiencies

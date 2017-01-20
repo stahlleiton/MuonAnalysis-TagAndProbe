@@ -13,11 +13,11 @@ PDFName = "twoGaussPlusPol2"
 process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     # IO parameters:
     #InputFileNames = cms.vstring("root://cms-xrd-global.cern.ch//store/group/phys_heavyions/dileptons/TNPTagAndProbe2015/Data2015/pp502TeV/TTrees/tnpJPsi_Data_pp5TeV_AOD.root"),
-    InputFileNames = cms.vstring("file:/afs/cern.ch/work/v/vabdulla/private/TnP/tnpJPsi_MC_pp5TeV_AOD.root"),
+    InputFileNames = cms.vstring("file:/afs/cern.ch/user/o/okukral/TnP/Data/tnpJPsi_MC_pp5TeV_AOD.root"),
     InputDirectoryName = cms.string("tpTreeSta"),
     InputTreeName = cms.string("fitter_tree"),
     #numbrer of CPUs to use for fitting
-    OutputFileName = cms.string("file:/afs/cern.ch/work/v/vabdulla/private/TnP/tnp_Ana_Trk_MC_pp_etapT.root"),
+    OutputFileName = cms.string("tnp_Ana_MC_pp_MuonTrk_AllMB_isGlb.root"),
     NumCPU = cms.uint32(25),
     # specifies wether to save the RooWorkspace containing the data for each bin and
     # the pdf object with the initial and final state snapshots
@@ -96,7 +96,7 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
                 BinnedVariables = cms.PSet(
                     pt  = cms.vdouble(0,30),
                     eta = cms.vdouble(-2.4,2.4),
-                    staValidStations= cms.vdouble(1,10),
+                    staValidStations= cms.vdouble(1,15),
                 ),
                 BinToPDFmap = cms.vstring(PDFName)
             ),
@@ -117,7 +117,7 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
                     #pt = cms.vdouble(0, 3.5, 7., 10.5, 30.0),
                     pt = cms.vdouble(0, 1.5, 3, 4.5, 6.5, 8.5, 10.5, 15, 30),
                     eta = cms.vdouble(-2.4,2.4),
-                    staValidStations= cms.vdouble(1,10),
+                    staValidStations= cms.vdouble(1,15),
                 ),
                 BinToPDFmap = cms.vstring(PDFName)
             ),
@@ -138,7 +138,7 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
                         #eta = cms.vdouble(-2.4,-1.6,-1.2,-0.9,0.9,1.2,1.6,2.4),
                         eta = cms.vdouble(-2.4,-1.8,-1.2,-0.9,-0.6,-0.3,0.3,0.6,0.9,1.2,1.8,2.4),
                         pt = cms.vdouble(0.,30.0),
-                        staValidStations= cms.vdouble(1,10),
+                        staValidStations= cms.vdouble(1,15),
                     ),
                     BinToPDFmap = cms.vstring(PDFName)
             ),
