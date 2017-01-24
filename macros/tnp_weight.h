@@ -6,20 +6,119 @@
 // IN THIS FILE YOU WILL FIND:
 // ++++++++++++++
 //
-// - Trigger:
+// - ALL: (tnp_weight_pp, tnp_weight_pbpb)
+//   * idx = 0:  nominal
+//   * idx = 1..100: toy variations, stat. only
+//   * idx = -1: syst variation, +1 sigma
+//   * idx = -2: syst variation, -1 sigma
+//
+// But also all the details entering in the computation (NOT FOR THE END USER)
+// - Trigger: (tnp_weight_trg_*)
 //   * idx = 0:  nominal
 //   * idx = 1..100: toy variations, stat. only
 //   * idx = -1: syst variation, "new_MAX", +1 sigma
 //   * idx = -2: syst variation, "new_MAX", -1 sigma
 //   * idx = -10: binned
-// - MuID, STA: 
+// - MuID, STA: (tnp_weight_muid_*, tnp_weight_sta_pp)
 //   * same organisation. BUT these SF are for systematics only.
 
+// M A I N   F U N C T I O N S
+// +++++++++++++++++++++++++++
+double tnp_weight_pbpb(double x, double eta, int idx);
+double tnp_weight_pp(double x, double eta, int idx);
+
+// THE INDIVIDUAL SFs
+// ++++++++++++++++++
 double tnp_weight_trg_pbpb(double x, double eta, int idx);
 double tnp_weight_trg_pp(double x, double eta, int idx);
-double tnp_weight_muid_pbpb(double x, double eta);
+double tnp_weight_muid_pbpb(double x, double eta, int idx=0);
 double tnp_weight_muid_pp(double x, double eta, int idx=0);
 double tnp_weight_sta_pp(double x, double eta, int idx=0);
+
+
+///////////////////////////////////////////////////
+//      A L L - I N - O N E    P b P b           //
+///////////////////////////////////////////////////
+double tnp_weight_pbpb(double x, double eta, int idx) {
+   if (idx==0 || idx==-10) { // nominal
+      return tnp_weight_trg_pbpb(x,eta,idx);
+   } else if (idx==-1) { // +1 sigma syst
+      double sf0 = tnp_weight_trg_pbpb(x,eta,0);
+      double sf1 = tnp_weight_trg_pbpb(x,eta,-1);
+      double sfb = max(sf0,tnp_weight_trg_pbpb(x,eta,-10));
+      double sfid1 = tnp_weight_muid_pbpb(x,eta,-1);
+      double sfidb = max(sfid1,tnp_weight_muid_pbpb(x,eta,-10));
+      double sfsta1 = tnp_weight_sta_pp(x,eta,-1);
+      double sfstab = max(sfsta1,tnp_weight_sta_pp(x,eta,-10));
+      return sf0*(1+sqrt(pow(sf1-sf0,2)+pow(sfb-sf0,2)
+            // +pow(sfid1-1,2)
+            +pow(sfidb-1,2)
+            // +pow(sfsta1-1,2)
+            +pow(sfstab-1,2)
+            ));
+   } else if (idx==-2) { // -1 sigma syst
+      double sf0 = tnp_weight_trg_pbpb(x,eta,0);
+      double sf1 = tnp_weight_trg_pbpb(x,eta,-2);
+      double sfb = min(sf0,tnp_weight_trg_pbpb(x,eta,-10));
+      double sfid1 = tnp_weight_muid_pbpb(x,eta,-2);
+      double sfidb = min(sfid1,tnp_weight_muid_pbpb(x,eta,-10));
+      double sfsta1 = tnp_weight_sta_pp(x,eta,-2);
+      double sfstab = min(sfsta1,tnp_weight_sta_pp(x,eta,-10));
+      return sf0*(1-sqrt(pow(sf1-sf0,2)+pow(sfb-sf0,2)
+            // +pow(sfid1-1,2)
+            +pow(sfidb-1,2)
+            // +pow(sfsta1-1,2)
+            +pow(sfstab-1,2)
+            ));
+   } else if (idx<=25) {
+      return tnp_weight_trg_pbpb(x,eta,idx);
+   } else if (idx<=50) {
+      return tnp_weight_trg_pbpb(x,eta,idx)*tnp_weight_muid_pbpb(x,eta,idx);
+   } else if (idx<=75) {
+      return tnp_weight_trg_pbpb(x,eta,idx)*tnp_weight_sta_pp(x,eta,idx);
+   } else {
+      return tnp_weight_trg_pbpb(x,eta,idx)*tnp_weight_muid_pbpb(x,eta,idx)*tnp_weight_sta_pp(x,eta,idx);
+   }
+}
+
+///////////////////////////////////////////////
+//      A L L - I N - O N E    P P           //
+///////////////////////////////////////////////
+double tnp_weight_pp(double x, double eta, int idx) {
+   if (idx==0 || idx==-10) { // nominal
+      return tnp_weight_trg_pp(x,eta,idx);
+   } else if (idx==-1) { // +1 sigma syst
+      double sf0 = tnp_weight_trg_pp(x,eta,0);
+      double sf1 = tnp_weight_trg_pp(x,eta,-1);
+      double sfb = max(sf0,tnp_weight_trg_pp(x,eta,-10));
+      double sfid1 = tnp_weight_muid_pp(x,eta,-1);
+      double sfidb = max(sfid1,tnp_weight_muid_pp(x,eta,-10));
+      double sfsta1 = tnp_weight_sta_pp(x,eta,-1);
+      double sfstab = max(sfsta1,tnp_weight_sta_pp(x,eta,-10));
+      return sf0*(1+sqrt(pow(sf1-sf0,2)+pow(sfb-sf0,2)
+            +pow(sfid1-1,2)+pow(sfidb-1,2)
+            +pow(sfsta1-1,2)+pow(sfstab-1,2)));
+   } else if (idx==-2) { // -1 sigma syst
+      double sf0 = tnp_weight_trg_pp(x,eta,0);
+      double sf1 = tnp_weight_trg_pp(x,eta,-2);
+      double sfb = min(sf0,tnp_weight_trg_pp(x,eta,-10));
+      double sfid1 = tnp_weight_muid_pp(x,eta,-2);
+      double sfidb = min(sfid1,tnp_weight_muid_pp(x,eta,-10));
+      double sfsta1 = tnp_weight_sta_pp(x,eta,-2);
+      double sfstab = min(sfsta1,tnp_weight_sta_pp(x,eta,-10));
+      return sf0*(1-sqrt(pow(sf1-sf0,2)+pow(sfb-sf0,2)
+            +pow(sfid1-1,2)+pow(sfidb-1,2)
+            +pow(sfsta1-1,2)+pow(sfstab-1,2)));
+   } else if (idx<=25) {
+      return tnp_weight_trg_pp(x,eta,idx);
+   } else if (idx<=50) {
+      return tnp_weight_trg_pp(x,eta,idx)*tnp_weight_muid_pp(x,eta,idx);
+   } else if (idx<=75) {
+      return tnp_weight_trg_pp(x,eta,idx)*tnp_weight_sta_pp(x,eta,idx);
+   } else {
+      return tnp_weight_trg_pp(x,eta,idx)*tnp_weight_muid_pp(x,eta,idx)*tnp_weight_sta_pp(x,eta,idx);
+   }
+}
 
 ///////////////////////////////////////////////////
 //               T R G    P b P b                //
@@ -1026,7 +1125,7 @@ double tnp_weight_trg_pp(double x, double eta, int idx)
 // !!  ONLY FOR SYSTEMATICS! DO NOT APPLY FOR THE NOMINAL CORRECTION!!! !!
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-double tnp_weight_muid_pbpb(double x, double eta) {
+double tnp_weight_muid_pbpb(double x, double eta, int idx) {
    // denominator (from MC)
    double den=1;
    if (fabs(eta)<1.2) den = 0.99*TMath::Erf((x+1.16)/3.49);

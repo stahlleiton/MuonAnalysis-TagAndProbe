@@ -43,7 +43,7 @@ float ptmin(float etamax) {
 }
 
 void closure2016pbpb() {
-   TFile *f = new TFile("histos_trd_pbpb_cent120200.root");
+   TFile *f = new TFile("histos_trd_pbpb_cent0200.root");
 
    TH1D *haxes20 = new TH1D("haxes20","haxes20",1,0,20);
    TH1D *haxes30 = new TH1D("haxes30","haxes30",1,0,30);

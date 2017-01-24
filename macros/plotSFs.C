@@ -5,10 +5,10 @@
 #include "TCanvas.h"
 
 Double_t tnp_weight_trg_pbpb_wrapper(Double_t *x, Double_t *par) {
-   return tnp_weight_trg_pbpb(x[0],par[0],par[1]);
+   return tnp_weight_pbpb(x[0],par[0],par[1]);
 }
 Double_t tnp_weight_trg_pp_wrapper(Double_t *x, Double_t *par) {
-   return tnp_weight_trg_pp(x[0],par[0],par[1]);
+   return tnp_weight_pp(x[0],par[0],par[1]);
 }
 
 float ptmin(float etamax) {
@@ -71,14 +71,14 @@ void plotSFs() {
       fnom->SetLineColor(kRed);
       fnom->Draw("same");
 
-      tleg->SetHeader(Form("#splitline{PbPb, Trigger}{#eta #in [%.1f,%.1f], p_{T}>%.1f GeV/c}",etamin[i],etamax[i],ptminval));
+      tleg->SetHeader(Form("#splitline{PbPb, All}{#eta #in [%.1f,%.1f], p_{T}>%.1f GeV/c}",etamin[i],etamax[i],ptminval));
       tleg->AddEntry(fnom,"Nominal","l");
       tleg->AddEntry("f1","stat (100 toys)","l");
       tleg->AddEntry(fp,"syst (+/1#sigma)","l");
       tleg->AddEntry(fbinned,"binned","l");
       tleg->Draw();
-      c1->SaveAs(Form("tnp_trg_pbpb_eta%.1f-%.1f.pdf",etamin[i],etamax[i]));
-      c1->SaveAs(Form("tnp_trg_pbpb_eta%.1f-%.1f.png",etamin[i],etamax[i]));
+      c1->SaveAs(Form("tnp_pbpb_eta%.1f-%.1f.pdf",etamin[i],etamax[i]));
+      c1->SaveAs(Form("tnp_pbpb_eta%.1f-%.1f.png",etamin[i],etamax[i]));
    }
 
    // trg, pp
@@ -120,13 +120,13 @@ void plotSFs() {
       fnom->SetLineColor(kRed);
       fnom->Draw("same");
 
-      tleg->SetHeader(Form("#splitline{pp, Trigger}{#eta #in [%.1f,%.1f], p_{T}>%.1f GeV/c}",etamin[i],etamax[i],ptminval));
+      tleg->SetHeader(Form("#splitline{pp, All}{#eta #in [%.1f,%.1f], p_{T}>%.1f GeV/c}",etamin[i],etamax[i],ptminval));
       tleg->AddEntry(fnom,"Nominal","l");
       tleg->AddEntry("f1","stat (100 toys)","l");
       tleg->AddEntry(fp,"syst (+/1#sigma)","l");
       tleg->AddEntry(fbinned,"binned","l");
       tleg->Draw();
-      c1->SaveAs(Form("tnp_trg_pp_eta%.1f-%.1f.pdf",etamin[i],etamax[i]));
-      c1->SaveAs(Form("tnp_trg_pp_eta%.1f-%.1f.png",etamin[i],etamax[i]));
+      c1->SaveAs(Form("tnp_pp_eta%.1f-%.1f.pdf",etamin[i],etamax[i]));
+      c1->SaveAs(Form("tnp_pp_eta%.1f-%.1f.png",etamin[i],etamax[i]));
    }
 }
