@@ -9,7 +9,7 @@ process.source = cms.Source("EmptySource")
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1) )    
 
 
-PDFName = "GausPlusPol1"
+PDFName = "twoGausPlusPol1"
 
 process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     # IO parameters:
@@ -29,7 +29,7 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     
     # defines all the real variables of the probes available in the input tree and intended for use in the efficiencies
     Variables = cms.PSet(
-        mass = cms.vstring("Tag-Probe Mass", "2.8", "3.4", "GeV/c^{2}"),
+        mass = cms.vstring("Tag-Probe Mass", "2.6", "3.5", "GeV/c^{2}"),
         pt = cms.vstring("Probe p_{T}", "0", "1000", "GeV/c"),
         p = cms.vstring("Probe p", "0", "1000", "GeV/c"),
         eta = cms.vstring("Probe #eta", "-2.4", "2.4", ""),
@@ -48,49 +48,25 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     # defines all the PDFs that will be available for the efficiency calculations; uses RooFit's "factory" syntax;
     # each pdf needs to define "signal", "backgroundPass", "backgroundFail" pdfs, "efficiency[0.9,0,1]" and "signalFractionInPassing[0.9]" are used for initial values  
     PDFs = cms.PSet(
-      twoGausPlusPol2 = cms.vstring(
-         "Gaussian::signal1(mass, mean[3.08,3.02,3.3], sigma1[0.02, 0.009, 0.08])",
-         "Gaussian::signal2(mass, mean, sigma2[0.025, 0.009, 0.08])",
-         "SUM::signal(vFrac[0.8,0.5,1]*signal1, signal2)",
-         "Chebychev::backgroundPass(mass, {cPass[0.,-1.1,1.1], cPass2[0.,-1.1,1.1]})", ### good
-         "Chebychev::backgroundFail(mass, {cFail[0.,-1.1,1.1], cFail2[0.,-1.1,1.1]})", ### good
-         "efficiency[0.9,0,1]",
-         "signalFractionInPassing[0.9]"
-       ),
-       cbGausPlusPol2 = cms.vstring(
-          "CBShape::signal1(mass, mean1[3.08,3.06,3.2], sigma1[0.02, 0.009, 0.07], alpha[1.85, 1.1, 2.7], n[1.7, 1.2, 3.5])",
-          "Gaussian::signal2(mass, mean2[3.11,3.08,3.3], sigma2[0.025, 0.009, 0.07])",
-          "SUM::signal(vFrac[0.8,0,1]*signal1, signal2)",
-          "Chebychev::backgroundPass(mass, {cPass[0.,-1.1,1.1], cPass2[0.,-1.1,1.1], cPass3[0.,-1.1,1.1]})", ### good
-          "Chebychev::backgroundFail(mass, {cFail[0.,-1.1,1.1], cFail2[0.,-1.1,1.1], cFail3[0.,-1.1,1.1]})", ### good
-          "efficiency[0.9,0,1]",
-          "signalFractionInPassing[0.9]"
-       ),
-       cbPlusExpo = cms.vstring(
-        "CBShape::signal(mass, mean[3.08,3.0,3.2], sigma[0.01,0.0,0.2], alpha[2.0, 0.2, 10.0], n[4, 0.5, 100.])",
-       # "CBShape::signal(mass, mean[3.1,3.0,3.2], sigma[0.02,0.02,0.1], alpha[1.0, 0.2, 3.0], n[4, 0.5, 100.])",
-        "Exponential::backgroundPass(mass, lp[0,-5,5])",
-        "Exponential::backgroundFail(mass, lf[0,-5,5])",
+ 
+      twoGausPlusPol1 = cms.vstring(
+        "Gaussian::signal1(mass, mean[3.08,3.02,3.3], sigma1[0.02, 0.009, 0.08])",
+        "Gaussian::signal2(mass, mean, sigma2[0.025, 0.009, 0.08])",
+        "SUM::signal(vFrac[0.8,0.5,1]*signal1, signal2)",
+        "Chebychev::backgroundPass(mass, {cPass[0.,-1.1,1.1]})",
+        "Chebychev::backgroundFail(mass, {cFail[0.,-1.1,1.1]})",
         "efficiency[0.9,0,1]",
         "signalFractionInPassing[0.9]"
       ),
-      cbGausPlusExpo = cms.vstring(
-       "Gaussian::signal1(mass, mean[3.08,3.05,3.2], sigma[0.02, 0.01, 0.1])",
-       "CBShape::signal2(mass, mean1[3.1,3.0,3.2], sigma2[0.1, 0.02, 0.3], alpha[2.0, 1.0, 10.0], n[4, 0.5, 100.])",
-        "SUM::signalPass(fracP[0.8,0,1]*signal1,signal2)",
-        "SUM::signalFail(fracF[0.8,0,1]*signal1,signal2)",
-        "Exponential::backgroundPass(mass, lp[0,-5,5])",
-        "Exponential::backgroundFail(mass, lf[0,-5,5])",
-        "efficiency[0.9,0,1]",
-        "signalFractionInPassing[0.9]"
-      ),
-     GausPlusPol1 = cms.vstring(
+    # alternate:
+      GausPlusPol1 = cms.vstring(
         "Gaussian::signal(mass, mean[3.1,2.9,3.3], sigma[0.025, 0.005, 0.3])",
-        "Chebychev::backgroundPass(mass, {cPass[0.,-1.1,1.1]})", ### good
-        "Chebychev::backgroundFail(mass, {cFail[0.,-1.1,1.1]})", ### good
+        "Chebychev::backgroundPass(mass, {cPass[0.,-1.1,1.1]})",
+        "Chebychev::backgroundFail(mass, {cFail[0.,-1.1,1.1]})", 
         "efficiency[0.9,0,1]",
         "signalFractionInPassing[0.9]"
       ),
+
     ),
     # defines a set of efficiency calculations, what PDF to use for fitting and how to bin the data;
     # there will be a separate output directory for each calculation that includes a simultaneous fit, side band subtraction and counting. 
