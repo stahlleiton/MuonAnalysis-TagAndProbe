@@ -1,0 +1,182 @@
+\documentclass[10pt]{beamer}
+
+\usepackage{ucs}
+\usepackage[utf8]{inputenc}
+% \usepackage{beamerthemebars}
+
+\usepackage[english]{babel}
+\usepackage{fontenc}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{url}
+
+% \date{25/01/2017}
+
+\begin{document}
+ \begin{frame}
+  \frametitle{How to use the scale factors: spirit}
+  
+%   The scale factors from tag-and-probe are divided into four parts:
+  
+  \begin{block}{Trigger}
+   \begin{itemize}
+    \item Correction: yes ($p_{T}$ and $\eta$ dependent)
+    \item Uncertainty: 100 toys, two up/down variations, one binned version
+   \end{itemize}
+  \end{block}
+  
+  \begin{block}{Muon ID}
+   \begin{itemize}
+    \item Correction: no
+    \item Uncertainty: 100 toys, two up/down variations
+   \end{itemize}
+  \end{block}
+
+  \begin{block}{Standalone muon}
+   \begin{itemize}
+    \item Correction: no
+    \item Uncertainty: 100 toys, two up/down variations
+   \end{itemize}
+  \end{block}
+  
+  \begin{block}{Inner tracking}
+   \begin{itemize}
+    \item Correction: yes ($p_{T}$ and $\eta$ independent)
+    \item Uncertainty: two up/down variations
+   \end{itemize}
+  \end{block}
+
+ \end{frame}
+ 
+ \begin{frame}
+  \frametitle{How to use the scale factors: technically}
+  
+  The file: \\\url{https://github.com/echapon/MuonAnalysis-TagAndProbe/blob/76X_HI/macros/tnp_weight.h}
+  
+  \begin{block}{Nominal}
+  \begin{itemize}
+   \item \alert{$\epsilon_0$}: weight each dimuon entering the numerator by
+   
+   \vspace{10pt}
+   
+   \texttt{tnp\_weight\_trg\_pp(pt1,eta1,\structure{0}) * tnp\_weight\_trk\_pp(\structure{0})} *\\
+   \texttt{tnp\_weight\_trg\_pp(pt2,eta2,\structure{0}) * tnp\_weight\_trk\_pp(\structure{0})}\\
+   
+   \vspace{10pt}
+   
+   where \texttt{pt1}, \texttt{eta1} and \texttt{pt2}, \texttt{eta2} are the kinematic quantities of the two muon legs
+   \end{itemize}
+  \end{block}
+
+ \end{frame}
+
+ \begin{frame}
+  \frametitle{How to use the scale factors: technically}
+  
+  \begin{block}{Stat. uncertainty, trigger part}
+  \begin{itemize}
+   \item \alert{$\epsilon^\text{stat, trg}_{i=1..100}$}: \\\texttt{tnp\_weight\_trg\_pp(pt,eta,\alert{i}) * tnp\_weight\_trk\_pp(\structure{0})}
+   \end{itemize}
+  \end{block}
+  
+  \begin{block}{Stat. uncertainty, muon ID part}
+  \begin{itemize}
+   \item \alert{$\epsilon^\text{stat, muID}_{i=1..100}$}: \\\texttt{tnp\_weight\_trg\_pp(pt,eta,\structure{0}) * tnp\_weight\_trk\_pp(\structure{0}) * tnp\_weight\_\alert{muid}\_pp(pt,eta,\alert{i})}
+   \end{itemize}
+  \end{block}
+  
+  \begin{block}{Stat. uncertainty, STA part}
+  \begin{itemize}
+   \item \alert{$\epsilon^\text{stat, STA}_{i=1..100}$}: \\\texttt{tnp\_weight\_trg\_pp(pt,eta,\structure{0}) * tnp\_weight\_trk\_pp(\structure{0}) * tnp\_weight\_\alert{sta}\_pp(pt,eta,\alert{i})}
+   \end{itemize}
+  \end{block}
+
+ \end{frame}
+ 
+ \begin{frame}
+  \frametitle{How to use the scale factors: technically}
+  
+  \begin{block}{Syst. uncertainty, trigger part}
+  \begin{itemize}
+   \item \alert{$\epsilon^\text{syst, trg}_{+}$}: \\\texttt{tnp\_weight\_trg\_pp(pt,eta,\alert{-1}) * tnp\_weight\_trk\_pp(\structure{0})}
+   
+   \item \alert{$\epsilon^\text{syst, trg}_{-}$}: \\\texttt{tnp\_weight\_trg\_pp(pt,eta,\alert{-2}) * tnp\_weight\_trk\_pp(\structure{0})}
+   \end{itemize}
+  \end{block}
+  
+    \begin{block}{Syst. uncertainty, inner tracking part}
+  \begin{itemize}
+   \item \alert{$\epsilon^\text{syst, trk}_{+}$}: \\\texttt{tnp\_weight\_trg\_pp(pt,eta,\structure{0}) * tnp\_weight\_trk\_pp(\alert{-1})}
+   
+   \item \alert{$\epsilon^\text{syst, trk}_{-}$}: \\\texttt{tnp\_weight\_trg\_pp(pt,eta,\structure{0}) * tnp\_weight\_trk\_pp(\alert{-2})}
+   \end{itemize}
+  \end{block}
+  
+
+ \end{frame}
+
+
+ 
+  \begin{frame}
+  \frametitle{How to use the scale factors: technically}
+  
+    \begin{block}{Syst. uncertainty, muon ID part}
+  \begin{itemize}
+   \item \alert{$\epsilon^\text{syst, muID}_{+}$}: \\\texttt{tnp\_weight\_trg\_pp(pt,eta,\structure{0}) * tnp\_weight\_trk\_pp(\structure{0}) * tnp\_weight\_\alert{muid}\_pp(pt,eta,\alert{-1})}
+   
+   \item \alert{$\epsilon^\text{syst, muID}_{-}$}: \\\texttt{tnp\_weight\_trg\_pp(pt,eta,\structure{0}) * tnp\_weight\_trk\_pp(\structure{0}) * tnp\_weight\_\alert{muid}\_pp(pt,eta,\alert{-2})}
+   \end{itemize}
+  \end{block}
+  
+  \begin{block}{Syst. uncertainty, STA part}
+  \begin{itemize}
+   \item \alert{$\epsilon^\text{syst, STA}_{+}$}: \\\texttt{tnp\_weight\_trg\_pp(pt,eta,\structure{0}) * tnp\_weight\_trk\_pp(\structure{0}) * tnp\_weight\_\alert{sta}\_pp(pt,eta,\alert{-1})}
+   
+   \item \alert{$\epsilon^\text{syst, STA}_{-}$}: \\\texttt{tnp\_weight\_trg\_pp(pt,eta,\structure{0}) * tnp\_weight\_trk\_pp(\structure{0}) * tnp\_weight\_\alert{sta}\_pp(pt,eta,\alert{-2})}
+   \end{itemize}
+  \end{block}
+
+ \end{frame}
+ 
+  \begin{frame}
+  \frametitle{How to use the scale factors: technically}
+  
+  \begin{block}{Syst. uncertainty, fitting of the tracking scale factors}
+  \begin{itemize}
+   \item \alert{$\epsilon^\text{syst, trg binned}$}: \\\texttt{tnp\_weight\_trg\_pp(pt,eta,\alert{-10}) * tnp\_weight\_trk\_pp(\structure{0})}
+   \end{itemize}
+  \end{block}
+ \end{frame}
+ 
+ \begin{frame}
+  \frametitle{How to combine all these numbers}
+  
+%   \begin{block}{Nominal efficiency}
+%    \alert{$\epsilon_0$}
+%   \end{block}
+  
+  \begin{block}{Statistical uncertainty}
+   \begin{equation*}
+    \alert{\Delta\epsilon^\text{stat}}  =  \left( \text{RMS} \left( \epsilon^\text{stat, trg}_i \right) \right.
+     + \text{RMS} \left( \epsilon^\text{stat, muID}_i \right) 
+     + \text{RMS} \left. \left( \epsilon^\text{stat, STA}_i \right) \right) 
+   \end{equation*}
+
+  \end{block}
+  
+  \begin{block}{Systematic uncertainty}
+   \begin{eqnarray}
+    \alert{\Delta\epsilon^\text{syst}}  & = &  \left(\left[\text{max} (\epsilon^\text{syst, trg}_{+} - \epsilon_0, \epsilon^\text{syst, trg}_{-} - \epsilon_0)\right]^2\right.\nonumber\\
+    &&+ \left[\text{max} (\epsilon^\text{syst, muID}_{+} - \epsilon_0, \epsilon^\text{syst, muID}_{-} - \epsilon_0)\right]^2\nonumber\\
+    &&+ \left[\text{max} (\epsilon^\text{syst, STA}_{+} - \epsilon_0, \epsilon^\text{syst, STA}_{-} - \epsilon_0)\right]^2\nonumber\\
+    &&+ \left[\text{max} (\epsilon^\text{syst, trk}_{+} - \epsilon_0, \epsilon^\text{syst, trk}_{-} - \epsilon_0)\right]^2\nonumber\\
+    &&+ \left.\left[\epsilon^\text{syst, trg binned} - \epsilon_0\right]^2\right)^{-1/2}\nonumber
+   \end{eqnarray}
+
+  \end{block}
+
+ \end{frame}
+
+
+\end{document}

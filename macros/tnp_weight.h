@@ -6,13 +6,6 @@
 // IN THIS FILE YOU WILL FIND:
 // ++++++++++++++
 //
-// - ALL: (tnp_weight_pp, tnp_weight_pbpb)
-//   * idx = 0:  nominal
-//   * idx = 1..100: toy variations, stat. only
-//   * idx = -1: syst variation, +1 sigma
-//   * idx = -2: syst variation, -1 sigma
-//
-// But also all the details entering in the computation (NOT FOR THE END USER)
 // - Trigger: (tnp_weight_trg_*)
 //   * idx = 0:  nominal
 //   * idx = 1..100: toy variations, stat. only
@@ -21,130 +14,24 @@
 //   * idx = -10: binned
 // - MuID, STA: (tnp_weight_muid_*, tnp_weight_sta_pp)
 //   * same organisation. BUT these SF are for systematics only.
-
-// M A I N   F U N C T I O N S
-// +++++++++++++++++++++++++++
-double tnp_weight_pbpb(double x, double eta, int idx);
-double tnp_weight_pp(double x, double eta, int idx);
+// - Inner tracking: 
+//   * idx = 0: nominal correction (pt, eta independent)
+//   * idx = -1: +1 sigma
+//   * idx = -2: -1 sigma
 
 // THE INDIVIDUAL SFs
 // ++++++++++++++++++
-double tnp_weight_trg_pbpb(double x, double eta, int idx);
-double tnp_weight_trg_pp(double x, double eta, int idx);
+double tnp_weight_trg_pbpb(double x, double eta, int idx=0);
+double tnp_weight_trg_pp(double x, double eta, int idx=0);
 double tnp_weight_muid_pbpb(double x, double eta, int idx=0);
 double tnp_weight_muid_pp(double x, double eta, int idx=0);
 double tnp_weight_sta_pp(double x, double eta, int idx=0);
+double tnp_weight_sta_pbpb(double x, double eta, int idx=0) {
+   return tnp_weight_sta_pp(x,eta,idx);
+};
+double tnp_weight_trk_pbpb(int idx);
+double tnp_weight_trk_pp(int idx);
 
-
-///////////////////////////////////////////////////
-//      A L L - I N - O N E    P b P b           //
-///////////////////////////////////////////////////
-double tnp_weight_pbpb(double x, double eta, int idx) {
-   if (idx==0 || idx==-10) { // nominal
-      return tnp_weight_trg_pbpb(x,eta,idx);
-   } else if (idx==-1) { // +1 sigma syst
-      double sf0 = tnp_weight_trg_pbpb(x,eta,0);
-      double sf1 = tnp_weight_trg_pbpb(x,eta,-1);
-      double sfb = max(sf0,tnp_weight_trg_pbpb(x,eta,-10));
-      double sfid1 = tnp_weight_muid_pbpb(x,eta,-1);
-      double sfidb = max(sfid1,tnp_weight_muid_pbpb(x,eta,-10));
-      double sfsta1 = tnp_weight_sta_pp(x,eta,-1);
-      double sfstab = max(sfsta1,tnp_weight_sta_pp(x,eta,-10));
-      return sf0*sqrt(1+(sqrt(pow(sf1*sf1/sf0/sf0-1,2)
-                  +pow(sfb*sfb/sf0/sf0-1,2)
-                  // +pow(sfid1-1,2)
-                  +pow(sfidb*sfidb-1,2)
-                  // +pow(sfsta1-1,2)
-                  +pow(sfstab*sfstab-1,2)
-                  )));
-   } else if (idx==-2) { // -1 sigma syst
-      double sf0 = tnp_weight_trg_pbpb(x,eta,0);
-      double sf1 = tnp_weight_trg_pbpb(x,eta,-2);
-      double sfb = min(sf0,tnp_weight_trg_pbpb(x,eta,-10));
-      double sfid1 = tnp_weight_muid_pbpb(x,eta,-2);
-      double sfidb = min(sfid1,tnp_weight_muid_pbpb(x,eta,-10));
-      double sfsta1 = tnp_weight_sta_pp(x,eta,-2);
-      double sfstab = min(sfsta1,tnp_weight_sta_pp(x,eta,-10));
-      return sf0*sqrt(1-sqrt(pow(sf1*sf1/sf0/sf0-1,2)
-               +pow(sfb*sfb/sf0/sf0-1,2)
-               // +pow(sfid1-1,2)
-               +pow(sfidb*sfidb-1,2)
-               // +pow(sfsta1-1,2)
-               +pow(sfstab*sfstab-1,2)
-               ));
-   // } else if (idx<=25) {
-   //    return tnp_weight_trg_pbpb(x,eta,idx);
-   // } else if (idx<=50) {
-   //    return tnp_weight_trg_pbpb(x,eta,idx)
-   //       *tnp_weight_muid_pbpb(x,eta,idx)
-   //       /tnp_weight_muid_pbpb(x,eta,0);
-   // } else if (idx<=75) {
-   //    return tnp_weight_trg_pbpb(x,eta,idx)
-   //       *tnp_weight_sta_pp(x,eta,idx)
-   //       /tnp_weight_sta_pp(x,eta,0);
-   } else {
-      return tnp_weight_trg_pbpb(x,eta,idx)
-         *tnp_weight_muid_pbpb(x,eta,idx)
-         *tnp_weight_sta_pp(x,eta,idx)
-         /tnp_weight_muid_pbpb(x,eta,0)
-         /tnp_weight_sta_pp(x,eta,0);
-   }
-}
-
-///////////////////////////////////////////////
-//      A L L - I N - O N E    P P           //
-///////////////////////////////////////////////
-double tnp_weight_pp(double x, double eta, int idx) {
-   if (idx==0 || idx==-10) { // nominal
-      return tnp_weight_trg_pp(x,eta,idx);
-   } else if (idx==-1) { // +1 sigma syst
-      double sf0 = tnp_weight_trg_pp(x,eta,0);
-      double sf1 = tnp_weight_trg_pp(x,eta,-1);
-      double sfb = max(sf0,tnp_weight_trg_pp(x,eta,-10));
-      double sfid1 = tnp_weight_muid_pp(x,eta,-1);
-      double sfidb = max(sfid1,tnp_weight_muid_pp(x,eta,-10));
-      double sfsta1 = tnp_weight_sta_pp(x,eta,-1);
-      double sfstab = max(sfsta1,tnp_weight_sta_pp(x,eta,-10));
-      return sf0*sqrt(1+sqrt(pow(sf1*sf1/sf0/sf0-1,2)
-                  +pow(sfb*sfb/sf0/sf0-1,2)
-                  // +pow(sfid1-1,2)
-                  +pow(sfidb*sfidb-1,2)
-                  // +pow(sfsta1-1,2)
-                  +pow(sfstab*sfstab-1,2)
-                  ));
-   } else if (idx==-2) { // -1 sigma syst
-      double sf0 = tnp_weight_trg_pp(x,eta,0);
-      double sf1 = tnp_weight_trg_pp(x,eta,-2);
-      double sfb = min(sf0,tnp_weight_trg_pp(x,eta,-10));
-      double sfid1 = tnp_weight_muid_pp(x,eta,-2);
-      double sfidb = min(sfid1,tnp_weight_muid_pp(x,eta,-10));
-      double sfsta1 = tnp_weight_sta_pp(x,eta,-2);
-      double sfstab = min(sfsta1,tnp_weight_sta_pp(x,eta,-10));
-      return sf0*sqrt(1-sqrt(pow(sf1*sf1/sf0/sf0-1,2)
-               +pow(sfb*sfb/sf0/sf0-1,2)
-               // +pow(sfid1-1,2)
-               +pow(sfidb*sfidb-1,2)
-               // +pow(sfsta1-1,2)
-               +pow(sfstab*sfstab-1,2)
-               ));
-   // } else if (idx<=25) {
-   //    return tnp_weight_trg_pp(x,eta,idx);
-   // } else if (idx<=50) {
-   //    return tnp_weight_trg_pp(x,eta,idx)
-   //       *tnp_weight_muid_pp(x,eta,idx)
-   //       /tnp_weight_muid_pp(x,eta,0);
-   // } else if (idx<=75) {
-   //    return tnp_weight_trg_pp(x,eta,idx)
-   //       *tnp_weight_sta_pp(x,eta,idx)
-   //       /tnp_weight_sta_pp(x,eta,0);
-   } else {
-      return tnp_weight_trg_pp(x,eta,idx)
-         *tnp_weight_muid_pp(x,eta,idx)
-         *tnp_weight_sta_pp(x,eta,idx)
-         /tnp_weight_muid_pp(x,eta,0)
-         /tnp_weight_sta_pp(x,eta,0);
-   }
-}
 
 ///////////////////////////////////////////////////
 //               T R G    P b P b                //
@@ -2643,6 +2530,26 @@ double tnp_weight_sta_pp(double x, double eta, int idx) {
 
    // return
    return num/den;
+}
+
+///////////////////////////////////////////////////
+//               T R K    P b P b                //
+///////////////////////////////////////////////////
+
+double tnp_weight_trk_pbpb(int idx=0) {
+   if (idx==-1) return 1;
+   if (idx==-2) return 1;
+   return 1;
+}
+
+///////////////////////////////////////////////////
+//                 T R K    P P                  //
+///////////////////////////////////////////////////
+
+double tnp_weight_trk_pp(int idx=0) {
+   if (idx==-1) return 1;
+   if (idx==-2) return 1;
+   return 1;
 }
 
 #endif //#ifndef tnp_weight_h

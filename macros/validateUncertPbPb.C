@@ -159,6 +159,10 @@ void validateUncertPbPb::Loop(const char* filename)
          // does it match our tag(s)? and if yes, is the other leg in acceptance?
          TLorentzVector *tlvrecomupl = (TLorentzVector*) Reco_QQ_mupl_4mom->At(ireco);
          TLorentzVector *tlvrecomumi = (TLorentzVector*) Reco_QQ_mumi_4mom->At(ireco);
+         double pt1=tlvrecomupl->Pt();
+         double pt2=tlvrecomumi->Pt();
+         double eta1=tlvrecomupl->Eta();
+         double eta2=tlvrecomumi->Eta();
          TLorentzVector *tlvrecoqq = (TLorentzVector*) Reco_QQ_4mom->At(ireco);
          // dimuon cuts
          if (tlvrecoqq->M()<2.7 || tlvrecoqq->M()>3.3 || fabs(tlvrecoqq->Rapidity())>2.4) continue;
@@ -176,53 +180,53 @@ void validateUncertPbPb::Loop(const char* filename)
             double y = tlvrecoqq->Rapidity();
 
             hist = (TH1F*) gDirectory->Get(TString("hnum_")+seta);
-            double wnom = tnp_weight_pbpb(pt,y,0);
+            double wnom = tnp_weight_pbpb(pt1,eta1,0)*tnp_weight_pbpb(pt2,eta2,0);
             hist->Fill(pt,weight*NcollWeight*wnom);
 
             // all-in-one
             hist = (TH1F*) gDirectory->Get(TString("hnum_allpl_")+seta);
-            hist->Fill(pt,weight*NcollWeight*tnp_weight_pbpb(pt,y,-1));
+            hist->Fill(pt,weight*NcollWeight*tnp_weight_pbpb(pt1,eta1,-1)*tnp_weight_pbpb(pt2,eta2,-1));
             hist = (TH1F*) gDirectory->Get(TString("hnum_allmi_")+seta);
-            hist->Fill(pt,weight*NcollWeight*tnp_weight_pbpb(pt,y,-2));
+            hist->Fill(pt,weight*NcollWeight*tnp_weight_pbpb(pt1,eta1,-2)*tnp_weight_pbpb(pt2,eta2,-2));
             for (int ivar=1; ivar<=100; ivar++) {
                hist = (TH1F*) gDirectory->Get(TString(Form("hnum_all%i_",ivar))+seta);
-               hist->Fill(pt,weight*NcollWeight*tnp_weight_pbpb(pt,y,ivar));
+               hist->Fill(pt,weight*NcollWeight*tnp_weight_pbpb(pt1,eta1,ivar)*tnp_weight_pbpb(pt2,eta2,ivar));
             }
 
             // trigger
             hist = (TH1F*) gDirectory->Get(TString("hnum_trgpl_")+seta);
-            hist->Fill(pt,weight*NcollWeight*tnp_weight_trg_pbpb(pt,y,-1));
+            hist->Fill(pt,weight*NcollWeight*tnp_weight_trg_pbpb(pt1,eta1,-1)*tnp_weight_trg_pbpb(pt2,eta2,-1));
             hist = (TH1F*) gDirectory->Get(TString("hnum_trgmi_")+seta);
-            hist->Fill(pt,weight*NcollWeight*tnp_weight_trg_pbpb(pt,y,-2));
+            hist->Fill(pt,weight*NcollWeight*tnp_weight_trg_pbpb(pt1,eta1,-2)*tnp_weight_trg_pbpb(pt2,eta2,-2));
             hist = (TH1F*) gDirectory->Get(TString("hnum_trgb_")+seta);
-            hist->Fill(pt,weight*NcollWeight*tnp_weight_trg_pbpb(pt,y,-10));
+            hist->Fill(pt,weight*NcollWeight*tnp_weight_trg_pbpb(pt1,eta1,-10)*tnp_weight_trg_pbpb(pt2,eta2,-10));
             for (int ivar=1; ivar<=100; ivar++) {
                hist = (TH1F*) gDirectory->Get(TString(Form("hnum_trg%i_",ivar))+seta);
-               hist->Fill(pt,weight*NcollWeight*tnp_weight_trg_pbpb(pt,y,ivar));
+               hist->Fill(pt,weight*NcollWeight*tnp_weight_trg_pbpb(pt1,eta1,ivar)*tnp_weight_trg_pbpb(pt2,eta2,ivar));
             }
 
             // muon ID
             hist = (TH1F*) gDirectory->Get(TString("hnum_muidpl_")+seta);
-            hist->Fill(pt,weight*NcollWeight*wnom*tnp_weight_muid_pbpb(pt,y,-1));
+            hist->Fill(pt,weight*NcollWeight*wnom*tnp_weight_muid_pbpb(pt1,eta1,-1)*tnp_weight_muid_pbpb(pt2,eta2,-1));
             hist = (TH1F*) gDirectory->Get(TString("hnum_muidmi_")+seta);
-            hist->Fill(pt,weight*NcollWeight*wnom*tnp_weight_muid_pbpb(pt,y,-2));
+            hist->Fill(pt,weight*NcollWeight*wnom*tnp_weight_muid_pbpb(pt1,eta1,-2)*tnp_weight_muid_pbpb(pt2,eta2,-2));
             hist = (TH1F*) gDirectory->Get(TString("hnum_muidb_")+seta);
-            hist->Fill(pt,weight*NcollWeight*wnom*tnp_weight_muid_pbpb(pt,y,-10));
+            hist->Fill(pt,weight*NcollWeight*wnom*tnp_weight_muid_pbpb(pt1,eta1,-10)*tnp_weight_muid_pbpb(pt2,eta2,-10));
             for (int ivar=0; ivar<=100; ivar++) {
                hist = (TH1F*) gDirectory->Get(TString(Form("hnum_muid%i_",ivar))+seta);
-               hist->Fill(pt,weight*NcollWeight*wnom*tnp_weight_muid_pbpb(pt,y,ivar));
+               hist->Fill(pt,weight*NcollWeight*wnom*tnp_weight_muid_pbpb(pt1,eta1,ivar)*tnp_weight_muid_pbpb(pt2,eta2,ivar));
             }
 
             // STA
             hist = (TH1F*) gDirectory->Get(TString("hnum_stapl_")+seta);
-            hist->Fill(pt,weight*NcollWeight*wnom*tnp_weight_sta_pp(pt,y,-1));
+            hist->Fill(pt,weight*NcollWeight*wnom*tnp_weight_sta_pp(pt1,eta1,-1)*tnp_weight_sta_pp(pt2,eta2,-1));
             hist = (TH1F*) gDirectory->Get(TString("hnum_stami_")+seta);
-            hist->Fill(pt,weight*NcollWeight*wnom*tnp_weight_sta_pp(pt,y,-2));
+            hist->Fill(pt,weight*NcollWeight*wnom*tnp_weight_sta_pp(pt1,eta1,-2)*tnp_weight_sta_pp(pt2,eta2,-2));
             hist = (TH1F*) gDirectory->Get(TString("hnum_stab_")+seta);
-            hist->Fill(pt,weight*NcollWeight*wnom*tnp_weight_sta_pp(pt,y,-10));
+            hist->Fill(pt,weight*NcollWeight*wnom*tnp_weight_sta_pp(pt1,eta1,-10)*tnp_weight_sta_pp(pt2,eta2,-10));
             for (int ivar=0; ivar<=100; ivar++) {
                hist = (TH1F*) gDirectory->Get(TString(Form("hnum_sta%i_",ivar))+seta);
-               hist->Fill(pt,weight*NcollWeight*wnom*tnp_weight_sta_pp(pt,y,ivar));
+               hist->Fill(pt,weight*NcollWeight*wnom*tnp_weight_sta_pp(pt1,eta1,ivar)*tnp_weight_sta_pp(pt2,eta2,ivar));
             }
          }
       }

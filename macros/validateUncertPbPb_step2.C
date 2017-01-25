@@ -6,6 +6,7 @@ TH1F* variance(vector<TH1F*> input, bool doquadsum=false);
 TH1F* hmax(TH1F *hpl, TH1F *hmi);
 void print(TH1F* hist);
 void addcst(TH1F* hist, double cst);
+void habs(TH1F* hist);
 
 void validateUncertPbPb_step2() {
    TFile *f = new TFile("histos_pbpb.root");
@@ -15,7 +16,7 @@ void validateUncertPbPb_step2() {
    TH1F *haxes = new TH1F("haxes","haxes",1,0,30);
    haxes->GetXaxis()->SetTitle("p_{T} [GeV/c]");
    haxes->GetYaxis()->SetTitle("Efficiency");
-   haxes->GetYaxis()->SetRangeUser(-0.05,0.05);
+   haxes->GetYaxis()->SetRangeUser(-0.15,0.15);
 
    TLegend *tleg = new TLegend(0.4,0.2,0.9,0.5);
    tleg->SetBorderSize(0);
@@ -76,6 +77,7 @@ void validateUncertPbPb_step2() {
       TH1F *htrg_b = (TH1F*) f->Get(TString("hnum_trgb_")+seta);
       htrg_b->Divide(hnom);
       addcst(htrg_b,-1);
+      habs(htrg_b);
       // print(htrg_b);
       TH1F *htrg_max = hmax(htrg_pl,htrg_mi);
       vector<TH1F*> vhtrg_stat;
@@ -101,8 +103,10 @@ void validateUncertPbPb_step2() {
       TH1F *hmuid_b = (TH1F*) f->Get(TString("hnum_muidb_")+seta);
       hmuid_b->Divide(hnom);
       addcst(hmuid_b,-1);
+      habs(hmuid_b);
       // print(hmuid_b);
       TH1F *hmuid_max = hmax(hmuid_pl,hmuid_mi);
+      hmuid_max = hmax(hmuid_max,hmuid_b);
       vector<TH1F*> vhmuid_stat;
       for (int ivar=1; ivar<=100; ivar++) {
          vhmuid_stat.push_back((TH1F*) f->Get(TString(Form("hnum_muid%i_",ivar))+seta));
@@ -126,8 +130,10 @@ void validateUncertPbPb_step2() {
       TH1F *hsta_b = (TH1F*) f->Get(TString("hnum_stab_")+seta);
       hsta_b->Divide(hnom);
       addcst(hsta_b,-1);
+      habs(hsta_b);
       // print(hsta_b);
       TH1F *hsta_max = hmax(hsta_pl,hsta_mi);
+      hsta_max = hmax(hsta_max,hsta_b);
       vector<TH1F*> vhsta_stat;
       for (int ivar=1; ivar<=100; ivar++) {
          vhsta_stat.push_back((TH1F*) f->Get(TString(Form("hnum_sta%i_",ivar))+seta));
@@ -222,4 +228,8 @@ void print(TH1F* hist) {
 
 void addcst(TH1F* hist, double cst) {
    for (int i=0; i<=hist->GetNbinsX()+1; i++) hist->SetBinContent(i,hist->GetBinContent(i)+cst);
+}
+
+void habs(TH1F* hist) {
+   for (int i=0; i<=hist->GetNbinsX()+1; i++) hist->SetBinContent(i,fabs(hist->GetBinContent(i)));
 }
