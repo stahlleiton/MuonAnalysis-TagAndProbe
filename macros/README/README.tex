@@ -1,4 +1,4 @@
-\documentclass[10pt]{beamer}
+\documentclass[9pt]{beamer}
 
 \usepackage{ucs}
 \usepackage[utf8]{inputenc}
@@ -11,10 +11,21 @@
 \usepackage{amssymb}
 \usepackage{url}
 
-% \date{25/01/2017}
+\usecolortheme{whale}
+\usecolortheme{orchid}
+\useinnertheme[shadow]{rounded}
+\useoutertheme{infolines}
+
+\date[]{January 2017}
+\title[]{How to use the data-driven efficiency corrections (scale factors from tag and probe) for Run2 pp and PbPb data at $\sqrt{s_{NN}} = 5.02$\,TeV}
+\author[]{The heavy-ion tag and probe team}
 
 \begin{document}
- \begin{frame}
+\begin{frame}[plain]
+ \maketitle
+\end{frame}
+
+ \begin{frame}[plain]
   \frametitle{How to use the scale factors: spirit}
   
 %   The scale factors from tag-and-probe are divided into four parts:
@@ -49,14 +60,14 @@
 
  \end{frame}
  
- \begin{frame}
+ \begin{frame}[plain]
   \frametitle{How to use the scale factors: technically}
   
   The file: \\\url{https://github.com/echapon/MuonAnalysis-TagAndProbe/blob/76X_HI/macros/tnp_weight.h}
   
-  \begin{block}{Nominal}
+  \begin{block}{How to apply TnP scale factor corrections?}
   \begin{itemize}
-   \item \alert{$\epsilon_0$}: weight each dimuon entering the numerator by
+   \item \alert{$\epsilon_0$}: In MC, re-calculate the dimuon efficiency ($= N_\text{dimuon}^\text{reco}/N_\text{dimuon}^\text{gen}$), by weighting each dimuon entering the numerator by
    
    \vspace{10pt}
    
@@ -68,10 +79,15 @@
    where \texttt{pt1}, \texttt{eta1} and \texttt{pt2}, \texttt{eta2} are the kinematic quantities of the two muon legs
    \end{itemize}
   \end{block}
+  
+  \begin{alertblock}{Nota bene}
+   The example is given here for \textbf{pp}. It should be repeated for \textbf{PbPb}, simply replacing everywhere \alert{\texttt{\_pp}} with \alert{\texttt{\_pbpb}}.
+  \end{alertblock}
+
 
  \end{frame}
 
- \begin{frame}
+ \begin{frame}[plain]
   \frametitle{How to use the scale factors: technically}
   
   \begin{block}{Stat. uncertainty, trigger part}
@@ -94,7 +110,7 @@
 
  \end{frame}
  
- \begin{frame}
+ \begin{frame}[plain]
   \frametitle{How to use the scale factors: technically}
   
   \begin{block}{Syst. uncertainty, trigger part}
@@ -118,7 +134,7 @@
 
 
  
-  \begin{frame}
+  \begin{frame}[plain]
   \frametitle{How to use the scale factors: technically}
   
     \begin{block}{Syst. uncertainty, muon ID part}
@@ -139,17 +155,17 @@
 
  \end{frame}
  
-  \begin{frame}
+  \begin{frame}[plain]
   \frametitle{How to use the scale factors: technically}
   
-  \begin{block}{Syst. uncertainty, fitting of the tracking scale factors}
+  \begin{block}{Syst. uncertainty, binned trigger scale factors}
   \begin{itemize}
    \item \alert{$\epsilon^\text{syst, trg binned}$}: \\\texttt{tnp\_weight\_trg\_pp(pt,eta,\alert{-10}) * tnp\_weight\_trk\_pp(\structure{0})}
    \end{itemize}
   \end{block}
  \end{frame}
  
- \begin{frame}
+ \begin{frame}[plain]
   \frametitle{How to combine all these numbers}
   
 %   \begin{block}{Nominal efficiency}
@@ -158,25 +174,38 @@
   
   \begin{block}{Statistical uncertainty}
    \begin{equation*}
-    \alert{\Delta\epsilon^\text{stat}}  =  \left( \text{RMS} \left( \epsilon^\text{stat, trg}_i \right) \right.
-     + \text{RMS} \left( \epsilon^\text{stat, muID}_i \right) 
-     + \text{RMS} \left. \left( \epsilon^\text{stat, STA}_i \right) \right) 
+    \alert{\Delta\epsilon^\text{stat}}  =  \sqrt{ \left[\text{RMS} \left( \epsilon^\text{stat, trg}_i \right)\right]^2
+     + \left[ \text{RMS} \left( \epsilon^\text{stat, muID}_i \right) \right]^2
+     + \left[ \text{RMS} \left( \epsilon^\text{stat, STA}_i \right) \right]^2 }
    \end{equation*}
 
   \end{block}
   
   \begin{block}{Systematic uncertainty}
    \begin{eqnarray}
-    \alert{\Delta\epsilon^\text{syst}}  & = &  \left(\left[\text{max} (\epsilon^\text{syst, trg}_{+} - \epsilon_0, \epsilon^\text{syst, trg}_{-} - \epsilon_0)\right]^2\right.\nonumber\\
-    &&+ \left[\text{max} (\epsilon^\text{syst, muID}_{+} - \epsilon_0, \epsilon^\text{syst, muID}_{-} - \epsilon_0)\right]^2\nonumber\\
-    &&+ \left[\text{max} (\epsilon^\text{syst, STA}_{+} - \epsilon_0, \epsilon^\text{syst, STA}_{-} - \epsilon_0)\right]^2\nonumber\\
-    &&+ \left[\text{max} (\epsilon^\text{syst, trk}_{+} - \epsilon_0, \epsilon^\text{syst, trk}_{-} - \epsilon_0)\right]^2\nonumber\\
+    \alert{\Delta\epsilon^\text{syst}}  & = &  \left(\left[\text{max} (|\epsilon^\text{syst, trg}_{+} - \epsilon_0|, |\epsilon^\text{syst, trg}_{-} - \epsilon_0|)\right]^2\right.\nonumber\\
+    &&+ \left[\text{max} (|\epsilon^\text{syst, muID}_{+} - \epsilon_0|, |\epsilon^\text{syst, muID}_{-} - \epsilon_0|)\right]^2\nonumber\\
+    &&+ \left[\text{max} (|\epsilon^\text{syst, STA}_{+} - \epsilon_0|, |\epsilon^\text{syst, STA}_{-} - \epsilon_0|)\right]^2\nonumber\\
+    &&+ \left[\text{max} (|\epsilon^\text{syst, trk}_{+} - \epsilon_0|, |\epsilon^\text{syst, trk}_{-} - \epsilon_0|)\right]^2\nonumber\\
     &&+ \left.\left[\epsilon^\text{syst, trg binned} - \epsilon_0\right]^2\right)^{-1/2}\nonumber
    \end{eqnarray}
 
   \end{block}
 
  \end{frame}
+ 
+ \begin{frame}[plain]
+  \frametitle{Total TnP uncertainty}
+  
+  \begin{block}{Total uncertainty}
+   \begin{equation*}
+    \alert{\Delta\epsilon^\text{tot}}  =  \sqrt{ (\Delta\epsilon^\text{stat})^2 + (\Delta\epsilon^\text{syst})^2 }
+   \end{equation*}
+
+  \end{block}
+  
+ \end{frame}
+
 
 
 \end{document}

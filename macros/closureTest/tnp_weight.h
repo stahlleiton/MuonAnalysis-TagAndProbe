@@ -2536,7 +2536,7 @@ double tnp_weight_sta_pp(double x, double eta, int idx) {
 //               T R K    P b P b                //
 ///////////////////////////////////////////////////
 
-double tnp_weight_trk_pbpb(int idx=0) {
+double tnp_weight_trk_pbpb(int idx) {
    if (idx==-1) return 0.998;
    if (idx==-2) return 0.978;
    return 0.988;
@@ -2546,7 +2546,7 @@ double tnp_weight_trk_pbpb(int idx=0) {
 //                 T R K    P P                  //
 ///////////////////////////////////////////////////
 
-double tnp_weight_trk_pp(int idx=0) {
+double tnp_weight_trk_pp(int idx) {
    if (idx==-1) return 0.998;
    if (idx==-2) return 0.992;
    return 0.995;

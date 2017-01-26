@@ -156,7 +156,7 @@ void ClosureTestPP::Loop(const char* filename)
             double totweight = 1;
             if (fabs(geneta)<1.2) {
                hden_00_12->Fill(genpt,totweight);
-               totweight *= tnp_mc_sta_pp(genpt,geneta);
+               totweight *= tnp_mc_sta_pp(genpt,geneta)*tnp_mc_trk_pp();
                hden_stawt_00_12->Fill(genpt,totweight);
                totweight *= tnp_mc_muid_pp(genpt,geneta);
                hden_staIDwt_00_12->Fill(genpt,totweight);
@@ -164,7 +164,7 @@ void ClosureTestPP::Loop(const char* filename)
                hden_staIDtrgwt_00_12->Fill(genpt,totweight);
             } else if (fabs(geneta)<1.8) {
                hden_12_18->Fill(genpt,totweight);
-               totweight *= tnp_mc_sta_pp(genpt,geneta);
+               totweight *= tnp_mc_sta_pp(genpt,geneta)*tnp_mc_trk_pp();
                hden_stawt_12_18->Fill(genpt,totweight);
                totweight *= tnp_mc_muid_pp(genpt,geneta);
                hden_staIDwt_12_18->Fill(genpt,totweight);
@@ -172,7 +172,7 @@ void ClosureTestPP::Loop(const char* filename)
                hden_staIDtrgwt_12_18->Fill(genpt,totweight);
             } else if (fabs(geneta)<2.1) {
                hden_18_21->Fill(genpt,totweight);
-               totweight *= tnp_mc_sta_pp(genpt,geneta);
+               totweight *= tnp_mc_sta_pp(genpt,geneta)*tnp_mc_trk_pp();
                hden_stawt_18_21->Fill(genpt,totweight);
                totweight *= tnp_mc_muid_pp(genpt,geneta);
                hden_staIDwt_18_21->Fill(genpt,totweight);
@@ -180,7 +180,7 @@ void ClosureTestPP::Loop(const char* filename)
                hden_staIDtrgwt_18_21->Fill(genpt,totweight);
             } else if (fabs(geneta)<2.4) {
                hden_21_24->Fill(genpt,totweight);
-               totweight *= tnp_mc_sta_pp(genpt,geneta);
+               totweight *= tnp_mc_sta_pp(genpt,geneta)*tnp_mc_trk_pp();
                hden_stawt_21_24->Fill(genpt,totweight);
                totweight *= tnp_mc_muid_pp(genpt,geneta);
                hden_staIDwt_21_24->Fill(genpt,totweight);
@@ -194,7 +194,7 @@ void ClosureTestPP::Loop(const char* filename)
             double totweight = 1;
             if (fabs(geneta)<1.2) {
                hden_00_12->Fill(genpt,totweight);
-               totweight *= tnp_mc_sta_pp(genpt,geneta);
+               totweight *= tnp_mc_sta_pp(genpt,geneta)*tnp_mc_trk_pp();
                hden_stawt_00_12->Fill(genpt,totweight);
                totweight *= tnp_mc_muid_pp(genpt,geneta);
                hden_staIDwt_00_12->Fill(genpt,totweight);
@@ -202,7 +202,7 @@ void ClosureTestPP::Loop(const char* filename)
                hden_staIDtrgwt_00_12->Fill(genpt,totweight);
             } else if (fabs(geneta)<1.8) {
                hden_12_18->Fill(genpt,totweight);
-               totweight *= tnp_mc_sta_pp(genpt,geneta);
+               totweight *= tnp_mc_sta_pp(genpt,geneta)*tnp_mc_trk_pp();
                hden_stawt_12_18->Fill(genpt,totweight);
                totweight *= tnp_mc_muid_pp(genpt,geneta);
                hden_staIDwt_12_18->Fill(genpt,totweight);
@@ -210,7 +210,7 @@ void ClosureTestPP::Loop(const char* filename)
                hden_staIDtrgwt_12_18->Fill(genpt,totweight);
             } else if (fabs(geneta)<2.1) {
                hden_18_21->Fill(genpt,totweight);
-               totweight *= tnp_mc_sta_pp(genpt,geneta);
+               totweight *= tnp_mc_sta_pp(genpt,geneta)*tnp_mc_trk_pp();
                hden_stawt_18_21->Fill(genpt,totweight);
                totweight *= tnp_mc_muid_pp(genpt,geneta);
                hden_staIDwt_18_21->Fill(genpt,totweight);
@@ -218,7 +218,7 @@ void ClosureTestPP::Loop(const char* filename)
                hden_staIDtrgwt_18_21->Fill(genpt,totweight);
             } else if (fabs(geneta)<2.4) {
                hden_21_24->Fill(genpt,totweight);
-               totweight *= tnp_mc_sta_pp(genpt,geneta);
+               totweight *= tnp_mc_sta_pp(genpt,geneta)*tnp_mc_trk_pp();
                hden_stawt_21_24->Fill(genpt,totweight);
                totweight *= tnp_mc_muid_pp(genpt,geneta);
                hden_staIDwt_21_24->Fill(genpt,totweight);

@@ -8,6 +8,8 @@ double tnp_mc_trg_pp(double x, double eta);
 double tnp_mc_muid_pbpb(double x, double eta);
 double tnp_mc_muid_pp(double x, double eta);
 double tnp_mc_sta_pp(double x, double eta);
+double tnp_mc_trk_pbpb();
+double tnp_mc_trk_pp();
 
 ///////////////////////////////////////////////////
 //               T R G    P b P b                //
@@ -16,10 +18,10 @@ double tnp_mc_trg_pbpb(double x, double eta)
 {
    // denominator (from MC)
    double den=1;
-   if (fabs(eta)<1.2) den = 0.97701*TMath::Erf((x-2.38691)/1.31574);
-   else if (fabs(eta)<1.8) den = 0.94675*TMath::Erf((x-2.29271)/1.19047);
-   else if (fabs(eta)<2.1) den = 0.89781*TMath::Erf((x-0.80641)/2.31842);
-   else den = 0.87208*TMath::Erf((x-0.63360)/1.99416);
+   if (fabs(eta)<1.2) den = (1.64178*TMath::Erf((x-1.99932)/1.43867))-0.66469;
+   else if (fabs(eta)<1.8) den = (0.88035*TMath::Erf((x-2.35547)/1.15969))+0.06624;
+   else if (fabs(eta)<2.1) den = (0.76354*TMath::Erf((x-1.06381)/2.19873))+0.13397;
+   else den = (0.75001*TMath::Erf((x-0.82761)/1.91299))+0.12193;
    return den;
 }
 
@@ -48,10 +50,10 @@ double tnp_mc_trg_pp(double x, double eta)
 double tnp_mc_muid_pbpb(double x, double eta) {
    // denominator (from MC)
    double den=1;
-   if (fabs(eta)<1.2) den = 0.99*TMath::Erf((x+1.16)/3.49);
-   else if (fabs(eta)<1.8) den = 0.99*TMath::Erf((x+3.63)/4.27);
-   else if (fabs(eta)<2.1) den = 1.00*TMath::Erf((x+4.64)/6.08);
-   else den = 0.99*TMath::Erf((x+3.17)/4.98);
+   if (fabs(eta)<1.2) den = (0.89729*TMath::Erf((x-1.13249)/1.92952))+0.08717;
+   else if (fabs(eta)<1.8) den = (0.89052*TMath::Erf((x+2.22470)/3.36829))+0.09852;
+   else if (fabs(eta)<2.1) den = (0.49857*TMath::Erf((x+1.05275)/3.92352))+0.49590;
+   else den = (0.42980*TMath::Erf((x+0.56912)/3.60743))+0.55171;
    return den;
 }
 
@@ -89,6 +91,24 @@ double tnp_mc_sta_pp(double x, double eta) {
    else if (fabs(eta)<2.1) den = (0.51122*TMath::Erf((x-0.01449)/1.43367))+0.47344;
    else den = (0.43706*TMath::Erf((x-0.50936)/1.62531))+0.54785;
    return den;
+}
+
+///////////////////////////////////////////////////
+//                 T R K    P b P b              //
+///////////////////////////////////////////////////
+
+double tnp_mc_trk_pbpb() {
+   // denominator (from MC)
+   return 0.9938;
+}
+
+///////////////////////////////////////////////////
+//                   T R K    P P                //
+///////////////////////////////////////////////////
+
+double tnp_mc_trk_pp() {
+   // denominator (from MC)
+   return 0.9973;
 }
 
 #endif //#ifndef tnp_mc_h
