@@ -50,9 +50,9 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     PDFs = cms.PSet(
  
       twoGausPlusPol1 = cms.vstring(
-        "Gaussian::signal1(mass, mean[3.08,3.02,3.3], sigma1[0.02, 0.009, 0.08])",
-        "Gaussian::signal2(mass, mean, sigma2[0.025, 0.009, 0.08])",
-        "SUM::signal(vFrac[0.8,0.5,1]*signal1, signal2)",
+        "Gaussian::signal1(mass, mean[3.08,3.02,3.3], sigma1[0.02, 0.009, 0.2])",
+        "Gaussian::signal2(mass, mean, sigma2[0.05, 0.009, 0.2])",
+        "SUM::signal(vFrac[0.8,0.1,1]*signal1, signal2)",
         "Chebychev::backgroundPass(mass, {cPass[0.,-1.1,1.1]})",
         "Chebychev::backgroundFail(mass, {cFail[0.,-1.1,1.1]})",
         "efficiency[0.9,0,1]",
