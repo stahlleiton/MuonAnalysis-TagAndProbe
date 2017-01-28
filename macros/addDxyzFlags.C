@@ -1,7 +1,7 @@
 #include "TTree.h"
 #include "TFile.h"
 
-#define DXYCUT 3
+#define DXYCUT 0.3
 #define DZCUT 20
 
 TTree* copyTree(TTree* told) {
