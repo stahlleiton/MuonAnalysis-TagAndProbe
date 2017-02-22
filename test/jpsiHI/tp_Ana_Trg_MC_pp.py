@@ -13,10 +13,10 @@ PDFName = "CBGPlusPol1"
 process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     # IO parameters:
     #InputFileNames = cms.vstring("root://cms-xrd-global.cern.ch//store/group/phys_heavyions/dileptons/TNPTagAndProbe2015/Data2015/pp502TeV/TTrees/tnpJPsi_Data_pp5TeV_AOD.root"),
-    InputFileNames = cms.vstring("file:/afs/cern.ch/work/v/vabdulla/private/TnP/tnpJPsi_MC_pp5TeV_AOD_MuIDTrgSpecial.root"),
+    InputFileNames = cms.vstring("file:/afs/cern.ch/work/v/vabdulla/private/TnP/tnpJPsi_MC_pp5TeV_AOD_dxyzflags.root"),
     InputDirectoryName = cms.string("tpTree"),
     InputTreeName = cms.string("fitter_tree"),
-    OutputFileName = cms.string("file:/afs/cern.ch/work/v/vabdulla/private/TnP/Trg/tnp_Ana_Trg_MC_pp_12122016_pol1_pT20_v2.root"),
+    OutputFileName = cms.string("file:/afs/cern.ch/work/v/vabdulla/private/TnP/Trg/tnp_Ana_Trg_MC_pp_16022017_pol1_pT20.root"),
     #numbrer of CPUs to use for fitting
     NumCPU = cms.uint32(25),
     # specifies whether to save the RooWorkspace containing the data for each bin and
