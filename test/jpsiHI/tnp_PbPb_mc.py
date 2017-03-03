@@ -85,7 +85,7 @@ TightId =  "isGlobalMuon && globalTrack.normalizedChi2 < 10 && globalTrack.hitPa
 
 HybridSoftId = "isTrackerMuon && isGlobalMuon && muonID('TMOneStationTight') && track.hitPattern.trackerLayersWithMeasurement > 5 && track.hitPattern.numberOfValidPixelHits > 0"
 
-TRACK_CUTS = "track.isNonnull && track.numberOfValidHits > 10 && track.normalizedChi2 < 4 && track.hitPattern.pixelLayersWithMeasurement > 0"
+TRACK_CUTS = "track.isNonnull && track.hitPattern.trackerLayersWithMeasurement > 5 && track.hitPattern.numberOfValidPixelHits > 0"
 
 HighPtTriggerFlags = cms.PSet(
    HIL2Mu5_NHitQ10_2HF = cms.string("!triggerObjectMatchesByPath('HLT_HIL2Mu5_NHitQ10_2HF_v*',1,0).empty()"),
