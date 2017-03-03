@@ -22,7 +22,7 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     # the pdf object with the initial and final state snapshots
     binnedFit = cms.bool(False),
     #binsForFit = cms.uint32(30),
-    binsForMassPlots = cms.uint32(45),
+    binsForMassPlots = cms.uint32(50),
     SaveWorkspace = cms.bool(False),
     
     # defines all the real variables of the probes available in the input tree and intended for use in the efficiencies
