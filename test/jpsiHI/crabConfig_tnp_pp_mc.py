@@ -18,7 +18,7 @@ config.Data.inputDBS      = 'global'
 config.Data.splitting     = 'FileBased'
 config.Data.unitsPerJob   = 1
 
-config.Data.outLFNDirBase = '/store/user/%s/TagAndProbe2015/%s' % (getUsernameFromSiteDB(), config.General.requestName)
+config.Data.outLFNDirBase = '/store/group/phys_heavyions/%s/TagAndProbe2015/%s' % (getUsernameFromSiteDB(), config.General.requestName)
 config.Data.publication   = False
 
 config.section_('Site')
