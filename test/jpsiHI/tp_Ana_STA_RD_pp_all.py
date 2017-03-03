@@ -13,10 +13,10 @@ PDFName = "twoGaussPlusPol1"
 process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     # IO parameters:
     #InputFileNames = cms.vstring("root://cms-xrd-global.cern.ch//store/group/phys_heavyions/dileptons/TNPTagAndProbe2015/Data2015/pp502TeV/TTrees/tnpJPsi_Data_pp5TeV_AOD.root"),
-    InputFileNames = cms.vstring("file:/afs/cern.ch/work/v/vabdulla/private/TnP/tnpJPsi_Data_pp5TeV_AOD.root"),
+    InputFileNames = cms.vstring("file:/afs/cern.ch/work/v/vabdulla/private/TnP/tnpJPsi_Data_pp5TeV_AOD_dxyzflags.root"),
     InputDirectoryName = cms.string("tpTreeTrk"),
     InputTreeName = cms.string("fitter_tree"),
-    OutputFileName = cms.string("file:/afs/cern.ch/work/v/vabdulla/private/TnP/STA/tnp_Ana_STA_pp_RD_18eta_18Nov2016_pol1.root"),
+    OutputFileName = cms.string("file:/afs/cern.ch/work/v/vabdulla/private/TnP/STA/tnp_Ana_STA_pp_RD_22022017_pol1.root"),
     NumCPU = cms.uint32(32),
     # specifies wether to save the RooWorkspace containing the data for each bin and
     # the pdf object with the initial and final state snapshots

@@ -13,10 +13,10 @@ PDFName = "CBGPlusPol1"
 process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     # IO parameters:
     #InputFileNames = cms.vstring("root://cms-xrd-global.cern.ch//store/group/phys_heavyions/dileptons/TNPTagAndProbe2015/Data2015/pp502TeV/TTrees/tnpJPsi_Data_pp5TeV_AOD.root"),
-    InputFileNames = cms.vstring("file:/afs/cern.ch/work/v/vabdulla/private/TnP/tnpJPsi_Data_pp5TeV_AOD_MuIDTrgSpecial.root"),
+    InputFileNames = cms.vstring("file:/afs/cern.ch/work/v/vabdulla/private/TnP/tnpJPsi_Data_pp5TeV_AOD_dxyzflags.root"),
     InputDirectoryName = cms.string("tpTree"),
     InputTreeName = cms.string("fitter_tree"),
-    OutputFileName = cms.string("file:/afs/cern.ch/work/v/vabdulla/private/TnP/MuId/tnp_Ana_MuonID_RD_pp_181120161_pol1_v2.root"),
+    OutputFileName = cms.string("file:/afs/cern.ch/work/v/vabdulla/private/TnP/MuId/tnp_Ana_MuonID_RD_pp_16022017_pol1.root"),
     #numbrer of CPUs to use for fitting
     NumCPU = cms.uint32(25),
     # specifies whether to save the RooWorkspace containing the data for each bin and
@@ -116,8 +116,8 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
              EfficiencyCategoryAndState = cms.vstring("HybridSoftHI","true","dxyzPVCuts","true"),
              UnbinnedVariables = cms.vstring("mass"),
              BinnedVariables = cms.PSet(
-                 #pt = cms.vdouble(1.8, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5, 7.5, 8.5, 10.5, 30),
-                 pt = cms.vdouble(1.8, 2.5, 3, 3.5, 4, 4.5, 5, 6, 7, 9, 12, 16, 30),
+                 #pt = cms.vdouble(1.8, 2.5, 3, 3.5, 4, 4.5, 5, 6, 7, 9, 12, 16, 30),
+                 pt = cms.vdouble(1.8, 2.5, 3, 3.5, 4, 4.5, 5, 6, 7, 9, 13, 20),
                  abseta = cms.vdouble(1.8,2.1),
              ),
              BinToPDFmap = cms.vstring(PDFName)
@@ -127,8 +127,8 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
              EfficiencyCategoryAndState = cms.vstring("HybridSoftHI","true","dxyzPVCuts","true"),
              UnbinnedVariables = cms.vstring("mass"),
              BinnedVariables = cms.PSet(
-                 #pt = cms.vdouble(1.8, 2, 2.5, 3, 3.5, 4, 4.5, 5, 6, 7.5, 30),
-                 pt = cms.vdouble(1.8, 2.5, 3, 3.5, 4, 4.5, 5, 6.5, 8.5, 11, 14, 30),
+                 #pt = cms.vdouble(1.8, 2.5, 3, 3.5, 4, 4.5, 5, 6.5, 8.5, 11, 14, 30),
+                 pt = cms.vdouble(1.8, 2.5, 3, 3.5, 4, 4.5, 5, 6.5, 8.5, 12, 20),
                  abseta = cms.vdouble(2.1,2.4),
              ),
              BinToPDFmap = cms.vstring(PDFName)
