@@ -44,11 +44,11 @@ using namespace std;
 
 // Choose the efficiency type.
 // Possible values: MUIDTRG, TRK, STA, MUID, TRG
-#define MUID
+#define TRK
 
 // pp or PbPb?
 bool isPbPb = true; // if true, will compute the centrality dependence
-TString collTag = "pPb"; // isPbPb ? "PbPb" : "pp";
+TString collTag = "Pbp"; // isPbPb ? "PbPb" : "pp";
 
 // do the toy study for the correction factors? (only applies if MUIDTRG)
 bool doToys = false;
@@ -70,7 +70,7 @@ const int nSyst = 1;//5;
 const char* fMCName[nSyst] = {
    //"tnp_Ana_MC_PbPb_MuonIDTrg_AllMB.root",
 	"tnp_Ana_MC_PbPb_MuonTrk_AllMB_isGlbPol2.root",
-};//*/
+};// */
 
 // names for systematics
 const char* systName[nSyst] = {
@@ -87,7 +87,7 @@ TString etaTag("MuIdTrg_etadep");
 TString absetaTag("MuIdTrg_absetadep");
 TString centTag("MuIdTrg_centdep");
 const int nAbsEtaBins = 4;
-TString ptTag[nAbsEtaBins] = { "MuIdTrg_abseta00_12", "MuIdTrg_abseta12_18", "MuIdTrg_abseta18_21", "MuIdTrg_abseta21_24" };
+TString ptTag[nAbsEtaBins] = { "MuIdTrg_abseta00_09", "MuIdTrg_abseta09_12", "MuIdTrg_abseta12_16", "MuIdTrg_abseta16_21", "MuIdTrg_abseta21_24" };
 TString allTag("MuIdTrg_1bin");
 TString absetaVar("abseta");
 TString centVar("tag_hiBin");
@@ -164,23 +164,23 @@ const double sfrange = 0.55;
 #endif
 
 #ifdef TRK
-TString etaTag("Trk_etaSeg");
-TString absetaTag("Trk_1binSeg");
-TString centTag("Trk_centSeg");
-const int nAbsEtaBins = 1;
-TString ptTag[nAbsEtaBins] = { "Trk_ptSeg" };
-TString allTag("Trk_1binSeg");
-TString absetaVar("eta");
-TString centVar("tag_hiBin");
+TString etaTag("Glb_etadep");
+TString absetaTag("Glb_absetadep");
+//TString centTag("Trk_centSeg");
+const int nAbsEtaBins = 5;
+TString ptTag[nAbsEtaBins] = { "Glb_abseta00_09", "Glb_abseta09_12", "Glb_abseta12_16", "Glb_abseta16_21", "Glb_abseta21_24" };
+TString allTag("Glb_1bin");
+TString absetaVar("abseta");
+//TString centVar("tag_hiBin");
 ofstream file_sfs("correction_functions.txt");
 ofstream file_Eta("EtaValues_Trk.txt");
 ofstream file_Cent("CentValues_Trk.txt");
 TString cutTag("tpTreeSta");
-TString cutLegend("Inner tracking");
+TString cutLegend("Inner tracking - Global");
 const double effmin = 0.8;
 const double sfrange = 0.08;
-const char* fDataName[nSyst] = { "tnp_Ana_RD_PbPb_MuonTrk_AllMB.root" };
-const char* fMCName[nSyst] = { "tnp_Ana_MC_PbPb_MuonTrk_AllMB.root" };
+const char* fDataName[nSyst] = { "../test/zmumuHI/FirstAttemptResults/tnp_Ana_Data_RecoTrackingGlbOnly_actual_Pbp.root" };
+const char* fMCName[nSyst] = { "../test/zmumuHI/FirstAttemptResults/tnp_Ana_MC_RecoTrackingGlbOnly_Pbp.root" };
 #endif
 
 // Function Define
@@ -215,6 +215,8 @@ void TnPEffDraw_singleFile() {
 	TFile* fMC[nSyst];
 	TFile* fData[nSyst];
 
+cout << "point1" << endl;
+
 	for (int i = 0; i < nSyst; i++) {
 		fMC[i] = new TFile(fMCName[i]);
 		fData[i] = new TFile(fDataName[i]);
@@ -229,12 +231,15 @@ void TnPEffDraw_singleFile() {
 		{
 			daPtData0[k].push_back((RooDataSet*)fMC[k]->Get(cutTag + "/" + ptTag[i] + "/fit_eff"));
 			daPtData1[k].push_back((RooDataSet*)fData[k]->Get(cutTag + "/" + ptTag[i] + "/fit_eff"));
+		
+cout << (RooDataSet*)fMC[k]->Get(cutTag + "/" + ptTag[i] + "/fit_eff") << endl;
 		}
 	}
 
 	vector<TGraphAsymmErrors*> ComPt0[nSyst], ComPt1[nSyst];
 
 	for (int k = 0; k < nSyst; k++) {
+cout << "k is " << k << endl;
 		for (unsigned int i = 0; i < daPtData0[k].size(); i++)
 		{
 			cout << k << " " << i << " " << daPtData1[k][i] << endl;
@@ -246,6 +251,8 @@ void TnPEffDraw_singleFile() {
 
 	RooDataSet* daEtaData0[nSyst];
 	RooDataSet* daEtaData1[nSyst];
+
+cout << "point2" << endl;
 
 	for (int i = 0; i < nSyst; i++) {
 		daEtaData0[i] = (RooDataSet*)fMC[i]->Get(cutTag + "/" + etaTag + "/fit_eff");
@@ -264,39 +271,49 @@ void TnPEffDraw_singleFile() {
 	RooDataSet* daPtData1Bin0[nSyst];
 	RooDataSet* daAbsEtaMC1[nSyst];
 	RooDataSet* daAbsEtaData1[nSyst];
-	RooDataSet* daCentMC1[nSyst];
-	RooDataSet* daCentData1[nSyst];
+//	RooDataSet* daCentMC1[nSyst];
+//	RooDataSet* daCentData1[nSyst];
 
 	for (int i = 0; i < nSyst; i++) {
 		daPtMC1Bin0[i] = (RooDataSet*)fMC[i]->Get(cutTag + "/" + allTag + "/fit_eff");
 		daPtData1Bin0[i] = (RooDataSet*)fData[i]->Get(cutTag + "/" + allTag + "/fit_eff");
 		daAbsEtaMC1[i] = (RooDataSet*)fMC[i]->Get(cutTag + "/" + absetaTag + "/fit_eff");
 		daAbsEtaData1[i] = (RooDataSet*)fData[i]->Get(cutTag + "/" + absetaTag + "/fit_eff");
-		if (isPbPb) {
+/*		if (isPbPb) {
 			daCentMC1[i] = (RooDataSet*)fMC[i]->Get(cutTag + "/" + centTag + "/fit_eff");
 			daCentData1[i] = (RooDataSet*)fData[i]->Get(cutTag + "/" + centTag + "/fit_eff");
 		}
+// */
 	}
+
+cout << "point3" << endl;
 
 	TGraphAsymmErrors* effPtMC[nSyst];
 	TGraphAsymmErrors* effPtData[nSyst];
 	vector<TGraphAsymmErrors*> effAbsEtaMC[nSyst];
 	vector<TGraphAsymmErrors*> effAbsEtaData[nSyst];
-	TGraphAsymmErrors* effCentMC = NULL;
-	TGraphAsymmErrors* effCentData = NULL;
-
+//	TGraphAsymmErrors* effCentMC = NULL;
+//	TGraphAsymmErrors* effCentData = NULL;
+cout << "made tgraphs" << endl;
 	for (int k = 0; k < nSyst; k++) {
+cout << "entered the for loop" << endl;
 		effPtMC[k] = plotEff_1bin(daPtMC1Bin0[k], 0, "eta");
 		effPtData[k] = plotEff_1bin(daPtData1Bin0[k], 0, "eta");
+cout << "pt was successful" << endl;
 		effAbsEtaMC[k] = plotEff_Nbins(daAbsEtaMC1[k], 0, "pt", absetaVar);
 		effAbsEtaData[k] = plotEff_Nbins(daAbsEtaData1[k], 0, "pt", absetaVar);
-		if (isPbPb && k == 0) {
+cout << "eta was successful" << endl;
+/*		if (isPbPb && k == 0) {
 			effCentMC = plotEff_1bin(daCentMC1[k], 0, centVar);
 			effCentData = plotEff_1bin(daCentData1[k], 0, centVar);
 		}
+// */
+cout << "k is " << k << endl;
 	}
 
+cout << "exited the for loop" << endl;
 
+/*
 	if (isPbPb) {
 		effCentMC->SetMarkerStyle(20);
 		effCentMC->SetMarkerSize(1.4);
@@ -307,7 +324,7 @@ void TnPEffDraw_singleFile() {
 		effCentData->SetMarkerColor(kBlue + 1);
 		effCentData->SetLineColor(kBlue + 1);
 	}
-
+// */
 	int nbins_abseta = ComPt0[0].size();
 	for (int k = 0; k < nSyst; k++)
 	{
@@ -339,6 +356,8 @@ void TnPEffDraw_singleFile() {
 	double Trk1[nSyst][4];
 	double*** TrkAbsEta0 = new double**[nSyst];
 	double*** TrkAbsEta1 = new double**[nSyst];
+
+cout << "point4" << endl;
 
 	for (int k = 0; k < nSyst; k++) {
 		TrkAbsEta0[k] = new double*[nbins_abseta];
@@ -377,10 +396,10 @@ void TnPEffDraw_singleFile() {
 
 	TH1F *hPad = new TH1F("hPad", ";p^{#mu}_{T} [GeV/c];Single #mu Efficiency", 5, 0, 200);
 	TH1F *hPad1 = new TH1F("hPad1", ";#eta^{#mu};Single #mu Efficiency", 5, -2.4, 2.4);
-	TH1F *hPad2 = new TH1F("hPad2", ";Centrality - nTracks ;Single #mu Efficiency", 5, 0, 300);
+//	TH1F *hPad2 = new TH1F("hPad2", ";Centrality - nTracks ;Single #mu Efficiency", 5, 0, 300);
 	hPad->GetXaxis()->CenterTitle();
 	hPad1->GetXaxis()->CenterTitle();
-	hPad2->GetXaxis()->CenterTitle();
+//	hPad2->GetXaxis()->CenterTitle();
 	hPad->GetXaxis()->SetLabelSize(0.05);
 	hPad->GetXaxis()->SetTitleSize(0.05);
 	hPad->GetXaxis()->SetTitleOffset(1.2);
@@ -393,17 +412,17 @@ void TnPEffDraw_singleFile() {
 	hPad1->GetYaxis()->SetLabelSize(0.05);
 	hPad1->GetYaxis()->SetTitleSize(0.05);
 	hPad1->GetYaxis()->SetTitleOffset(1.);
-	hPad2->GetXaxis()->SetLabelSize(0.);
+/*	hPad2->GetXaxis()->SetLabelSize(0.);
 	hPad2->GetXaxis()->SetTitleSize(0.);
 	hPad2->GetXaxis()->SetTitleOffset(1.2);
 	hPad2->GetYaxis()->SetLabelSize(0.05);
 	hPad2->GetYaxis()->SetTitleSize(0.05);
 	hPad2->GetYaxis()->SetTitleOffset(1.);
-
+// */
 
 	hPad->GetYaxis()->SetRangeUser(effmin, 1.05);
 	hPad1->GetYaxis()->SetRangeUser(effmin, 1.05);
-	hPad2->GetYaxis()->SetRangeUser(effmin, 1.05);
+//	hPad2->GetYaxis()->SetRangeUser(effmin, 1.05);
 
 	pad2->cd();
 	pad2->SetGridy();
@@ -426,15 +445,17 @@ void TnPEffDraw_singleFile() {
 	hPad1r->GetYaxis()->SetNdivisions(504, kTRUE);
 	TH1F *hPad1r_syst = (TH1F*)hPad1r->Clone("hPad1r_syst");hPad1r_syst->GetYaxis()->SetRangeUser(1. - .1, 1. + .1);
 	TH1F *hPad1_syst = (TH1F*)hPad1->Clone("hPad1_syst");
-	TH1F *hPad2r = (TH1F*)hPad2->Clone("hPad2r"); hPad2r->GetYaxis()->SetRangeUser(1. - sfrange, 1. + sfrange);
+/*	TH1F *hPad2r = (TH1F*)hPad2->Clone("hPad2r"); hPad2r->GetYaxis()->SetRangeUser(1. - sfrange, 1. + sfrange);
 	hPad2r->GetYaxis()->SetTitle("Scale Factor");
 	hPad2r->GetXaxis()->SetTitleSize(tsize);
 	hPad2r->GetXaxis()->SetLabelSize(tsize);
 	hPad2r->GetYaxis()->SetTitleSize(tsize);
 	hPad2r->GetYaxis()->SetLabelSize(tsize);
 	hPad2r->GetYaxis()->SetNdivisions(504, kTRUE);
-
+// */
 	pad1->cd();
+
+cout << "point5" << endl;
 
 	TString header;
 	for (int i = 0; i < nbins_abseta; i++)
@@ -527,6 +548,8 @@ void TnPEffDraw_singleFile() {
 				delete[] tntot;
 			}
 
+cout << "point6" << endl;
+
 			// here we assume that the mc uncertainty is negligible compared to the data one: simply scale everything by the central value.
 			for (int j = 0; j < nbins; j++)
 			{
@@ -551,6 +574,8 @@ void TnPEffDraw_singleFile() {
 				c1->SaveAs(cutTag + Form("Eff%i_", i) + collTag + "_RD_MC_PT.pdf");
 				c1->SaveAs(cutTag + Form("Eff%i_", i) + collTag + "_RD_MC_PT.png");
 			}
+
+cout << "point7" << endl;
 
 			// in case we are looking at muon Id + trigger: get the scale factor at the same time
 #if defined MUIDTRG || defined STA || defined MUID || defined TRG
@@ -659,6 +684,8 @@ void TnPEffDraw_singleFile() {
 			}
 		}
 
+cout << "point8-endofmaincode" << endl;
+
 		// plot systematics
 		TGraphAsymmErrors *graphssyst_data[nSyst];
 		//data
@@ -675,6 +702,8 @@ void TnPEffDraw_singleFile() {
 	}
 #endif // ifdef MUIDTRG or STA
 	}
+
+cout << "point9" << endl;
 
 	//---------- This is for eta dependence
 	TLegend *leg1 = new TLegend(0.43, 0.11, 0.66, 0.33);
@@ -771,6 +800,8 @@ void TnPEffDraw_singleFile() {
 		}
 	}
 
+cout << "point10" << endl;
+
 	// plot systematics
 	//data
 	plotSysts(ComEta1, c1, pad1, hPad1_syst, pad2, hPad1r_syst, header, "syst_data_eta");
@@ -778,7 +809,7 @@ void TnPEffDraw_singleFile() {
 	plotSysts(ComEta0, c1, pad1, hPad1_syst, pad2, hPad1r_syst, header, "syst_mc_eta");
 
 	//-------- This is for centrality dependence
-	if (isPbPb) {
+/*	if (isPbPb) {
 		pad1->cd();
 		hPad2->Draw();
 
@@ -829,6 +860,8 @@ void TnPEffDraw_singleFile() {
 		c1->SaveAs(cutTag + "Eff_" + collTag + "_RD_MC_Cent.pdf");
 		c1->SaveAs(cutTag + "Eff_" + collTag + "_RD_MC_Cent.png");
 
+cout << "point11" << endl;
+
 		// print the centrality dependence to file
 		double xVal, yVal, ErrDown, ErrUp;
 		file_Cent << "Data " << endl << endl;
@@ -852,10 +885,13 @@ void TnPEffDraw_singleFile() {
 		}
 		file_Cent.close();
 	}
-
+// */
 
 	file_sfs.close();
 	file_binnedsfs.close();
+
+cout << "point12-endofeverything" << endl;
+
 }
 
 void formatTH1F(TH1* a, int b, int c, int d) {
