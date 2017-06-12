@@ -8,12 +8,13 @@ TTree* copyTree(TTree* told) {
    TTree *tnew = told->CloneTree(0);
    tnew->SetAutoSave(0);
    tnew->SetAutoFlush(0);
-   int isIso_3_15, isIso_3_20, isTightMuonO;
-
-
-   float isoTrk03Rel;
+   int isIso_3_15, isIso_3_20, isIso_4_15, isIso_4_20, isTightMuonO;
+   float combRelIsoPF03;
+   float combRelIsoPF04;
    float dzPV, dB, tkValidPixelHits, tkTrackerLay, numberOfMatchedStations, glbValidMuHits, glbChi2;
-   told->SetBranchAddress("isoTrk03Rel", &isoTrk03Rel);
+
+   told->SetBranchAddress("combRelIsoPF03", &combRelIsoPF03);
+   told->SetBranchAddress("combRelIsoPF04", &combRelIsoPF04);
    told->SetBranchAddress("dzPV",&dzPV);
    told->SetBranchAddress("dB",&dB);
    told->SetBranchAddress("tkValidPixelHits", &tkValidPixelHits);
@@ -24,15 +25,18 @@ TTree* copyTree(TTree* told) {
 
    tnew->Branch("isIso_3_15",&isIso_3_15,"isIso_3_15/I");
    tnew->Branch("isIso_3_20", &isIso_3_20, "isIso_3_20/I");
+   tnew->Branch("isIso_4_15", &isIso_4_15, "isIso_4_15/I");
+   tnew->Branch("isIso_4_20", &isIso_4_20, "isIso_4_20/I");
    tnew->Branch("isTightMuonO", &isTightMuonO, "isTightMuonO/I");
 
    int nentries = told->GetEntries();
    for (int i=0; i<nentries; i++) {
       told->GetEntry(i);
 	  // Isolations
-	  isIso_3_15 = ((isoTrk03Rel)<0.15);
-	  isIso_3_20 = ((isoTrk03Rel)<0.20);
-
+	  isIso_3_15 = ((combRelIsoPF03)<0.15);
+	  isIso_3_20 = ((combRelIsoPF03)<0.20);
+	  isIso_4_15 = ((combRelIsoPF04)<0.15);
+	  isIso_4_20 = ((combRelIsoPF04)<0.20);
 
 	  //TightMuonID
 
@@ -71,10 +75,10 @@ void addFlagsToFile(const char *filein, const char *fileout) {
    tdir_muidtrg->cd();
    TTree *tr_muidtrg = copyTree((TTree*) fin->Get("tpTree/fitter_tree"));
 
-   //fout->cd();
-   //TDirectory *tdir_trg = fout->mkdir("tpTreeTrk");
-   //tdir_trg->cd();
-   //TTree *tr_trg = justCopyTree((TTree*)fin->Get("tpTreeTrk/fitter_tree"));
+   fout->cd();
+   TDirectory *tdir_trg = fout->mkdir("tpTreeTrk");
+   tdir_trg->cd();
+   TTree *tr_trg = justCopyTree((TTree*)fin->Get("tpTreeTrk/fitter_tree"));
 
 
    fout->Write();
