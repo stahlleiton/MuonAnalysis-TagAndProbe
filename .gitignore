@@ -1,6 +1,9 @@
 __init__.py
 *.root
 *.pyc
+*.pdf
+*.png
+*.txt
 .*.swp
 .#*
 #*#
