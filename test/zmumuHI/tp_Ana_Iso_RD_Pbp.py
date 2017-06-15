@@ -6,7 +6,6 @@ if len(args) < 2: scenario = "0"
 else: 
    scenario = args[1]
 print "Will run scenario ", scenario 
-
 # scenario: 1 pT, 2-3 pT in detailed abseta bins, 4-5 pT in overall abseta bins, 6 abseta, 7, eta, 8 centrality, 0 (or no parameter) run all
 
 process = cms.Process("TagProbe")
@@ -236,7 +235,7 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     InputFileNames = cms.vstring("file:/afs/cern.ch/work/o/okukral/TnP_pPb/Data/RD_trees_Pbp.root"),
     InputDirectoryName = cms.string("tpTree"),
     InputTreeName = cms.string("fitter_tree"),
-    OutputFileName = cms.string("tnp_Ana_RD_Iso_Pbp_test_%s.root" % scenario),
+    OutputFileName = cms.string("tnp_Ana_RD_Iso_Pbp_%s.root" % scenario),
     #numbrer of CPUs to use for fitting
     NumCPU = cms.uint32(16),
     # specifies whether to save the RooWorkspace containing the data for each bin and

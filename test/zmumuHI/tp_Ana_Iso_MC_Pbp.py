@@ -1,14 +1,235 @@
 import FWCore.ParameterSet.Config as cms
 
+import sys
+args =sys.argv[1:]
+if len(args) < 2: scenario = "0"
+else: 
+   scenario = args[1]
+print "Will run scenario ", scenario 
+# scenario: 1 pT, 2-3 pT in detailed abseta bins, 4-5 pT in overall abseta bins, 6 abseta, 7, eta, 8 centrality, 0 (or no parameter) run all
+
 process = cms.Process("TagProbe")
-
 process.load('FWCore.MessageService.MessageLogger_cfi')
-
 process.source = cms.Source("EmptySource")
-
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1) )    
-
 PDFName = "VoigtExp"
+
+
+VEFFICIENCYSET =cms.VPSet(
+# Order: 0 total, 1 pT, 2-8 pT fits in abseta bins, 9 abseta, 10 eta, 11-12 centrality   NOTE: IS NOT SAME AS SCENARIO
+    cms.PSet(
+        Iso_1bin = cms.PSet(
+            EfficiencyCategoryAndState = cms.vstring("isIso_3_15","true"),
+            UnbinnedVariables = cms.vstring("mass"),
+            BinnedVariables = cms.PSet(
+                pt = cms.vdouble(15, 200),
+                eta = cms.vdouble(-2.4, 2.4),
+                tag_nVertices    = cms.vdouble(0.9,1.1),
+                TightID = cms.vstring("true"),
+                #hltL3fL1sSingleMu7BptxANDL1f0L2f0L3Filtered12 = cms.vstring("true"),
+                hltL3fL1sSingleMu7BptxANDL1f0L2f0L3Filtered15 = cms.vstring("true"),
+            ),
+         BinToPDFmap = cms.vstring(PDFName)
+        )
+    ),
+    cms.PSet(
+       Iso_pt = cms.PSet(
+           EfficiencyCategoryAndState = cms.vstring("isIso_3_15","true"),
+           UnbinnedVariables = cms.vstring("mass"),
+           BinnedVariables = cms.PSet(
+               pt = cms.vdouble(10, 15, 30, 40, 50, 60, 70, 80, 100, 200),
+               eta = cms.vdouble(-2.4,2.4),
+                tag_nVertices    = cms.vdouble(0.9,1.1),
+                TightID = cms.vstring("true"),
+                hltL3fL1sSingleMu7BptxANDL1f0L2f0L3Filtered12 = cms.vstring("true"),
+               # hltL3fL1sSingleMu7BptxANDL1f0L2f0L3Filtered15 = cms.vstring("true"),
+           ),
+           BinToPDFmap = cms.vstring(PDFName)
+       )
+    ),
+    cms.PSet(
+        Iso_abseta00_09 = cms.PSet(
+            EfficiencyCategoryAndState = cms.vstring("isIso_3_15","true"),
+            UnbinnedVariables = cms.vstring("mass"),
+            BinnedVariables = cms.PSet(
+                pt = cms.vdouble(10, 15, 25, 30, 35, 40, 45,50, 80, 200),
+                abseta = cms.vdouble(0, 0.9),
+                tag_nVertices    = cms.vdouble(0.9,1.1),
+                TightID = cms.vstring("true"),
+                hltL3fL1sSingleMu7BptxANDL1f0L2f0L3Filtered12 = cms.vstring("true"),
+               # hltL3fL1sSingleMu7BptxANDL1f0L2f0L3Filtered15 = cms.vstring("true"),
+            ),
+            BinToPDFmap = cms.vstring(PDFName)
+        )
+    ), 
+    cms.PSet(
+        Iso_abseta09_12 = cms.PSet(
+            EfficiencyCategoryAndState = cms.vstring("isIso_3_15","true"),
+            UnbinnedVariables = cms.vstring("mass"),
+            BinnedVariables = cms.PSet(
+                pt = cms.vdouble(10, 15, 25, 30, 35, 40, 45,50, 80, 200),
+                abseta = cms.vdouble(0.9, 1.2),
+                tag_nVertices    = cms.vdouble(0.9,1.1),
+                TightID = cms.vstring("true"),
+                hltL3fL1sSingleMu7BptxANDL1f0L2f0L3Filtered12 = cms.vstring("true"),
+               # hltL3fL1sSingleMu7BptxANDL1f0L2f0L3Filtered15 = cms.vstring("true"),
+            ),
+            BinToPDFmap = cms.vstring(PDFName)
+        )
+    ), 
+    cms.PSet(
+        Iso_abseta00_12 = cms.PSet(
+            EfficiencyCategoryAndState = cms.vstring("isIso_3_15","true"),
+            UnbinnedVariables = cms.vstring("mass"),
+            BinnedVariables = cms.PSet(
+                pt = cms.vdouble(10, 15, 25, 30, 35, 40, 45,50, 80, 200),
+                abseta = cms.vdouble(0, 1.2),
+                tag_nVertices    = cms.vdouble(0.9,1.1),
+                TightID = cms.vstring("true"),
+                hltL3fL1sSingleMu7BptxANDL1f0L2f0L3Filtered12 = cms.vstring("true"),
+               # hltL3fL1sSingleMu7BptxANDL1f0L2f0L3Filtered15 = cms.vstring("true"),
+            ),
+            BinToPDFmap = cms.vstring(PDFName)
+        )
+    ), 
+    cms.PSet(
+         Iso_abseta12_16 = cms.PSet(
+             EfficiencyCategoryAndState = cms.vstring("isIso_3_15","true"),
+             UnbinnedVariables = cms.vstring("mass"),
+             BinnedVariables = cms.PSet(
+                pt = cms.vdouble(10, 15, 25, 30,35, 40,45,50, 80, 200),
+                abseta = cms.vdouble(1.2,1.6),
+                tag_nVertices    = cms.vdouble(0.9,1.1),
+                TightID = cms.vstring("true"),
+                hltL3fL1sSingleMu7BptxANDL1f0L2f0L3Filtered12 = cms.vstring("true"),
+               # hltL3fL1sSingleMu7BptxANDL1f0L2f0L3Filtered15 = cms.vstring("true"),
+             ),
+             BinToPDFmap = cms.vstring(PDFName)
+        )
+    ), 
+    cms.PSet(         
+         Iso_abseta16_21 = cms.PSet(
+             EfficiencyCategoryAndState = cms.vstring("isIso_3_15","true"),
+             UnbinnedVariables = cms.vstring("mass"),
+             BinnedVariables = cms.PSet(
+                pt = cms.vdouble(10, 15, 25, 30, 35, 40, 50, 80, 200),
+                abseta = cms.vdouble(1.6,2.1),
+                tag_nVertices    = cms.vdouble(0.9,1.1),
+                TightID = cms.vstring("true"),
+                hltL3fL1sSingleMu7BptxANDL1f0L2f0L3Filtered12 = cms.vstring("true"),
+               # hltL3fL1sSingleMu7BptxANDL1f0L2f0L3Filtered15 = cms.vstring("true"),
+             ),
+             BinToPDFmap = cms.vstring(PDFName)
+        )
+    ), 
+    cms.PSet(         
+         Iso_abseta12_21 = cms.PSet(
+             EfficiencyCategoryAndState = cms.vstring("isIso_3_15","true"),
+             UnbinnedVariables = cms.vstring("mass"),
+             BinnedVariables = cms.PSet(
+                pt = cms.vdouble(10, 15, 25, 30,35, 40,45,50, 80, 200),
+                abseta = cms.vdouble(1.2,2.1),
+                tag_nVertices    = cms.vdouble(0.9,1.1),
+                TightID = cms.vstring("true"),
+                hltL3fL1sSingleMu7BptxANDL1f0L2f0L3Filtered12 = cms.vstring("true"),
+               # hltL3fL1sSingleMu7BptxANDL1f0L2f0L3Filtered15 = cms.vstring("true"),
+             ),
+             BinToPDFmap = cms.vstring(PDFName)
+        )
+    ), 
+    cms.PSet(
+        Iso_abseta21_24 = cms.PSet(
+            EfficiencyCategoryAndState = cms.vstring("isIso_3_15","true"),
+            UnbinnedVariables = cms.vstring("mass"),
+            BinnedVariables = cms.PSet(
+                pt = cms.vdouble(10, 15, 25, 40, 80, 200),
+                abseta = cms.vdouble(2.1,2.4),
+                tag_nVertices    = cms.vdouble(0.9,1.1),
+                TightID = cms.vstring("true"),
+                hltL3fL1sSingleMu7BptxANDL1f0L2f0L3Filtered12 = cms.vstring("true"),
+                #hltL3fL1sSingleMu7BptxANDL1f0L2f0L3Filtered15 = cms.vstring("true"),
+            ),
+            BinToPDFmap = cms.vstring(PDFName)
+        )
+    ), 
+    cms.PSet(
+        Iso_absetadep = cms.PSet(
+            EfficiencyCategoryAndState = cms.vstring("isIso_3_15","true"),
+            UnbinnedVariables = cms.vstring("mass"),
+            BinnedVariables = cms.PSet(
+                pt = cms.vdouble(15, 200),
+                abseta = cms.vdouble(0,0.9,1.2,1.6,2.1,2.4),
+                tag_nVertices    = cms.vdouble(0.9,1.1),
+                TightID = cms.vstring("true"),
+                hltL3fL1sSingleMu7BptxANDL1f0L2f0L3Filtered12 = cms.vstring("true"),
+                #hltL3fL1sSingleMu7BptxANDL1f0L2f0L3Filtered15 = cms.vstring("true"),
+            ),
+            BinToPDFmap = cms.vstring(PDFName)
+        )
+    ), 
+    cms.PSet(      
+        Iso_etadep = cms.PSet(
+            EfficiencyCategoryAndState = cms.vstring("isIso_3_15","true"),
+            UnbinnedVariables = cms.vstring("mass"),
+            BinnedVariables = cms.PSet(
+                pt = cms.vdouble(15, 200),
+                eta = cms.vdouble(-2.4,-2.1,-1.6,-1.2,-0.9,-0.6,-0.3,0,0.3,0.6,0.9,1.2,1.6,2.1,2.4),
+                tag_nVertices    = cms.vdouble(0.9,1.1),
+                TightID = cms.vstring("true"),
+                hltL3fL1sSingleMu7BptxANDL1f0L2f0L3Filtered12 = cms.vstring("true"),
+               # hltL3fL1sSingleMu7BptxANDL1f0L2f0L3Filtered15 = cms.vstring("true"),
+            ),
+            BinToPDFmap = cms.vstring(PDFName)
+        )
+    ), 
+    cms.PSet(
+        Iso_centdep = cms.PSet(
+            EfficiencyCategoryAndState = cms.vstring("isIso_3_15","true"),
+            UnbinnedVariables = cms.vstring("mass"),
+            BinnedVariables = cms.PSet(
+                pt = cms.vdouble(15,200),
+                eta = cms.vdouble(-2.4,2.4),
+                tag_nVertices    = cms.vdouble(0.9,1.1),
+                tag_hiNtracks = cms.vdouble(0,30,50,75,100,125,150,175,400),
+                TightID = cms.vstring("true"),
+                hltL3fL1sSingleMu7BptxANDL1f0L2f0L3Filtered12 = cms.vstring("true"),
+                #hltL3fL1sSingleMu7BptxANDL1f0L2f0L3Filtered15 = cms.vstring("true"),
+            ),
+            BinToPDFmap = cms.vstring(PDFName)
+        )
+    ), 
+    cms.PSet(
+        Iso_centdepHF = cms.PSet(
+            EfficiencyCategoryAndState = cms.vstring("isIso_3_15","true"),
+            UnbinnedVariables = cms.vstring("mass"),
+            BinnedVariables = cms.PSet(
+                pt = cms.vdouble(15,200),
+                eta = cms.vdouble(-2.4,2.4),
+                tag_nVertices    = cms.vdouble(0.9,1.1),
+                tag_hiHF = cms.vdouble(0,30,50,75,100,125,150,175,400),
+                TightID = cms.vstring("true"),
+                hltL3fL1sSingleMu7BptxANDL1f0L2f0L3Filtered12 = cms.vstring("true"),
+                #hltL3fL1sSingleMu7BptxANDL1f0L2f0L3Filtered15 = cms.vstring("true"),
+            ),
+            BinToPDFmap = cms.vstring(PDFName)
+        )
+    ), 
+)
+
+#Actual selection 
+if scenario == "1": EFFICIENCYSET = cms.PSet(VEFFICIENCYSET[0], VEFFICIENCYSET[1])
+if scenario == "2": EFFICIENCYSET = cms.PSet(VEFFICIENCYSET[2], VEFFICIENCYSET[3])
+if scenario == "3": EFFICIENCYSET = cms.PSet(VEFFICIENCYSET[5], VEFFICIENCYSET[6])
+if scenario == "4": EFFICIENCYSET = cms.PSet(VEFFICIENCYSET[4], VEFFICIENCYSET[7])
+if scenario == "5": EFFICIENCYSET = cms.PSet(VEFFICIENCYSET[8])
+if scenario == "6": EFFICIENCYSET = cms.PSet(VEFFICIENCYSET[9])
+if scenario == "7": EFFICIENCYSET = cms.PSet(VEFFICIENCYSET[10])
+if scenario == "8": EFFICIENCYSET = cms.PSet(VEFFICIENCYSET[11], VEFFICIENCYSET[12])
+if scenario == "0": EFFICIENCYSET = cms.PSet(VEFFICIENCYSET[0],VEFFICIENCYSET[1],VEFFICIENCYSET[2], VEFFICIENCYSET[3],VEFFICIENCYSET[4], VEFFICIENCYSET[5],VEFFICIENCYSET[6], VEFFICIENCYSET[7],VEFFICIENCYSET[8], VEFFICIENCYSET[9], VEFFICIENCYSET[10],VEFFICIENCYSET[11],VEFFICIENCYSET[12])
+
+
+
+
 
 process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     # IO parameters:
@@ -16,7 +237,7 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     InputFileNames = cms.vstring("file:/afs/cern.ch/work/o/okukral/TnP_pPb/Data/MC_trees_Pbp.root"),
     InputDirectoryName = cms.string("tpTree"),
     InputTreeName = cms.string("fitter_tree"),
-    OutputFileName = cms.string("tnp_Ana_MC_Iso_Pbp_Quick.root"),
+    OutputFileName = cms.string("tnp_Ana_MC_Iso_Pbp_%s.root" % scenario),
     #numbrer of CPUs to use for fitting
     NumCPU = cms.uint32(25),
     # specifies whether to save the RooWorkspace containing the data for each bin and
@@ -111,190 +332,12 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
       #),
 
     ),
+
+
     # defines a set of efficiency calculations, what PDF to use for fitting and how to bin the data;
     # there will be a separate output directory for each calculation that includes a simultaneous fit, side band subtraction and counting. 
-    Efficiencies = cms.PSet(
-    #    Iso_1bin = cms.PSet(
-    #        EfficiencyCategoryAndState = cms.vstring("isIso_3_15","true"),
-    #        UnbinnedVariables = cms.vstring("mass"),
-    #        BinnedVariables = cms.PSet(
-    #            pt = cms.vdouble(15, 200),
-    #            eta = cms.vdouble(-2.4, 2.4),
-    #            tag_nVertices    = cms.vdouble(0.9,1.1),
-    #            TightID = cms.vstring("true"),
-    #            #hltL3fL1sSingleMu7BptxANDL1f0L2f0L3Filtered12 = cms.vstring("true"),
-    #            hltL3fL1sSingleMu7BptxANDL1f0L2f0L3Filtered15 = cms.vstring("true"),
-    #        ),
-    #        BinToPDFmap = cms.vstring(PDFName)
-    #    ),
-        
-    #   Iso_pt = cms.PSet(
-    #       EfficiencyCategoryAndState = cms.vstring("isIso_3_15","true"),
-    #       UnbinnedVariables = cms.vstring("mass"),
-    #       BinnedVariables = cms.PSet(
-    #           pt = cms.vdouble(10, 15, 30, 40, 50, 60, 70, 80, 100, 200),
-    #           eta = cms.vdouble(-2.4,2.4),
-    #            tag_nVertices    = cms.vdouble(0.9,1.1),
-    #            TightID = cms.vstring("true"),
-    #            hltL3fL1sSingleMu7BptxANDL1f0L2f0L3Filtered12 = cms.vstring("true"),
-    #           # hltL3fL1sSingleMu7BptxANDL1f0L2f0L3Filtered15 = cms.vstring("true"),
-    #       ),
-    #       BinToPDFmap = cms.vstring(PDFName)
-    #   ),
+    Efficiencies = EFFICIENCYSET 
 
-    #    Iso_abseta00_09 = cms.PSet(
-    #        EfficiencyCategoryAndState = cms.vstring("Tight2012","true"),
-    #        UnbinnedVariables = cms.vstring("mass"),
-    #        BinnedVariables = cms.PSet(
-    #            pt = cms.vdouble(10, 15, 25, 30, 35, 40, 45,50, 80, 200),
-    #            abseta = cms.vdouble(0, 0.9),
-    #            tag_nVertices    = cms.vdouble(0.9,1.1),
-    #            TightID = cms.vstring("true"),
-    #            hltL3fL1sSingleMu7BptxANDL1f0L2f0L3Filtered12 = cms.vstring("true"),
-    #           # hltL3fL1sSingleMu7BptxANDL1f0L2f0L3Filtered15 = cms.vstring("true"),
-    #        ),
-    #        BinToPDFmap = cms.vstring(PDFName)
-    #    ), 
-
-    #    Iso_abseta09_12 = cms.PSet(
-    #        EfficiencyCategoryAndState = cms.vstring("Tight2012","true"),
-    #        UnbinnedVariables = cms.vstring("mass"),
-    #        BinnedVariables = cms.PSet(
-    #            pt = cms.vdouble(10, 15, 25, 30, 35, 40, 45,50, 80, 200),
-    #            abseta = cms.vdouble(0.9, 1.2),
-    #            tag_nVertices    = cms.vdouble(0.9,1.1),
-    #            TightID = cms.vstring("true"),
-    #            hltL3fL1sSingleMu7BptxANDL1f0L2f0L3Filtered12 = cms.vstring("true"),
-    #           # hltL3fL1sSingleMu7BptxANDL1f0L2f0L3Filtered15 = cms.vstring("true"),
-    #        ),
-    #        BinToPDFmap = cms.vstring(PDFName)
-    #    ), 
-
-    #    Iso_abseta00_12 = cms.PSet(
-    #        EfficiencyCategoryAndState = cms.vstring("Tight2012","true"),
-    #        UnbinnedVariables = cms.vstring("mass"),
-    #        BinnedVariables = cms.PSet(
-    #            pt = cms.vdouble(10, 15, 25, 30, 35, 40, 45,50, 80, 200),
-    #            abseta = cms.vdouble(0, 1.2),
-    #            tag_nVertices    = cms.vdouble(0.9,1.1),
-    #            TightID = cms.vstring("true"),
-    #            hltL3fL1sSingleMu7BptxANDL1f0L2f0L3Filtered12 = cms.vstring("true"),
-    #           # hltL3fL1sSingleMu7BptxANDL1f0L2f0L3Filtered15 = cms.vstring("true"),
-    #        ),
-    #        BinToPDFmap = cms.vstring(PDFName)
-    #    ),  
-    #     Iso_abseta12_16 = cms.PSet(
-    #         EfficiencyCategoryAndState = cms.vstring("isIso_3_15","true"),
-    #         UnbinnedVariables = cms.vstring("mass"),
-    #         BinnedVariables = cms.PSet(
-    #            pt = cms.vdouble(10, 15, 25, 30,35, 40,45,50, 80, 200),
-    #            abseta = cms.vdouble(1.2,1.6),
-    #            tag_nVertices    = cms.vdouble(0.9,1.1),
-    #            TightID = cms.vstring("true"),
-    #            hltL3fL1sSingleMu7BptxANDL1f0L2f0L3Filtered12 = cms.vstring("true"),
-    #           # hltL3fL1sSingleMu7BptxANDL1f0L2f0L3Filtered15 = cms.vstring("true"),
-    #         ),
-    #         BinToPDFmap = cms.vstring(PDFName)
-    #     ),
-         
-    #     Iso_abseta16_21 = cms.PSet(
-    #         EfficiencyCategoryAndState = cms.vstring("Tight2012","true"),
-    #         UnbinnedVariables = cms.vstring("mass"),
-    #         BinnedVariables = cms.PSet(
-    #            pt = cms.vdouble(10, 15, 25, 30, 35, 40, 50, 80, 200),
-    #             abseta = cms.vdouble(1.6,2.1),
-    #            tag_nVertices    = cms.vdouble(0.9,1.1),
-    #            TightID = cms.vstring("true"),
-    #            hltL3fL1sSingleMu7BptxANDL1f0L2f0L3Filtered12 = cms.vstring("true"),
-    #           # hltL3fL1sSingleMu7BptxANDL1f0L2f0L3Filtered15 = cms.vstring("true"),
-    #         ),
-    #         BinToPDFmap = cms.vstring(PDFName)
-    #     ),
-         
-    #     Iso_abseta12_21 = cms.PSet(
-    #         EfficiencyCategoryAndState = cms.vstring("isIso_3_15","true"),
-    #         UnbinnedVariables = cms.vstring("mass"),
-    #         BinnedVariables = cms.PSet(
-    #            pt = cms.vdouble(10, 15, 25, 30,35, 40,45,50, 80, 200),
-    #            abseta = cms.vdouble(1.2,2.1),
-    #            tag_nVertices    = cms.vdouble(0.9,1.1),
-    #            TightID = cms.vstring("true"),
-    #            hltL3fL1sSingleMu7BptxANDL1f0L2f0L3Filtered12 = cms.vstring("true"),
-    #           # hltL3fL1sSingleMu7BptxANDL1f0L2f0L3Filtered15 = cms.vstring("true"),
-    #         ),
-    #         BinToPDFmap = cms.vstring(PDFName)
-    #     ),
-
-    #     Iso_abseta21_24 = cms.PSet(
-    #         EfficiencyCategoryAndState = cms.vstring("Tight2012","true"),
-    #         UnbinnedVariables = cms.vstring("mass"),
-    #         BinnedVariables = cms.PSet(
-    #            pt = cms.vdouble(10, 15, 25, 40, 80, 200),
-    #             abseta = cms.vdouble(2.1,2.4),
-    #            tag_nVertices    = cms.vdouble(0.9,1.1),
-    #            TightID = cms.vstring("true"),
-    #            hltL3fL1sSingleMu7BptxANDL1f0L2f0L3Filtered12 = cms.vstring("true"),
-    #           # hltL3fL1sSingleMu7BptxANDL1f0L2f0L3Filtered15 = cms.vstring("true"),
-    #         ),
-    #         BinToPDFmap = cms.vstring(PDFName)
-    #     ),
-
-
-    #      Iso_absetadep = cms.PSet(
-    #         EfficiencyCategoryAndState = cms.vstring("isIso_3_15","true"),
-    #         UnbinnedVariables = cms.vstring("mass"),
-    #         BinnedVariables = cms.PSet(
-    #             pt = cms.vdouble(15, 200),
-    #             abseta = cms.vdouble(0,0.9,1.2,1.6,2.1,2.4),
-    #            tag_nVertices    = cms.vdouble(0.9,1.1),
-    #            TightID = cms.vstring("true"),
-    #            hltL3fL1sSingleMu7BptxANDL1f0L2f0L3Filtered12 = cms.vstring("true"),
-    #           # hltL3fL1sSingleMu7BptxANDL1f0L2f0L3Filtered15 = cms.vstring("true"),
-    #         ),
-    #         BinToPDFmap = cms.vstring(PDFName)
-    #     ),        
-         Iso_etadep = cms.PSet(
-             EfficiencyCategoryAndState = cms.vstring("isIso_3_15","true"),
-             UnbinnedVariables = cms.vstring("mass"),
-             BinnedVariables = cms.PSet(
-                 pt = cms.vdouble(15, 200),
-                 eta = cms.vdouble(-2.4,-2.1,-1.6,-1.2,-0.9,-0.6,-0.3,0,0.3,0.6,0.9,1.2,1.6,2.1,2.4),
-                tag_nVertices    = cms.vdouble(0.9,1.1),
-                TightID = cms.vstring("true"),
-                hltL3fL1sSingleMu7BptxANDL1f0L2f0L3Filtered12 = cms.vstring("true"),
-               # hltL3fL1sSingleMu7BptxANDL1f0L2f0L3Filtered15 = cms.vstring("true"),
-             ),
-             BinToPDFmap = cms.vstring(PDFName)
-         ),
-    #     Iso_centdep = cms.PSet(
-    #            EfficiencyCategoryAndState = cms.vstring("isIso_3_15","true"),
-    #            UnbinnedVariables = cms.vstring("mass"),
-    #            BinnedVariables = cms.PSet(
-    #                pt = cms.vdouble(15,200),
-    #                eta = cms.vdouble(-2.4,2.4),
-    #            tag_nVertices    = cms.vdouble(0.9,1.1),
-    #                tag_hiNtracks = cms.vdouble(0,30,50,75,100,125,150,175,400),
-    #              TightID = cms.vstring("true"),
-    #              hltL3fL1sSingleMu7BptxANDL1f0L2f0L3Filtered12 = cms.vstring("true"),
-    #             # hltL3fL1sSingleMu7BptxANDL1f0L2f0L3Filtered15 = cms.vstring("true"),
-    #            ),
-    #            BinToPDFmap = cms.vstring(PDFName)
-    #        ),
-    #    Iso_centdepHF = cms.PSet(
-    #            EfficiencyCategoryAndState = cms.vstring("isIso_3_15","true"),
-    #            UnbinnedVariables = cms.vstring("mass"),
-    #            BinnedVariables = cms.PSet(
-    #              pt = cms.vdouble(15,200),
-    #              eta = cms.vdouble(-2.4,2.4),
-    #            tag_nVertices    = cms.vdouble(0.9,1.1),
-    #              tag_hiHF = cms.vdouble(0,30,50,75,100,125,150,175,400),
-    #              TightID = cms.vstring("true"),
-    #              hltL3fL1sSingleMu7BptxANDL1f0L2f0L3Filtered12 = cms.vstring("true"),
-    #             # hltL3fL1sSingleMu7BptxANDL1f0L2f0L3Filtered15 = cms.vstring("true"),
-    #            ),
-    #            BinToPDFmap = cms.vstring(PDFName)
-    #        ),
-      )
 )
 
 process.fitness = cms.Path(
