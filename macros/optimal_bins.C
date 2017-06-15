@@ -7,7 +7,7 @@ void optimal_bins(TString inFileName, TString TreeName, TString cut, int nmin)
 	TTree *tr;
 	inFile->GetObject(TreeName, tr);
 
-	tr->Draw("pt>>hpt(100,0,200)", cut);
+	tr->Draw("pt>>hpt(40,0,200)", cut);
 	TH1F *hpt = (TH1F*)gDirectory->Get("hpt");
 	int nentries = hpt->Integral();
 	int nbins = nentries / nmin;
