@@ -48,7 +48,7 @@ using namespace std;
 
 // pp or PbPb?
 bool isPbPb = true; // if true, will compute the centrality dependence
-TString collTag = "Pbp"; // isPbPb ? "PbPb" : "pp";
+TString collTag = "pPb"; // isPbPb ? "PbPb" : "pp";
 
 // do the toy study for the correction factors? (only applies if MUIDTRG)
 bool doToys = false;
@@ -146,21 +146,26 @@ const char* fMCName[nSyst] = { "tnp_Ana_MC_PbPb_Trg_AllMB.root" };
 
 
 #ifdef STA
-TString etaTag("STA_eta");
-TString absetaTag("STA_abseta");
-TString centTag("STA_cent");
-const int nAbsEtaBins = 4;
-TString ptTag[nAbsEtaBins] = { "STA_pt1", "STA_pt2", "STA_pt3", "STA_pt4" };
+TString etaTag("STA_etadep");
+TString absetaTag("STA_absetadep");
+//TString centTag("STA_cent");
+TString HFTag("STA_HFdep");
+TString NtracksTag("STA_nTracksdep");
+const int nAbsEtaBins = 5;
+TString ptTag[nAbsEtaBins] = { "STA_abseta00_09", "STA_abseta09_12", "STA_abseta12_16", "STA_abseta16_21", "STA_abseta21_24" };
 TString allTag("STA_1bin");
 TString absetaVar("abseta");
-TString centVar("tag_hiBin");
+TString HFVar("tag_hiHF");
+TString NtracksVar("tag_hiNtracks");
 ofstream file_sfs("correction_functions.txt");
 ofstream file_Eta("EtaValues_Sta.txt");
-ofstream file_Cent("CentValues_Sta.txt");
+//ofstream file_Cent("CentValues_Sta.txt");
 TString cutTag("tpTreeTrk");
 TString cutLegend("Standalone");
 const double effmin = 0.;
 const double sfrange = 0.55;
+const char* fDataName[nSyst] = { "../test/zmumuHI/STAResults/tnp_Ana_Data_RecoSTA_pPb.root" };
+const char* fMCName[nSyst] = { "../test/zmumuHI/STAResults/tnp_Ana_MC_RecoSTA_pPb.root" };
 #endif
 
 #ifdef TRK
@@ -176,7 +181,7 @@ ofstream file_sfs("correction_functions.txt");
 ofstream file_Eta("EtaValues_Trk.txt");
 ofstream file_Cent("CentValues_Trk.txt");
 TString cutTag("tpTreeSta");
-TString cutLegend("Inner tracking - Global");
+TString cutLegend("Inner tracking - Global and PF");
 const double effmin = 0.8;
 const double sfrange = 0.08;
 const char* fDataName[nSyst] = { "../test/zmumuHI/FirstAttemptResults/tnp_Ana_Data_RecoTrackingGlbOnly_actual_Pbp.root" };
