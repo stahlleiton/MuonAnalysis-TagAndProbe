@@ -8,11 +8,11 @@ void pPb_vs_PbP (const char* file_pPb, const char* file_PbP, const char* fullpat
    TCanvas *c1 = new TCanvas();
    haxes->Draw();
 
-   TGraphAsymmErrors *tg0 = plotEff_1bin((RooDataSet*) _file0->Get("tpTree/Iso_etadep/fit_eff"),1,"eta");
+   TGraphAsymmErrors *tg0 = plotEff_1bin((RooDataSet*) _file0->Get(fullpathtodataset),1,"eta");
    tg0->SetLineColor(kRed);
    tg0->SetMarkerColor(kRed);
    tg0->Draw("P");
-   TGraphAsymmErrors *tg1 = plotEff_1bin((RooDataSet*) _file1->Get("tpTree/Iso_etadep/fit_eff"),1,"eta");
+   TGraphAsymmErrors *tg1 = plotEff_1bin((RooDataSet*) _file1->Get(fullpathtodataset),1,"eta");
    tg1->SetLineColor(kBlue);
    tg1->SetMarkerColor(kBlue);
    tg1->Draw("P");
