@@ -23,14 +23,14 @@ void extractEffs(const char* filein, const char* fileout) {
                RooDataSet* ds = (RooDataSet*) tdir2->Get("fit_eff");
                TString dirname(tdir2->GetName());
                TString varname;
-               if (dirname.Contains("etadep")) varname = "eta";
+               if (dirname.Contains("absetadep")) varname = "abseta";
                else if (dirname.Contains("ptdep")) varname = "pt";
-               else if (dirname.Contains("absetadep")) varname = "abseta";
+               else if (dirname.Contains("etadep")) varname = "eta";
                else if (dirname.Contains("nPV")) varname = "tag_nVertices";
-               else if (dirname.Contains("centdepHF")) varname = "tag_hiHF";
-               else if (dirname.Contains("centdep")) varname = "tag_hiNtracks";
-               else if (dirname.Contains("centdep")) continue;
+               else if (dirname.Contains("centdepHF") || dirname.Contains("HFdep")) varname = "tag_hiHF";
+               else if (dirname.Contains("centdep") || dirname.Contains("nTracksdep")) varname = "tag_hiNtracks";
                else varname = "pt";
+               cout << dirname << " " << varname << endl;
                TGraphAsymmErrors *tg0 = plotEff_1bin(ds,1,varname.Data());
                fout->WriteTObject(tg0,dirname);
             }
