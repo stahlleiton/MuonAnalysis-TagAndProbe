@@ -4,11 +4,11 @@
 #define DXYCUT 0.2
 #define DZCUT 0.5
 
-TTree* copyTree(TTree* told) {
+TTree* copyTree(TTree* told, int nentries=0) {
    TTree *tnew = told->CloneTree(0);
    tnew->SetAutoSave(0);
    tnew->SetAutoFlush(0);
-   int isIso_3_15, isIso_3_20, isIso_4_15, isIso_4_20, isTightMuonO;
+   int isIso_3_15, isIso_3_20, isIso_4_15, isIso_4_20, isTightMuonO, passedDXYZ,passedDZ, passedValidPixelHits, passedTrackerLayers, passedMatchedStations, passedMuHits, passedglbChi2;
    float combRelIsoPF03;
    float combRelIsoPF04;
    float dzPV, dB, tkValidPixelHits, tkTrackerLay, numberOfMatchedStations, glbValidMuHits, glbChi2;
@@ -27,9 +27,21 @@ TTree* copyTree(TTree* told) {
    tnew->Branch("isIso_3_20", &isIso_3_20, "isIso_3_20/I");
    tnew->Branch("isIso_4_15", &isIso_4_15, "isIso_4_15/I");
    tnew->Branch("isIso_4_20", &isIso_4_20, "isIso_4_20/I");
-   tnew->Branch("isTightMuonO", &isTightMuonO, "isTightMuonO/I");
 
-   int nentries = told->GetEntries();
+   tnew->Branch("isTightMuonO", &isTightMuonO, "isTightMuonO/I");
+   tnew->Branch("passedDXYZ", &passedDXYZ, "passedDXYZ/I");
+   tnew->Branch("passedDZ", &passedDZ, "passedDZ/I");
+   tnew->Branch("passedValidPixelHits", &passedValidPixelHits, "passedValidPixelHits/I");
+   tnew->Branch("passedTrackerLayers", &passedTrackerLayers, "passedTrackerLayers/I");
+   tnew->Branch("passedMatchedStations", &passedMatchedStations, "passedMatchedStations/I");
+   tnew->Branch("passedMuHits", &passedMuHits, "passedMuHits/I");
+   tnew->Branch("passedglbChi2", &passedglbChi2, "passedglbChi2/I");
+
+ 
+   if (nentries == 0)
+   {
+	   nentries = told->GetEntries();
+   }
    for (int i=0; i<nentries; i++) {
       told->GetEntry(i);
 	  // Isolations
@@ -41,6 +53,14 @@ TTree* copyTree(TTree* told) {
 	  //TightMuonID
 
 	  isTightMuonO = (fabs(dB)<DXYCUT && fabs(dzPV)<DZCUT && tkValidPixelHits>0.1 && tkTrackerLay>5.1 && numberOfMatchedStations>1.1 && glbValidMuHits>0.1 && glbChi2<10);
+	  passedDXYZ = (fabs(dB) < DXYCUT);
+	  passedDZ = (fabs(dzPV) < DZCUT);
+	  passedValidPixelHits = (tkValidPixelHits > 0.1);
+	  passedTrackerLayers = (tkTrackerLay > 5.1);
+	  passedMatchedStations = (numberOfMatchedStations > 1.1);
+	  passedMuHits = (glbValidMuHits > 0.1);
+	  passedglbChi2 = (glbChi2 < 10);
+
 
       tnew->Fill();
    }
@@ -48,12 +68,15 @@ TTree* copyTree(TTree* told) {
    return tnew;
 }
 
-TTree* justCopyTree(TTree* told) {
+TTree* justCopyTree(TTree* told, int nentries=0) {
 	TTree *tnew = told->CloneTree(0);
 	tnew->SetAutoSave(0);
 	tnew->SetAutoFlush(0);
 
-	int nentries = told->GetEntries();
+	if (nentries == 0)
+	{
+		nentries = told->GetEntries();
+	}
 	for (int i = 0; i<nentries; i++) {
 		told->GetEntry(i);
 		tnew->Fill();
@@ -68,17 +91,17 @@ void addFlagsToFile(const char *filein, const char *fileout) {
    fout->cd();
    TDirectory *tdir_trk = fout->mkdir("tpTreeSta");
    tdir_trk->cd();
-   TTree *tr_trk = justCopyTree((TTree*)fin->Get("tpTreeSta/fitter_tree"));
+   TTree *tr_trk = justCopyTree((TTree*)fin->Get("tpTreeSta/fitter_tree"),0);
 
    fout->cd();
    TDirectory *tdir_muidtrg = fout->mkdir("tpTree");
    tdir_muidtrg->cd();
-   TTree *tr_muidtrg = copyTree((TTree*) fin->Get("tpTree/fitter_tree"));
+   TTree *tr_muidtrg = copyTree((TTree*) fin->Get("tpTree/fitter_tree"),0);
 
    fout->cd();
    TDirectory *tdir_trg = fout->mkdir("tpTreeTrk");
    tdir_trg->cd();
-   TTree *tr_trg = justCopyTree((TTree*)fin->Get("tpTreeTrk/fitter_tree"));
+   TTree *tr_trg = justCopyTree((TTree*)fin->Get("tpTreeTrk/fitter_tree"),0);
 
 
    fout->Write();
