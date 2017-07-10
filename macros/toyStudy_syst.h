@@ -16,7 +16,7 @@
 
 #include <fstream>
 
-const int nToys = 1;
+const int nToys = 100;
 
 TString formula(TF1 *f, int digits=2);
 
@@ -104,7 +104,7 @@ void toyStudy(int nsyst, TGraphAsymmErrors **gdata, TGraphAsymmErrors **gmc, TF1
 
    TCanvas *cdata = new TCanvas("cdata");
    TCanvas *cmc = new TCanvas("cmc");
-   TH1F *hPad = new TH1F("hPad",";p^{#mu}_{T} [GeV/c];Single #mu Efficiency",5,0,30);
+   TH1F *hPad = new TH1F("hPad",";p^{#mu}_{T} [GeV/c];Single #mu Efficiency",5,0,200);
    hPad->GetXaxis()->CenterTitle();
    hPad->GetXaxis()->SetLabelSize(0.05);
    hPad->GetXaxis()->SetTitleSize(0.05);
