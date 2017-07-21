@@ -13,6 +13,9 @@
 //   * idx = -2: syst variation, "new_MAX", -1 sigma NOT YET IMPLEMENTED
 //   * idx = -10: binned
 // - Trigger: (tnp_weight_trg_ppb)
+//   * idx = 0: nominal
+//   * idx = -1: syst variation,  +1 sigma
+//   * idx = -2: syst variation,  -1 sigma
 
 // THE INDIVIDUAL SFs
 // ++++++++++++++++++
@@ -226,6 +229,9 @@ double tnp_weight_iso_ppb(double pt, double eta, int idx=0) {
       else if (idx == 98  ) num = 0.49480*TMath::Erf((x-2.33938)/26.15338)+0.49699;
       else if (idx == 99  ) num = 0.48606*TMath::Erf((x+7.31056)/37.65800)+0.51366;
       else if (idx == 100 ) num = 0.55144*TMath::Erf((x-1.80793)/24.83159)+0.43652;
+      // // ADD THE FUNCTIONS FOR SYSTS BELOW! +1 SIGMA (IDX==-1) AND -1 SIGMA (IDX==-2)
+      // else if (idx == -1  ) num = ...;
+      // else if (idx == -2  ) num = ...;
    } else if (fabs(eta)<2.1) {
       if (idx == 1   ) num = 0.55152*TMath::Erf((x+3.10429)/27.23581)+0.43739;
       else if (idx == 2   ) num = 0.55052*TMath::Erf((x+16.63164)/39.99587)+0.44885;
@@ -327,6 +333,9 @@ double tnp_weight_iso_ppb(double pt, double eta, int idx=0) {
       else if (idx == 98  ) num = 0.54736*TMath::Erf((x+11.22862)/31.96638)+0.43848;
       else if (idx == 99  ) num = 0.05387*TMath::Erf((x-32.42992)/9.87505)+0.93994;
       else if (idx == 100 ) num = 0.55248*TMath::Erf((x+9.12957)/34.81715)+0.44471;
+      // // ADD THE FUNCTIONS FOR SYSTS BELOW! +1 SIGMA (IDX==-1) AND -1 SIGMA (IDX==-2)
+      // else if (idx == -1  ) num = ...;
+      // else if (idx == -2  ) num = ...;
    } else {
       if (idx == 1   ) num = 0.55097*TMath::Erf((x-8.40759)/10.88146)+0.42528;
       else if (idx == 2   ) num = 0.52988*TMath::Erf((x-1.57857)/17.77923)+0.44143;
@@ -428,6 +437,9 @@ double tnp_weight_iso_ppb(double pt, double eta, int idx=0) {
       else if (idx == 98  ) num = 0.52408*TMath::Erf((x-3.75409)/15.30248)+0.42569;
       else if (idx == 99  ) num = 0.53116*TMath::Erf((x-5.59678)/11.25447)+0.42197;
       else if (idx == 100 ) num = 0.54439*TMath::Erf((x-5.75150)/11.94555)+0.43170;
+      // // ADD THE FUNCTIONS FOR SYSTS BELOW! +1 SIGMA (IDX==-1) AND -1 SIGMA (IDX==-2)
+      // else if (idx == -1  ) num = ...;
+      // else if (idx == -2  ) num = ...;
    }
 
    return num / den;
@@ -588,6 +600,9 @@ double tnp_weight_muid_ppb(double pt, double eta, int idx=0) {
       else if (idx == 98  ) num = 0.97650+0.00003*x;
       else if (idx == 99  ) num = 0.99554-0.00045*x;
       else if (idx == 100 ) num = 0.97934-0.00010*x;
+      // // ADD THE FUNCTIONS FOR SYSTS BELOW! +1 SIGMA (IDX==-1) AND -1 SIGMA (IDX==-2)
+      // else if (idx == -1  ) num = ...;
+      // else if (idx == -2  ) num = ...;
    } else if (fabs(eta)<2.1) {
       if (idx == 1   ) num = 0.99035+0.00003*x;
       else if (idx == 2   ) num = 0.99224+0.00003*x;
@@ -689,6 +704,9 @@ double tnp_weight_muid_ppb(double pt, double eta, int idx=0) {
       else if (idx == 98  ) num = 1.00333-0.00029*x;
       else if (idx == 99  ) num = 0.99071+0.00006*x;
       else if (idx == 100 ) num = 0.99103+0.00002*x;
+      // // ADD THE FUNCTIONS FOR SYSTS BELOW! +1 SIGMA (IDX==-1) AND -1 SIGMA (IDX==-2)
+      // else if (idx == -1  ) num = ...;
+      // else if (idx == -2  ) num = ...;
    } else {
       if (idx == 1   ) num = 0.98883-0.00012*x;
       else if (idx == 2   ) num = 0.99973-0.00052*x;
@@ -790,6 +808,9 @@ double tnp_weight_muid_ppb(double pt, double eta, int idx=0) {
       else if (idx == 98  ) num = 1.01214-0.00111*x;
       else if (idx == 99  ) num = 1.01610-0.00107*x;
       else if (idx == 100 ) num = 0.99436-0.00021*x;
+      // // ADD THE FUNCTIONS FOR SYSTS BELOW! +1 SIGMA (IDX==-1) AND -1 SIGMA (IDX==-2)
+      // else if (idx == -1  ) num = ...;
+      // else if (idx == -2  ) num = ...;
    }
 
    return num / den;
