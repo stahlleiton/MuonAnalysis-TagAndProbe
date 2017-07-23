@@ -446,13 +446,13 @@ double tnp_weight_iso_ppb(double pt, double eta, int idx=0) {
 }
 
 ///////////////////////////////////////////////////
-//                 I D      P P b                //
+//               M U I D      P P b              //
 ///////////////////////////////////////////////////
 double tnp_weight_muid_ppb(double pt, double eta, int idx=0) {
    double x = pt;
 
    if (idx == -10) {
-      if (fabs(eta)<0.9) {
+      if (fabs(eta)<1.2) {
          // 0 < |eta| < 1.2
          if (pt<15) return 0.981114;
          else if (pt<25) return 1.00118;
@@ -488,17 +488,17 @@ double tnp_weight_muid_ppb(double pt, double eta, int idx=0) {
 
    // nominal
    if (fabs(eta)<1.2) {
-      num = 0.99334-0.00036*x;
-      den = 0.98799-0.00001*x;
+      num = 0.98711-0.00022*x;
+      den = 0.98864-0.00002*x;
    } else if (fabs(eta)<2.1) {
-      num = 0.99771-0.00013*x;
-      den = 1.00231-0.00021*x;
+      num = 0.99296 + 0.00001*x;
+      den = 0.99633-0.00004*x;
    } else {
-      num = 1.01007-0.00090*x;
-      den = 1.00243-0.00068*x;
+      num = 1.00072-0.00052*x;
+      den = 0.99254-0.00017*x;
    }
 
-   // 100 variations
+   // 100 variations 
    if (fabs(eta)<1.2) {
       if (idx == 1   ) num = 0.98216-0.00012*x;
       else if (idx == 2   ) num = 0.98444-0.00015*x;
@@ -601,8 +601,8 @@ double tnp_weight_muid_ppb(double pt, double eta, int idx=0) {
       else if (idx == 99  ) num = 0.99554-0.00045*x;
       else if (idx == 100 ) num = 0.97934-0.00010*x;
       // // ADD THE FUNCTIONS FOR SYSTS BELOW! +1 SIGMA (IDX==-1) AND -1 SIGMA (IDX==-2)
-      // else if (idx == -1  ) num = ...;
-      // else if (idx == -2  ) num = ...;
+      else if (idx == -1  ) num = 0.99313+0.00032*x;
+      else if (idx == -2  ) num = 0.98101-0.00013*x;
    } else if (fabs(eta)<2.1) {
       if (idx == 1   ) num = 0.99035+0.00003*x;
       else if (idx == 2   ) num = 0.99224+0.00003*x;
@@ -705,8 +705,8 @@ double tnp_weight_muid_ppb(double pt, double eta, int idx=0) {
       else if (idx == 99  ) num = 0.99071+0.00006*x;
       else if (idx == 100 ) num = 0.99103+0.00002*x;
       // // ADD THE FUNCTIONS FOR SYSTS BELOW! +1 SIGMA (IDX==-1) AND -1 SIGMA (IDX==-2)
-      // else if (idx == -1  ) num = ...;
-      // else if (idx == -2  ) num = ...;
+      else if (idx == -1  ) num = 0.99234+0.00003*x;
+      else if (idx == -2  ) num = 0.99346-0.00001*x;
    } else {
       if (idx == 1   ) num = 0.98883-0.00012*x;
       else if (idx == 2   ) num = 0.99973-0.00052*x;
@@ -809,8 +809,8 @@ double tnp_weight_muid_ppb(double pt, double eta, int idx=0) {
       else if (idx == 99  ) num = 1.01610-0.00107*x;
       else if (idx == 100 ) num = 0.99436-0.00021*x;
       // // ADD THE FUNCTIONS FOR SYSTS BELOW! +1 SIGMA (IDX==-1) AND -1 SIGMA (IDX==-2)
-      // else if (idx == -1  ) num = ...;
-      // else if (idx == -2  ) num = ...;
+      else if (idx == -1  ) num = 1.00129-0.00053*x;
+      else if (idx == -2  ) num = 1.00014-0.00052*x;
    }
 
    return num / den;
