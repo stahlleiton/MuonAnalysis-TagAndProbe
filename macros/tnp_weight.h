@@ -229,9 +229,9 @@ double tnp_weight_iso_ppb(double pt, double eta, int idx=0) {
       else if (idx == 98  ) num = 0.49480*TMath::Erf((x-2.33938)/26.15338)+0.49699;
       else if (idx == 99  ) num = 0.48606*TMath::Erf((x+7.31056)/37.65800)+0.51366;
       else if (idx == 100 ) num = 0.55144*TMath::Erf((x-1.80793)/24.83159)+0.43652;
-      // // ADD THE FUNCTIONS FOR SYSTS BELOW! +1 SIGMA (IDX==-1) AND -1 SIGMA (IDX==-2)
-      // else if (idx == -1  ) num = ...;
-      // else if (idx == -2  ) num = ...;
+       // ADD THE FUNCTIONS FOR SYSTS BELOW! +1 SIGMA (IDX==-1) AND -1 SIGMA (IDX==-2)
+      else if (idx == -1  ) num = 0.49184*TMath::Erf((x+2.23174) / 30.38505) + 0.50443;
+      else if (idx == -2  ) num = 0.48870*TMath::Erf((x+4.83105) / 35.67397) + 0.50928;
    } else if (fabs(eta)<2.1) {
       if (idx == 1   ) num = 0.55152*TMath::Erf((x+3.10429)/27.23581)+0.43739;
       else if (idx == 2   ) num = 0.55052*TMath::Erf((x+16.63164)/39.99587)+0.44885;
@@ -333,9 +333,9 @@ double tnp_weight_iso_ppb(double pt, double eta, int idx=0) {
       else if (idx == 98  ) num = 0.54736*TMath::Erf((x+11.22862)/31.96638)+0.43848;
       else if (idx == 99  ) num = 0.05387*TMath::Erf((x-32.42992)/9.87505)+0.93994;
       else if (idx == 100 ) num = 0.55248*TMath::Erf((x+9.12957)/34.81715)+0.44471;
-      // // ADD THE FUNCTIONS FOR SYSTS BELOW! +1 SIGMA (IDX==-1) AND -1 SIGMA (IDX==-2)
-      // else if (idx == -1  ) num = ...;
-      // else if (idx == -2  ) num = ...;
+      // ADD THE FUNCTIONS FOR SYSTS BELOW! +1 SIGMA (IDX==-1) AND -1 SIGMA (IDX==-2)
+      else if (idx == -1  ) num = 0.55135*TMath::Erf((x+14.74471) / 39.89229) + 0.45190;
+      else if (idx == -2  ) num = 0.55095*TMath::Erf((x+16.84950) / 42.32004) + 0.45059;
    } else {
       if (idx == 1   ) num = 0.55097*TMath::Erf((x-8.40759)/10.88146)+0.42528;
       else if (idx == 2   ) num = 0.52988*TMath::Erf((x-1.57857)/17.77923)+0.44143;
@@ -437,9 +437,9 @@ double tnp_weight_iso_ppb(double pt, double eta, int idx=0) {
       else if (idx == 98  ) num = 0.52408*TMath::Erf((x-3.75409)/15.30248)+0.42569;
       else if (idx == 99  ) num = 0.53116*TMath::Erf((x-5.59678)/11.25447)+0.42197;
       else if (idx == 100 ) num = 0.54439*TMath::Erf((x-5.75150)/11.94555)+0.43170;
-      // // ADD THE FUNCTIONS FOR SYSTS BELOW! +1 SIGMA (IDX==-1) AND -1 SIGMA (IDX==-2)
-      // else if (idx == -1  ) num = ...;
-      // else if (idx == -2  ) num = ...;
+      // ADD THE FUNCTIONS FOR SYSTS BELOW! +1 SIGMA (IDX==-1) AND -1 SIGMA (IDX==-2)
+      else if (idx == -1  ) num = 0.55349*TMath::Erf((x - 8.07217) / 8.88300) + 0.42628;
+      else if (idx == -2  ) num = 0.52667*TMath::Erf((x - 0.60436) / 25.37216) + 0.44844;
    }
 
    return num / den;
