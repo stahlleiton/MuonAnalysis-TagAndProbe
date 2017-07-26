@@ -53,13 +53,12 @@ void plotSFs() {
          eta = (etamax[ieta]+etamin[ieta])/2.;
          ptminval = j==0 ? -2.4 : ptmin(etamax[ieta]);
          ptmaxval = j==0 ? 2.4 : 200;
-         if (j>0) { // no toys for trigger
-            for (int i=1; i<=100; i++) {
-               TF1 *fnom = new TF1(Form("f%i",i),tnp_weight_ppb_wrapper,ptminval,ptmaxval,3);
-               fnom->SetParameters(eta,i,j);
-               fnom->SetLineColor(kBlack);
-               fnom->Draw("same");
-            }
+         int imax = (j>0) ? 100 : 2;
+         for (int i=1; i<=imax; i++) {
+            TF1 *fnom = new TF1(Form("f%i",i),tnp_weight_ppb_wrapper,ptminval,ptmaxval,3);
+            fnom->SetParameters(eta,i,j);
+            fnom->SetLineColor(kBlack);
+            fnom->Draw("same");
          }
          TF1 *fp = new TF1("fp",tnp_weight_ppb_wrapper,ptminval,ptmaxval,3);
          fp->SetParameters(eta,-1,j);
@@ -83,6 +82,7 @@ void plotSFs() {
 
          tleg->AddEntry(fnom,"Nominal","l");
          if (j>0) tleg->AddEntry("f1","stat (100 toys)","l");
+         else tleg->AddEntry("f1","stat","l");
          if (j==0) tleg->AddEntry(fp,"syst (+/1#sigma)","l");
          if (j>0) tleg->AddEntry(fbinned,"binned","l");
          tleg->Draw();
