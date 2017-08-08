@@ -63,11 +63,11 @@ void plotSFs() {
          TF1 *fp = new TF1("fp",tnp_weight_ppb_wrapper,ptminval,ptmaxval,3);
          fp->SetParameters(eta,-1,j);
          fp->SetLineColor(kCyan);
-         if (j==0) fp->Draw("same");
+         fp->Draw("same");
          TF1 *fm = new TF1("fm",tnp_weight_ppb_wrapper,ptminval,ptmaxval,3);
          fm->SetParameters(eta,-2,j);
          fm->SetLineColor(kCyan);
-         if (j==0) fm->Draw("same");
+         fm->Draw("same");
          TF1 *fbinned = new TF1("fbinned",tnp_weight_ppb_wrapper,ptminval,ptmaxval,3);
          fbinned->SetParameters(eta,-10,j);
          fbinned->SetLineColor(kGreen+2);
@@ -83,7 +83,7 @@ void plotSFs() {
          tleg->AddEntry(fnom,"Nominal","l");
          if (j>0) tleg->AddEntry("f1","stat (100 toys)","l");
          else tleg->AddEntry("f1","stat","l");
-         if (j==0) tleg->AddEntry(fp,"syst (+/1#sigma)","l");
+         tleg->AddEntry(fp,"syst (+/1#sigma)","l");
          if (j>0) tleg->AddEntry(fbinned,"binned","l");
          tleg->Draw();
          c1->SaveAs(Form("tnp_ppb_%seta%.1f-%.1f.pdf",tags[j],etamin[ieta],etamax[ieta]));
