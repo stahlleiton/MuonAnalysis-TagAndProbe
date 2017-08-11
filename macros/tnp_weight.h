@@ -635,7 +635,7 @@ double tnp_weight_muid_ppb(double pt, double eta, int idx=0) {
       else if (idx == 99  ) num = 0.99554-0.00045*x;
       else if (idx == 100 ) num = 0.97934-0.00010*x;
       // // ADD THE FUNCTIONS FOR SYSTS BELOW! +1 SIGMA (IDX==-1) AND -1 SIGMA (IDX==-2)
-      else if (idx == -1  ) num = 0.99313+0.00032*x;
+      else if (idx == -1  ) num = 0.99313-0.00032*x;
       else if (idx == -2  ) num = 0.98101-0.00013*x;
    } else if (fabs(eta)<2.1) {
       if (idx == 1   ) num = 0.99035+0.00003*x;
