@@ -9,8 +9,8 @@
 // - Iso, MuID: (tnp_weight_(iso|muid)_ppb)
 //   * idx = 0:  nominal
 //   * idx = 1..100: toy variations, stat. only
-//   * idx = -1: syst variation, "new_MAX", +1 sigma NOT YET IMPLEMENTED
-//   * idx = -2: syst variation, "new_MAX", -1 sigma NOT YET IMPLEMENTED
+//   * idx = -1: syst variation, "new_MAX", +1 sigma
+//   * idx = -2: syst variation, "new_MAX", -1 sigma
 //   * idx = -10: binned
 // - Trigger: (tnp_weight_trg_ppb)
 //   * idx = 0: nominal
