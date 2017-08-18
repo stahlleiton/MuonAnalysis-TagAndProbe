@@ -9,13 +9,15 @@
 // - Iso, MuID: (tnp_weight_(iso|muid)_ppb)
 //   * idx = 0:  nominal
 //   * idx = 1..100: toy variations, stat. only
-//   * idx = -1: syst variation, "new_MAX", +1 sigma NOT YET IMPLEMENTED
-//   * idx = -2: syst variation, "new_MAX", -1 sigma NOT YET IMPLEMENTED
+//   * idx = -1: syst variation, "new_MAX", +1 sigma
+//   * idx = -2: syst variation, "new_MAX", -1 sigma
 //   * idx = -10: binned
 // - Trigger: (tnp_weight_trg_ppb)
 //   * idx = 0: nominal
 //   * idx = -1: syst variation,  +1 sigma
 //   * idx = -2: syst variation,  -1 sigma
+//   * idx = +1: stat variation,  +1 sigma
+//   * idx = +2: stat variation,  -1 sigma
 
 // THE INDIVIDUAL SFs
 // ++++++++++++++++++
@@ -52,20 +54,52 @@ double tnp_weight_trg_ppb(double eta, int idx)
 
 
    // data
-   if (x>-2.4&&x<=-2.1) num = 0.912108;
-   if (x>-2.1&&x<=-1.6) num = 0.911221;
-   if (x>-1.6&&x<=-1.2) num = 0.981533;
-   if (x>-1.2&&x<=-0.9) num = 0.96613;
-   if (x>-0.9&&x<=-0.6) num = 0.949597;
-   if (x>-0.6&&x<=-0.3) num = 0.969409;
-   if (x>-0.3&&x<=0) num = 0.945339;
-   if (x>0&&x<=0.3) num = 0.940214;
-   if (x>0.3&&x<=0.6) num = 0.971724;
-   if (x>0.6&&x<=0.9) num = 0.948503;
-   if (x>0.9&&x<=1.2) num = 0.961593;
-   if (x>1.2&&x<=1.6) num = 0.96347;
-   if (x>1.6&&x<=2.1) num = 0.934085;
-   if (x>2.1&&x<=2.4) num = 0.900878;
+   if (idx<=0) { // nominal
+      if (x>-2.4&&x<=-2.1) num = 0.912108;
+      if (x>-2.1&&x<=-1.6) num = 0.911221;
+      if (x>-1.6&&x<=-1.2) num = 0.981533;
+      if (x>-1.2&&x<=-0.9) num = 0.96613;
+      if (x>-0.9&&x<=-0.6) num = 0.949597;
+      if (x>-0.6&&x<=-0.3) num = 0.969409;
+      if (x>-0.3&&x<=0) num = 0.945339;
+      if (x>0&&x<=0.3) num = 0.940214;
+      if (x>0.3&&x<=0.6) num = 0.971724;
+      if (x>0.6&&x<=0.9) num = 0.948503;
+      if (x>0.9&&x<=1.2) num = 0.961593;
+      if (x>1.2&&x<=1.6) num = 0.96347;
+      if (x>1.6&&x<=2.1) num = 0.934085;
+      if (x>2.1&&x<=2.4) num = 0.900878;
+   } else if (idx==1) { // stat up
+      if (x>-2.4&&x<=-2.1) num = 0.919225;
+      if (x>-2.1&&x<=-1.6) num = 0.917041;
+      if (x>-1.6&&x<=-1.2) num = 0.984238;
+      if (x>-1.2&&x<=-0.9) num = 0.970189;
+      if (x>-0.9&&x<=-0.6) num = 0.953795;
+      if (x>-0.6&&x<=-0.3) num = 0.972969;
+      if (x>-0.3&&x<=0) num = 0.947511;
+      if (x>0&&x<=0.3) num = 0.945271;
+      if (x>0.3&&x<=0.6) num = 0.974013;
+      if (x>0.6&&x<=0.9) num = 0.953942;
+      if (x>0.9&&x<=1.2) num = 0.965556;
+      if (x>1.2&&x<=1.6) num = 0.966879;
+      if (x>1.6&&x<=2.1) num = 0.939012;
+      if (x>2.1&&x<=2.4) num = 0.908827;
+   } else if (idx==2) { // stat down
+      if (x>-2.4&&x<=-2.1) num = 0.904625;
+      if (x>-2.1&&x<=-1.6) num = 0.903859;
+      if (x>-1.6&&x<=-1.2) num = 0.974557;
+      if (x>-1.2&&x<=-0.9) num = 0.962079;
+      if (x>-0.9&&x<=-0.6) num = 0.945176;
+      if (x>-0.6&&x<=-0.3) num = 0.965603;
+      if (x>-0.3&&x<=0) num = 0.945339;
+      if (x>0&&x<=0.3) num = 0.93499;
+      if (x>0.3&&x<=0.6) num = 0.968431;
+      if (x>0.6&&x<=0.9) num = 0.943928;
+      if (x>0.9&&x<=1.2) num = 0.957373;
+      if (x>1.2&&x<=1.6) num = 0.959845;
+      if (x>1.6&&x<=2.1) num = 0.928945;
+      if (x>2.1&&x<=2.4) num = 0.892385;
+   }
 
 
    double syst_factor = 1.;
@@ -601,7 +635,7 @@ double tnp_weight_muid_ppb(double pt, double eta, int idx=0) {
       else if (idx == 99  ) num = 0.99554-0.00045*x;
       else if (idx == 100 ) num = 0.97934-0.00010*x;
       // // ADD THE FUNCTIONS FOR SYSTS BELOW! +1 SIGMA (IDX==-1) AND -1 SIGMA (IDX==-2)
-      else if (idx == -1  ) num = 0.99313+0.00032*x;
+      else if (idx == -1  ) num = 0.99313-0.00032*x;
       else if (idx == -2  ) num = 0.98101-0.00013*x;
    } else if (fabs(eta)<2.1) {
       if (idx == 1   ) num = 0.99035+0.00003*x;
