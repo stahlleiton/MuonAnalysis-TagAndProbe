@@ -18,6 +18,10 @@
 //   * idx = -2: syst variation,  -1 sigma
 //   * idx = +1: stat variation,  +1 sigma
 //   * idx = +2: stat variation,  -1 sigma
+//
+// For all:
+//   * idx = +200: tnp efficiency for data
+//   * idx = +300: tnp efficiency for MC
 
 // THE INDIVIDUAL SFs
 // ++++++++++++++++++
@@ -54,7 +58,7 @@ double tnp_weight_trg_ppb(double eta, int idx)
 
 
    // data
-   if (idx<=0) { // nominal
+   if (idx<=0 || idx>10) { // nominal
       if (x>-2.4&&x<=-2.1) num = 0.912108;
       if (x>-2.1&&x<=-1.6) num = 0.911221;
       if (x>-1.6&&x<=-1.2) num = 0.981533;
@@ -100,6 +104,9 @@ double tnp_weight_trg_ppb(double eta, int idx)
       if (x>1.6&&x<=2.1) num = 0.928945;
       if (x>2.1&&x<=2.4) num = 0.892385;
    }
+
+   if (idx==200) den = 1.;
+   if (idx==300) num = den*den;
 
 
    double syst_factor = 1.;
@@ -476,6 +483,9 @@ double tnp_weight_iso_ppb(double pt, double eta, int idx=0) {
       else if (idx == -2  ) num = 0.52667*TMath::Erf((x - 0.60436) / 25.37216) + 0.44844;
    }
 
+   if (idx==200) den = 1.;
+   if (idx==300) num = den*den;
+
    return num / den;
 }
 
@@ -846,6 +856,9 @@ double tnp_weight_muid_ppb(double pt, double eta, int idx=0) {
       else if (idx == -1  ) num = 1.00129-0.00053*x;
       else if (idx == -2  ) num = 1.00014-0.00052*x;
    }
+
+   if (idx==200) den = 1.;
+   if (idx==300) num = den*den;
 
    return num / den;
 }
