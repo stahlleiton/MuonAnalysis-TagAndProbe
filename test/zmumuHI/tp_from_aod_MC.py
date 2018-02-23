@@ -63,7 +63,7 @@ elif "CMSSW_7_6_" in os.environ['CMSSW_VERSION']:
             '/store/data/Run2015D/SingleMuon/AOD/16Dec2015-v1/10000/24537A2D-0BA8-E511-8D7C-20CF300E9ECF.root',
     ]
 elif "CMSSW_8_0_"in os.environ['CMSSW_VERSION']:
-    process.GlobalTag.globaltag = cms.string('80X_dataRun2_Prompt_v9')
+    process.GlobalTag.globaltag = cms.string('80X_mcRun2_pA_v4')
 
     process.source.fileNames = [
          '/store/user/anstahll/EWQAnalysis2017/MC/Embedded/Embedded_PileUp_Pyquen_DYtoMuMu_M_30_TuneZ2_8TeV16_pythia6_RECO_20170613/DYtoMuMu/Embedded_PileUp_Pyquen_DYtoMuMu_M_30_TuneZ2_8TeV16_pythia6_RECO_20170613/170613_105031/0000/step3_Embedded_PileUp_Pyquen_DYtoMuMu_M_30_TuneZ2_8TeV16_pythia6_RECO_20170613_87.root',
