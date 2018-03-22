@@ -66,13 +66,16 @@ elif "CMSSW_8_0_"in os.environ['CMSSW_VERSION']:
     process.GlobalTag.globaltag = cms.string('80X_dataRun2_Prompt_v9')
 
     process.source.fileNames = [
-         '/store/user/anstahll/EWQAnalysis2017/MC/Embedded/Embedded_PileUp_Pyquen_DYtoMuMu_M_30_TuneZ2_8TeV16_pythia6_RECO_20170613/DYtoMuMu/Embedded_PileUp_Pyquen_DYtoMuMu_M_30_TuneZ2_8TeV16_pythia6_RECO_20170613/170613_105031/0000/step3_Embedded_PileUp_Pyquen_DYtoMuMu_M_30_TuneZ2_8TeV16_pythia6_RECO_20170613_87.root',
-#         '/store/hidata/PARun2016C/PASingleMuon/AOD/PromptReco-v1/000/285/480/00000/AAF1FE3C-09AF-E611-B0B7-02163E014168.root',
-#         '/store/hidata/PARun2016C/PASingleMuon/AOD/PromptReco-v1/000/285/480/00000/D4037D8C-09AF-E611-9C59-02163E0135E5.root',
-#         '/store/hidata/PARun2016C/PASingleMuon/AOD/PromptReco-v1/000/285/505/00000/006636FE-7CAF-E611-9AB7-FA163E2D272A.root',
-#        '/store/data/Run2016C/SingleMuon/AOD/PromptReco-v2/000/276/283/00000/04C4B374-B044-E611-97D0-02163E011ECD.root',
-#        '/store/data/Run2016C/SingleMuon/AOD/PromptReco-v2/000/276/283/00000/06056373-B044-E611-B41D-02163E0137AA.root',
-#        '/store/data/Run2016C/SingleMuon/AOD/PromptReco-v2/000/276/283/00000/064D926A-B044-E611-9CAA-02163E011FCC.root',
+        '/store/data/Run2016C/SingleMuon/AOD/PromptReco-v2/000/276/283/00000/0001E5C0-AE44-E611-9F88-02163E014235.root',
+        '/store/data/Run2016C/SingleMuon/AOD/PromptReco-v2/000/276/283/00000/007E4250-AE44-E611-867E-02163E011AB6.root',
+        '/store/data/Run2016C/SingleMuon/AOD/PromptReco-v2/000/276/283/00000/00997A4B-B044-E611-9FBB-02163E011EDE.root',
+        '/store/data/Run2016C/SingleMuon/AOD/PromptReco-v2/000/276/283/00000/02BB51AA-B044-E611-8DB0-02163E014168.root',
+        '/store/data/Run2016C/SingleMuon/AOD/PromptReco-v2/000/276/283/00000/0466BA91-AE44-E611-825B-02163E0136EF.root',
+        '/store/data/Run2016C/SingleMuon/AOD/PromptReco-v2/000/276/283/00000/0485506E-AE44-E611-A24B-02163E0140ED.root',
+        '/store/data/Run2016C/SingleMuon/AOD/PromptReco-v2/000/276/283/00000/0494A580-B044-E611-993A-02163E012944.root',
+        '/store/data/Run2016C/SingleMuon/AOD/PromptReco-v2/000/276/283/00000/04C4B374-B044-E611-97D0-02163E011ECD.root',
+        '/store/data/Run2016C/SingleMuon/AOD/PromptReco-v2/000/276/283/00000/06056373-B044-E611-B41D-02163E0137AA.root',
+        '/store/data/Run2016C/SingleMuon/AOD/PromptReco-v2/000/276/283/00000/064D926A-B044-E611-9CAA-02163E011FCC.root',
         ]
  
 else: raise RuntimeError, "Unknown CMSSW version %s" % os.environ['CMSSW_VERSION']
