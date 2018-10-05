@@ -30,7 +30,7 @@ process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring('file:/afs/cern.ch/work/j/jjay/public/TagAndProbe_pPb/Data/0249A3C5-A2B1-E611-8E3E-FA163ED701FA.root'),
     #fileNames = cms.untracked.vstring('file:/store/data/Run2016C/SingleMuon/AOD/PromptReco-v2/000/276/283/00000/0001E5C0-AE44-E611-9F88-02163E014235.root'),
 )
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1000) )    
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )    
 
 process.load('Configuration.StandardSequences.GeometryRecoDB_cff')
 process.load('Configuration.StandardSequences.MagneticField_cff')
