@@ -11,15 +11,16 @@ config.section_('JobType')
 config.JobType.pluginName = 'Analysis'
 config.JobType.psetName = 'tnp_pPb_data.py'
 config.JobType.maxMemoryMB = 2500
-config.JobType.outputFiles = ['tnpJPsi_Data_Pbp_AOD.root']
+config.JobType.outputFiles = ['tnpJPsi_Data_pPb_AOD.root']
 
 config.section_('Data')
 config.Data.inputDataset = '/PASingleMuon/PARun2016C-PromptReco-v1/AOD'
 config.Data.inputDBS = 'global'
-config.Data.unitsPerJob = 5
+config.Data.unitsPerJob = 10 
 config.Data.splitting = 'LumiBased'
 #Pbp (1st run)
-config.Data.runRange = '285479-285832'
+#config.Data.runRange = '285479-285832'
+config.Data.runRange = '285480-285480'
 config.Data.lumiMask = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/HI/Cert_285479-285832_HI8TeV_PromptReco_pPb_Collisions16_JSON_NoL1T.txt'
 #pPb (2nd run)
 #config.Data.runRange = '285952-286496'
