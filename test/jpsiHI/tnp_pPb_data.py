@@ -14,7 +14,7 @@ process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring('file:/afs/cern.ch/work/j/jjay/public/TagAndProbe_pPb/Data/0249A3C5-A2B1-E611-8E3E-FA163ED701FA.root'),
     #fileNames = cms.untracked.vstring('file:/store/data/Run2016C/SingleMuon/AOD/PromptReco-v2/000/276/283/00000/0001E5C0-AE44-E611-9F88-02163E014235.root'),
 )
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(10000) )    
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1000) )    
 
 process.load('Configuration.StandardSequences.GeometryRecoDB_cff')
 process.load('Configuration.StandardSequences.MagneticField_cff')
@@ -63,36 +63,16 @@ process.noScraping = cms.EDFilter("FilterOutScraping",
 
 process.load("HLTrigger.HLTfilters.triggerResultsFilter_cfi")
 
-## SELECT WHAT DATASET YOU'RE RUNNING ON
-#TRIGGER="SingleMu"
-#TRIGGER="DoubleMu"
-
-#if TRIGGER == "SingleMu":
-#    process.triggerResultsFilter.triggerConditions = cms.vstring( 'HLT_PAL3Mu12_v1', 'HLT_PAL3Mu15_v1'  )
-   # process.triggerResultsFilter.triggerConditions = cms.vstring( 'hltL3fL1sSingleMu7BptxANDL1f0L2f0L3Filtered12', 'hltL3fL1sSingleMu7BptxANDL1f0L2f0L3Filtered15'  )
-    #process.triggerResultsFilter.triggerConditions = cms.vstring( 'HLT_Mu45_eta2p1_v*', 'HLT_Mu50_v*',
-    #                                                              'HLT_IsoMu27_v*',   'HLT_IsoMu24_v*',   'HLT_IsoMu22_v*',   'HLT_IsoMu20_v*',
-    #                                                              'HLT_IsoTkMu27_v*', 'HLT_IsoTkMu24_v*', 'HLT_IsoTkMu22_v*', 'HLT_IsoTkMu20_v*'  )
-#elif TRIGGER == "DoubleMu":
-#    process.triggerResultsFilter.triggerConditions = cms.vstring( 'HLT_Mu8_v*', 'HLT_Mu17_v*',
-#                                                                  'HLT_Mu8_TrkIsoVVL_v*', 'HLT_Mu17_TrkIsoVVL_v*',
-#                                                                  'HLT_Mu17_TkMu8_v*', 'HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_v*' )
-#else:
-#    raise RuntimeError, "TRIGGER must be 'SingleMu' or 'DoubleMu'"
 process.triggerResultsFilter.triggerConditions = cms.vstring( 'HLT_PAL1DoubleMuOpen_v*', 'HLT_PAL2DoubleMu0_v*', 'HLT_PAL3DoubleMu0_v*', 'HLT_PAL3DoubleMu0_HIon_v*', 'HLT_PAL1DoubleMu0_v*', 'HLT_PAL1DoubleMu0_HighQ_v*', 'HLT_PAL1DoubleMu0_MGT1_v*', 'HLT_PAL1DoubleMuOpen_OS_v*', 'HLT_PAL1DoubleMuOpen_SS_v*', 'HLT_PAL1DoubleMu10_v*', 'HLT_PAL2DoubleMu10_v*', 'HLT_PAL3DoubleMu10_v*', 'HLT_PAL3Mu3_v*', 'HLT_PAL3Mu5_v*', 'HLT_PAL3Mu7_v*', 'HLT_PAL2Mu12_v*', 'HLT_PAL3Mu12_v*', 'HLT_PAL2Mu15_v*', 'HLT_PAL3Mu15_v*', 'HLT_PAL1*', 'HLT_PAL2*',)
 
-process.triggerResultsFilter.l1tResults = "gtStage2Digis"
-#process.triggerResultsFilter.l1tResults = "hltGtStage2Digis"
+process.triggerResultsFilter.l1tResults = "gtStage2Digis" #O: needs to be this
+#process.triggerResultsFilter.l1tResults = "gtDigis"
 process.triggerResultsFilter.throw = False
 process.triggerResultsFilter.hltResults = cms.InputTag("TriggerResults","","HLT")
 
-#decomment when you have it
-#process.triggerResultsFilterFake = process.triggerResultsFilter.clone(
-#    triggerConditions = cms.vstring( 'HLT_Mu40_v*', 'HLT_Mu5_v*', 'HLT_Mu12_v*', 'HLT_Mu24_v*')
-#)
 
 #process.fastFilter     = cms.Sequence(process.collisionEventSelectionPA + process.triggerResultsFilter)
-process.fastFilter     = cms.Sequence(process.triggerResultsFilter)
+process.fastFilter     = cms.Sequence(process.triggerResultsFilter + process.goodVertexFilter)
 
 ##    __  __                       
 ##   |  \/  |_   _  ___  _ __  ___ 
@@ -123,9 +103,9 @@ process.load("MuonAnalysis.MuonAssociators.patMuonsWithTrigger_cff")
 ## with some customization
 #O.J. Check this block
 #process.muonL1Info.maxDeltaR = 0.3
-#process.muonL1Info.fallbackToME1 = True
+process.muonL1Info.fallbackToME1 = True
 #process.muonMatchHLTL1.maxDeltaR = 0.3
-#process.muonMatchHLTL1.fallbackToME1 = True
+process.muonMatchHLTL1.fallbackToME1 = True
 #process.muonMatchHLTL2.maxDeltaR = 0.3
 #process.muonMatchHLTL2.maxDPtRel = 10.0
 #process.muonMatchHLTL3.maxDeltaR = 0.1
@@ -139,11 +119,18 @@ appendL1MatchingAlgo(process)
 addHLTL1Passthrough(process)
 
 process.patMuonsWithoutTrigger.pvSrc = "offlinePrimaryVertices"
-#process.patTriggerFull.l1GtReadoutRecordInputTag = cms.InputTag("gtStage2Digis","","RECO")       
-process.patTriggerFull.l1GtReadoutRecordInputTag = cms.InputTag("gtDigis","","RECO")                 
+#process.patTriggerFull.l1GtReadoutRecordInputTag = cms.InputTag("gmtStage2Digis","Muon","RECO")       
+#process.patTriggerFull.l1GtReadoutRecordInputTag = cms.InputTag("gtDigis","","RECO")           #O: Settings doesn't seem to do anything      
+process.patTrigger.collections.append("hltGmtStage2Digis:Muon")
+process.muonMatchHLTL1.matchedCuts = cms.string('coll("hltGmtStage2Digis:Muon")')
+
+process.patTrigger.collections.append("hltHIL3MuonCandidates")
+process.muonMatchHLTL3.matchedCuts = cms.string('coll("hltHIL3MuonCandidates")||coll("hltL3MuonCandidates")')
+
 #process.patTrigger.collections.remove("hltL3MuonCandidates")
 #process.patTrigger.collections.append("hltHIL3MuonCandidates")
 #process.muonMatchHLTL3.matchedCuts = cms.string('coll("hltHIL3MuonCandidates")')
+
 from MuonAnalysis.TagAndProbe.common_variables_cff import *
 process.load("MuonAnalysis.TagAndProbe.common_modules_cff")
 from MuonAnalysis.TagAndProbe.heavyIon_variables_cff import *
@@ -157,30 +144,7 @@ HybridSoftId = "isTrackerMuon && isGlobalMuon && muonID('TMOneStationTight') && 
 
 TRACK_CUTS = "track.isNonnull && track.hitPattern.trackerLayersWithMeasurement > 5 && track.hitPattern.numberOfValidPixelHits > 0"
 
-#HighPtTriggerFlags = cms.PSet(
-#   HIL2Mu5_NHitQ10_2HF = cms.string("!triggerObjectMatchesByPath('HLT_HIL2Mu5_NHitQ10_2HF_v*',1,0).empty()"),
-#   HIL3Mu5_NHitQ15_2HF = cms.string("!triggerObjectMatchesByPath('HLT_HIL3Mu5_NHitQ15_2HF_v*',1,0).empty()"),
-#   HIL2Mu5_NHitQ10_2HF0 = cms.string("!triggerObjectMatchesByPath('HLT_HIL2Mu5_NHitQ10_2HF0_v*',1,0).empty()"),
-#   HIL3Mu5_NHitQ15_2HF0 = cms.string("!triggerObjectMatchesByPath('HLT_HIL3Mu5_NHitQ15_2HF0_v*',1,0).empty()"),
-#   HIL2Mu7_NHitQ10_2HF = cms.string("!triggerObjectMatchesByPath('HLT_HIL2Mu7_NHitQ10_2HF_v*',1,0).empty()"),
-#   HIL3Mu7_NHitQ15_2HF = cms.string("!triggerObjectMatchesByPath('HLT_HIL3Mu7_NHitQ15_2HF_v*',1,0).empty()"),
-#   HIL2Mu7_NHitQ10_2HF0 = cms.string("!triggerObjectMatchesByPath('HLT_HIL2Mu7_NHitQ10_2HF0_v*',1,0).empty()"),
-#   HIL3Mu7_NHitQ15_2HF0 = cms.string("!triggerObjectMatchesByPath('HLT_HIL3Mu7_NHitQ15_2HF0_v*',1,0).empty()"),
-#   HIL2Mu15 = cms.string("!triggerObjectMatchesByPath('HLT_HIL2Mu15_v*',1,0).empty()"),
-#   HIL3Mu15 = cms.string("!triggerObjectMatchesByPath('HLT_HIL3Mu15_v*',1,0).empty()"),
-#   HIL2Mu20 = cms.string("!triggerObjectMatchesByPath('HLT_HIL2Mu20_v*',1,0).empty()"),
-#   HIL3Mu20 = cms.string("!triggerObjectMatchesByPath('HLT_HIL3Mu20_v*',1,0).empty()"),
-#)
-#
-#LowPtTriggerFlags = cms.PSet(
-#   HIL2Mu3_NHitQ10_2HF = cms.string("!triggerObjectMatchesByPath('HLT_HIL2Mu3_NHitQ10_2HF_v*',1,0).empty()"),
-#   HIL3Mu3_NHitQ15_2HF = cms.string("!triggerObjectMatchesByPath('HLT_HIL3Mu3_NHitQ15_2HF_v*',1,0).empty()"),
-#   HIL2Mu3_NHitQ10_2HF0 = cms.string("!triggerObjectMatchesByPath('HLT_HIL2Mu3_NHitQ10_2HF0_v*',1,0).empty()"),
-#   HIL3Mu3_NHitQ15_2HF0 = cms.string("!triggerObjectMatchesByPath('HLT_HIL3Mu3_NHitQ15_2HF0_v*',1,0).empty()"),
-#)
-#
-#TrigTagFlags = cms.PSet(HighPtTriggerFlags, LowPtTriggerFlags)
-#
+
 TrigProbeFlags = cms.PSet( 
      HLT_PAL1DoubleMuOpen = cms.string("!triggerObjectMatchesByPath('HLT_PAL1DoubleMuOpen_v*',1,0).empty()"),
      HLT_PAL2DoubleMu0 = cms.string("!triggerObjectMatchesByPath('HLT_PAL2DoubleMu0_v*',1,0).empty()"),
@@ -304,10 +268,10 @@ process.tpTree = cms.EDAnalyzer("TagProbeFitTreeProducer",
        # L1Variables,
        # L1SeedVariables,
         KinematicVariables,
-	MuonIDVariables,
-	TrackQualityVariables,
-	GlobalTrackQualityVariables,
-	StaOnlyVariables,
+	    MuonIDVariables,
+	    TrackQualityVariables,
+	    GlobalTrackQualityVariables,
+	    StaOnlyVariables,
         isoTrk03Abs = cms.InputTag("probeMuonsIsoValueMaps","probeMuonsIsoFromDepsTk"),
         isoTrk03Rel = cms.InputTag("probeMuonsIsoValueMaps","probeMuonsRelIsoFromDepsTk"),
         dxyBS = cms.InputTag("muonDxyPVdzmin","dxyBS"),
@@ -338,11 +302,11 @@ process.tpTree = cms.EDAnalyzer("TagProbeFitTreeProducer",
     tagVariables = cms.PSet(
         #L1Variables,
         #L1SeedVariables,
-        #KinematicVariables,
-	#MuonIDVariables,
-	#TrackQualityVariables,
-	#GlobalTrackQualityVariables,
-	#StaOnlyVariables,
+        KinematicVariables,
+	    MuonIDVariables,
+	    TrackQualityVariables,
+	    GlobalTrackQualityVariables,
+	    StaOnlyVariables,
         CentralityVariablesNoHiBin,
         nVertices   = cms.InputTag("nverticesModule"),
         isoTrk03Abs = cms.InputTag("probeMuonsIsoValueMaps","probeMuonsIsoFromDepsTk"),
@@ -432,6 +396,8 @@ process.muonsSta = cms.EDProducer("RedefineMuonP4FromTrack",
 ## Match to trigger, to measure the efficiency of HLT tracking
 from PhysicsTools.PatAlgos.tools.helpers import *
 process.patMuonsWithTriggerSequenceSta = cloneProcessingSnippet(process, process.patMuonsWithTriggerSequence, "Sta")
+process.patMuonsWithTriggerSequenceSta.replace(process.patTriggerFullSta, process.patTriggerFull)
+process.patTriggerSta.src = 'patTriggerFull'
 process.muonMatchHLTL2Sta.maxDeltaR = 0.5
 process.muonMatchHLTL3Sta.maxDeltaR = 0.5
 massSearchReplaceAnyInputTag(process.patMuonsWithTriggerSequenceSta, "mergedMuons", "muonsSta")
@@ -508,6 +474,8 @@ process.tpTreeSta = process.tpTree.clone(
 )
 
 process.tnpSimpleSequenceSta = cms.Sequence(
+    process.muonsSta +
+    process.patMuonsWithTriggerSequenceSta +
     process.tagMuons +
     process.oneTag     +
     process.probeMuonsSta   +
@@ -522,10 +490,7 @@ process.tnpSimpleSequenceSta = cms.Sequence(
 )
 
 process.tagAndProbeSta = cms.Path( 
-#      process.fastFilter
-#    * process.centralityBin
-     process.muonsSta
-    * process.patMuonsWithTriggerSequenceSta
+      process.fastFilter
     * process.tnpSimpleSequenceSta
 )
 #
@@ -592,7 +557,7 @@ process.tpTreeTrk = cms.EDAnalyzer("TagProbeFitTreeProducer",
 
      ),
      tagFlags     = cms.PSet(
-     #   TrigTagFlags,
+        TrigTagFlags,
      ),
      pairVariables = cms.PSet(
         pt  = cms.string("pt"),
@@ -620,9 +585,8 @@ process.tnpSimpleSequenceTrk = cms.Sequence(
 )
 
 process.tagAndProbeTrk = cms.Path(
-      #process.fastFilter
-    #* process.centralityBin
-     process.tnpSimpleSequenceTrk
+      process.fastFilter
+    * process.tnpSimpleSequenceTrk
 )
 
 process.RandomNumberGeneratorService.tkTracksNoJPsi = cms.PSet( initialSeed = cms.untracked.uint32(81) )
