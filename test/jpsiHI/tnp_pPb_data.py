@@ -129,9 +129,7 @@ TightId =  "isGlobalMuon && globalTrack.normalizedChi2 < 10 && globalTrack.hitPa
 
 HybridSoftId = "isTrackerMuon && isGlobalMuon && muonID('TMOneStationTight') && track.hitPattern.trackerLayersWithMeasurement > 5 && track.hitPattern.numberOfValidPixelHits > 0"
 
-#SoftId = "isGoodMuon && track.hitPattern.trackerLayersWithMeasurement > 5 && track.hitPattern.pixelLayersWithMeasurement > 0 && track.quality(reco::TrackBase::highPurity) && fabs(track.dxy) < 0.3 && fabs(track.dz)<20."
-#SoftId = "isGoodMuon('track',\"TMOneStationTight\") && track.hitPattern.trackerLayersWithMeasurement > 5 && track.hitPattern.pixelLayersWithMeasurement > 0  && track.quality(\"highPurity\") "
-SoftId = "muonID('TMOneStationTight') && muonID('TrackerMuonArbitrated') && track.hitPattern.trackerLayersWithMeasurement > 5 && track.hitPattern.pixelLayersWithMeasurement > 0  && track.quality(\"highPurity\") "
+SoftId = "muonID('TMOneStationTight') && track.hitPattern.trackerLayersWithMeasurement > 5 && track.hitPattern.pixelLayersWithMeasurement > 0  && track.quality(\"highPurity\") && abs(track.dxy) < 0.3 && abs(track.dz)<20.0"
 
 #TRACK_CUTS = "track.isNonnull && track.hitPattern.trackerLayersWithMeasurement > 5 && track.hitPattern.numberOfValidPixelHits > 0"
 TRACK_CUTS = "track.isNonnull" #no cut
@@ -236,28 +234,14 @@ process.tpTree = cms.EDAnalyzer("TagProbeFitTreeProducer",
     # probe variables: all useful ones
     variables = cms.PSet(
         #AllVariables,
-        ExtraIsolationVariables,
-        PuppiIsolationVariables,
-       # L1Variables,
-       # L1SeedVariables,
         KinematicVariables,
 	    MuonIDVariables,
 	    TrackQualityVariables,
 	    GlobalTrackQualityVariables,
 	    StaOnlyVariables,
-        isoTrk03Abs = cms.InputTag("probeMuonsIsoValueMaps","probeMuonsIsoFromDepsTk"),
-        isoTrk03Rel = cms.InputTag("probeMuonsIsoValueMaps","probeMuonsRelIsoFromDepsTk"),
         dxyBS = cms.InputTag("muonDxyPVdzmin","dxyBS"),
         dxyPVdzmin = cms.InputTag("muonDxyPVdzMinID","dxyPVdzmin"),
         dzPV       = cms.InputTag("muonDxyPVdzMinID","dzPV"),
-        miniIsoCharged = cms.InputTag("muonMiniIsoCharged","miniIso"),
-        activity_miniIsoCharged = cms.InputTag("muonMiniIsoCharged","activity"),
-        miniIsoPUCharged = cms.InputTag("muonMiniIsoPUCharged","miniIso"),
-        activity_miniIsoPUCharged = cms.InputTag("muonMiniIsoPUCharged","activity"),
-        miniIsoNeutrals = cms.InputTag("muonMiniIsoNeutrals","miniIso"),
-        activity_miniIsoNeutrals = cms.InputTag("muonMiniIsoNeutrals","activity"),
-        miniIsoPhotons = cms.InputTag("muonMiniIsoPhotons","miniIso"),
-        activity_miniIsoPhotons = cms.InputTag("muonMiniIsoPhotons","activity"),
         nSplitTk  = cms.InputTag("splitTrackTagger"),
         #mt  = cms.InputTag("probeMetMt","mt"),
     ),
@@ -281,8 +265,6 @@ process.tpTree = cms.EDAnalyzer("TagProbeFitTreeProducer",
 	    StaOnlyVariables,
         CentralityVariablesNoHiBin,
         nVertices   = cms.InputTag("nverticesModule"),
-        isoTrk03Abs = cms.InputTag("probeMuonsIsoValueMaps","probeMuonsIsoFromDepsTk"),
-        isoTrk03Rel = cms.InputTag("probeMuonsIsoValueMaps","probeMuonsRelIsoFromDepsTk"),
         dxyBS = cms.InputTag("muonDxyPVdzminTags","dxyBS"),
         dxyPVdzmin = cms.InputTag("muonDxyPVdzminTags","dxyPVdzmin"),
         dzPV = cms.InputTag("muonDxyPVdzminTags","dzPV"),
@@ -309,22 +291,10 @@ process.tpTree = cms.EDAnalyzer("TagProbeFitTreeProducer",
 process.load("MuonAnalysis.TagAndProbe.muon.tag_probe_muon_extraIso_cfi")
 process.load("PhysicsTools.PatAlgos.recoLayer0.pfParticleSelectionForIso_cff")
 
-process.miniIsoSeq = cms.Sequence(
-    process.pfParticleSelectionForIsoSequence +
-    process.muonMiniIsoCharged +
-    process.muonMiniIsoPUCharged +
-    process.muonMiniIsoNeutrals +
-    process.muonMiniIsoPhotons
-)
 
 process.extraProbeVariablesSeq = cms.Sequence(
-    process.probeMuonsIsoSequence +
-    process.computeCorrectedIso +
     process.splitTrackTagger +
-    process.muonDxyPVdzmin +
-    process.miniIsoSeq +
-    # process.ak4PFCHSJetsL1L2L3 +
-    process.fullPuppIsolationSequence
+    process.muonDxyPVdzmin
 )
 
 process.tnpSimpleSequence = cms.Sequence(
