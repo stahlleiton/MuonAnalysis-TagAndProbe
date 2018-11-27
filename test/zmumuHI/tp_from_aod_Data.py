@@ -189,7 +189,7 @@ process.centralityInfo.CentralitySrc = cms.InputTag("pACentrality")
 TRACK_CUTS = "track.isNonnull && track.hitPattern.trackerLayersWithMeasurement > 5 && track.hitPattern.numberOfValidPixelHits > 0"
 process.tagMuons = cms.EDFilter("PATMuonSelector",
     src = cms.InputTag("patMuonsWithTrigger"),
-    cut = cms.string("pt > 15"+
+    cut = cms.string("pt > 15 && "+MuonIDFlags.TightId.value()+
                      " && !triggerObjectMatchesByCollection('hltL3MuonCandidates').empty()"+
                    #  " && pfIsolationR03()"+
                      " && (pfIsolationR03().sumChargedHadronPt + pfIsolationR03().sumNeutralHadronEt + pfIsolationR03().sumPhotonEt)/pt < 0.15"),
