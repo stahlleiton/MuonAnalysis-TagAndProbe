@@ -14,7 +14,7 @@ process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring('file:/afs/cern.ch/work/j/jjay/public/TagAndProbe_pPb/Data/0249A3C5-A2B1-E611-8E3E-FA163ED701FA.root'),
     #fileNames = cms.untracked.vstring('file:/store/data/Run2016C/SingleMuon/AOD/PromptReco-v2/000/276/283/00000/0001E5C0-AE44-E611-9F88-02163E014235.root'),
 )
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(10000) )    
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1000) )    
 
 process.load('Configuration.StandardSequences.GeometryRecoDB_cff')
 process.load('Configuration.StandardSequences.MagneticField_cff')
@@ -114,9 +114,6 @@ process.patTriggerFull.l1GtReadoutRecordInputTag = cms.InputTag("gtDigis","","RE
 process.patTrigger.collections.append("hltGmtStage2Digis:Muon")
 process.muonMatchHLTL1.matchedCuts = cms.string('coll("hltGmtStage2Digis:Muon")')
 
-#process.patTrigger.collections.append("hltHIL3MuonCandidates")
-#process.muonMatchHLTL3.matchedCuts = cms.string('coll("hltHIL3MuonCandidates")||coll("hltL3MuonCandidates")')
-
 
 from MuonAnalysis.TagAndProbe.common_variables_cff import *
 process.load("MuonAnalysis.TagAndProbe.common_modules_cff")
@@ -212,6 +209,10 @@ process.muonDxyPVdzMinID = cms.EDProducer("MuonDxyPVdzmin",
     probes = cms.InputTag("probeMuons"),
     vertexes = cms.InputTag("hiSelectedVertex"),
 )
+process.muonDxyPVdzMinTags = cms.EDProducer("MuonDxyPVdzmin",
+    probes = cms.InputTag("tagMuons"),
+    vertexes = cms.InputTag("hiSelectedVertex"),
+)
 
 process.tpPairs = cms.EDProducer("CandViewShallowCloneCombiner",
     cut = cms.string('2.0 < mass < 4.0'),
@@ -261,9 +262,8 @@ process.tpTree = cms.EDAnalyzer("TagProbeFitTreeProducer",
 	    StaOnlyVariables,
         CentralityVariablesNoHiBin,
         nVertices   = cms.InputTag("nverticesModule"),
-        dxyBS = cms.InputTag("muonDxyPVdzminTags","dxyBS"),
-        dxyPVdzmin = cms.InputTag("muonDxyPVdzminTags","dxyPVdzmin"),
-        dzPV = cms.InputTag("muonDxyPVdzminTags","dzPV"),
+        dxyPVdzmin = cms.InputTag("muonDxyPVdzMinTags","dxyPVdzmin"),
+        dzPV = cms.InputTag("muonDxyPVdzMinTags","dzPV"),
     ),
     tagFlags = cms.PSet(
         TrigTagFlags  
@@ -294,6 +294,7 @@ process.tnpSimpleSequence = cms.Sequence(
     process.oneTag     +
     process.probeMuons +
     process.muonDxyPVdzMinID +
+    process.muonDxyPVdzMinTags +
     process.tpPairs    +
     process.onePair    +
     process.nverticesModule +
