@@ -147,6 +147,7 @@ MuonIDFlags = cms.PSet(
                         "track.hitPattern.trackerLayersWithMeasurement > 9 && track.hitPattern.numberOfValidPixelHits > 0"),
     Tight2012   = cms.string("isPFMuon && numberOfMatchedStations > 1 && muonID('GlobalMuonPromptTight') && abs(dB) < 0.2 && "+
                         "track.hitPattern.trackerLayersWithMeasurement > 5 && track.hitPattern.numberOfValidPixelHits > 0"),
+    TightId =  cms.string("isGlobalMuon && globalTrack.normalizedChi2 < 10 && globalTrack.hitPattern.numberOfValidMuonHits > 0 && numberOfMatchedStations > 1 && track.hitPattern.trackerLayersWithMeasurement > 5 && track.hitPattern.numberOfValidPixelHits > 0 && abs(dB) < 0.2"),
     Loose       = cms.string("isLooseMuon()"),
     Medium      = cms.string("isPFMuon && innerTrack.validFraction >= 0.8 && ( isGlobalMuon && globalTrack.normalizedChi2 < 3 && combinedQuality.chi2LocalPosition < 12 && combinedQuality.trkKink < 20 && segmentCompatibility >= 0.303 || segmentCompatibility >= 0.451 )"),
     Medium2016      = cms.string("isPFMuon && innerTrack.validFraction >= 0.49 && ( isGlobalMuon && globalTrack.normalizedChi2 < 3 && combinedQuality.chi2LocalPosition < 12 && combinedQuality.trkKink < 20 && segmentCompatibility >= 0.303 || segmentCompatibility >= 0.451 )"),
@@ -329,6 +330,8 @@ HighPtTriggerFlagsDebug = cms.PSet(
    hltL3fL1sMu22f0TkFiltered24QL3pfhcalIsoRhoFilteredHB0p21HE0p22 = cms.string("!triggerObjectMatchesByFilter('hltL3crIsoL1sMu22L1f0L2f10QL3f24QL3trkIsoFiltered0p09').empty()"),
    hltL3fL1sMu22L1f0Tkf24QL3trkIsoFiltered0p09 = cms.string("!triggerObjectMatchesByFilter('hltL3crIsoL1sMu22L1f0L2f10QL3f24QL3trkIsoFiltered0p09').empty()"),
                               
+   hltL3fL1sSingleMu7BptxANDL1f0L2f0L3Filtered12 = cms.string("!triggerObjectMatchesByFilter('hltL3fL1sSingleMu7BptxANDL1f0L2f0L3Filtered12').empty()"),
+   hltL3fL1sSingleMu7BptxANDL1f0L2f0L3Filtered15 = cms.string("!triggerObjectMatchesByFilter('hltL3fL1sSingleMu7BptxANDL1f0L2f0L3Filtered15').empty()"),
    #matching to muon leg of HLT_Mu23_TrkIsoVVL_Ele8_CaloIdL_TrackIdL_IsoVL_v*
    Mu23_TrkIsoVVL = cms.string("!triggerObjectMatchesByFilter('hltMu23TrkIsoVVLEle8CaloIdLTrackIdLIsoVLMuonlegL3IsoFiltered23').empty()"),
    
