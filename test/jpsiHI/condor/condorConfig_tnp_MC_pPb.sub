@@ -1,0 +1,28 @@
+executable            = condorExec.sh
+arguments             = MC 1 
+output                = outputMC/condor.$(ClusterId).$(ProcId).out
+error                 = errorMC/condor.$(ClusterId).$(ProcId).err
+log                   = logMC/condor.$(ClusterId).log
++JobFlavour           = "tomorrow"
+queue
+
+arguments = MC 2
+queue
+
+arguments = MC 3
+queue
+
+arguments = MC 4
+queue
+
+arguments = MC 5
+queue
+
+arguments = MC 6
+queue
+
+arguments = MC 7
+queue
+
+arguments = MC 8
+queue
