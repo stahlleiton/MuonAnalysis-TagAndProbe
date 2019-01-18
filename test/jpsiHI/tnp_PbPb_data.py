@@ -8,7 +8,7 @@ process.options   = cms.untracked.PSet( wantSummary = cms.untracked.bool(True))
 process.MessageLogger.cerr.FwkReport.reportEvery = 1000
 
 process.source = cms.Source("PoolSource",
-    fileNames = cms.untracked.vstring('/store/user/anstahll/TagAndProbe/PbPb2018/SKIM/SKIM_HISingleMuon_PbPb5TeV_2018_AOD_JPsi_20190101/HISingleMuon/SKIM_HISingleMuon_PbPb5TeV_2018_AOD_JPsi_20190101/190101_221845/0000/MuMu_M_1_6_PbPb5TeV_2018_AOD_SKIM_876.root'),
+    fileNames = cms.untracked.vstring('/store/hidata/HIRun2018A/HISingleMuon/AOD/PromptReco-v1/000/326/791/00000/890754BB-4491-3D43-80C6-67B8829EE158.root'),
 )
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
 
@@ -112,19 +112,81 @@ TightIdReco = "isGlobalMuon && isPFMuon && globalTrack.normalizedChi2 < 10 && gl
 TightId = TightIdReco+" && abs(dB) < 0.2"
 HybridSoftIdReco2015 = "isTrackerMuon && isGlobalMuon && innerTrack.hitPattern.trackerLayersWithMeasurement > 5 && innerTrack.hitPattern.numberOfValidPixelHits > 0"
 HybridSoftId2015 = HybridSoftIdReco2015 + " && muonID('TMOneStationTight')"
-HybridSoftIdReco2018 = "isTrackerMuon && isGlobalMuon && innerTrack.hitPattern.                      trackerLayersWithMeasurement > 5 && innerTrack.hitPattern.numberOfValidPixelHits > 0 && innerTrack.quality(\"highPurity\")"
+HybridSoftIdReco2018 = "isTrackerMuon && isGlobalMuon && innerTrack.hitPattern.trackerLayersWithMeasurement > 5 && innerTrack.hitPattern.numberOfValidPixelHits > 0 && innerTrack.quality(\"highPurity\")"
 HybridSoftId2018 = HybridSoftIdReco2018 + " && muonID('TMOneStationTight')"
 SoftId = "muonID('TMOneStationTight') && innerTrack.hitPattern.trackerLayersWithMeasurement > 5 && innerTrack.hitPattern.pixelLayersWithMeasurement > 0 && innerTrack.quality(\"highPurity\")"
 ### Trigger
-LowPtTriggerFlags = cms.PSet( )
+LowPtTriggerFlags = cms.PSet(
+    # Double Muon Trigger Paths
+    HLT_HIL1DoubleMuOpen = cms.string("!triggerObjectMatchesByPath('HLT_HIL1DoubleMuOpen_v*',1,0).empty()"),
+    HLT_HIL1DoubleMuOpen_OS_Centrality_40_100 = cms.string("!triggerObjectMatchesByPath('HLT_HIL1DoubleMuOpen_OS_Centrality_40_100_v*',1,0).empty()"),
+    HLT_HIL1DoubleMuOpen_Centrality_50_100 = cms.string("!triggerObjectMatchesByPath('HLT_HIL1DoubleMuOpen_Centrality_50_100_v*',1,0).empty()"),
+    HLT_HIL2DoubleMuOpen = cms.string("!triggerObjectMatchesByPath('HLT_HIL2DoubleMuOpen_v*',1,0).empty()"),
+    HLT_HIL3DoubleMuOpen = cms.string("!triggerObjectMatchesByPath('HLT_HIL3DoubleMuOpen_v*',1,0).empty()"),
+    HLT_HIL3DoubleMuOpen_M60120 = cms.string("!triggerObjectMatchesByPath('HLT_HIL3DoubleMuOpen_M60120_v*',1,0).empty()"),
+    HLT_HIL3DoubleMuOpen_JpsiPsi = cms.string("!triggerObjectMatchesByPath('HLT_HIL3DoubleMuOpen_JpsiPsi_v*',1,0).empty()"),
+    HLT_HIL3DoubleMuOpen_Upsi = cms.string("!triggerObjectMatchesByPath('HLT_HIL3DoubleMuOpen_Upsi_v*',1,0).empty()"),
+    HLT_HIL3Mu0_L2Mu0 = cms.string("!triggerObjectMatchesByPath('HLT_HIL3Mu0_L2Mu0_v*',1,0).empty()"),
+    HLT_HIL3Mu0NHitQ10_L2Mu0_MAXdR3p5_M1to5 = cms.string("!triggerObjectMatchesByPath('HLT_HIL3Mu0NHitQ10_L2Mu0_MAXdR3p5_M1to5_v*',1,0).empty()"),
+    HLT_HIL3Mu2p5NHitQ10_L2Mu2_M7toinf = cms.string("!triggerObjectMatchesByPath('HLT_HIL3Mu2p5NHitQ10_L2Mu2_M7toinf_v*',1,0).empty()"),
+    HLT_HIL3Mu3_L1TripleMuOpen = cms.string("!triggerObjectMatchesByPath('HLT_HIL3Mu3_L1TripleMuOpen_v*',1,0).empty()"),
+    HLT_HIL1MuOpen_Centrality_70_100 = cms.string("!triggerObjectMatchesByPath('HLT_HIL1MuOpen_Centrality_70_100_v*',1,0).empty()"),
+    HLT_HIL1MuOpen_Centrality_80_100 = cms.string("!triggerObjectMatchesByPath('HLT_HIL1MuOpen_Centrality_80_100_v*',1,0).empty()"),
+    # Double Muon Trigger Filters
+    HLT_HIL1DoubleMuOpen_Filter = cms.string("!triggerObjectMatchesByFilter('hltL1fL1sL1DoubleMuOpenL1Filtered0').empty()"),
+    HLT_HIL1DoubleMuOpen_OS_Centrality_40_100_Filter = cms.string("!triggerObjectMatchesByFilter('hltL1fL1sL1DoubleMuOpenOSCentrality40100L1Filtered0').empty()"),
+    HLT_HIL1DoubleMuOpen_Centrality_50_100_Filter = cms.string("!triggerObjectMatchesByFilter('hltL1fL1sL1DoubleMuOpenCentrality50100L1Filtered0').empty()"),
+    HLT_HIL2DoubleMuOpen_Filter = cms.string("!triggerObjectMatchesByFilter('hltL2fL1sL1DoubleMuOpenL1f0L2Filtered0').empty()"),
+    HLT_HIL3DoubleMuOpen_Filter = cms.string("!triggerObjectMatchesByFilter('hltL3fL1DoubleMuOpenL3Filtered0').empty()"),
+    HLT_HIL3DoubleMuOpen_M60120_Filter = cms.string("!triggerObjectMatchesByFilter('hltL3fL1DoubleMuOpenL3FilteredM60120').empty()"),
+    HLT_HIL3DoubleMuOpen_JpsiPsi_Filter = cms.string("!triggerObjectMatchesByFilter('hltL3fL1DoubleMuOpenL3FilteredPsi').empty()"),
+    HLT_HIL3DoubleMuOpen_Upsi_Filter = cms.string("!triggerObjectMatchesByFilter('hltL3fL1DoubleMuOpenL3FilteredUpsi').empty()"),
+    HLT_HIL3Mu0_L2Mu0_Filter = cms.string("!triggerObjectMatchesByFilter('hltL3f0L3Mu0L2Mu0Filtered0').empty()"),
+    HLT_HIL3Mu0NHitQ10_L2Mu0_MAXdR3p5_M1to5_Filter = cms.string("!triggerObjectMatchesByFilter('hltL3f0L3Mu0L2Mu0DR3p5FilteredNHitQ10M1to5').empty()"),
+    HLT_HIL3Mu2p5NHitQ10_L2Mu2_M7toinf_Filter = cms.string("!triggerObjectMatchesByFilter('hltL3f0L3Mu2p5NHitQ10L2Mu2FilteredM7toinf').empty()"),
+    HLT_HIL3Mu3_L1TripleMuOpen_Filter = cms.string("!triggerObjectMatchesByFilter('hltL3fL1sL1DoubleMuOpenL1fN3L2f0L3Filtered3').empty()"),
+    # Single Muon Trigger Paths
+    HLT_HIL2Mu3_NHitQ15 = cms.string("!triggerObjectMatchesByPath('HLT_HIL2Mu3_NHitQ15_v*',1,0).empty()"),
+    HLT_HIL2Mu5_NHitQ15 = cms.string("!triggerObjectMatchesByPath('HLT_HIL2Mu5_NHitQ15_v*',1,0).empty()"),
+    HLT_HIL2Mu7_NHitQ15 = cms.string("!triggerObjectMatchesByPath('HLT_HIL2Mu7_NHitQ15_v*',1,0).empty()"),
+    HLT_HIL3Mu3_NHitQ10 = cms.string("!triggerObjectMatchesByPath('HLT_HIL3Mu3_NHitQ10_v*',1,0).empty()"),
+    HLT_HIL3Mu5_NHitQ10 = cms.string("!triggerObjectMatchesByPath('HLT_HIL3Mu5_NHitQ10_v*',1,0).empty()"),
+    HLT_HIL3Mu7_NHitQ10 = cms.string("!triggerObjectMatchesByPath('HLT_HIL3Mu7_NHitQ10_v*',1,0).empty()"),
+    # Single Muon Trigger Filters
+    HLT_HIL1MuOpen_Centrality_70_100_Filter = cms.string("!triggerObjectMatchesByFilter('hltL1fL1sL1MuOpenCentrality70100L1Filtered0').empty()"),
+    HLT_HIL1MuOpen_Centrality_80_100_Filter = cms.string("!triggerObjectMatchesByFilter('hltL1fL1sL1MuOpenCentrality80100L1Filtered0').empty()"),
+    HLT_HIL2Mu3_NHitQ15_Filter = cms.string("!triggerObjectMatchesByFilter('hltL2fL1sMuOpenL1f0L2Filtered3NHitQ15').empty()"),
+    HLT_HIL2Mu5_NHitQ15_Filter = cms.string("!triggerObjectMatchesByFilter('hltL2fL1sMuOpenL1f0L2Filtered5NHitQ15').empty()"),
+    HLT_HIL2Mu7_NHitQ15_Filter = cms.string("!triggerObjectMatchesByFilter('hltL2fL1sMuOpenL1f0L2Filtered7NHitQ15').empty()"),
+    HLT_HIL3Mu3_NHitQ10_Filter = cms.string("!triggerObjectMatchesByFilter('hltL3fL1sL1SingleMuOpenL1f0L2f0L3Filtered3NHitQ10').empty()"),
+    HLT_HIL3Mu5_NHitQ10_Filter = cms.string("!triggerObjectMatchesByFilter('hltL3fL1sL1SingleMuOpenL1f0L2f0L3Filtered5NHitQ10').empty()"),
+    HLT_HIL3Mu7_NHitQ10_Filter = cms.string("!triggerObjectMatchesByFilter('hltL3fL1sL1SingleMuOpenL1f0L2f0L3Filtered7NHitQ10').empty()"),
+    # Trigger objects
+    isL1Muon = cms.string("!triggerObjectMatchesByCollection('hltGtStage2Digis:Muon').empty()"),
+    isL2Muon = cms.string("!triggerObjectMatchesByCollection('hltL2MuonCandidatesPPOnAA').empty()"),
+    isL3Muon = cms.string("!triggerObjectMatchesByCollection('hltIterL3MuonCandidatesPPOnAA').empty()"),
+)
 HighPtTriggerFlags = cms.PSet(
-   HLT_HIL3Mu12 = cms.string("!triggerObjectMatchesByPath('HLT_HIL3Mu12_v*',1,0).empty()"),
-   HLT_HIL3Mu15 = cms.string("!triggerObjectMatchesByPath('HLT_HIL3Mu15_v*',1,0).empty()"),
-   HLT_HIL3Mu20 = cms.string("!triggerObjectMatchesByPath('HLT_HIL3Mu20_v*',1,0).empty()"),
+    # Double Muon Trigger Paths
+    HLT_HIL1DoubleMu10 = cms.string("!triggerObjectMatchesByPath('HLT_HIL1DoubleMu10_v*',1,0).empty()"),
+    HLT_HIL2_L1DoubleMu10 = cms.string("!triggerObjectMatchesByPath('HLT_HIL2_L1DoubleMu10_v*',1,0).empty()"),
+    HLT_HIL3_L1DoubleMu10 = cms.string("!triggerObjectMatchesByPath('HLT_HIL3_L1DoubleMu10_v*',1,0).empty()"),
+    # Double Muon Trigger Filters
+    HLT_HIL1DoubleMu10_Filter = cms.string("!triggerObjectMatchesByFilter('hltL1fL1sL1DoubleMu10L1Filtered0').empty()"),
+    HLT_HIL2_L1DoubleMu10_Filter = cms.string("!triggerObjectMatchesByFilter('hltL2fL1sL1DoubleMu10L1f0L2Filtered0').empty()"),
+    HLT_HIL3_L1DoubleMu10_Filter = cms.string("!triggerObjectMatchesByFilter('hltDoubleMuOpenL1DoubleMu10Filtered').empty()"),
+    # Single Muon Trigger Paths
+    HLT_HIL3Mu12 = cms.string("!triggerObjectMatchesByPath('HLT_HIL3Mu12_v*',1,0).empty()"),
+    HLT_HIL3Mu15 = cms.string("!triggerObjectMatchesByPath('HLT_HIL3Mu15_v*',1,0).empty()"),
+    HLT_HIL3Mu20 = cms.string("!triggerObjectMatchesByPath('HLT_HIL3Mu20_v*',1,0).empty()"),
+    # Single Muon Trigger Filters
+    HLT_HIL3Mu12_Filter = cms.string("!triggerObjectMatchesByFilter('hltL3fL1sL1SingleMu3OpenL1f7L2f0L3Filtered12').empty() || !triggerObjectMatchesByFilter('hltL3fL1sL1SingleMuOpenL1f7L2f0L3Filtered12').empty() || !triggerObjectMatchesByFilter('hltL3fL1sL1SingleMuOpenL1f0L2f0L3Filtered12').empty()"),
+    HLT_HIL3Mu15_Filter = cms.string("!triggerObjectMatchesByFilter('hltL3fL1sL1SingleMu3OpenL1f7L2f0L3Filtered15').empty() || !triggerObjectMatchesByFilter('hltL3fL1sL1SingleMuOpenL1f7L2f0L3Filtered15').empty() || !triggerObjectMatchesByFilter('hltL3fL1sL1SingleMuOpenL1f0L2f0L3Filtered15').empty()"),
+    HLT_HIL3Mu20_Filter = cms.string("!triggerObjectMatchesByFilter('hltL3fL1sL1SingleMu3OpenL1f7L2f0L3Filtered20').empty() || !triggerObjectMatchesByFilter('hltL3fL1sL1SingleMuOpenL1f7L2f0L3Filtered20').empty() || !triggerObjectMatchesByFilter('hltL3fL1sL1SingleMuOpenL1f0L2f0L3Filtered20').empty()"),
 )
 ### Tracking
 TRACK_CUTS2015 = "track.isNonnull && track.hitPattern.trackerLayersWithMeasurement > 5 && track.hitPattern.numberOfValidPixelHits > 0"
-TRACK_CUTS2018 = "track.isNonnull && track.hitPattern.trackerLayersWithMeasurement > 5 && track.     hitPattern.numberOfValidPixelHits > 0 && innerTrack.quality(\"highPurity\")"
+TRACK_CUTS2018 = "track.isNonnull && track.hitPattern.trackerLayersWithMeasurement > 5 && track.hitPattern.numberOfValidPixelHits > 0 && innerTrack.quality(\"highPurity\")"
 
 ## ==== Tag muons
 process.tagMuons = cms.EDFilter("PATMuonSelector",
@@ -400,11 +462,11 @@ process.tagAndProbeSta = cms.Path(
 
 process.probeMuonsTrk = cms.EDFilter("PATMuonSelector",
     src = cms.InputTag("patMuonsWithTrigger"),
-    cut = cms.string(TRACK_CUTS2018 + ' && ' + InAcceptance + ' &&' + 'innerTrack.isNonnull && innerTrack.originalAlgo<13'), #   muonSeededStepInOut = 13
+    cut = cms.string(TRACK_CUTS2015 + ' && ' + InAcceptance + ' &&' + 'innerTrack.isNonnull && innerTrack.originalAlgo<13'), #   muonSeededStepInOut = 13
     )
 process.pseudoProbeTrk = cms.EDFilter("MuonSelector",
     src = cms.InputTag("mergedMuons"),
-    cut = cms.string(TRACK_CUTS2018 + ' && ' + InAcceptance + ' &&' + 'innerTrack.isNonnull && innerTrack.originalAlgo<13'), #   muonSeededStepInOut = 13
+    cut = cms.string(TRACK_CUTS2015 + ' && ' + InAcceptance + ' &&' + 'innerTrack.isNonnull && innerTrack.originalAlgo<13'), #   muonSeededStepInOut = 13
     )
 
 process.muonDxyPVdzMinTrk = cms.EDProducer("MuonDxyPVdzmin",

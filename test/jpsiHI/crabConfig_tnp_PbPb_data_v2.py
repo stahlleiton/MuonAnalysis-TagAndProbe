@@ -2,21 +2,23 @@ from CRABClient.UserUtilities import config, getUsernameFromSiteDB
 config = config()
 
 config.section_('General')
-config.General.requestName = 'TnP_HISingleMuon_PbPb5TeV_2018_ZBoson_MC_20190119'
+config.General.requestName = 'TnP_HISingleMuon_v2_PbPb5TeV_2018_JPsi_Data_20190115'
 config.General.workArea = 'crab_projects'
 config.General.transferOutputs = True
 config.General.transferLogs = False
 
 config.section_('JobType')
 config.JobType.pluginName = 'Analysis'
-config.JobType.psetName = 'tnp_PbPb_MC.py'
+config.JobType.psetName = 'tnp_PbPb_data.py'
 config.JobType.maxMemoryMB = 2400
 
 config.section_('Data')
-config.Data.inputDataset ='/ZMM_5p02TeV_TuneCP5/anstahll-ZMM_5p02TeV_TuneCP5_Embd_RECO_20190117-5db5dfa073297cb96791f14c622e83e2/USER'
-config.Data.inputDBS = 'phys03'
-config.Data.unitsPerJob = 1
-config.Data.splitting = 'FileBased'
+config.Data.inputDataset = '/HISingleMuon/HIRun2018A-PromptReco-v2/AOD'
+config.Data.inputDBS = 'global'
+config.Data.unitsPerJob = 60
+config.Data.splitting = 'LumiBased'
+config.Data.lumiMask = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions18/HI/DCSOnly/json_DCSONLY_HI.txt'
+config.Data.runRange = '326381-327564'
 config.Data.outLFNDirBase = '/store/user/%s/TagAndProbe/PbPb2018/TnP/%s' % (getUsernameFromSiteDB(), config.General.requestName)
 config.Data.publication = False
 config.Data.outputDatasetTag = config.General.requestName
