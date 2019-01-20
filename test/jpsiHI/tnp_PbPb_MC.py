@@ -8,7 +8,7 @@ process.options   = cms.untracked.PSet( wantSummary = cms.untracked.bool(True))
 process.MessageLogger.cerr.FwkReport.reportEvery = 1000
 
 process.source = cms.Source("PoolSource",
-    fileNames = cms.untracked.vstring('/store/user/anstahll/Dilepton/MC/NonEmbedded/JpsiMM_5p02TeV_TuneCP5_RECO_07122018/JpsiMM_5p02TeV_TuneCP5/JpsiMM_5p02TeV_TuneCP5_RECO_07122018/181206_150400/0000/JpsiMM_5p02TeV_TuneCP5_step2_8.root'),
+    fileNames = cms.untracked.vstring('/store/user/anstahll/Dilepton/MC/Embedded/JpsiMM_5p02TeV_TuneCP5_Embd_RECO_20190117/JpsiMM_5p02TeV_TuneCP5/JpsiMM_5p02TeV_TuneCP5_Embd_RECO_20190117/190118_020651/0001/JpsiMM_5p02TeV_TuneCP5_Embd_step2_1074.root')
 )
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
 
@@ -272,7 +272,7 @@ process.tpTree = cms.EDAnalyzer("TagProbeFitTreeProducer",
         dxyBS = cms.InputTag("muonDxyPVdzminTags","dxyBS"),
         dxyPVdzmin = cms.InputTag("muonDxyPVdzminTags","dxyPVdzmin"),
         dzPV = cms.InputTag("muonDxyPVdzminTags","dzPV"),
-        dxyPV = cms.InputTag("muonDxyPVdzmin","dxyPV"),
+        dxyPV = cms.InputTag("muonDxyPVdzminTags","dxyPV"),
     ),
     tagFlags = cms.PSet(
         LowPtTriggerFlags,
@@ -288,14 +288,35 @@ process.tpTree = cms.EDAnalyzer("TagProbeFitTreeProducer",
         genWeight = cms.InputTag("genWeightInfo", "genWeight"),
     ),
     pairFlags = cms.PSet(
-        #BestJPsi = cms.InputTag("bestPairByJpsiMass"), (NEED TO CHECK)
+        BestJPsi = cms.InputTag("bestPairByJpsiMass"),
     ),
     isMC = cms.bool(False),
     addRunLumiInfo = cms.bool(True),
 )
 
-process.extraProbeVariablesSeq = cms.Sequence(
-    process.muonDxyPVdzmin
+process.nverticesModule = cms.EDProducer("VertexMultiplicityCounter",
+    probes = cms.InputTag("tagMuons"),
+    objects = cms.InputTag("offlinePrimaryVertices"),
+    objectSelection = cms.string("!isFake && abs(z) <= 25 && position.Rho <= 2 && tracksSize >= 2")
+)
+process.bestPairByJpsiMass = cms.EDProducer("BestPairByMass",
+    pairs = cms.InputTag("tpPairs"),
+    mass  = cms.double(3.096916)
+)
+process.probeMultiplicity = cms.EDProducer("ProbeMulteplicityProducer",
+    pairs = cms.InputTag("tpPairs")
+)
+process.probeMultiplicityTMGM = process.probeMultiplicity.clone(
+    probeCut = cms.string("isTrackerMuon || isGlobalMuon")
+)
+process.muonDxyPVdzmin = cms.EDProducer("MuonDxyPVdzmin",
+    probes = cms.InputTag("probeMuons")
+)
+process.muonDxyPVdzminTags = process.muonDxyPVdzmin.clone(
+    probes = cms.InputTag("tagMuons")
+)
+process.genWeightInfo = process.genAdditionalInfo.clone(
+    pairTag = cms.InputTag("tpPairs")
 )
 
 process.tnpSimpleSequence = cms.Sequence(
@@ -305,12 +326,12 @@ process.tnpSimpleSequence = cms.Sequence(
     process.tpPairs    +
     process.onePair    +
     process.nverticesModule +
-    process.extraProbeVariablesSeq +
-    process.probeMultiplicities +
-    #process.bestPairByJpsiMass + (NEED TO CHECK)
+    process.muonDxyPVdzmin + process.muonDxyPVdzminTags +
+    process.probeMultiplicity + process.probeMultiplicityTMGM +
+    process.bestPairByJpsiMass +
     process.centralityInfo +
     process.centralityBinInfo +
-    process.genAdditionalInfo +
+    process.genWeightInfo +
     process.tpTree
 )
 
@@ -405,8 +426,13 @@ process.tpTreeSta = process.tpTree.clone(
         pt = cms.string("pt"),
         rapidity = cms.string("rapidity"),
         deltaR = cms.string("deltaR(daughter(0).eta, daughter(0).phi, daughter(1).eta, daughter(1).phi)"),
+        genWeight = cms.InputTag("genWeightInfoSta", "genWeight"),
     ),
     pairFlags = cms.PSet(),
+)
+
+process.genWeightInfoSta = process.genAdditionalInfo.clone(
+    pairTag = cms.InputTag("tpPairsSta")
 )
 
 process.tnpSimpleSequenceSta = cms.Sequence(
@@ -419,6 +445,7 @@ process.tnpSimpleSequenceSta = cms.Sequence(
     process.staToTkMatchSequenceZ +
     process.centralityInfo +
     process.centralityBinInfo +
+    process.genWeightInfoSta +
     process.tpTreeSta
 )
 
@@ -465,25 +492,21 @@ process.tagAndProbeSta = cms.Path(
 process.probeMuonsTrk = cms.EDFilter("PATMuonSelector",
     src = cms.InputTag("patMuonsWithTrigger"),
     cut = cms.string(TRACK_CUTS2015 + ' && ' + InAcceptance + ' &&' + 'innerTrack.isNonnull && innerTrack.originalAlgo<13'), #   muonSeededStepInOut = 13
-    )
+)
 process.pseudoProbeTrk = cms.EDFilter("MuonSelector",
     src = cms.InputTag("mergedMuons"),
     cut = cms.string(TRACK_CUTS2015 + ' && ' + InAcceptance + ' &&' + 'innerTrack.isNonnull && innerTrack.originalAlgo<13'), #   muonSeededStepInOut = 13
-    )
-
-process.muonDxyPVdzMinTrk = cms.EDProducer("MuonDxyPVdzmin",
-    probes = cms.InputTag("probeMuonsTrk"),
-    )
+)
 
 process.tpPairsTrk = cms.EDProducer("CandViewShallowCloneCombiner",
     cut = cms.string('2.5 < mass < 3.5'),
     decay = cms.string('tagMuons@+ probeMuonsTrk@-')
-    )
+)
 
 process.onePairTrk = cms.EDFilter("CandViewCountFilter",
     src = cms.InputTag('tpPairsTrk'),
     minNumber = cms.uint32(1),
-    )
+)
 
 process.pseudoPairsTrk = process.tpPairsTrk.clone(decay = "pseudoTag@+ pseudoProbeTrk@-")
 process.onePseudoPairTrk = process.onePairTrk.clone(src = 'pseudoPairsTrk')
@@ -497,8 +520,10 @@ process.tpTreeTrk = cms.EDAnalyzer("TagProbeFitTreeProducer",
     variables = cms.PSet(
       KinematicVariables,
       StaOnlyVariables,
-      dxyPVdzmin = cms.InputTag("muonDxyPVdzMinTrk","dxyPVdzmin"),
-      dzPV = cms.InputTag("muonDxyPVdzMinTrk","dzPV"),
+      dxyBS = cms.InputTag("muonDxyPVdzminTrk","dxyBS"),
+      dxyPVdzmin = cms.InputTag("muonDxyPVdzminTrk","dxyPVdzmin"),
+      dzPV = cms.InputTag("muonDxyPVdzminTrk","dzPV"),
+      dxyPV = cms.InputTag("muonDxyPVdzminTrk","dxyPV"),
     ),
     flags = cms.PSet(
       isSTA = cms.string("isStandAloneMuon"),
@@ -529,21 +554,30 @@ process.tpTreeTrk = cms.EDAnalyzer("TagProbeFitTreeProducer",
       y = cms.string("rapidity"),
       absy = cms.string("abs(rapidity)"),
       deltaR = cms.string("deltaR(daughter(0).eta, daughter(0).phi, daughter(1).eta, daughter(1).phi)"),
+      genWeight = cms.InputTag("genWeightInfoTrk", "genWeight"),
     ),
     pairFlags = cms.PSet(),
     isMC = cms.bool(False)
+)
+
+process.muonDxyPVdzminTrk = process.muonDxyPVdzmin.clone(
+    probes = cms.InputTag("probeMuonsTrk")
+)
+process.genWeightInfoTrk = process.genAdditionalInfo.clone(
+    pairTag = cms.InputTag("tpPairsTrk")
 )
 
 process.tnpSimpleSequenceTrk = cms.Sequence(
     process.tagMuons +
     process.oneTag +
     process.probeMuonsTrk +
-    process.muonDxyPVdzMinTrk +
+    process.muonDxyPVdzminTrk +
     process.tpPairsTrk +
     process.onePairTrk +
     process.nverticesModule +
     process.centralityInfo +
     process.centralityBinInfo +
+    process.genWeightInfoTrk +
     process.tpTreeTrk
 )
 

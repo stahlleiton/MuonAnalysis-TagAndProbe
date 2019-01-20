@@ -2,7 +2,7 @@ from CRABClient.UserUtilities import config, getUsernameFromSiteDB
 config = config()
 
 config.section_('General')
-config.General.requestName = 'TnP_HISingleMuon_PbPb5TeV_2018_ZBoson_MC_20190119'
+config.General.requestName = 'TnP_HISingleMuon_PbPb5TeV_2018_ZBoson_MC_20190120'
 config.General.workArea = 'crab_projects'
 config.General.transferOutputs = True
 config.General.transferLogs = False
@@ -22,4 +22,6 @@ config.Data.publication = False
 config.Data.outputDatasetTag = config.General.requestName
 
 config.section_('Site')
+config.Data.ignoreLocality = True
+config.Site.whitelist = ['T1_FR_*','T2_FR_*','T2_CH_*','T2_US_*','T3_FR_*']
 config.Site.storageSite = 'T2_FR_GRIF_LLR'

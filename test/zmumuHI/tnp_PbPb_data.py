@@ -109,12 +109,14 @@ TightIdReco = "isGlobalMuon && isPFMuon && globalTrack.normalizedChi2 < 10 && gl
 TightId = TightIdReco+" && abs(dB) < 0.2"
 ### Trigger
 HighPtTriggerFlags = cms.PSet(
-   HLT_HIL3Mu12_Filter = cms.string("!triggerObjectMatchesByFilter('hltL3fL1sL1SingleMu3OpenL1f7L2f0L3Filtered12').empty() || !triggerObjectMatchesByFilter('hltL3fL1sL1SingleMuOpenL1f7L2f0L3Filtered12').empty() || !triggerObjectMatchesByFilter('hltL3fL1sL1SingleMuOpenL1f0L2f0L3Filtered12').empty()"),
-   HLT_HIL3Mu15_Filter = cms.string("!triggerObjectMatchesByFilter('hltL3fL1sL1SingleMu3OpenL1f7L2f0L3Filtered15').empty() || !triggerObjectMatchesByFilter('hltL3fL1sL1SingleMuOpenL1f7L2f0L3Filtered15').empty() || !triggerObjectMatchesByFilter('hltL3fL1sL1SingleMuOpenL1f0L2f0L3Filtered15').empty()"),
-   HLT_HIL3Mu20_Filter = cms.string("!triggerObjectMatchesByFilter('hltL3fL1sL1SingleMu3OpenL1f7L2f0L3Filtered20').empty() || !triggerObjectMatchesByFilter('hltL3fL1sL1SingleMuOpenL1f7L2f0L3Filtered20').empty() || !triggerObjectMatchesByFilter('hltL3fL1sL1SingleMuOpenL1f0L2f0L3Filtered20').empty()"),
-   HLT_HIL3Mu12 = cms.string("!triggerObjectMatchesByPath('HLT_HIL3Mu12_v*',1,0).empty()"),
-   HLT_HIL3Mu15 = cms.string("!triggerObjectMatchesByPath('HLT_HIL3Mu15_v*',1,0).empty()"),
-   HLT_HIL3Mu20 = cms.string("!triggerObjectMatchesByPath('HLT_HIL3Mu20_v*',1,0).empty()"),
+    # Single Muon Trigger Paths
+    HLT_HIL3Mu12 = cms.string("!triggerObjectMatchesByPath('HLT_HIL3Mu12_v*',1,0).empty()"),
+    HLT_HIL3Mu15 = cms.string("!triggerObjectMatchesByPath('HLT_HIL3Mu15_v*',1,0).empty()"),
+    HLT_HIL3Mu20 = cms.string("!triggerObjectMatchesByPath('HLT_HIL3Mu20_v*',1,0).empty()"),
+    # Single Muon Trigger Filters
+    HLT_HIL3Mu12_Filter = cms.string("!triggerObjectMatchesByFilter('hltL3fL1sL1SingleMu3OpenL1f7L2f0L3Filtered12').empty() || !triggerObjectMatchesByFilter('hltL3fL1sL1SingleMuOpenL1f7L2f0L3Filtered12').empty() || !triggerObjectMatchesByFilter('hltL3fL1sL1SingleMuOpenL1f0L2f0L3Filtered12').empty()"),
+    HLT_HIL3Mu15_Filter = cms.string("!triggerObjectMatchesByFilter('hltL3fL1sL1SingleMu3OpenL1f7L2f0L3Filtered15').empty() || !triggerObjectMatchesByFilter('hltL3fL1sL1SingleMuOpenL1f7L2f0L3Filtered15').empty() || !triggerObjectMatchesByFilter('hltL3fL1sL1SingleMuOpenL1f0L2f0L3Filtered15').empty()"),
+    HLT_HIL3Mu20_Filter = cms.string("!triggerObjectMatchesByFilter('hltL3fL1sL1SingleMu3OpenL1f7L2f0L3Filtered20').empty() || !triggerObjectMatchesByFilter('hltL3fL1sL1SingleMuOpenL1f7L2f0L3Filtered20').empty() || !triggerObjectMatchesByFilter('hltL3fL1sL1SingleMuOpenL1f0L2f0L3Filtered20').empty()"),
 )
 ### Tracking
 TRACK_CUTS = "track.isNonnull && track.hitPattern.trackerLayersWithMeasurement > 5 && track.hitPattern.numberOfValidPixelHits > 0"
@@ -195,7 +197,7 @@ process.tpTree = cms.EDAnalyzer("TagProbeFitTreeProducer",
         dxyBS = cms.InputTag("muonDxyPVdzminTags","dxyBS"),
         dxyPVdzmin = cms.InputTag("muonDxyPVdzminTags","dxyPVdzmin"),
         dzPV = cms.InputTag("muonDxyPVdzminTags","dzPV"),
-        dxyPV = cms.InputTag("muonDxyPVdzmin","dxyPV"),
+        dxyPV = cms.InputTag("muonDxyPVdzminTags","dxyPV"),
     ),
     tagFlags = cms.PSet(
         HighPtTriggerFlags,
@@ -216,8 +218,30 @@ process.tpTree = cms.EDAnalyzer("TagProbeFitTreeProducer",
     addRunLumiInfo = cms.bool(True),
 )
 
-process.extraProbeVariablesSeq = cms.Sequence(
-    process.muonDxyPVdzmin
+process.nverticesModule = cms.EDProducer("VertexMultiplicityCounter",
+    probes = cms.InputTag("tagMuons"),
+    objects = cms.InputTag("offlinePrimaryVertices"),
+    objectSelection = cms.string("!isFake && abs(z) <= 25 && position.Rho <= 2 && tracksSize >= 2")
+)
+process.bestPairByZMass = cms.EDProducer("BestPairByMass",
+    pairs = cms.InputTag("tpPairs"),
+    mass  = cms.double(91.2)
+)
+process.probeMultiplicity = cms.EDProducer("ProbeMulteplicityProducer",
+    pairs = cms.InputTag("tpPairs")
+)
+process.probeMultiplicityTMGM = process.probeMultiplicity.clone(
+    probeCut = cms.string("isTrackerMuon || isGlobalMuon")
+)
+process.probeMultiplicityPt10M60140 = process.probeMultiplicity.clone(
+    pairCut  = cms.string("mass > 60 && mass < 140"),
+    probeCut = cms.string("pt > 10")
+)
+process.muonDxyPVdzmin = cms.EDProducer("MuonDxyPVdzmin",
+    probes = cms.InputTag("probeMuons")
+)
+process.muonDxyPVdzminTags = process.muonDxyPVdzmin.clone(
+    probes = cms.InputTag("tagMuons")
 )
 
 process.tnpSimpleSequence = cms.Sequence(
@@ -227,12 +251,11 @@ process.tnpSimpleSequence = cms.Sequence(
     process.tpPairs    +
     process.onePair    +
     process.nverticesModule +
-    process.extraProbeVariablesSeq +
-    process.probeMultiplicities +
+    process.muonDxyPVdzmin + process.muonDxyPVdzminTags +
+    process.probeMultiplicity + process.probeMultiplicityTMGM + process.probeMultiplicityPt10M60140 +
     process.bestPairByZMass +
     process.centralityInfo +
     process.centralityBinInfo +
-    process.muonDxyPVdzminTags +
     process.tpTree
 )
 
@@ -386,25 +409,21 @@ process.tagAndProbeSta = cms.Path(
 process.probeMuonsTrk = cms.EDFilter("PATMuonSelector",
     src = cms.InputTag("patMuonsWithTrigger"),
     cut = cms.string(TRACK_CUTS + ' && ' + '(pt>10 && abs(eta) < 2.4)' + ' &&' + 'innerTrack.isNonnull && innerTrack.originalAlgo<13'), #   muonSeededStepInOut = 13
-    )
+)
 process.pseudoProbeTrk = cms.EDFilter("MuonSelector",
     src = cms.InputTag("mergedMuons"),
     cut = cms.string(TRACK_CUTS + ' && ' + '(pt>10 && abs(eta) < 2.4)' + ' &&' + 'innerTrack.isNonnull && innerTrack.originalAlgo<13'), #   muonSeededStepInOut = 13
-    )
-
-process.muonDxyPVdzMinTrk = cms.EDProducer("MuonDxyPVdzmin",
-    probes = cms.InputTag("probeMuonsTrk"),
-    )
+)
 
 process.tpPairsTrk = cms.EDProducer("CandViewShallowCloneCombiner",
     cut = cms.string('30 < mass '),
     decay = cms.string('tagMuons@+ probeMuonsTrk@-')
-    )
+)
 
 process.onePairTrk = cms.EDFilter("CandViewCountFilter",
     src = cms.InputTag('tpPairsTrk'),
     minNumber = cms.uint32(1),
-    )
+)
 
 process.pseudoPairsTrk = process.tpPairsTrk.clone(decay = "pseudoTag@+ pseudoProbeTrk@-")
 process.onePseudoPairTrk = process.onePairTrk.clone(src = 'pseudoPairsTrk')
@@ -418,8 +437,10 @@ process.tpTreeTrk = cms.EDAnalyzer("TagProbeFitTreeProducer",
     variables = cms.PSet(
       KinematicVariables,
       StaOnlyVariables,
-      dxyPVdzmin = cms.InputTag("muonDxyPVdzMinTrk","dxyPVdzmin"),
-      dzPV = cms.InputTag("muonDxyPVdzMinTrk","dzPV"),
+      dxyBS = cms.InputTag("muonDxyPVdzminTrk","dxyBS"),
+      dxyPVdzmin = cms.InputTag("muonDxyPVdzminTrk","dxyPVdzmin"),
+      dzPV = cms.InputTag("muonDxyPVdzminTrk","dzPV"),
+      dxyPV = cms.InputTag("muonDxyPVdzminTrk","dxyPV"),
     ),
     flags = cms.PSet(
       isSTA = cms.string("isStandAloneMuon"),
@@ -454,11 +475,15 @@ process.tpTreeTrk = cms.EDAnalyzer("TagProbeFitTreeProducer",
     isMC = cms.bool(False)
 )
 
+process.muonDxyPVdzminTrk = process.muonDxyPVdzmin.clone(
+    probes = cms.InputTag("probeMuonsTrk")
+)
+
 process.tnpSimpleSequenceTrk = cms.Sequence(
     process.tagMuons +
     process.oneTag +
     process.probeMuonsTrk +
-    process.muonDxyPVdzMinTrk +
+    process.muonDxyPVdzminTrk +
     process.tpPairsTrk +
     process.onePairTrk +
     process.nverticesModule +
