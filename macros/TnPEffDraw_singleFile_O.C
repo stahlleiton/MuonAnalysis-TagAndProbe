@@ -58,7 +58,7 @@ bool doToys = false;
 // 1 = [0]*Erf((x-[1])/[2]) + [3]
 // 2 = ([0]*Erf((x-[1])/[2]))*Exp(x/[4])+ [3]
 // 3 = [0]
-int fitfcn = 2;
+int fitfcn = 1;
 
 // Location of the files
 const int nSyst = 1;//5;
@@ -118,11 +118,11 @@ ofstream file_Eta("EtaValues_MuId.txt");
 ofstream file_Cent("CentValues_MuId.txt");
 ofstream file_TestErr("MuId_ExpErr.txt");
 TString cutTag("tpTree");
-TString cutLegend("Tight ID");
+TString cutLegend("Soft ID");
 const double effmin = 0.8;
 const double sfrange = 0.1;
-const char* fDataName[nSyst] = { "tnp_Ana_RD_MuId_pPb_0.root" };
-const char* fMCName[nSyst] = { "tnp_Ana_MC_MuId_pPb_0.root" };
+const char* fDataName[nSyst] = { "tnp_Ana_RD_MuId_pPb.root" };
+const char* fMCName[nSyst] = { "tnp_Ana_MC_MuId_pPb.root" };
 #endif
 
 //#ifdef MUID
@@ -358,6 +358,7 @@ void TnPEffDraw_singleFile_O() {
 
 	int nbins_abseta = ComPt0[0].size();
 	cout << "HERE" << endl;
+	cout << "nbins_abseta " << nbins_abseta<< endl << endl;
 	for (int k = 0; k < nSyst; k++)
 	{
 		for (int i = 0; i < nbins_abseta; i++)
@@ -424,7 +425,7 @@ void TnPEffDraw_singleFile_O() {
 	// lTextSize *= 1./0.7;
 
 
-	TH1F *hPad = new TH1F("hPad", ";p^{#mu}_{T} [GeV/c];Single #mu Efficiency", 5, 0, 200);
+	TH1F *hPad = new TH1F("hPad", ";p^{#mu}_{T} [GeV/c];Single #mu Efficiency", 5, 0, 30);
 	TH1F *hPad1 = new TH1F("hPad1", ";#eta^{#mu};Single #mu Efficiency", 5, -2.4, 2.4);
 	TH1F *hPad2 = new TH1F("hPad2", ";Centrality - HF ;Single #mu Efficiency", 5, 0, 300);
 	hPad->GetXaxis()->CenterTitle();
@@ -520,7 +521,7 @@ void TnPEffDraw_singleFile_O() {
 				header = TString("#splitline{") + cutLegend + Form(" Efficiency}{(p^{#mu}_{T}>%.1f, #eta #in [%.1f, %.1f])}", ptmin, etamin, etamax);
 			}
 			leg1->SetHeader(header);
-			sprintf(legs, "MC PYTHIA+EvtGen: %.4f^{ + %.3f}_{ - %.3f}", TrkAbsEta0[k][i][0], TrkAbsEta0[k][i][1], TrkAbsEta0[k][i][2]);
+			sprintf(legs, "MC PYTHIA: %.4f^{ + %.3f}_{ - %.3f}", TrkAbsEta0[k][i][0], TrkAbsEta0[k][i][1], TrkAbsEta0[k][i][2]);
 			//sprintf(legs, "MC Pbp: %.4f^{ + %.3f}_{ - %.3f}", TrkAbsEta0[k][i][0], TrkAbsEta0[k][i][1], TrkAbsEta0[k][i][2]);
 			leg1->AddEntry(ComPt0[k][i], legs, "pl");
 			sprintf(legs, "Data: %.4f^{ + %.3f}_{ - %.3f}", TrkAbsEta1[k][i][0], TrkAbsEta1[k][i][1], TrkAbsEta1[k][i][2]);
@@ -1227,7 +1228,7 @@ void CalEffErr(vector<TGraphAsymmErrors*> a, double **b) {
 		b[vbin][2] = sqrt(sqSumLow) / nBins;
 		//cout<<"b1 : "<<b[0]<<", b2 : "<<b[1]<<", b3 : "<<b[2]<<endl;
 
-		cout << b[vbin][0] << "^{" << b[vbin][1] << "}_{" << b[vbin][2] << "}" << endl;
+		cout << b[vbin][0] << "^{" << b[vbin][1] << "}_{" << b[vbin][2] << "}" << ".. .." <<endl;
 	}
 	//return b[3];
 }

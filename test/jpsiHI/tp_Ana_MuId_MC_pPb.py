@@ -5,7 +5,7 @@ args =sys.argv[1:]
 if len(args) < 2: scenario = "0"
 else: 
    scenario = args[1]
-"Will run scenario ", scenario 
+print("Will run scenario " + scenario) 
 # scenario: 1 pT, 2-3 pT in detailed abseta bins, 4-5 pT in overall abseta bins, 6 abseta, 7, eta, 8 centrality, 0 (or no parameter) run all
 
 
@@ -24,7 +24,7 @@ VEFFICIENCYSET =cms.VPSet(
             EfficiencyCategoryAndState = cms.vstring("SoftHI","true"),
             UnbinnedVariables = cms.vstring("mass"),
             BinnedVariables = cms.PSet(
-                pt = cms.vdouble(0.0 ,20.0),
+                pt = cms.vdouble(0.0, 20.0),
                 eta = cms.vdouble(-2.4, 2.4),
                 tag_nVertices    = cms.vdouble(0.9,1.1),
                 #Glb = cms.vstring("true"),
@@ -223,16 +223,17 @@ if scenario == "0": EFFICIENCYSET = cms.PSet(VEFFICIENCYSET[0],VEFFICIENCYSET[1]
 process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     # IO parameters:
     #InputFileNames = cms.vstring("file:/afs/cern.ch/work/o/okukral/TnP_pPb/Data/MC_pPb_merged.root"),
-    InputFileNames = cms.vstring("file:/afs/cern.ch/user/o/okukral/Work/public/TnP_pPb/tnpJPsi_MC_pPb-merged.root"),
+    #InputFileNames = cms.vstring("file:/afs/cern.ch/user/o/okukral/Work/public/TnP_pPb/tnpJPsi_MC_pPb-merged.root"),
+    InputFileNames = cms.vstring("file:/eos/cms/store/group/phys_heavyions/okukral/TagAndProbe2016/LowPt/tnpJPsi_MC_pPb-merged.root"),
     InputDirectoryName = cms.string("tpTree"),
     InputTreeName = cms.string("fitter_tree"),
     OutputFileName = cms.string("tnp_Ana_MC_MuId_pPb_%s.root" % scenario),
     #numbrer of CPUs to use for fitting
-    NumCPU = cms.uint32(25),
+    NumCPU = cms.uint32(16),
     # specifies whether to save the RooWorkspace containing the data for each bin and
     # the pdf object with the initial and final state snapshots
-    binnedFit = cms.bool(False),
-    #binsForFit = cms.uint32(30),
+    binnedFit = cms.bool(True),
+    binsForFit = cms.uint32(50),
     binsForMassPlots = cms.uint32(50),
     SaveWorkspace = cms.bool(False),
     

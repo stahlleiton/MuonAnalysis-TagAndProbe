@@ -5,7 +5,7 @@ args =sys.argv[1:]
 if len(args) < 2: scenario = "0"
 else: 
    scenario = args[1]
-print "Will run scenario ", scenario 
+print("Will run scenario " + scenario) 
 # scenario: 1 pT, 2-3 pT in detailed abseta bins, 4-5 pT in overall abseta bins, 6 abseta, 7, eta, 8 centrality, 9 added nPV, 0 (or no parameter) run all
 
 
@@ -24,7 +24,7 @@ VEFFICIENCYSET =cms.VPSet(
             EfficiencyCategoryAndState = cms.vstring("SoftHI","true"),
             UnbinnedVariables = cms.vstring("mass"),
             BinnedVariables = cms.PSet(
-                pt = cms.vdouble(0.0 ,20.0),
+                pt = cms.vdouble(0.0, 20.0),
                 eta = cms.vdouble(-2.4, 2.4),
                 tag_nVertices    = cms.vdouble(0.9,1.1),
                 #Glb = cms.vstring("true"),
@@ -41,6 +41,7 @@ VEFFICIENCYSET =cms.VPSet(
                pt = cms.vdouble(3.5, 4.0, 4.5, 5.0, 5.5, 6.5, 8.0, 10.5, 14.0, 18.0, 25.0, 30.0),
                eta = cms.vdouble(-2.4,2.4),
                tag_nVertices    = cms.vdouble(0.9,1.1),
+               tag_pt    = cms.vdouble(5.0, 1000.0),
                #Glb = cms.vstring("true"),
                #PF = cms.vstring("true"),
            ),
@@ -55,6 +56,7 @@ VEFFICIENCYSET =cms.VPSet(
                 pt = cms.vdouble(3.5, 4.0, 4.5, 5.0, 5.5, 6.5, 8.0, 10.5, 14.0, 18.0, 25.0, 30.0),
                 abseta = cms.vdouble(0, 0.9),
                 tag_nVertices    = cms.vdouble(0.9,1.1),
+                tag_pt    = cms.vdouble(5.0, 1000.0),
                 #Glb = cms.vstring("true"),
                 #PF = cms.vstring("true"),
             ),
@@ -69,6 +71,7 @@ VEFFICIENCYSET =cms.VPSet(
                 pt = cms.vdouble(3.5, 4.0, 4.5, 5.0, 5.5, 6.5, 8.0, 10.5, 14.0, 18.0, 25.0, 30.0),
                 abseta = cms.vdouble(0.9, 1.2),
                 tag_nVertices    = cms.vdouble(0.9,1.1),
+                tag_pt    = cms.vdouble(5.0, 1000.0),
                 #Glb = cms.vstring("true"),
                 #PF = cms.vstring("true"),
             ),
@@ -83,6 +86,7 @@ VEFFICIENCYSET =cms.VPSet(
                 pt = cms.vdouble(3.5, 4.0, 4.5, 5.0, 5.5, 6.5, 8.0, 10.5, 14.0, 18.0, 25.0, 30.0),
                 abseta = cms.vdouble(0, 1.2),
                 tag_nVertices    = cms.vdouble(0.9,1.1),
+                tag_pt    = cms.vdouble(15.0, 1000.0),
                 #Glb = cms.vstring("true"),
                 #PF = cms.vstring("true"),
             ),
@@ -125,6 +129,7 @@ VEFFICIENCYSET =cms.VPSet(
                 pt = cms.vdouble(3.5, 4.0, 4.5, 5.0, 5.5, 6.5, 8.0, 10.5, 14.0, 18.0, 25.0, 30.0),
                 abseta = cms.vdouble(1.2,2.1),
                 tag_nVertices    = cms.vdouble(0.9,1.1),
+                tag_pt    = cms.vdouble(15.0, 1000.0),
                 #Glb = cms.vstring("true"),
                 #PF = cms.vstring("true"),
              ),
@@ -139,6 +144,7 @@ VEFFICIENCYSET =cms.VPSet(
                 pt = cms.vdouble(3.5, 4.0, 4.5, 5.0, 5.5, 6.5, 8.0, 10.5, 14.0, 18.0, 25.0, 30.0),
                 abseta = cms.vdouble(2.1,2.4),
                 tag_nVertices    = cms.vdouble(0.9,1.1),
+
                 #Glb = cms.vstring("true"),
                 #PF = cms.vstring("true"),
             ),
@@ -223,7 +229,7 @@ if scenario == "0": EFFICIENCYSET = cms.PSet(VEFFICIENCYSET[0],VEFFICIENCYSET[1]
 process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     # IO parameters:
     #InputFileNames = cms.vstring("file:/afs/cern.ch/work/o/okukral/TnP_pPb/Data/PASingleMuon_PARun2016C-PromptReco-v1TnpTress_Pbpv1CentralityInfo.root"),
-    InputFileNames = cms.vstring("file:/afs/cern.ch/user/o/okukral/Work/public/TnP_pPb/tnpJPsi_Data_pPb-mergedPartial.root"),
+    InputFileNames = cms.vstring("file:/eos/cms/store/group/phys_heavyions/okukral/TagAndProbe2016/LowPt/tnpJPsi_Data_pPb-merged.root"),
     InputDirectoryName = cms.string("tpTree"),
     InputTreeName = cms.string("fitter_tree"),
     OutputFileName = cms.string("tnp_Ana_RD_MuId_pPb_%s.root" % scenario),
@@ -231,8 +237,8 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     NumCPU = cms.uint32(16),
     # specifies whether to save the RooWorkspace containing the data for each bin and
     # the pdf object with the initial and final state snapshots
-    binnedFit = cms.bool(False),
-    #binsForFit = cms.uint32(30),
+    binnedFit = cms.bool(True),
+    binsForFit = cms.uint32(50),
     binsForMassPlots = cms.uint32(50),
     SaveWorkspace = cms.bool(False),
     
@@ -245,6 +251,7 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
                          tag_hiNtracks    = cms.vstring("N Tracks", "0", "400", ""),
                          tag_hiHF         = cms.vstring("HF", "0", "500", ""),
                          tag_nVertices    = cms.vstring("PU - nVertices", "0", "10", ""),
+                         tag_pt           = cms.vstring("tag_pt", "0", "1000", "GeV/c"),
     ),
     # defines all the discrete variables of the probes available in the input tree and intended for use in the efficiency calculations
     Categories = cms.PSet(
@@ -255,6 +262,7 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
                         #hltL3fL1sSingleMu7BptxANDL1f0L2f0L3Filtered12 = cms.vstring("hltL3fL1sSingleMu7BptxANDL1f0L2f0L3Filtered12", "dummy[true=1,false=0]"),
                         #hltL3fL1sSingleMu7BptxANDL1f0L2f0L3Filtered15 = cms.vstring("hltL3fL1sSingleMu7BptxANDL1f0L2f0L3Filtered15", "dummy[true=1,false=0]"),
                         SoftHI = cms.vstring("SoftHI", "dummy[true=1,false=0]"),
+                      
     ),
 
     # defines all the PDFs that will be available for the efficiency calculations; uses RooFit's "factory" syntax;
