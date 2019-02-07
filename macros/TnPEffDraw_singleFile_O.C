@@ -44,11 +44,11 @@ using namespace std;
 
 // Choose the efficiency type.
 // Possible values: MUIDTRG, TRK, STA, MUID, TRG
-#define MUID
+#define TRK
 
 // pp or PbPb?
 bool isPbPb = true; // if true, will compute the centrality dependence
-TString collTag = "pPb"; // isPbPb ? "PbPb" : "pp";
+TString collTag = "PbPb"; // isPbPb ? "PbPb" : "pp";
 
 // do the toy study for the correction factors? (only applies if MUIDTRG)
 bool doToys = false;
@@ -212,13 +212,13 @@ const double sfrange = 0.55;
 #endif
 
 #ifdef TRK
-TString etaTag("Trk_etaSeg");
-TString absetaTag("Trk_1binSeg");
-TString centTag("Trk_centSeg");
-const int nAbsEtaBins = 1;
-TString ptTag[nAbsEtaBins] = { "Trk_ptSeg" };
-TString allTag("Trk_1binSeg");
-TString absetaVar("eta");
+TString etaTag("Trk_etadep");
+TString absetaTag("Trk_absetadep");
+TString centTag("Trk_centdep");
+const int nAbsEtaBins = 8;
+TString ptTag[nAbsEtaBins] = {"Trk_pt","Trk_abseta00_09","Trk_abseta09_12", "Trk_abseta00_12", "Trk_abseta12_16", "Trk_abseta16_21", "Trk_abseta12_21", "Trk_abseta21_24" };
+TString allTag("Trk_1bin");
+TString absetaVar("abseta");
 TString centVar("tag_hiBin");
 ofstream file_sfs("correction_functions.txt");
 ofstream file_Eta("EtaValues_Trk.txt");
@@ -227,8 +227,8 @@ TString cutTag("tpTreeSta");
 TString cutLegend("Inner tracking");
 const double effmin = 0.8;
 const double sfrange = 0.08;
-const char* fDataName[nSyst] = { "tnp_Ana_RD_PbPb_MuonTrk_AllMB.root" };
-const char* fMCName[nSyst] = { "tnp_Ana_MC_PbPb_MuonTrk_AllMB.root" };
+const char* fDataName[nSyst] = { "tnp_Ana_RD_Trk_PbPb.root" };
+const char* fMCName[nSyst] = { "tnp_Ana_MC_Trk_PbPb.root" };
 #endif
 
 // Function Define
@@ -302,12 +302,12 @@ void TnPEffDraw_singleFile_O() {
 
 	TGraphAsymmErrors* ComEta0[nSyst];
 	TGraphAsymmErrors* ComEta1[nSyst];
-
+	cout << "HERE1a" << endl;
 	for (int i = 0; i < nSyst; i++) {
 		ComEta0[i] = plotEff_1bin(daEtaData0[i], 1, "eta");
 		ComEta1[i] = plotEff_1bin(daEtaData1[i], 1, "eta");
 	}
-
+	cout << "HERE1b" << endl;
 	RooDataSet* daPtMC1Bin0[nSyst];
 	RooDataSet* daPtData1Bin0[nSyst];
 	RooDataSet* daAbsEtaMC1[nSyst];

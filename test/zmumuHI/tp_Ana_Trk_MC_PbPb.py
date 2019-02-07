@@ -13,7 +13,7 @@ process = cms.Process("TagProbe")
 process.load('FWCore.MessageService.MessageLogger_cfi')
 process.source = cms.Source("EmptySource")
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1) )    
-PDFName = "VoigtExp"
+PDFName = "BWResCBExp"
 
 
 
@@ -36,7 +36,7 @@ VEFFICIENCYSET =cms.VPSet(
            EfficiencyCategoryAndState = cms.vstring("Glb","true","PF","true"),
            UnbinnedVariables = cms.vstring("mass"),
            BinnedVariables = cms.PSet(
-               pt = cms.vdouble(5, 15, 30, 50, 80, 200),
+               pt = cms.vdouble(5, 15, 20, 30, 50, 80, 200),
                eta = cms.vdouble(-2.4,2.4),
 #               tag_nVertices = cms.vdouble(0, 1, 2, 6),
            ),
@@ -49,7 +49,7 @@ VEFFICIENCYSET =cms.VPSet(
             UnbinnedVariables = cms.vstring("mass"),
             BinnedVariables = cms.PSet(
 #                tag_nVertices = cms.vdouble(0, 1, 2, 6),
-                pt = cms.vdouble(15, 30, 50, 80, 200),
+                pt = cms.vdouble(15, 20, 30, 50, 80, 200),
                 abseta = cms.vdouble(0, 0.9),
             ),
             BinToPDFmap = cms.vstring(PDFName)
@@ -61,7 +61,7 @@ VEFFICIENCYSET =cms.VPSet(
              UnbinnedVariables = cms.vstring("mass"),
              BinnedVariables = cms.PSet(
 #                 tag_nVertices = cms.vdouble(0, 1, 2, 6),
-                 pt = cms.vdouble(15, 30, 50, 80, 200),
+                 pt = cms.vdouble(15, 20, 30, 50, 80, 200),
                  abseta = cms.vdouble(0.9,1.2),
              ),
              BinToPDFmap = cms.vstring(PDFName)
@@ -73,7 +73,7 @@ VEFFICIENCYSET =cms.VPSet(
              UnbinnedVariables = cms.vstring("mass"),
              BinnedVariables = cms.PSet(
 #                 tag_nVertices = cms.vdouble(0, 1, 2, 6),
-                 pt = cms.vdouble(15, 30, 50, 80, 200),
+                 pt = cms.vdouble(15, 20, 30, 50, 80, 200),
                  abseta = cms.vdouble(0.0,1.2),
              ),
              BinToPDFmap = cms.vstring(PDFName)
@@ -85,7 +85,7 @@ VEFFICIENCYSET =cms.VPSet(
              UnbinnedVariables = cms.vstring("mass"),
              BinnedVariables = cms.PSet(
 #                 tag_nVertices = cms.vdouble(0, 1, 2, 6),
-                 pt = cms.vdouble(15, 30, 50, 80, 200),
+                 pt = cms.vdouble(15, 20, 30, 50, 80, 200),
                  abseta = cms.vdouble(1.2, 1.6),
              ),
              BinToPDFmap = cms.vstring(PDFName)
@@ -97,7 +97,7 @@ VEFFICIENCYSET =cms.VPSet(
              UnbinnedVariables = cms.vstring("mass"),
              BinnedVariables = cms.PSet(
 #                 tag_nVertices = cms.vdouble(0, 1, 2, 6),
-                 pt = cms.vdouble(15, 30, 50, 80, 200),
+                 pt = cms.vdouble(15, 20, 30, 50, 80, 200),
                  abseta = cms.vdouble(1.6, 2.1),
              ),
              BinToPDFmap = cms.vstring(PDFName)
@@ -109,7 +109,7 @@ VEFFICIENCYSET =cms.VPSet(
              UnbinnedVariables = cms.vstring("mass"),
              BinnedVariables = cms.PSet(
 #                 tag_nVertices = cms.vdouble(0, 1, 2, 6),
-                 pt = cms.vdouble(15, 30, 50, 80, 200),
+                 pt = cms.vdouble(15, 20, 30, 50, 80, 200),
                  abseta = cms.vdouble(1.2, 2.1),
              ),
              BinToPDFmap = cms.vstring(PDFName)
@@ -121,7 +121,7 @@ VEFFICIENCYSET =cms.VPSet(
              UnbinnedVariables = cms.vstring("mass"),
              BinnedVariables = cms.PSet(
 #                 tag_nVertices = cms.vdouble(0, 1, 2, 6),
-                 pt = cms.vdouble(15, 30, 50, 80, 200),
+                 pt = cms.vdouble(15, 20, 30, 50, 80, 200),
                  abseta = cms.vdouble(2.1,2.4),
              ),
              BinToPDFmap = cms.vstring(PDFName)
@@ -190,8 +190,8 @@ OutputFileName = cms.string("tnp_Ana_MC_Trk_PbPb_%s.root" % scenario),
     # specifies whether to save the RooWorkspace containing the data for each bin and
     # the pdf object with the initial and final state snapshots
     binnedFit = cms.bool(True),
-    binsForFit = cms.uint32(100),
-    binsForMassPlots = cms.uint32(100),
+    binsForFit = cms.uint32(90),
+    binsForMassPlots = cms.uint32(90),
     SaveWorkspace = cms.bool(False),
     WeightVariable = cms.string("weight"),
     
