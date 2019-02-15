@@ -3,10 +3,11 @@ arguments             = RD MuId 1
 output                = output/condor.$(ClusterId).$(ProcId).out
 error                 = error/condor.$(ClusterId).$(ProcId).err
 log                   = log/condor.$(ClusterId).log
-request_cpus          = 1
+request_cpus          = 15 
 +JobFlavour           = "tomorrow"
 queue
 
+request_cpus = 1
 arguments = RD MuId 2
 queue
 
@@ -19,6 +20,7 @@ queue
 arguments = RD MuId 5
 queue
 
+request_cpus = 15
 arguments = RD MuId 6
 queue
 
@@ -31,6 +33,7 @@ queue
 arguments = RD TrkM 1
 queue
 
+request_cpus = 1
 arguments = RD TrkM 2
 queue
 
@@ -43,6 +46,7 @@ queue
 arguments = RD TrkM 5
 queue
 
+request_cpus = 15
 arguments = RD TrkM 6
 queue
 
