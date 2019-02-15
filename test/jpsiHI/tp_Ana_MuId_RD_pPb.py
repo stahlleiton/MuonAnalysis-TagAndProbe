@@ -13,7 +13,7 @@ process = cms.Process("TagProbe")
 process.load('FWCore.MessageService.MessageLogger_cfi')
 process.source = cms.Source("EmptySource")
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1) )    
-PDFName = "cbPlusPol1"
+PDFName = "cbGausExp"
 
 
 
@@ -243,7 +243,7 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     InputFileNames = cms.vstring("file:/eos/cms/store/group/phys_heavyions/okukral/TagAndProbe2016/LowPt/tnpJPsi_Data_pPb-merged.root"),
     InputDirectoryName = cms.string("tpTree"),
     InputTreeName = cms.string("fitter_tree"),
-    OutputFileName = cms.string("tnp_Ana_RD_MuId_pPb_%s.root" % scenario),
+    OutputFileName = cms.string("tnp_Ana_RD_MuId_pPb_%s_%s.root" % (scenario,PDFName)),
     #numbrer of CPUs to use for fitting
     NumCPU = cms.uint32(16),
     # specifies whether to save the RooWorkspace containing the data for each bin and
@@ -326,6 +326,16 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
         "SUM::signal(frac[0.8,0.5,1.]*signal1,signal2)",
         "Chebychev::backgroundPass(mass, {cPass[0.,-1.1,1.1]})",
         "Chebychev::backgroundFail(mass, {cFail[0.,-1.1,1.1]})",
+        "efficiency[0.9,0,1]",
+        "signalFractionInPassing[0.9]"
+    ),
+    cbGausExp = cms.vstring(
+        "CBShape::signal1(mass, mean[3.08,3.00,3.3], sigma1[0.03, 0.01, 0.10], alpha[1.85, 0.1, 50], n[1.7, 0.2, 50])",
+        "RooFormulaVar::sigma2('@0*@1',{fracS[1.8,1.2,2.4],sigma1})",
+        "Gaussian::signal2(mass, mean, sigma2)",
+        "SUM::signal(frac[0.8,0.5,1.]*signal1,signal2)",
+        "Exponential::backgroundPass(mass, lp[0,-5,5])",
+        "Exponential::backgroundFail(mass, lf[0,-5,5])",
         "efficiency[0.9,0,1]",
         "signalFractionInPassing[0.9]"
     ),
