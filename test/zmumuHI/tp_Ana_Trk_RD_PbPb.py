@@ -195,7 +195,7 @@ OutputFileName = cms.string("tnp_Ana_RD_Trk_PbPb_%s.root" % scenario),
     
     # defines all the real variables of the probes available in the input tree and intended for use in the efficiencies
     Variables = cms.PSet(
-                         mass             = cms.vstring("Tag-Probe Mass", "45.0", "135.0", "GeV/c^{2}"), # mass range syst: 
+                         mass             = cms.vstring("Tag-Probe Mass", "60.0", "135.0", "GeV/c^{2}"), # mass range syst:         #orig 45
                          pt               = cms.vstring("Probe p_{T}", "0.0", "1000", "GeV/c"),
                          eta              = cms.vstring("Probe #eta", "-2.4", "2.4", ""),
                          abseta           = cms.vstring("Probe |#eta|", "0", "2.5", ""),

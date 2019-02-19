@@ -5,7 +5,7 @@ args =sys.argv[1:]
 if len(args) < 2: scenario = "0"
 else:
    scenario = args[1]
-print "Will run scenario ", scenario
+print("Will run scenario " + scenario)
 # scenario: 1 pT, 2-3 pT in detailed abseta bins, 4-5 pT in overall abseta bins, 6 abseta, 7, eta, 8 centrality, 0 (or no parameter) run all
 
 
@@ -25,7 +25,7 @@ VEFFICIENCYSET =cms.VPSet(
             BinnedVariables = cms.PSet(
                 pt = cms.vdouble(15, 200),
                 eta = cms.vdouble(-2.4, 2.4),
-                hiBin = cms.vdouble(0, 200),
+                tag_hiBin = cms.vdouble(0, 200),
                 Glb = cms.vstring("true"),
                 PF = cms.vstring("true"),
             ),
@@ -39,7 +39,7 @@ VEFFICIENCYSET =cms.VPSet(
             BinnedVariables = cms.PSet(
                 pt = cms.vdouble(10, 15, 30, 40, 50, 60, 70, 80, 100, 200),
                 eta = cms.vdouble(-2.4, 2.4),
-                hiBin = cms.vdouble(0, 200),
+                tag_hiBin = cms.vdouble(0, 200),
                 Glb = cms.vstring("true"),
                 PF = cms.vstring("true"),
             ),
@@ -53,7 +53,7 @@ VEFFICIENCYSET =cms.VPSet(
             BinnedVariables = cms.PSet(
                 pt = cms.vdouble(10, 15, 25, 30, 35, 40, 45, 50, 80, 200),
                 abseta = cms.vdouble(0, 0.9),
-                hiBin = cms.vdouble(0, 200),
+                tag_hiBin = cms.vdouble(0, 200),
                 Glb = cms.vstring("true"),
                 PF = cms.vstring("true"),
             ),
@@ -67,7 +67,7 @@ VEFFICIENCYSET =cms.VPSet(
             BinnedVariables = cms.PSet(
                 pt = cms.vdouble(10, 15, 25, 30, 35, 40, 45, 50, 80, 200),
                 abseta = cms.vdouble(0.9, 1.2),
-                hiBin = cms.vdouble(0, 200),
+                tag_hiBin = cms.vdouble(0, 200),
                 Glb = cms.vstring("true"),
                 PF = cms.vstring("true"),
             ),
@@ -81,7 +81,7 @@ VEFFICIENCYSET =cms.VPSet(
             BinnedVariables = cms.PSet(
                 pt = cms.vdouble(10, 15, 25, 30, 35, 40, 45, 50, 80, 200),
                 abseta = cms.vdouble(0, 1.2),
-                hiBin = cms.vdouble(0, 200),
+                tag_hiBin = cms.vdouble(0, 200),
                 Glb = cms.vstring("true"),
                 PF = cms.vstring("true"),
             ),
@@ -95,7 +95,7 @@ VEFFICIENCYSET =cms.VPSet(
              BinnedVariables = cms.PSet(
                 pt = cms.vdouble(10, 15, 25, 30,35, 40, 45,50, 80, 200),
                 abseta = cms.vdouble(1.2, 1.6),
-                hiBin = cms.vdouble(0, 200),
+                tag_hiBin = cms.vdouble(0, 200),
                 Glb = cms.vstring("true"),
                 PF = cms.vstring("true"),
              ),
@@ -109,7 +109,7 @@ VEFFICIENCYSET =cms.VPSet(
              BinnedVariables = cms.PSet(
                 pt = cms.vdouble(10, 15, 25, 30, 35, 40, 50, 80, 200),
                 abseta = cms.vdouble(1.6, 2.1),
-                hiBin = cms.vdouble(0, 200),
+                tag_hiBin = cms.vdouble(0, 200),
                 Glb = cms.vstring("true"),
                 PF = cms.vstring("true"),
              ),
@@ -123,7 +123,7 @@ VEFFICIENCYSET =cms.VPSet(
              BinnedVariables = cms.PSet(
                 pt = cms.vdouble(10, 15, 25, 30,35, 40,45,50, 80, 200),
                 abseta = cms.vdouble(1.2, 2.1),
-                hiBin = cms.vdouble(0, 200),
+                tag_hiBin = cms.vdouble(0, 200),
                 Glb = cms.vstring("true"),
                 PF = cms.vstring("true"),
              ),
@@ -137,7 +137,7 @@ VEFFICIENCYSET =cms.VPSet(
             BinnedVariables = cms.PSet(
                 pt = cms.vdouble(10, 15, 25, 40, 80, 200),
                 abseta = cms.vdouble(2.1, 2.4),
-                hiBin = cms.vdouble(0, 200),
+                tag_hiBin = cms.vdouble(0, 200),
                 Glb = cms.vstring("true"),
                 PF = cms.vstring("true"),
             ),
@@ -151,7 +151,7 @@ VEFFICIENCYSET =cms.VPSet(
             BinnedVariables = cms.PSet(
                 pt = cms.vdouble(15, 200),
                 abseta = cms.vdouble(0, 0.9, 1.2, 1.6, 2.1, 2.4),
-                hiBin = cms.vdouble(0, 200),
+                tag_hiBin = cms.vdouble(0, 200),
                 Glb = cms.vstring("true"),
                 PF = cms.vstring("true"),
             ),
@@ -165,7 +165,7 @@ VEFFICIENCYSET =cms.VPSet(
             BinnedVariables = cms.PSet(
                 pt = cms.vdouble(15, 200),
                 eta = cms.vdouble(-2.4, -2.1, -1.6, -1.2, -0.9, -0.6, -0.3, 0, 0.3, 0.6, 0.9, 1.2, 1.6, 2.1, 2.4),
-                hiBin = cms.vdouble(0, 200),
+                tag_hiBin = cms.vdouble(0, 200),
                 Glb = cms.vstring("true"),
                 PF = cms.vstring("true"),
             ),
@@ -179,7 +179,7 @@ VEFFICIENCYSET =cms.VPSet(
             BinnedVariables = cms.PSet(
                 pt = cms.vdouble(15, 200),
                 eta = cms.vdouble(-2.4, 2.4),
-                hiBin = cms.vdouble(0, 20, 40, 60, 80, 100, 200),
+                tag_hiBin = cms.vdouble(0, 20, 40, 60, 80, 100, 200),
                 Glb = cms.vstring("true"),
                 PF = cms.vstring("true"),
             ),
@@ -201,7 +201,7 @@ if scenario == "0": EFFICIENCYSET = cms.PSet(VEFFICIENCYSET[0],VEFFICIENCYSET[1]
 
 process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     # IO parameters:
-    InputFileNames = cms.vstring("file:Samples/tnpZ_Data_PbPb.root"),
+    InputFileNames = cms.vstring("file:/eos/cms/store/group/phys_heavyions/dileptons/TNPTagAndProbe2018/Data2018/PbPb502TeV/tnpZ_Data_PbPb_mod.root"),
     InputDirectoryName = cms.string("tpTree"),
     InputTreeName = cms.string("fitter_tree"),
     OutputFileName = cms.string("tnp_Ana_RD_MuId_PbPb_%s.root" % scenario),
@@ -209,8 +209,8 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     NumCPU = cms.uint32(16),
     # specifies whether to save the RooWorkspace containing the data for each bin and
     # the pdf object with the initial and final state snapshots
-    binnedFit = cms.bool(False),
-    #binsForFit = cms.uint32(30),
+    binnedFit = cms.bool(True),
+    binsForFit = cms.uint32(50),
     binsForMassPlots = cms.uint32(50),
     SaveWorkspace = cms.bool(False),
 
@@ -220,7 +220,7 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
                          pt     = cms.vstring("Probe p_{T}", "0.0", "1000", "GeV/c"),
                          eta    = cms.vstring("Probe #eta", "-2.5", "2.5", ""),
                          abseta = cms.vstring("Probe |#eta|", "0", "2.5", ""),
-                         hiBin  = cms.vstring("Centrality bin", "-1", "201", ""),
+                         tag_hiBin  = cms.vstring("Centrality bin", "0", "200", ""),
     ),
     # defines all the discrete variables of the probes available in the input tree and intended for use in the efficiency calculations
     Categories = cms.PSet(
