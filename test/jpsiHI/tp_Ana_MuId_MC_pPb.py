@@ -14,7 +14,7 @@ process.load('FWCore.MessageService.MessageLogger_cfi')
 process.source = cms.Source("EmptySource")
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1) )    
 #PDFName = "cbPlusPol1"
-PDFName = "cbGausExp"
+PDFName = "cbFixedNGausExp"
 
 
 VEFFICIENCYSET =cms.VPSet(
@@ -237,11 +237,11 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     # IO parameters:
     #InputFileNames = cms.vstring("file:/afs/cern.ch/work/o/okukral/TnP_pPb/Data/MC_pPb_merged.root"),
     #InputFileNames = cms.vstring("file:/afs/cern.ch/user/o/okukral/Work/public/TnP_pPb/tnpJPsi_MC_pPb-merged.root"),
-    InputFileNames = cms.vstring("file:/eos/cms/store/group/phys_heavyions/okukral/TagAndProbe2016/LowPt/tnpJPsi_MC_pPb-merged.root"),
+    InputFileNames = cms.vstring("file:/eos/cms/store/group/phys_heavyions/okukral/TagAndProbe2016/LowPt/tnpJPsi_MC-bothDir_Weighted.root"),
     InputDirectoryName = cms.string("tpTree"),
     InputTreeName = cms.string("fitter_tree"),
     OutputFileName = cms.string("tnp_Ana_MC_MuId_pPb_%s.root" % scenario),
-    #numbrer of CPUs to use for fitting
+    #number of CPUs to use for fitting
     NumCPU = cms.uint32(16),
     # specifies whether to save the RooWorkspace containing the data for each bin and
     # the pdf object with the initial and final state snapshots
@@ -249,6 +249,7 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     binsForFit = cms.uint32(50),
     binsForMassPlots = cms.uint32(50),
     SaveWorkspace = cms.bool(False),
+    WeightVariable = cms.string("weight_pt"),
     
     # defines all the real variables of the probes available in the input tree and intended for use in the efficiencies
     Variables = cms.PSet(
@@ -259,6 +260,7 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
                          tag_hiNtracks    = cms.vstring("N Tracks", "0", "400", ""),
                          tag_hiHF         = cms.vstring("HF", "0", "500", ""),
                          tag_nVertices    = cms.vstring("PU - nVertices", "0", "10", ""),
+                         weight_pt        = cms.vstring("weight_pt","0","100",""),
     ),
     # defines all the discrete variables of the probes available in the input tree and intended for use in the efficiency calculations
     Categories = cms.PSet(
@@ -354,6 +356,16 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
         "SUM::signal(frac[0.8,0.5,1.]*signal1,signal2)",
         "Chebychev::backgroundPass(mass, {cPass[0.,-1.1,1.1], cPass2[0.,-1.1,1.1]})",
         "Chebychev::backgroundFail(mass, {cFail[0.,-1.1,1.1], cFail2[0.,-1.1,1.1]})",
+        "efficiency[0.9,0,1]",
+        "signalFractionInPassing[0.9]"
+    ),
+    cbFixedNGausExp = cms.vstring( #n fixed to average value in the MC abseta fits
+        "CBShape::signal1(mass, mean[3.08,3.00,3.3], sigma1[0.03, 0.01, 0.10], alpha[1.85, 0.1, 50], n[1.4])",
+        "RooFormulaVar::sigma2('@0*@1',{fracS[1.8,1.2,2.4],sigma1})",
+        "Gaussian::signal2(mass, mean, sigma2)",
+        "SUM::signal(frac[0.8,0.5,1.]*signal1,signal2)",
+        "Exponential::backgroundPass(mass, lp[0,-5,5])",
+        "Exponential::backgroundFail(mass, lf[0,-5,5])",
         "efficiency[0.9,0,1]",
         "signalFractionInPassing[0.9]"
     ),
