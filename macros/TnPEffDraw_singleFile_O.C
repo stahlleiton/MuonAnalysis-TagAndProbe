@@ -334,10 +334,10 @@ void TnPEffDraw_singleFile_O() {
 	TGraphAsymmErrors* effCentData = NULL;
 	cout << "HERE2" << endl;
 	for (int k = 0; k < nSyst; k++) {
-		effPtMC[k] = plotEff_1bin(daPtMC1Bin0[k], 0, "eta");
-		effPtData[k] = plotEff_1bin(daPtData1Bin0[k], 0, "eta");
-		effAbsEtaMC[k] = plotEff_Nbins(daAbsEtaMC1[k], 0, "pt", absetaVar);
-		effAbsEtaData[k] = plotEff_Nbins(daAbsEtaData1[k], 0, "pt", absetaVar);
+		//effPtMC[k] = plotEff_1bin(daPtMC1Bin0[k], 0, "eta");
+		//effPtData[k] = plotEff_1bin(daPtData1Bin0[k], 0, "eta");
+		//effAbsEtaMC[k] = plotEff_Nbins(daAbsEtaMC1[k], 0, "pt", absetaVar);
+		//effAbsEtaData[k] = plotEff_Nbins(daAbsEtaData1[k], 0, "pt", absetaVar);
 		if (isPbPb && k == 0) {
 			effCentMC = plotEff_1bin(daCentMC1[k], 0, centVar);
 			effCentData = plotEff_1bin(daCentData1[k], 0, centVar);
@@ -400,8 +400,8 @@ void TnPEffDraw_singleFile_O() {
 			TrkAbsEta1[k][i] = new double[4];
 		}
 
-		CalEffErr(effPtMC[k], Trk0[k]);
-		CalEffErr(effPtData[k], Trk1[k]);
+		//CalEffErr(effPtMC[k], Trk0[k]);
+		//CalEffErr(effPtData[k], Trk1[k]);
 		CalEffErr(effAbsEtaMC[k], TrkAbsEta0[k]);
 
 		CalEffErr(effAbsEtaData[k], TrkAbsEta1[k]);
@@ -501,7 +501,7 @@ void TnPEffDraw_singleFile_O() {
 			lt1->SetNDC();
 
 			char legs[512];
-			TLegend *leg1 = new TLegend(0.25, 0.05, 0.66, 0.43); //(0.43, 0.05, 0.66, 0.43);
+			TLegend *leg1 = new TLegend(0.25, 0.05, 0.66, 0.33); //(0.43, 0.05, 0.66, 0.43);
 			leg1->SetFillStyle(0);
 			leg1->SetFillColor(0);
 			leg1->SetBorderSize(0);
@@ -533,8 +533,8 @@ void TnPEffDraw_singleFile_O() {
 			ComPt1[k][i]->Draw("pz same");
 
 			lt1->SetTextSize(0.05);
-			lt1->DrawLatex(0.43, 0.55, "CMS Preliminary");
-			lt1->DrawLatex(0.43, 0.49, collTag + "  #sqrt{s_{NN}} = 8.16 TeV");
+			lt1->DrawLatex(0.43, 0.50, "CMS Preliminary");
+			lt1->DrawLatex(0.43, 0.44, collTag + "  #sqrt{s_{NN}} = 8.16 TeV");
 
 			// now take care of the data/mc ratio panel
 			c1->cd();
@@ -758,9 +758,9 @@ void TnPEffDraw_singleFile_O() {
 		leg1->Draw("same");
 
 		lt1->SetTextSize(0.05);
-		lt1->DrawLatex(0.43, 0.50, "CMS Preliminary");
+		lt1->DrawLatex(0.43, 0.45, "CMS Preliminary");
 		//lt1->DrawLatex(0.43,0.54,"pp  #sqrt{s} = 5.02 TeV");
-		lt1->DrawLatex(0.43, 0.44, collTag + "  #sqrt{s_{NN}} = 8.16 TeV");
+		lt1->DrawLatex(0.43, 0.39, collTag + "  #sqrt{s_{NN}} = 8.16 TeV");
 
 		// now take care of the data/mc ratio panel
 		c1->cd();
@@ -843,9 +843,9 @@ void TnPEffDraw_singleFile_O() {
 		leg1->Draw("same");
 
 		lt1->SetTextSize(0.05);
-		lt1->DrawLatex(0.43, 0.50, "CMS Preliminary");
+		lt1->DrawLatex(0.43, 0.45, "CMS Preliminary");
 		//lt1->DrawLatex(0.43,0.54,"pp  #sqrt{s} = 5.02 TeV");
-		lt1->DrawLatex(0.43, 0.44, collTag + "  #sqrt{s_{NN}} = 8.16 TeV");
+		lt1->DrawLatex(0.43, 0.39, collTag + "  #sqrt{s_{NN}} = 8.16 TeV");
 
 		// now take care of the data/mc ratio panel
 		c1->cd();

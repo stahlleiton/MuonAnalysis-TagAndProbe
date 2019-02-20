@@ -360,7 +360,7 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
         "signalFractionInPassing[0.9]"
     ),
     cbFixedNGausExp = cms.vstring( #n fixed to average value in the MC abseta fits
-        "CBShape::signal1(mass, mean[3.08,3.00,3.3], sigma1[0.03, 0.01, 0.10], alpha[1.85, 0.1, 50], n[1.4])",
+        "CBShape::signal1(mass, mean[3.08,3.00,3.3], sigma1[0.03, 0.01, 0.10], alpha[1.85, 0.1, 50], n[1.3])",
         "RooFormulaVar::sigma2('@0*@1',{fracS[1.8,1.2,2.4],sigma1})",
         "Gaussian::signal2(mass, mean, sigma2)",
         "SUM::signal(frac[0.8,0.5,1.]*signal1,signal2)",
