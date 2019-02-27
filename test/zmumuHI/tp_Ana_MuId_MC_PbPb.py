@@ -13,7 +13,7 @@ process = cms.Process("TagProbe")
 process.load('FWCore.MessageService.MessageLogger_cfi')
 process.source = cms.Source("EmptySource")
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1) )
-PDFName = "VoigtExp"
+PDFName = "BWResCBExp"
 
 
 VEFFICIENCYSET =cms.VPSet(
@@ -21,7 +21,7 @@ VEFFICIENCYSET =cms.VPSet(
     cms.PSet(
        MuId_1bin = cms.PSet(
             EfficiencyCategoryAndState = cms.vstring("TightId", "true"),
-            UnbinnedVariables = cms.vstring("mass"),
+            UnbinnedVariables = cms.vstring("mass", "weight"),
             BinnedVariables = cms.PSet(
                 pt = cms.vdouble(15, 200),
                 eta = cms.vdouble(-2.4, 2.4),
@@ -35,9 +35,9 @@ VEFFICIENCYSET =cms.VPSet(
     cms.PSet(
        MuId_pt = cms.PSet(
             EfficiencyCategoryAndState = cms.vstring("TightId", "true"),
-            UnbinnedVariables = cms.vstring("mass"),
+            UnbinnedVariables = cms.vstring("mass", "weight"),
             BinnedVariables = cms.PSet(
-                pt = cms.vdouble(10, 15, 30, 40, 50, 60, 70, 80, 100, 200),
+                pt = cms.vdouble(15, 30, 40, 50, 60, 70, 80, 100, 200),
                 eta = cms.vdouble(-2.4, 2.4),
                 tag_hiBin = cms.vdouble(0, 200),
                 Glb = cms.vstring("true"),
@@ -49,9 +49,9 @@ VEFFICIENCYSET =cms.VPSet(
     cms.PSet(
         MuId_abseta00_09 = cms.PSet(
             EfficiencyCategoryAndState = cms.vstring("TightId", "true"),
-            UnbinnedVariables = cms.vstring("mass"),
+            UnbinnedVariables = cms.vstring("mass", "weight"),
             BinnedVariables = cms.PSet(
-                pt = cms.vdouble(10, 15, 25, 30, 35, 40, 45, 50, 80, 200),
+                pt = cms.vdouble(15, 25, 30, 35, 40, 45, 50, 80, 200),
                 abseta = cms.vdouble(0, 0.9),
                 tag_hiBin = cms.vdouble(0, 200),
                 Glb = cms.vstring("true"),
@@ -63,9 +63,9 @@ VEFFICIENCYSET =cms.VPSet(
     cms.PSet(
         MuId_abseta09_12 = cms.PSet(
             EfficiencyCategoryAndState = cms.vstring("TightId", "true"),
-            UnbinnedVariables = cms.vstring("mass"),
+            UnbinnedVariables = cms.vstring("mass", "weight"),
             BinnedVariables = cms.PSet(
-                pt = cms.vdouble(10, 15, 25, 30, 35, 40, 45, 50, 80, 200),
+                pt = cms.vdouble(15, 25, 30, 35, 40, 45, 50, 80, 200),
                 abseta = cms.vdouble(0.9, 1.2),
                 tag_hiBin = cms.vdouble(0, 200),
                 Glb = cms.vstring("true"),
@@ -77,9 +77,9 @@ VEFFICIENCYSET =cms.VPSet(
     cms.PSet(
         MuId_abseta00_12 = cms.PSet(
             EfficiencyCategoryAndState = cms.vstring("TightId", "true"),
-            UnbinnedVariables = cms.vstring("mass"),
+            UnbinnedVariables = cms.vstring("mass", "weight"),
             BinnedVariables = cms.PSet(
-                pt = cms.vdouble(10, 15, 25, 30, 35, 40, 45, 50, 80, 200),
+                pt = cms.vdouble(15, 25, 30, 35, 40, 45, 50, 80, 200),
                 abseta = cms.vdouble(0, 1.2),
                 tag_hiBin = cms.vdouble(0, 200),
                 Glb = cms.vstring("true"),
@@ -91,9 +91,9 @@ VEFFICIENCYSET =cms.VPSet(
     cms.PSet(
          MuId_abseta12_16 = cms.PSet(
              EfficiencyCategoryAndState = cms.vstring("TightId", "true"),
-             UnbinnedVariables = cms.vstring("mass"),
+             UnbinnedVariables = cms.vstring("mass", "weight"),
              BinnedVariables = cms.PSet(
-                pt = cms.vdouble(10, 15, 25, 30,35, 40, 45,50, 80, 200),
+                pt = cms.vdouble(15, 25, 30,35, 40, 45,50, 80, 200),
                 abseta = cms.vdouble(1.2, 1.6),
                 tag_hiBin = cms.vdouble(0, 200),
                 Glb = cms.vstring("true"),
@@ -105,9 +105,9 @@ VEFFICIENCYSET =cms.VPSet(
     cms.PSet(
          MuId_abseta16_21 = cms.PSet(
              EfficiencyCategoryAndState = cms.vstring("TightId", "true"),
-             UnbinnedVariables = cms.vstring("mass"),
+             UnbinnedVariables = cms.vstring("mass", "weight"),
              BinnedVariables = cms.PSet(
-                pt = cms.vdouble(10, 15, 25, 30, 35, 40, 50, 80, 200),
+                pt = cms.vdouble(15, 25, 30, 35, 40, 50, 80, 200),
                 abseta = cms.vdouble(1.6, 2.1),
                 tag_hiBin = cms.vdouble(0, 200),
                 Glb = cms.vstring("true"),
@@ -119,9 +119,9 @@ VEFFICIENCYSET =cms.VPSet(
     cms.PSet(
          MuId_abseta12_21 = cms.PSet(
              EfficiencyCategoryAndState = cms.vstring("TightId", "true"),
-             UnbinnedVariables = cms.vstring("mass"),
+             UnbinnedVariables = cms.vstring("mass", "weight"),
              BinnedVariables = cms.PSet(
-                pt = cms.vdouble(10, 15, 25, 30,35, 40,45,50, 80, 200),
+                pt = cms.vdouble(15, 25, 30,35, 40,45,50, 80, 200),
                 abseta = cms.vdouble(1.2, 2.1),
                 tag_hiBin = cms.vdouble(0, 200),
                 Glb = cms.vstring("true"),
@@ -133,9 +133,9 @@ VEFFICIENCYSET =cms.VPSet(
     cms.PSet(
         MuId_abseta21_24 = cms.PSet(
             EfficiencyCategoryAndState = cms.vstring("TightId", "true"),
-            UnbinnedVariables = cms.vstring("mass"),
+            UnbinnedVariables = cms.vstring("mass", "weight"),
             BinnedVariables = cms.PSet(
-                pt = cms.vdouble(10, 15, 25, 40, 80, 200),
+                pt = cms.vdouble(15, 25, 40, 80, 200),
                 abseta = cms.vdouble(2.1, 2.4),
                 tag_hiBin = cms.vdouble(0, 200),
                 Glb = cms.vstring("true"),
@@ -147,7 +147,7 @@ VEFFICIENCYSET =cms.VPSet(
     cms.PSet(
         MuId_absetadep = cms.PSet(
             EfficiencyCategoryAndState = cms.vstring("TightId", "true"),
-            UnbinnedVariables = cms.vstring("mass"),
+            UnbinnedVariables = cms.vstring("mass", "weight"),
             BinnedVariables = cms.PSet(
                 pt = cms.vdouble(15, 200),
                 abseta = cms.vdouble(0, 0.9, 1.2, 1.6, 2.1, 2.4),
@@ -161,7 +161,7 @@ VEFFICIENCYSET =cms.VPSet(
     cms.PSet(
         MuId_etadep = cms.PSet(
             EfficiencyCategoryAndState = cms.vstring("TightId", "true"),
-            UnbinnedVariables = cms.vstring("mass"),
+            UnbinnedVariables = cms.vstring("mass", "weight"),
             BinnedVariables = cms.PSet(
                 pt = cms.vdouble(15, 200),
                 eta = cms.vdouble(-2.4, -2.1, -1.6, -1.2, -0.9, -0.6, -0.3, 0, 0.3, 0.6, 0.9, 1.2, 1.6, 2.1, 2.4),
@@ -175,7 +175,7 @@ VEFFICIENCYSET =cms.VPSet(
     cms.PSet(
         MuId_centdep = cms.PSet(
             EfficiencyCategoryAndState = cms.vstring("TightId", "true"),
-            UnbinnedVariables = cms.vstring("mass"),
+            UnbinnedVariables = cms.vstring("mass", "weight"),
             BinnedVariables = cms.PSet(
                 pt = cms.vdouble(15, 200),
                 eta = cms.vdouble(-2.4, 2.4),
@@ -222,6 +222,7 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
                          eta    = cms.vstring("Probe #eta", "-2.5", "2.5", ""),
                          abseta = cms.vstring("Probe |#eta|", "0", "2.5", ""),
                          tag_hiBin  = cms.vstring("Centrality bin", "0", "200", ""),
+                         weight = cms.vstring("weight", "0", "100", ""),
     ),
     # defines all the discrete variables of the probes available in the input tree and intended for use in the efficiency calculations
     Categories = cms.PSet(

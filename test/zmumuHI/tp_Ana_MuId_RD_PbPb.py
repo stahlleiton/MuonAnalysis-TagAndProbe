@@ -5,7 +5,7 @@ args =sys.argv[1:]
 if len(args) < 2: scenario = "0"
 else:
    scenario = args[1]
-print("Will run scenario " + scenario)
+print ("Will run scenario " + scenario)
 # scenario: 1 pT, 2-3 pT in detailed abseta bins, 4-5 pT in overall abseta bins, 6 abseta, 7, eta, 8 centrality, 0 (or no parameter) run all
 
 
@@ -13,7 +13,7 @@ process = cms.Process("TagProbe")
 process.load('FWCore.MessageService.MessageLogger_cfi')
 process.source = cms.Source("EmptySource")
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1) )
-PDFName = "VoigtExp"
+PDFName = "BWResCBExp"
 
 
 VEFFICIENCYSET =cms.VPSet(
@@ -37,7 +37,7 @@ VEFFICIENCYSET =cms.VPSet(
             EfficiencyCategoryAndState = cms.vstring("TightId", "true"),
             UnbinnedVariables = cms.vstring("mass"),
             BinnedVariables = cms.PSet(
-                pt = cms.vdouble(10, 15, 30, 40, 50, 60, 70, 80, 100, 200),
+                pt = cms.vdouble(15, 30, 40, 50, 60, 70, 80, 100, 200),
                 eta = cms.vdouble(-2.4, 2.4),
                 tag_hiBin = cms.vdouble(0, 200),
                 Glb = cms.vstring("true"),
@@ -51,7 +51,7 @@ VEFFICIENCYSET =cms.VPSet(
             EfficiencyCategoryAndState = cms.vstring("TightId", "true"),
             UnbinnedVariables = cms.vstring("mass"),
             BinnedVariables = cms.PSet(
-                pt = cms.vdouble(10, 15, 25, 30, 35, 40, 45, 50, 80, 200),
+                pt = cms.vdouble(15, 25, 30, 35, 40, 45, 50, 80, 200),
                 abseta = cms.vdouble(0, 0.9),
                 tag_hiBin = cms.vdouble(0, 200),
                 Glb = cms.vstring("true"),
@@ -65,7 +65,7 @@ VEFFICIENCYSET =cms.VPSet(
             EfficiencyCategoryAndState = cms.vstring("TightId", "true"),
             UnbinnedVariables = cms.vstring("mass"),
             BinnedVariables = cms.PSet(
-                pt = cms.vdouble(10, 15, 25, 30, 35, 40, 45, 50, 80, 200),
+                pt = cms.vdouble(15, 25, 30, 35, 40, 45, 50, 80, 200),
                 abseta = cms.vdouble(0.9, 1.2),
                 tag_hiBin = cms.vdouble(0, 200),
                 Glb = cms.vstring("true"),
@@ -79,7 +79,7 @@ VEFFICIENCYSET =cms.VPSet(
             EfficiencyCategoryAndState = cms.vstring("TightId", "true"),
             UnbinnedVariables = cms.vstring("mass"),
             BinnedVariables = cms.PSet(
-                pt = cms.vdouble(10, 15, 25, 30, 35, 40, 45, 50, 80, 200),
+                pt = cms.vdouble(15, 25, 30, 35, 40, 45, 50, 80, 200),
                 abseta = cms.vdouble(0, 1.2),
                 tag_hiBin = cms.vdouble(0, 200),
                 Glb = cms.vstring("true"),
@@ -93,7 +93,7 @@ VEFFICIENCYSET =cms.VPSet(
              EfficiencyCategoryAndState = cms.vstring("TightId", "true"),
              UnbinnedVariables = cms.vstring("mass"),
              BinnedVariables = cms.PSet(
-                pt = cms.vdouble(10, 15, 25, 30,35, 40, 45,50, 80, 200),
+                pt = cms.vdouble(15, 25, 30,35, 40, 45,50, 80, 200),
                 abseta = cms.vdouble(1.2, 1.6),
                 tag_hiBin = cms.vdouble(0, 200),
                 Glb = cms.vstring("true"),
@@ -107,7 +107,7 @@ VEFFICIENCYSET =cms.VPSet(
              EfficiencyCategoryAndState = cms.vstring("TightId", "true"),
              UnbinnedVariables = cms.vstring("mass"),
              BinnedVariables = cms.PSet(
-                pt = cms.vdouble(10, 15, 25, 30, 35, 40, 50, 80, 200),
+                pt = cms.vdouble(15, 25, 30, 35, 40, 50, 80, 200),
                 abseta = cms.vdouble(1.6, 2.1),
                 tag_hiBin = cms.vdouble(0, 200),
                 Glb = cms.vstring("true"),
@@ -121,7 +121,7 @@ VEFFICIENCYSET =cms.VPSet(
              EfficiencyCategoryAndState = cms.vstring("TightId", "true"),
              UnbinnedVariables = cms.vstring("mass"),
              BinnedVariables = cms.PSet(
-                pt = cms.vdouble(10, 15, 25, 30,35, 40,45,50, 80, 200),
+                pt = cms.vdouble(15, 25, 30,35, 40,45,50, 80, 200),
                 abseta = cms.vdouble(1.2, 2.1),
                 tag_hiBin = cms.vdouble(0, 200),
                 Glb = cms.vstring("true"),
@@ -135,7 +135,7 @@ VEFFICIENCYSET =cms.VPSet(
             EfficiencyCategoryAndState = cms.vstring("TightId", "true"),
             UnbinnedVariables = cms.vstring("mass"),
             BinnedVariables = cms.PSet(
-                pt = cms.vdouble(10, 15, 25, 40, 80, 200),
+                pt = cms.vdouble(15, 25, 40, 80, 200),
                 abseta = cms.vdouble(2.1, 2.4),
                 tag_hiBin = cms.vdouble(0, 200),
                 Glb = cms.vstring("true"),

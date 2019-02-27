@@ -24,7 +24,7 @@ VEFFICIENCYSET =cms.VPSet(
             UnbinnedVariables = cms.vstring("mass"),
             BinnedVariables = cms.PSet(
 #                tag_nVertices = cms.vdouble(0, 6),
-                pt = cms.vdouble(15, 200),
+                pt = cms.vdouble(15, 80),
                 eta = cms.vdouble(-2.4, 2.4),
             ),
             BinToPDFmap = cms.vstring(PDFName)
@@ -35,7 +35,7 @@ VEFFICIENCYSET =cms.VPSet(
            EfficiencyCategoryAndState = cms.vstring("Glb","true","PF","true"),
            UnbinnedVariables = cms.vstring("mass"),
            BinnedVariables = cms.PSet(
-               pt = cms.vdouble(5, 15,20, 30, 50, 80, 200),
+               pt = cms.vdouble(15, 30, 50, 80),
                eta = cms.vdouble(-2.4,2.4),
 #               tag_nVertices = cms.vdouble(0, 1, 2, 6),
            ),
@@ -48,7 +48,7 @@ VEFFICIENCYSET =cms.VPSet(
             UnbinnedVariables = cms.vstring("mass"),
             BinnedVariables = cms.PSet(
 #                tag_nVertices = cms.vdouble(0, 1, 2, 6),
-                pt = cms.vdouble(15,20, 30, 50, 80, 200),
+                pt = cms.vdouble(15, 30, 50, 80),
                 abseta = cms.vdouble(0, 0.9),
             ),
             BinToPDFmap = cms.vstring(PDFName)
@@ -60,7 +60,7 @@ VEFFICIENCYSET =cms.VPSet(
              UnbinnedVariables = cms.vstring("mass"),
              BinnedVariables = cms.PSet(
 #                 tag_nVertices = cms.vdouble(0, 1, 2, 6),
-                 pt = cms.vdouble(15,20, 30, 50, 80, 200),
+                 pt = cms.vdouble(15, 30, 50, 80),
                  abseta = cms.vdouble(0.9,1.2),
              ),
              BinToPDFmap = cms.vstring(PDFName)
@@ -72,7 +72,7 @@ VEFFICIENCYSET =cms.VPSet(
              UnbinnedVariables = cms.vstring("mass"),
              BinnedVariables = cms.PSet(
 #                 tag_nVertices = cms.vdouble(0, 1, 2, 6),
-                 pt = cms.vdouble(15,20, 30, 50, 80, 200),
+                 pt = cms.vdouble(15, 30, 50, 80),
                  abseta = cms.vdouble(0.0,1.2),
              ),
              BinToPDFmap = cms.vstring(PDFName)
@@ -84,7 +84,7 @@ VEFFICIENCYSET =cms.VPSet(
              UnbinnedVariables = cms.vstring("mass"),
              BinnedVariables = cms.PSet(
 #                 tag_nVertices = cms.vdouble(0, 1, 2, 6),
-                 pt = cms.vdouble(15,20, 30, 50, 80, 200),
+                 pt = cms.vdouble(15, 30, 50, 80),
                  abseta = cms.vdouble(1.2, 1.6),
              ),
              BinToPDFmap = cms.vstring(PDFName)
@@ -96,7 +96,7 @@ VEFFICIENCYSET =cms.VPSet(
              UnbinnedVariables = cms.vstring("mass"),
              BinnedVariables = cms.PSet(
 #                 tag_nVertices = cms.vdouble(0, 1, 2, 6),
-                 pt = cms.vdouble(15,20, 30, 50, 80, 200),
+                 pt = cms.vdouble(15, 30, 50, 80),
                  abseta = cms.vdouble(1.6, 2.1),
              ),
              BinToPDFmap = cms.vstring(PDFName)
@@ -108,7 +108,7 @@ VEFFICIENCYSET =cms.VPSet(
              UnbinnedVariables = cms.vstring("mass"),
              BinnedVariables = cms.PSet(
 #                 tag_nVertices = cms.vdouble(0, 1, 2, 6),
-                 pt = cms.vdouble(15, 20, 30, 50, 80, 200),
+                 pt = cms.vdouble(15, 30, 50, 80),
                  abseta = cms.vdouble(1.2, 2.1),
              ),
              BinToPDFmap = cms.vstring(PDFName)
@@ -120,7 +120,7 @@ VEFFICIENCYSET =cms.VPSet(
              UnbinnedVariables = cms.vstring("mass"),
              BinnedVariables = cms.PSet(
 #                 tag_nVertices = cms.vdouble(0, 1, 2, 6),
-                 pt = cms.vdouble(15, 20, 30, 50, 80, 200),
+                 pt = cms.vdouble(15, 30, 50, 80),
                  abseta = cms.vdouble(2.1,2.4),
              ),
              BinToPDFmap = cms.vstring(PDFName)
@@ -132,7 +132,7 @@ VEFFICIENCYSET =cms.VPSet(
              UnbinnedVariables = cms.vstring("mass"),
              BinnedVariables = cms.PSet(
 #                 tag_nVertices = cms.vdouble(0, 1, 2, 6),
-                 pt = cms.vdouble(15, 200),
+                 pt = cms.vdouble(15, 80),
                  abseta = cms.vdouble(0,0.9,1.2,1.6,2.1,2.4),
              ),
              BinToPDFmap = cms.vstring(PDFName)
@@ -144,7 +144,7 @@ VEFFICIENCYSET =cms.VPSet(
              UnbinnedVariables = cms.vstring("mass"),
              BinnedVariables = cms.PSet(
 #                 tag_nVertices = cms.vdouble(0, 1, 2, 6),
-                 pt = cms.vdouble(15, 200),
+                 pt = cms.vdouble(15, 80),
                  eta = cms.vdouble(-2.4,-2.1,-1.6,-1.2,-0.9,0,0.9,1.2,1.6,2.1,2.4),
              ),
              BinToPDFmap = cms.vstring(PDFName)
