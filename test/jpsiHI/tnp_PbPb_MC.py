@@ -24,7 +24,7 @@ process.load("RecoHI.HiCentralityAlgos.CentralityBin_cfi")
 process.GlobalTag.snapshotTime = cms.string("9999-12-31 23:59:59.000")
 process.GlobalTag.toGet.extend([
     cms.PSet(record = cms.string("HeavyIonRcd"),
-        tag = cms.string("CentralityTable_HFtowers200_HydjetCymbal5Ev8_v1020x01_mc"),
+        tag = cms.string("CentralityTable_HFtowers200_HydjetDrum5Ev8_v1030pre5x02_mc"),
         connect = cms.string("frontier://FrontierProd/CMS_CONDITIONS"),
         label = cms.untracked.string("HFtowers")
         ),
@@ -36,7 +36,8 @@ process.load("RecoVertex.PrimaryVertexProducer.OfflinePrimaryVerticesRecovery_cf
 process.load('HeavyIonsAnalysis.Configuration.collisionEventSelection_cff')
 ### Trigger selection
 process.load("HLTrigger.HLTfilters.triggerResultsFilter_cfi")
-process.triggerResultsFilter.triggerConditions = cms.vstring( 'HLT_HIL1*' , 'HLT_HIL2*' , 'HLT_HIL3*' )
+process.triggerResultsFilter.triggerConditions = cms.vstring( 'HLT_HIL3Mu3_NHitQ10*' , 'HLT_HIL3Mu5_NHitQ10*' , 'HLT_HIL3Mu7_NHitQ10*',
+                                                              'HLT_HIL3Mu12_v*' , 'HLT_HIL3Mu15_v*' , 'HLT_HIL3Mu20_v*' )
 process.triggerResultsFilter.hltResults = cms.InputTag("TriggerResults","","HLT")
 process.triggerResultsFilter.l1tResults = cms.InputTag("") # keep empty!
 process.triggerResultsFilter.throw = False
@@ -51,7 +52,9 @@ process.fastFilter = cms.Sequence(process.offlinePrimaryVerticesRecovery + proce
 ##
 ## ==== Merge CaloMuons and Tracks into the collection of reco::Muons  ====
 
-InAcceptance = '((abs(eta)<1.2 && pt>=3.5) || (1.2<=abs(eta) && abs(eta)<2.1 && pt>=5.77-1.89*abs(eta)) || (2.1<=abs(eta) && abs(eta)<2.4 && pt>=1.8))'
+InAcceptance_2015       = '((abs(eta)<1.2 && pt>=3.5) || (1.2<=abs(eta) && abs(eta)<2.1 && pt>=5.77-1.89*abs(eta)) || (2.1<=abs(eta) && abs(eta)<2.4 && pt>=1.8))'
+InAcceptance_2018_Tight = '((abs(eta)<1.2 && pt>=3.5) || (1.2<=abs(eta) && abs(eta)<2.1 && pt>=5.47-1.89*abs(eta)) || (2.1<=abs(eta) && abs(eta)<2.4 && pt>=1.5))'
+InAcceptance_2018_Loose = '((abs(eta)<1.0 && pt>=3.4) || (1.0<=abs(eta) && abs(eta)<2.1 && pt>=5.31-1.91*abs(eta)) || (2.1<=abs(eta) && abs(eta)<2.4 && pt>=1.3))'
 
 from RecoMuon.MuonIdentification.calomuons_cfi import calomuons;
 process.mergedMuons = cms.EDProducer("CaloMuonMerger",
@@ -62,9 +65,9 @@ process.mergedMuons = cms.EDProducer("CaloMuonMerger",
     tracks    = cms.InputTag("generalTracks"),
     minCaloCompatibility = calomuons.minCaloCompatibility,
     ## Apply some minimal pt cut
-    muonsCut     = cms.string(InAcceptance + " && track.isNonnull"),
-    caloMuonsCut = cms.string(InAcceptance),
-    tracksCut    = cms.string(InAcceptance),
+    muonsCut     = cms.string(InAcceptance_2018_Loose + " && track.isNonnull"),
+    caloMuonsCut = cms.string(InAcceptance_2018_Loose),
+    tracksCut    = cms.string(InAcceptance_2018_Loose),
 )
 
 ## ==== Trigger matching
@@ -110,10 +113,10 @@ process.load("MuonAnalysis.TagAndProbe.heavyIon_modules_cff")
 ### Muon Id
 TightIdReco = "isGlobalMuon && isPFMuon && globalTrack.normalizedChi2 < 10 && globalTrack.hitPattern.numberOfValidMuonHits > 0 && numberOfMatchedStations > 1 && track.hitPattern.trackerLayersWithMeasurement > 5 && track.hitPattern.numberOfValidPixelHits > 0"
 TightId = TightIdReco+" && abs(dB) < 0.2"
-HybridSoftIdReco2015 = "isTrackerMuon && isGlobalMuon && innerTrack.hitPattern.trackerLayersWithMeasurement > 5 && innerTrack.hitPattern.numberOfValidPixelHits > 0"
-HybridSoftId2015 = HybridSoftIdReco2015 + " && muonID('TMOneStationTight')"
-HybridSoftIdReco2018 = "isTrackerMuon && isGlobalMuon && innerTrack.hitPattern.trackerLayersWithMeasurement > 5 && innerTrack.hitPattern.numberOfValidPixelHits > 0 && innerTrack.quality(\"highPurity\")"
-HybridSoftId2018 = HybridSoftIdReco2018 + " && muonID('TMOneStationTight')"
+HybridSoftIdReco_2018 = "isTrackerMuon && isGlobalMuon && innerTrack.hitPattern.trackerLayersWithMeasurement > 5 && innerTrack.hitPattern.numberOfValidPixelHits > 0"
+HybridSoftId_2018 = HybridSoftIdReco_2018
+HybridSoftIdReco_2015 = HybridSoftIdReco_2018
+HybridSoftId_2015 = HybridSoftIdReco_2015 + " && muonID('TMOneStationTight')"
 SoftId = "muonID('TMOneStationTight') && innerTrack.hitPattern.trackerLayersWithMeasurement > 5 && innerTrack.hitPattern.pixelLayersWithMeasurement > 0 && innerTrack.quality(\"highPurity\")"
 ### Trigger
 LowPtTriggerFlags = cms.PSet(
@@ -142,7 +145,13 @@ LowPtTriggerFlags = cms.PSet(
     HLT_HIL3DoubleMuOpen_JpsiPsi_Filter = cms.string("!triggerObjectMatchesByFilter('hltL3fL1DoubleMuOpenL3FilteredPsi').empty()"),
     HLT_HIL3DoubleMuOpen_Upsi_Filter = cms.string("!triggerObjectMatchesByFilter('hltL3fL1DoubleMuOpenL3FilteredUpsi').empty()"),
     HLT_HIL3Mu0_L2Mu0_Filter = cms.string("!triggerObjectMatchesByFilter('hltL3f0L3Mu0L2Mu0Filtered0').empty()"),
+    HLT_HIL3Mu0NHitQ10_L2Mu0_MAXdR3p5_M1to5_L1Filter = cms.string("!triggerObjectMatchesByFilter('hltL1fL1sL1DoubleMuOpenMAXdR3p5L1Filtered0').empty()"),
+    HLT_HIL3Mu0NHitQ10_L2Mu0_MAXdR3p5_M1to5_L2Filter = cms.string("!triggerObjectMatchesByFilter('hltL2fDoubleMuOpenL2DR3p5PreFiltered0').empty()"),
+    HLT_HIL3Mu0NHitQ10_L2Mu0_MAXdR3p5_M1to5_L3Filter = cms.string("!triggerObjectMatchesByFilter('hltL3f0DR3p5L3FilteredNHitQ10').empty()"),
     HLT_HIL3Mu0NHitQ10_L2Mu0_MAXdR3p5_M1to5_Filter = cms.string("!triggerObjectMatchesByFilter('hltL3f0L3Mu0L2Mu0DR3p5FilteredNHitQ10M1to5').empty()"),
+    HLT_HIL3Mu2p5NHitQ10_L2Mu2_M7toinf_L1Filter = cms.string("!triggerObjectMatchesByFilter('hltL1fL1sL1DoubleMuOpenL1Filtered0').empty()"),
+    HLT_HIL3Mu2p5NHitQ10_L2Mu2_M7toinf_L2Filter = cms.string("!triggerObjectMatchesByFilter('hltL2fDoubleMuOpenL2PreFiltered0').empty()"),
+    HLT_HIL3Mu2p5NHitQ10_L2Mu2_M7toinf_L3Filter = cms.string("!triggerObjectMatchesByFilter('hltL3f0L3Filtered2p5NHitQ10').empty()"),
     HLT_HIL3Mu2p5NHitQ10_L2Mu2_M7toinf_Filter = cms.string("!triggerObjectMatchesByFilter('hltL3f0L3Mu2p5NHitQ10L2Mu2FilteredM7toinf').empty()"),
     HLT_HIL3Mu3_L1TripleMuOpen_Filter = cms.string("!triggerObjectMatchesByFilter('hltL3fL1sL1DoubleMuOpenL1fN3L2f0L3Filtered3').empty()"),
     # Single Muon Trigger Paths
@@ -152,15 +161,27 @@ LowPtTriggerFlags = cms.PSet(
     HLT_HIL3Mu3_NHitQ10 = cms.string("!triggerObjectMatchesByPath('HLT_HIL3Mu3_NHitQ10_v*',1,0).empty()"),
     HLT_HIL3Mu5_NHitQ10 = cms.string("!triggerObjectMatchesByPath('HLT_HIL3Mu5_NHitQ10_v*',1,0).empty()"),
     HLT_HIL3Mu7_NHitQ10 = cms.string("!triggerObjectMatchesByPath('HLT_HIL3Mu7_NHitQ10_v*',1,0).empty()"),
+    HLT_HIL2Mu3_NHitQ15_tagging = cms.string("!triggerObjectMatchesByPath('HLT_HIL2Mu3_NHitQ15_tagging_v*',1,0).empty()"),
+    HLT_HIL2Mu5_NHitQ15_tagging = cms.string("!triggerObjectMatchesByPath('HLT_HIL2Mu5_NHitQ15_tagging_v*',1,0).empty()"),
+    HLT_HIL2Mu7_NHitQ15_tagging = cms.string("!triggerObjectMatchesByPath('HLT_HIL2Mu7_NHitQ15_tagging_v*',1,0).empty()"),
+    HLT_HIL3Mu3_NHitQ10_tagging = cms.string("!triggerObjectMatchesByPath('HLT_HIL3Mu3_NHitQ10_tagging_v*',1,0).empty()"),
+    HLT_HIL3Mu5_NHitQ10_tagging = cms.string("!triggerObjectMatchesByPath('HLT_HIL3Mu5_NHitQ10_tagging_v*',1,0).empty()"),
+    HLT_HIL3Mu7_NHitQ10_tagging = cms.string("!triggerObjectMatchesByPath('HLT_HIL3Mu7_NHitQ10_tagging_v*',1,0).empty()"),
     # Single Muon Trigger Filters
     HLT_HIL1MuOpen_Centrality_70_100_Filter = cms.string("!triggerObjectMatchesByFilter('hltL1fL1sL1MuOpenCentrality70100L1Filtered0').empty()"),
     HLT_HIL1MuOpen_Centrality_80_100_Filter = cms.string("!triggerObjectMatchesByFilter('hltL1fL1sL1MuOpenCentrality80100L1Filtered0').empty()"),
-    HLT_HIL2Mu3_NHitQ15_Filter = cms.string("!triggerObjectMatchesByFilter('hltL2fL1sMuOpenL1f0L2Filtered3NHitQ15').empty()"),
-    HLT_HIL2Mu5_NHitQ15_Filter = cms.string("!triggerObjectMatchesByFilter('hltL2fL1sMuOpenL1f0L2Filtered5NHitQ15').empty()"),
-    HLT_HIL2Mu7_NHitQ15_Filter = cms.string("!triggerObjectMatchesByFilter('hltL2fL1sMuOpenL1f0L2Filtered7NHitQ15').empty()"),
-    HLT_HIL3Mu3_NHitQ10_Filter = cms.string("!triggerObjectMatchesByFilter('hltL3fL1sL1SingleMuOpenL1f0L2f0L3Filtered3NHitQ10').empty()"),
-    HLT_HIL3Mu5_NHitQ10_Filter = cms.string("!triggerObjectMatchesByFilter('hltL3fL1sL1SingleMuOpenL1f0L2f0L3Filtered5NHitQ10').empty()"),
-    HLT_HIL3Mu7_NHitQ10_Filter = cms.string("!triggerObjectMatchesByFilter('hltL3fL1sL1SingleMuOpenL1f0L2f0L3Filtered7NHitQ10').empty()"),
+    HLT_HIL2Mu3_NHitQ15_Filter = cms.string("!triggerObjectMatchesByFilter('hltL2fL1sMu3OpenL1f0L2Filtered3NHitQ15').empty() || !triggerObjectMatchesByFilter('hltL2fL1sMuOpenL1f0L2Filtered3NHitQ15').empty()"),
+    HLT_HIL2Mu5_NHitQ15_Filter = cms.string("!triggerObjectMatchesByFilter('hltL2fL1sMu3OpenL1f0L2Filtered5NHitQ15').empty() || !triggerObjectMatchesByFilter('hltL2fL1sMuOpenL1f0L2Filtered5NHitQ15').empty()"),
+    HLT_HIL2Mu7_NHitQ15_Filter = cms.string("!triggerObjectMatchesByFilter('hltL2fL1sMu3OpenL1f0L2Filtered7NHitQ15').empty() || !triggerObjectMatchesByFilter('hltL2fL1sMuOpenL1f0L2Filtered7NHitQ15').empty()"),
+    HLT_HIL3Mu3_NHitQ10_Filter = cms.string("!triggerObjectMatchesByFilter('hltL3fL1sL1SingleMu3OpenL1f0L2f0L3Filtered3NHitQ10').empty() || !triggerObjectMatchesByFilter('hltL3fL1sL1SingleMuOpenL1f0L2f0L3Filtered3NHitQ10').empty()"),
+    HLT_HIL3Mu5_NHitQ10_Filter = cms.string("!triggerObjectMatchesByFilter('hltL3fL1sL1SingleMu3OpenL1f0L2f0L3Filtered5NHitQ10').empty() || !triggerObjectMatchesByFilter('hltL3fL1sL1SingleMuOpenL1f0L2f0L3Filtered5NHitQ10').empty()"),
+    HLT_HIL3Mu7_NHitQ10_Filter = cms.string("!triggerObjectMatchesByFilter('hltL3fL1sL1SingleMu3OpenL1f0L2f0L3Filtered7NHitQ10').empty() || !triggerObjectMatchesByFilter('hltL3fL1sL1SingleMuOpenL1f0L2f0L3Filtered7NHitQ10').empty()"),
+    HLT_HIL2Mu3_NHitQ15_tagging_Filter = cms.string("!triggerObjectMatchesByFilter('hltL2fL1sMu3OpenMinimumBiasL1f0L2Filtered3NHitQ15').empty() || !triggerObjectMatchesByFilter('hltL2fL1sMuOpenMinimumBiasL1f0L2Filtered3NHitQ15').empty()"),
+    HLT_HIL2Mu5_NHitQ15_tagging_Filter = cms.string("!triggerObjectMatchesByFilter('hltL2fL1sMu3OpenMinimumBiasL1f0L2Filtered5NHitQ15').empty() || !triggerObjectMatchesByFilter('hltL2fL1sMuOpenMinimumBiasL1f0L2Filtered5NHitQ15').empty()"),
+    HLT_HIL2Mu7_NHitQ15_tagging_Filter = cms.string("!triggerObjectMatchesByFilter('hltL2fL1sMu3OpenMinimumBiasL1f0L2Filtered7NHitQ15').empty() || !triggerObjectMatchesByFilter('hltL2fL1sMuOpenMinimumBiasL1f0L2Filtered7NHitQ15').empty()"),
+    HLT_HIL3Mu3_NHitQ10_tagging_Filter = cms.string("!triggerObjectMatchesByFilter('hltL3fL1sL1SingleMu3OpenMinimumBiasL1f0L2f0L3Filtered3NHitQ10').empty() || !triggerObjectMatchesByFilter('hltL3fL1sL1SingleMuOpenMinimumBiasL1f0L2f0L3Filtered3NHitQ10').empty()"),
+    HLT_HIL3Mu5_NHitQ10_tagging_Filter = cms.string("!triggerObjectMatchesByFilter('hltL3fL1sL1SingleMu3OpenMinimumBiasL1f0L2f0L3Filtered5NHitQ10').empty() || !triggerObjectMatchesByFilter('hltL3fL1sL1SingleMuOpenMinimumBiasL1f0L2f0L3Filtered5NHitQ10').empty()"),
+    HLT_HIL3Mu7_NHitQ10_tagging_Filter = cms.string("!triggerObjectMatchesByFilter('hltL3fL1sL1SingleMu3OpenMinimumBiasL1f0L2f0L3Filtered7NHitQ10').empty() || !triggerObjectMatchesByFilter('hltL3fL1sL1SingleMuOpenMinimumBiasL1f0L2f0L3Filtered7NHitQ10').empty()"),
     # Trigger objects
     isL1Muon = cms.string("!triggerObjectMatchesByCollection('hltGtStage2Digis:Muon').empty()"),
     isL2Muon = cms.string("!triggerObjectMatchesByCollection('hltL2MuonCandidatesPPOnAA').empty()"),
@@ -185,17 +206,16 @@ HighPtTriggerFlags = cms.PSet(
     HLT_HIL3Mu20_Filter = cms.string("!triggerObjectMatchesByFilter('hltL3fL1sL1SingleMu3OpenL1f7L2f0L3Filtered20').empty() || !triggerObjectMatchesByFilter('hltL3fL1sL1SingleMuOpenL1f7L2f0L3Filtered20').empty() || !triggerObjectMatchesByFilter('hltL3fL1sL1SingleMuOpenL1f0L2f0L3Filtered20').empty()"),
 )
 ### Tracking
-TRACK_CUTS2015 = "track.isNonnull && track.hitPattern.trackerLayersWithMeasurement > 5 && track.hitPattern.numberOfValidPixelHits > 0"
-TRACK_CUTS2018 = "track.isNonnull && track.hitPattern.trackerLayersWithMeasurement > 5 && track.hitPattern.numberOfValidPixelHits > 0 && innerTrack.quality(\"highPurity\")"
+TRACK_CUTS = "track.isNonnull && track.hitPattern.trackerLayersWithMeasurement > 5 && track.hitPattern.numberOfValidPixelHits > 0"
 
 ## ==== Tag muons
 process.tagMuons = cms.EDFilter("PATMuonSelector",
     src = cms.InputTag("patMuonsWithTrigger"),
-    cut = cms.string("(pt > 3.5 && abs(eta) < 2.4) && "+HybridSoftId2018+" && !triggerObjectMatchesByCollection('hltIterL3MuonCandidatesPPOnAA').empty()"),
+    cut = cms.string(InAcceptance_2015+" && "+HybridSoftId_2015+" && !triggerObjectMatchesByCollection('hltIterL3MuonCandidatesPPOnAA').empty() && (!triggerObjectMatchesByPath('HLT_HIL3Mu3_NHitQ10_v*',1,0).empty() || !triggerObjectMatchesByPath('HLT_HIL3Mu5_NHitQ10_v*',1,0).empty() || !triggerObjectMatchesByPath('HLT_HIL3Mu7_NHitQ10_v*',1,0).empty() || !triggerObjectMatchesByPath('HLT_HIL3Mu3_NHitQ10_tagging_v*',1,0).empty() || !triggerObjectMatchesByPath('HLT_HIL3Mu5_NHitQ10_tagging_v*',1,0).empty() || !triggerObjectMatchesByPath('HLT_HIL3Mu7_NHitQ10_tagging_v*',1,0).empty() || !triggerObjectMatchesByPath('HLT_HIL3Mu12_v*',1,0).empty() || !triggerObjectMatchesByPath('HLT_HIL3Mu15_v*',1,0).empty() || !triggerObjectMatchesByPath('HLT_HIL3Mu20_v*',1,0).empty())"),
 )
 process.pseudoTag = cms.EDFilter("MuonSelector",
     src = cms.InputTag("mergedMuons"),
-    cut = cms.string("(pt > 3.5 && abs(eta) < 2.4) && "+HybridSoftIdReco2018),
+    cut = cms.string(InAcceptance_2015+" && "+HybridSoftIdReco_2015),
 )
 process.oneTag = cms.EDFilter("CandViewCountFilter", src = cms.InputTag("tagMuons"), minNumber = cms.uint32(1))
 
@@ -247,12 +267,13 @@ process.tpTree = cms.EDAnalyzer("TagProbeFitTreeProducer",
         LowPtTriggerFlags,
         HighPtTriggerFlags,
         TightId = cms.string(TightIdReco),
-        HybridSoftId2015 = cms.string(HybridSoftId2015),
-        HybridSoftId2018 = cms.string(HybridSoftId2018),
+        HybridSoftId_2015 = cms.string(HybridSoftId_2015),
+        HybridSoftId_2018 = cms.string(HybridSoftId_2018),
         SoftId = cms.string(SoftId),
-        InAcceptance = cms.string(InAcceptance),
-        TrackCuts2015 = cms.string(TRACK_CUTS2015),
-        TrackCuts2018 = cms.string(TRACK_CUTS2018),
+        InAcceptance_2015 = cms.string(InAcceptance_2015),
+        InAcceptance_2018_Loose = cms.string(InAcceptance_2018_Loose),
+        InAcceptance_2018_Tight = cms.string(InAcceptance_2018_Tight),
+        TrackCuts = cms.string(TRACK_CUTS),
         StaTkSameCharge = cms.string("outerTrack.isNonnull && innerTrack.isNonnull && (outerTrack.charge == innerTrack.charge)"),
         outerValidHits = cms.string("outerTrack.isNonnull && outerTrack.numberOfValidHits > 0"),
     ),
@@ -491,11 +512,11 @@ process.tagAndProbeSta = cms.Path(
 
 process.probeMuonsTrk = cms.EDFilter("PATMuonSelector",
     src = cms.InputTag("patMuonsWithTrigger"),
-    cut = cms.string(TRACK_CUTS2015 + ' && ' + InAcceptance + ' &&' + 'innerTrack.isNonnull && innerTrack.originalAlgo<13'), #   muonSeededStepInOut = 13
+    cut = cms.string(TRACK_CUTS + ' && ' + InAcceptance_2018_Loose + ' &&' + 'innerTrack.isNonnull && innerTrack.originalAlgo<13'), #   muonSeededStepInOut = 13
 )
 process.pseudoProbeTrk = cms.EDFilter("MuonSelector",
     src = cms.InputTag("mergedMuons"),
-    cut = cms.string(TRACK_CUTS2015 + ' && ' + InAcceptance + ' &&' + 'innerTrack.isNonnull && innerTrack.originalAlgo<13'), #   muonSeededStepInOut = 13
+    cut = cms.string(TRACK_CUTS + ' && ' + InAcceptance_2018_Loose + ' &&' + 'innerTrack.isNonnull && innerTrack.originalAlgo<13'), #   muonSeededStepInOut = 13
 )
 
 process.tpPairsTrk = cms.EDProducer("CandViewShallowCloneCombiner",

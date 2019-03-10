@@ -27,7 +27,7 @@ VEFFICIENCYSET =cms.VPSet(
             BinnedVariables = cms.PSet(
                 pt = cms.vdouble(15, 200),
                 eta = cms.vdouble(-2.4, 2.4),
-                hiBin = cms.vdouble(0, 200),
+                tag_hiBin = cms.vdouble(0, 200),
                 TightId = cms.vstring("true"),
             ),
          BinToPDFmap = cms.vstring(PDFName)
@@ -40,7 +40,7 @@ VEFFICIENCYSET =cms.VPSet(
             BinnedVariables = cms.PSet(
                 pt = cms.vdouble(10, 15, 20, 30, 40, 50, 75, 100, 200),
                 eta = cms.vdouble(-2.4, 2.4),
-                hiBin = cms.vdouble(0, 200),
+                tag_hiBin = cms.vdouble(0, 200),
                 TightId = cms.vstring("true"),
             ),
             BinToPDFmap = cms.vstring(PDFName)
@@ -53,7 +53,7 @@ VEFFICIENCYSET =cms.VPSet(
             BinnedVariables = cms.PSet(
                 pt = cms.vdouble(10, 15, 20, 30,50, 80, 200),
                 abseta = cms.vdouble(0, 0.9),
-                hiBin = cms.vdouble(0, 200),
+                tag_hiBin = cms.vdouble(0, 200),
                 TightId = cms.vstring("true"),
             ),
             BinToPDFmap = cms.vstring(PDFName)
@@ -66,7 +66,7 @@ VEFFICIENCYSET =cms.VPSet(
             BinnedVariables = cms.PSet(
                 pt = cms.vdouble(10, 15, 20, 30,50, 80, 200),
                 abseta = cms.vdouble(0.9, 1.2),
-                hiBin = cms.vdouble(0, 200),
+                tag_hiBin = cms.vdouble(0, 200),
                 TightId = cms.vstring("true"),
             ),
             BinToPDFmap = cms.vstring(PDFName)
@@ -79,7 +79,7 @@ VEFFICIENCYSET =cms.VPSet(
             BinnedVariables = cms.PSet(
                 pt = cms.vdouble(10, 15, 20, 30,50, 80, 200),
                 abseta = cms.vdouble(0, 1.2),
-                hiBin = cms.vdouble(0, 200),
+                tag_hiBin = cms.vdouble(0, 200),
                 TightId = cms.vstring("true"),
             ),
             BinToPDFmap = cms.vstring(PDFName)
@@ -92,7 +92,7 @@ VEFFICIENCYSET =cms.VPSet(
              BinnedVariables = cms.PSet(
                 pt = cms.vdouble(10, 15, 20, 30,50, 80, 200),
                 abseta = cms.vdouble(1.2, 1.6),
-                hiBin = cms.vdouble(0, 200),
+                tag_hiBin = cms.vdouble(0, 200),
                 TightId = cms.vstring("true"),
              ),
              BinToPDFmap = cms.vstring(PDFName)
@@ -105,7 +105,7 @@ VEFFICIENCYSET =cms.VPSet(
              BinnedVariables = cms.PSet(
                 pt = cms.vdouble(10, 15, 20, 30,50, 80, 200),
                 abseta = cms.vdouble(1.6, 2.1),
-                hiBin = cms.vdouble(0, 200),
+                tag_hiBin = cms.vdouble(0, 200),
                 TightId = cms.vstring("true"),
              ),
              BinToPDFmap = cms.vstring(PDFName)
@@ -118,7 +118,7 @@ VEFFICIENCYSET =cms.VPSet(
              BinnedVariables = cms.PSet(
                 pt = cms.vdouble(10, 15, 20, 30,50, 80, 200),
                 abseta = cms.vdouble(1.2, 2.1),
-                hiBin = cms.vdouble(0, 200),
+                tag_hiBin = cms.vdouble(0, 200),
                 TightId = cms.vstring("true"),
              ),
              BinToPDFmap = cms.vstring(PDFName)
@@ -131,7 +131,7 @@ VEFFICIENCYSET =cms.VPSet(
             BinnedVariables = cms.PSet(
                 pt = cms.vdouble(10, 15, 20, 30,50, 80, 200),
                 abseta = cms.vdouble(2.1, 2.4),
-                hiBin = cms.vdouble(0, 200),
+                tag_hiBin = cms.vdouble(0, 200),
                 TightId = cms.vstring("true"),
             ),
             BinToPDFmap = cms.vstring(PDFName)
@@ -144,7 +144,7 @@ VEFFICIENCYSET =cms.VPSet(
             BinnedVariables = cms.PSet(
                 pt = cms.vdouble(15, 200),
                 abseta = cms.vdouble(0, 0.9, 1.2, 1.6, 2.1, 2.4),
-                hiBin = cms.vdouble(0, 200),
+                tag_hiBin = cms.vdouble(0, 200),
                 TightId = cms.vstring("true"),
             ),
             BinToPDFmap = cms.vstring(PDFName)
@@ -157,7 +157,7 @@ VEFFICIENCYSET =cms.VPSet(
             BinnedVariables = cms.PSet(
                 pt = cms.vdouble(15, 200),
                 eta = cms.vdouble(-2.4, -2.1, -1.6, -1.2, -0.9, -0.6, -0.3, 0, 0.3, 0.6, 0.9, 1.2, 1.6, 2.1, 2.4),
-                hiBin = cms.vdouble(0, 200),
+                tag_hiBin = cms.vdouble(0, 200),
                 TightId = cms.vstring("true"),
             ),
             BinToPDFmap = cms.vstring(PDFName)
@@ -170,7 +170,7 @@ VEFFICIENCYSET =cms.VPSet(
             BinnedVariables = cms.PSet(
                 pt = cms.vdouble(15, 200),
                 eta = cms.vdouble(-2.4, 2.4),
-                hiBin = cms.vdouble(0, 20, 40, 60, 80, 100, 200),
+                tag_hiBin = cms.vdouble(0, 20, 40, 60, 80, 100, 200),
                 TightId = cms.vstring("true"),
             ),
             BinToPDFmap = cms.vstring(PDFName)
@@ -213,7 +213,7 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
                          pt     = cms.vstring("Probe p_{T}", "0.0", "1000", "GeV/c"),
                          eta    = cms.vstring("Probe #eta", "-2.4", "2.4", ""),
                          abseta = cms.vstring("Probe |#eta|", "0", "2.5", ""),
-                         hiBin  = cms.vstring("Centrality bin", "0", "200", ""),
+                         tag_hiBin = cms.vstring("Centrality bin", "0", "200", ""),
                          weight = cms.vstring("weight", "0", "10", ""),
     ),
     # defines all the discrete variables of the probes available in the input tree and intended for use in the efficiency calculations
