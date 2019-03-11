@@ -213,7 +213,11 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
                          pt     = cms.vstring("Probe p_{T}", "0.0", "1000", "GeV/c"),
                          eta    = cms.vstring("Probe #eta", "-2.4", "2.4", ""),
                          abseta = cms.vstring("Probe |#eta|", "0", "2.5", ""),
+<<<<<<< HEAD
                          tag_hiBin  = cms.vstring("Centrality bin", "0", "200", ""),
+=======
+                         tag_hiBin = cms.vstring("Centrality bin", "0", "200", ""),
+>>>>>>> 0002d2b465b1f447bab638fd1d4b7527988cfe5f
                          weight = cms.vstring("weight", "0", "10", ""),
     ),
     # defines all the discrete variables of the probes available in the input tree and intended for use in the efficiency calculations
