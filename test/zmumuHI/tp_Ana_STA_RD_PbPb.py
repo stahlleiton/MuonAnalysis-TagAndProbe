@@ -131,6 +131,18 @@ VEFFICIENCYSET =cms.VPSet(
              BinToPDFmap = cms.vstring(PDFName)
          )
 	),
+	cms.PSet(
+	  STA_centdep = cms.PSet(
+            EfficiencyCategoryAndState = cms.vstring("isSTA","true"),
+            UnbinnedVariables = cms.vstring("mass"),
+            BinnedVariables = cms.PSet(
+              pt = cms.vdouble(15, 80),
+              eta = cms.vdouble(-2.4,2.4),
+	      tag_hiBin = cms.vdouble(0, 20, 40, 60, 80, 100, 200),
+            ),
+             BinToPDFmap = cms.vstring(PDFName)
+         )
+	),
 
 )
 #)
@@ -140,7 +152,7 @@ if scenario == "1": EFFICIENCYSET = cms.PSet(VEFFICIENCYSET[0], VEFFICIENCYSET[1
 if scenario == "2": EFFICIENCYSET = cms.PSet(VEFFICIENCYSET[2], VEFFICIENCYSET[3])
 if scenario == "3": EFFICIENCYSET = cms.PSet(VEFFICIENCYSET[5], VEFFICIENCYSET[6])
 if scenario == "4": EFFICIENCYSET = cms.PSet(VEFFICIENCYSET[4], VEFFICIENCYSET[7])
-if scenario == "0": EFFICIENCYSET = cms.PSet(VEFFICIENCYSET[0], VEFFICIENCYSET[1], VEFFICIENCYSET[2], VEFFICIENCYSET[3],VEFFICIENCYSET[4], VEFFICIENCYSET[5],VEFFICIENCYSET[6], VEFFICIENCYSET[7])
+if scenario == "0": EFFICIENCYSET = cms.PSet(VEFFICIENCYSET[0], VEFFICIENCYSET[1], VEFFICIENCYSET[2], VEFFICIENCYSET[3],VEFFICIENCYSET[4], VEFFICIENCYSET[5],VEFFICIENCYSET[6], VEFFICIENCYSET[7], VEFFICIENCYSET[8])
 
 
 
