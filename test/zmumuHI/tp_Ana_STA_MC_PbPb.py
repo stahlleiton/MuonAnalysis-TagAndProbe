@@ -11,7 +11,7 @@ process = cms.Process("TagProbe")
 process.load('FWCore.MessageService.MessageLogger_cfi')
 process.source = cms.Source("EmptySource")
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1) )    
-PDFName = "VoigtExp"
+PDFName = "BWResCBExp"
 
 VEFFICIENCYSET =cms.VPSet(
 
@@ -166,8 +166,8 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
                          pt               = cms.vstring("Probe p_{T}", "0.0", "1000", "GeV/c"),
                          eta              = cms.vstring("Probe #eta", "-2.4", "2.4", ""),
                          abseta           = cms.vstring("Probe |#eta|", "0", "2.5", ""),
-						 tag_hiBin        = cms.vstring("Centrality bin", "0", "200", ""),
-						 weight			  = cms.vstring("weight", "0", "10", ""),
+			 tag_hiBin        = cms.vstring("Centrality bin", "0", "200", ""),
+			 weight		  = cms.vstring("weight", "0", "10", ""),
 #                         tag_nVertices    = cms.vstring("Number of Primary Vertices", "0", "4", ""),
 #                         tag_hiHF         = cms.vstring("HF energy", "0", "400", ""),
 #                         tag_hiNtracks    = cms.vstring("Number of tracks", "0", "300", ""),
