@@ -44,7 +44,7 @@ using namespace std;
 
 // Choose the efficiency type.
 // Possible values: MUIDTRG, TRK, STA, MUID, TRG
-#define TRK
+#define STA 
 
 // pp or PbPb?
 bool isPbPb = true; // if true, will compute the centrality dependence
@@ -210,8 +210,8 @@ TString cutTag("tpTreeTrk");
 TString cutLegend("Standalone");
 const double effmin = 0.;
 const double sfrange = 0.55;
-const char* fDataName[nSyst] = {"tnp_Ana_Data_RecoSTA_PbPb.root"}
-const char* fMCName[nSyst] = {"tnp_Ana_MC_STA_PbPb.root"}
+const char* fDataName[nSyst] = {"tnp_Ana_Data_RecoSTA_PbPb.root"};
+const char* fMCName[nSyst] = {"tnp_Ana_MC_STA_PbPb.root"};
 #endif
 
 #ifdef TRK
@@ -251,7 +251,7 @@ TF1 *ratiofunc(const char* fname, TF1 *fnum, TF1 *fden);
 ofstream file_binnedsfs("correction_binned.txt");
 
 // From here you need to set up your environments.
-void TnPEffDraw_singleFile_O() {
+void TnPEffDraw_singleFile_hwan() {
 
 	// gROOT->Macro("~/logon.C");
 	gROOT->SetStyle("Plain");
