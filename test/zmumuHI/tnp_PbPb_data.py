@@ -124,7 +124,7 @@ TRACK_CUTS = "track.isNonnull && track.hitPattern.trackerLayersWithMeasurement >
 ## ==== Tag muons
 process.tagMuons = cms.EDFilter("PATMuonSelector",
     src = cms.InputTag("patMuonsWithTrigger"),
-    cut = cms.string("(pt > 15 && abs(eta) < 2.4) && "+TightId+" && !triggerObjectMatchesByCollection('hltIterL3MuonCandidatesPPOnAA').empty()"),
+    cut = cms.string("(pt > 15 && abs(eta) < 2.4) && "+TightId+" && !triggerObjectMatchesByCollection('hltIterL3MuonCandidatesPPOnAA').empty() && !triggerObjectMatchesByPath('HLT_HIL3Mu15_v*',1,0).empty()"),
 )
 process.pseudoTag = cms.EDFilter("MuonSelector",
     src = cms.InputTag("mergedMuons"),
