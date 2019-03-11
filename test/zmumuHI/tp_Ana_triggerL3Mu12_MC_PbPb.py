@@ -215,7 +215,11 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
                          abseta = cms.vstring("Probe |#eta|", "0", "2.5", ""),
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                          tag_hiBin  = cms.vstring("Centrality bin", "0", "200", ""),
+=======
+                         tag_hiBin = cms.vstring("Centrality bin", "0", "200", ""),
+>>>>>>> 0002d2b465b1f447bab638fd1d4b7527988cfe5f
 =======
                          tag_hiBin = cms.vstring("Centrality bin", "0", "200", ""),
 >>>>>>> 0002d2b465b1f447bab638fd1d4b7527988cfe5f
