@@ -21,8 +21,8 @@ PDFName = "BWResCBExp"
 VEFFICIENCYSET =cms.VPSet(
 # Order: 0 total, 1 pT, 2-8 pT fits in abseta bins, 9 abseta, 10 eta, 11 centrality NOTE: IS NOT SAME AS SCENARIO
     cms.PSet(
-        MuId_1bin = cms.PSet(
-            EfficiencyCategoryAndState = cms.vstring("HLTL3Mu12_Filter", "true"),
+        Trg_1bin = cms.PSet(
+            EfficiencyCategoryAndState = cms.vstring("HLT_HIL3Mu12_Filter", "true"),
             UnbinnedVariables = cms.vstring("mass"),
             BinnedVariables = cms.PSet(
                 pt = cms.vdouble(15, 200),
@@ -34,8 +34,8 @@ VEFFICIENCYSET =cms.VPSet(
         )
     ),
     cms.PSet(
-        MuId_pt = cms.PSet(
-            EfficiencyCategoryAndState = cms.vstring("HLTL3Mu12_Filter", "true"),
+        Trg_pt = cms.PSet(
+            EfficiencyCategoryAndState = cms.vstring("HLT_HIL3Mu12_Filter", "true"),
             UnbinnedVariables = cms.vstring("mass"),
             BinnedVariables = cms.PSet(
                 pt = cms.vdouble(10, 15, 20, 30, 40, 50, 75, 100, 200),
@@ -47,8 +47,8 @@ VEFFICIENCYSET =cms.VPSet(
         )
     ),
     cms.PSet(
-        MuId_abseta00_09 = cms.PSet(
-            EfficiencyCategoryAndState = cms.vstring("HLTL3Mu12_Filter", "true"),
+        Trg_abseta00_09 = cms.PSet(
+            EfficiencyCategoryAndState = cms.vstring("HLT_HIL3Mu12_Filter", "true"),
             UnbinnedVariables = cms.vstring("mass"),
             BinnedVariables = cms.PSet(
                 pt = cms.vdouble(10, 15, 20, 30,50, 80, 200),
@@ -60,8 +60,8 @@ VEFFICIENCYSET =cms.VPSet(
         )
     ),
     cms.PSet(
-        MuId_abseta09_12 = cms.PSet(
-            EfficiencyCategoryAndState = cms.vstring("HLTL3Mu12_Filter", "true"),
+        Trg_abseta09_12 = cms.PSet(
+            EfficiencyCategoryAndState = cms.vstring("HLT_HIL3Mu12_Filter", "true"),
             UnbinnedVariables = cms.vstring("mass"),
             BinnedVariables = cms.PSet(
                 pt = cms.vdouble(10, 15, 20, 30,50, 80, 200),
@@ -73,8 +73,8 @@ VEFFICIENCYSET =cms.VPSet(
         )
     ),
     cms.PSet(
-        MuId_abseta00_12 = cms.PSet(
-            EfficiencyCategoryAndState = cms.vstring("HLTL3Mu12_Filter", "true"),
+        Trg_abseta00_12 = cms.PSet(
+            EfficiencyCategoryAndState = cms.vstring("HLT_HIL3Mu12_Filter", "true"),
             UnbinnedVariables = cms.vstring("mass"),
             BinnedVariables = cms.PSet(
                 pt = cms.vdouble(10, 15, 20, 30,50, 80, 200),
@@ -86,8 +86,8 @@ VEFFICIENCYSET =cms.VPSet(
         )
     ),
     cms.PSet(
-         MuId_abseta12_16 = cms.PSet(
-             EfficiencyCategoryAndState = cms.vstring("HLTL3Mu12_Filter", "true"),
+         Trg_abseta12_16 = cms.PSet(
+             EfficiencyCategoryAndState = cms.vstring("HLT_HIL3Mu12_Filter", "true"),
              UnbinnedVariables = cms.vstring("mass"),
              BinnedVariables = cms.PSet(
                 pt = cms.vdouble(10, 15, 20, 30,50, 80, 200),
@@ -99,8 +99,8 @@ VEFFICIENCYSET =cms.VPSet(
         )
     ),
     cms.PSet(
-         MuId_abseta16_21 = cms.PSet(
-             EfficiencyCategoryAndState = cms.vstring("HLTL3Mu12_Filter", "true"),
+         Trg_abseta16_21 = cms.PSet(
+             EfficiencyCategoryAndState = cms.vstring("HLT_HIL3Mu12_Filter", "true"),
              UnbinnedVariables = cms.vstring("mass"),
              BinnedVariables = cms.PSet(
                 pt = cms.vdouble(10, 15, 20, 30,50, 80, 200),
@@ -112,8 +112,8 @@ VEFFICIENCYSET =cms.VPSet(
         )
     ),
     cms.PSet(
-         MuId_abseta12_21 = cms.PSet(
-             EfficiencyCategoryAndState = cms.vstring("HLTL3Mu12_Filter", "true"),
+         Trg_abseta12_21 = cms.PSet(
+             EfficiencyCategoryAndState = cms.vstring("HLT_HIL3Mu12_Filter", "true"),
              UnbinnedVariables = cms.vstring("mass"),
              BinnedVariables = cms.PSet(
                 pt = cms.vdouble(10, 15, 20, 30,50, 80, 200),
@@ -125,8 +125,8 @@ VEFFICIENCYSET =cms.VPSet(
         )
     ),
     cms.PSet(
-        MuId_abseta21_24 = cms.PSet(
-            EfficiencyCategoryAndState = cms.vstring("HLTL3Mu12_Filter", "true"),
+        Trg_abseta21_24 = cms.PSet(
+            EfficiencyCategoryAndState = cms.vstring("HLT_HIL3Mu12_Filter", "true"),
             UnbinnedVariables = cms.vstring("mass"),
             BinnedVariables = cms.PSet(
                 pt = cms.vdouble(10, 15, 20, 30,50, 80, 200),
@@ -138,8 +138,8 @@ VEFFICIENCYSET =cms.VPSet(
         )
     ),
     cms.PSet(
-        MuId_absetadep = cms.PSet(
-            EfficiencyCategoryAndState = cms.vstring("HLTL3Mu12_Filter", "true"),
+        Trg_absetadep = cms.PSet(
+            EfficiencyCategoryAndState = cms.vstring("HLT_HIL3Mu12_Filter", "true"),
             UnbinnedVariables = cms.vstring("mass"),
             BinnedVariables = cms.PSet(
                 pt = cms.vdouble(15, 200),
@@ -151,8 +151,8 @@ VEFFICIENCYSET =cms.VPSet(
         )
     ),
     cms.PSet(
-        MuId_etadep = cms.PSet(
-            EfficiencyCategoryAndState = cms.vstring("HLTL3Mu12_Filter", "true"),
+        Trg_etadep = cms.PSet(
+            EfficiencyCategoryAndState = cms.vstring("HLT_HIL3Mu12_Filter", "true"),
             UnbinnedVariables = cms.vstring("mass"),
             BinnedVariables = cms.PSet(
                 pt = cms.vdouble(15, 200),
@@ -164,8 +164,8 @@ VEFFICIENCYSET =cms.VPSet(
         )
     ),
     cms.PSet(
-        MuId_centdep = cms.PSet(
-            EfficiencyCategoryAndState = cms.vstring("HLTL3Mu12_Filter", "true"),
+        Trg_centdep = cms.PSet(
+            EfficiencyCategoryAndState = cms.vstring("HLT_HIL3Mu12_Filter", "true"),
             UnbinnedVariables = cms.vstring("mass"),
             BinnedVariables = cms.PSet(
                 pt = cms.vdouble(15, 200),
@@ -213,19 +213,7 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
                          pt     = cms.vstring("Probe p_{T}", "0.0", "1000", "GeV/c"),
                          eta    = cms.vstring("Probe #eta", "-2.4", "2.4", ""),
                          abseta = cms.vstring("Probe |#eta|", "0", "2.5", ""),
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
                          tag_hiBin  = cms.vstring("Centrality bin", "0", "200", ""),
-=======
-                         tag_hiBin = cms.vstring("Centrality bin", "0", "200", ""),
->>>>>>> 0002d2b465b1f447bab638fd1d4b7527988cfe5f
-=======
-                         tag_hiBin = cms.vstring("Centrality bin", "0", "200", ""),
->>>>>>> 0002d2b465b1f447bab638fd1d4b7527988cfe5f
-=======
-                         tag_hiBin = cms.vstring("Centrality bin", "0", "200", ""),
->>>>>>> 0002d2b465b1f447bab638fd1d4b7527988cfe5f
                          weight = cms.vstring("weight", "0", "10", ""),
     ),
     # defines all the discrete variables of the probes available in the input tree and intended for use in the efficiency calculations
@@ -234,8 +222,8 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
                         TightId = cms.vstring("TightId", "dummy[true=1,false=0]"),
                         Glb = cms.vstring("Glb", "dummy[true=1,false=0]"),
                         PF = cms.vstring("PF", "dummy[true=1,false=0]"),
-                        HLTL3Mu12_Filter = cms.vstring("HLTL3Mu12_Filter", "dummy[true=1,false=0]"),
-                        HLTL3Mu15_Filter = cms.vstring("HLTL3Mu15_Filter", "dummy[true=1,false=0]"),
+                        HLT_HIL3Mu12_Filter = cms.vstring("HLT_HIL3Mu12_Filter", "dummy[true=1,false=0]"),
+                        HLT_HIL3Mu15_Filter = cms.vstring("HLT_HIL3Mu15_Filter", "dummy[true=1,false=0]"),
     ),
 
     # defines all the PDFs that will be available for the efficiency calculations; uses RooFit's "factory" syntax;
