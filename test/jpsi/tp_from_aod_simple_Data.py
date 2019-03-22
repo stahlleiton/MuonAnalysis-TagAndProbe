@@ -99,7 +99,7 @@ process.mergedMuons = cms.EDProducer("CaloMuonMerger",
     tracks    = cms.InputTag("generalTracks"),
     minCaloCompatibility = calomuons.minCaloCompatibility,
     ## Apply some minimal pt cut
-    muonsCut     = cms.string(InLooseAcceptance),
+    muonsCut     = cms.string(InLooseAcceptance + " && track.isNonnull"),
     caloMuonsCut = cms.string(InLooseAcceptance),
     tracksCut    = cms.string(InLooseAcceptance),
 )
