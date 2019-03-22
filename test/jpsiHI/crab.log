@@ -1,0 +1,208 @@
+DEBUG 2018-10-26 17:29:46,999: 	 Executing command: 'submit'
+DEBUG 2018-10-26 17:29:46,999: 	 Found CRAB cache file /home/llr/cms/falmagne/.crab3
+DEBUG 2018-10-26 17:29:47,028: 	 Checking credentials
+DEBUG 2018-10-26 17:29:47,028: 	 Found proxy file /tmp/x509up_u879
+DEBUG 2018-10-26 17:29:47,028: 	 Getting proxy life time left
+DEBUG 2018-10-26 17:29:47,732: 	 Executing : 
+ command : voms-proxy-info -file /tmp/x509up_u879 -timeleft
+ output : 0
+
+ error: 
+ retcode : 0
+DEBUG 2018-10-26 17:29:47,732: 	 Proxy valid for 00:00:00 hours
+DEBUG 2018-10-26 17:29:47,732: 	 Creating new proxy for 24:00 hours with VO group '' and VO role 'NULL'.
+DEBUG 2018-10-26 17:29:53,743: 	 Executing : 
+ command : voms-proxy-init -voms cms:/cms -valid 24:00 -rfc
+ output : None
+ error: None
+ retcode : 0
+DEBUG 2018-10-26 17:29:54,447: 	 Executing : 
+ command : voms-proxy-info -file /tmp/x509up_u879 -timeleft
+ output : 86398
+
+ error: 
+ retcode : 0
+DEBUG 2018-10-26 17:29:55,151: 	 Executing : 
+ command : voms-proxy-info -file /tmp/x509up_u879 -actimeleft
+ output : 86397
+
+ error: 
+ retcode : 0
+DEBUG 2018-10-26 17:29:55,855: 	 Executing : 
+ command : env X509_USER_PROXY=/tmp/x509up_u879 voms-proxy-info -fqan
+ output : /cms/Role=NULL/Capability=NULL
+
+ error: 
+ retcode : 0
+DEBUG 2018-10-26 17:29:55,855: 	 Proxy created.
+INFO 2018-10-26 17:29:55,855: 	 Will use CRAB configuration file crabConfig_tnp_pp_data.py
+DEBUG 2018-10-26 17:29:55,856: 	 Loading CRAB configuration file.
+ERROR 2018-10-26 17:30:04,895: 	 Error while loading CRAB configuration:
+Failed to retrieve username from SiteDB. Your DN does not seem to be registered in SiteDB.
+Details follow:
+  Executed command: curl -s --capath /etc/grid-security/certificates --cert /tmp/x509up_u879 --key /tmp/x509up_u879 'https://cmsweb.cern.ch/sitedb/data/prod/whoami'
+    Stdout:
+      {"result": [
+       {"dn": "/DC=ch/DC=cern/OU=Organic Units/OU=Users/CN=gfalmagn/CN=783670/CN=Guillaume Falmagne", "login": null, "method": "X509Proxy", "roles": {}, "name": null}
+      ]}
+      
+    Parsed username: null
+Note: Make sure you have the correct certificate mapped in SiteDB (you can check what is the certificate you currently have mapped in SiteDB by searching for your name in https://cmsweb.cern.ch/sitedb/prod/people). For instructions on how to map a certificate in SiteDB, see https://twiki.cern.ch/twiki/bin/viewauth/CMS/SiteDBForCRAB.
+Please refer to https://twiki.cern.ch/twiki/bin/view/CMSPublic/CRAB3CommonErrors#Syntax_error_in_CRAB_configurati
+See the ./crab.log file for more details.
+The documentation about the CRAB configuration file can be found in https://twiki.cern.ch/twiki/bin/view/CMSPublic/CRAB3ConfigurationFile
+ERROR 2018-10-26 17:30:04,895: 	 Caught exception
+Traceback (most recent call last):
+  File "/cvmfs/cms.cern.ch/crab3/slc6_amd64_gcc493/cms/crabclient/3.3.1809-comp/bin/crab", line 160, in <module>
+    client()
+  File "/cvmfs/cms.cern.ch/crab3/slc6_amd64_gcc493/cms/crabclient/3.3.1809-comp/bin/crab", line 146, in __call__
+    self.cmd = sub_cmd(self.logger, args[1:])
+  File "/cvmfs/cms.cern.ch/crab3/slc6_amd64_gcc493/cms/crabclient/3.3.1809-comp/lib/python2.7/site-packages/CRABClient/Commands/submit.py", line 34, in __init__
+    SubCommand.__init__(self, logger, cmdargs, disable_interspersed_args=True)
+  File "/cvmfs/cms.cern.ch/crab3/slc6_amd64_gcc493/cms/crabclient/3.3.1809-comp/lib/python2.7/site-packages/CRABClient/Commands/SubCommand.py", line 303, in __init__
+    self.loadConfig(self.options.config, self.args)
+  File "/cvmfs/cms.cern.ch/crab3/slc6_amd64_gcc493/cms/crabclient/3.3.1809-comp/lib/python2.7/site-packages/CRABClient/Commands/SubCommand.py", line 84, in loadConfig
+    raise ConfigurationException(configmsg)
+ConfigurationException: Error while loading CRAB configuration:
+Failed to retrieve username from SiteDB. Your DN does not seem to be registered in SiteDB.
+Details follow:
+  Executed command: curl -s --capath /etc/grid-security/certificates --cert /tmp/x509up_u879 --key /tmp/x509up_u879 'https://cmsweb.cern.ch/sitedb/data/prod/whoami'
+    Stdout:
+      {"result": [
+       {"dn": "/DC=ch/DC=cern/OU=Organic Units/OU=Users/CN=gfalmagn/CN=783670/CN=Guillaume Falmagne", "login": null, "method": "X509Proxy", "roles": {}, "name": null}
+      ]}
+      
+    Parsed username: null
+[1mNote[0m: Make sure you have the correct certificate mapped in SiteDB (you can check what is the certificate you currently have mapped in SiteDB by searching for your name in https://cmsweb.cern.ch/sitedb/prod/people). For instructions on how to map a certificate in SiteDB, see https://twiki.cern.ch/twiki/bin/viewauth/CMS/SiteDBForCRAB.
+Please refer to https://twiki.cern.ch/twiki/bin/view/CMSPublic/CRAB3CommonErrors#Syntax_error_in_CRAB_configurati
+See the ./crab.log file for more details.
+The documentation about the CRAB configuration file can be found in https://twiki.cern.ch/twiki/bin/view/CMSPublic/CRAB3ConfigurationFile
+DEBUG 2018-10-26 17:30:22,172: 	 Executing command: 'submit'
+DEBUG 2018-10-26 17:30:22,172: 	 Found CRAB cache file /home/llr/cms/falmagne/.crab3
+DEBUG 2018-10-26 17:30:22,178: 	 Checking credentials
+DEBUG 2018-10-26 17:30:22,178: 	 Found proxy file /tmp/x509up_u879
+DEBUG 2018-10-26 17:30:22,178: 	 Getting proxy life time left
+DEBUG 2018-10-26 17:30:22,882: 	 Executing : 
+ command : voms-proxy-info -file /tmp/x509up_u879 -timeleft
+ output : 43197
+
+ error: 
+ retcode : 0
+DEBUG 2018-10-26 17:30:23,586: 	 Executing : 
+ command : voms-proxy-info -file /tmp/x509up_u879 -actimeleft
+ output : 43195
+
+ error: 
+ retcode : 0
+DEBUG 2018-10-26 17:30:23,586: 	 Proxy valid for 11:59:57 hours
+INFO 2018-10-26 17:30:23,587: 	 Will use CRAB configuration file crabConfig_tnp_pp_data.py
+DEBUG 2018-10-26 17:30:23,587: 	 Loading CRAB configuration file.
+ERROR 2018-10-26 17:30:29,952: 	 Error while loading CRAB configuration:
+Failed to retrieve username from SiteDB. Your DN does not seem to be registered in SiteDB.
+Details follow:
+  Executed command: curl -s --capath /etc/grid-security/certificates --cert /tmp/x509up_u879 --key /tmp/x509up_u879 'https://cmsweb.cern.ch/sitedb/data/prod/whoami'
+    Stdout:
+      {"result": [
+       {"dn": "/DC=ch/DC=cern/OU=Organic Units/OU=Users/CN=gfalmagn/CN=783670/CN=Guillaume Falmagne", "login": null, "method": "X509Proxy", "roles": {}, "name": null}
+      ]}
+      
+    Parsed username: null
+Note: Make sure you have the correct certificate mapped in SiteDB (you can check what is the certificate you currently have mapped in SiteDB by searching for your name in https://cmsweb.cern.ch/sitedb/prod/people). For instructions on how to map a certificate in SiteDB, see https://twiki.cern.ch/twiki/bin/viewauth/CMS/SiteDBForCRAB.
+Please refer to https://twiki.cern.ch/twiki/bin/view/CMSPublic/CRAB3CommonErrors#Syntax_error_in_CRAB_configurati
+See the ./crab.log file for more details.
+The documentation about the CRAB configuration file can be found in https://twiki.cern.ch/twiki/bin/view/CMSPublic/CRAB3ConfigurationFile
+ERROR 2018-10-26 17:30:29,952: 	 Caught exception
+Traceback (most recent call last):
+  File "/cvmfs/cms.cern.ch/crab3/slc6_amd64_gcc493/cms/crabclient/3.3.1809-comp/bin/crab", line 160, in <module>
+    client()
+  File "/cvmfs/cms.cern.ch/crab3/slc6_amd64_gcc493/cms/crabclient/3.3.1809-comp/bin/crab", line 146, in __call__
+    self.cmd = sub_cmd(self.logger, args[1:])
+  File "/cvmfs/cms.cern.ch/crab3/slc6_amd64_gcc493/cms/crabclient/3.3.1809-comp/lib/python2.7/site-packages/CRABClient/Commands/submit.py", line 34, in __init__
+    SubCommand.__init__(self, logger, cmdargs, disable_interspersed_args=True)
+  File "/cvmfs/cms.cern.ch/crab3/slc6_amd64_gcc493/cms/crabclient/3.3.1809-comp/lib/python2.7/site-packages/CRABClient/Commands/SubCommand.py", line 303, in __init__
+    self.loadConfig(self.options.config, self.args)
+  File "/cvmfs/cms.cern.ch/crab3/slc6_amd64_gcc493/cms/crabclient/3.3.1809-comp/lib/python2.7/site-packages/CRABClient/Commands/SubCommand.py", line 84, in loadConfig
+    raise ConfigurationException(configmsg)
+ConfigurationException: Error while loading CRAB configuration:
+Failed to retrieve username from SiteDB. Your DN does not seem to be registered in SiteDB.
+Details follow:
+  Executed command: curl -s --capath /etc/grid-security/certificates --cert /tmp/x509up_u879 --key /tmp/x509up_u879 'https://cmsweb.cern.ch/sitedb/data/prod/whoami'
+    Stdout:
+      {"result": [
+       {"dn": "/DC=ch/DC=cern/OU=Organic Units/OU=Users/CN=gfalmagn/CN=783670/CN=Guillaume Falmagne", "login": null, "method": "X509Proxy", "roles": {}, "name": null}
+      ]}
+      
+    Parsed username: null
+[1mNote[0m: Make sure you have the correct certificate mapped in SiteDB (you can check what is the certificate you currently have mapped in SiteDB by searching for your name in https://cmsweb.cern.ch/sitedb/prod/people). For instructions on how to map a certificate in SiteDB, see https://twiki.cern.ch/twiki/bin/viewauth/CMS/SiteDBForCRAB.
+Please refer to https://twiki.cern.ch/twiki/bin/view/CMSPublic/CRAB3CommonErrors#Syntax_error_in_CRAB_configurati
+See the ./crab.log file for more details.
+The documentation about the CRAB configuration file can be found in https://twiki.cern.ch/twiki/bin/view/CMSPublic/CRAB3ConfigurationFile
+DEBUG 2018-10-29 15:47:43,698: 	 Executing command: 'kill'
+DEBUG 2018-10-29 15:47:43,699: 	 Found CRAB cache file /home/llr/cms/falmagne/.crab3
+ERROR 2018-10-29 15:47:43,717: 	 Error: Please indicate the CRAB project directory with --dir=<project-directory>.
+ERROR 2018-10-29 15:47:43,718: 	 Caught exception
+Traceback (most recent call last):
+  File "/cvmfs/cms.cern.ch/crab3/slc6_amd64_gcc493/cms/crabclient/3.3.1809-comp/bin/crab", line 160, in <module>
+    client()
+  File "/cvmfs/cms.cern.ch/crab3/slc6_amd64_gcc493/cms/crabclient/3.3.1809-comp/bin/crab", line 146, in __call__
+    self.cmd = sub_cmd(self.logger, args[1:])
+  File "/cvmfs/cms.cern.ch/crab3/slc6_amd64_gcc493/cms/crabclient/3.3.1809-comp/lib/python2.7/site-packages/CRABClient/Commands/SubCommand.py", line 262, in __init__
+    self.validateOptions()
+  File "/cvmfs/cms.cern.ch/crab3/slc6_amd64_gcc493/cms/crabclient/3.3.1809-comp/lib/python2.7/site-packages/CRABClient/Commands/kill.py", line 55, in validateOptions
+    SubCommand.validateOptions(self)
+  File "/cvmfs/cms.cern.ch/crab3/slc6_amd64_gcc493/cms/crabclient/3.3.1809-comp/lib/python2.7/site-packages/CRABClient/Commands/SubCommand.py", line 571, in validateOptions
+    raise ex
+MissingOptionException: [91mError[0m: Please indicate the CRAB project directory with --dir=<project-directory>.
+DEBUG 2018-10-29 15:47:53,429: 	 Executing command: 'kill'
+DEBUG 2018-10-29 15:47:53,429: 	 Found CRAB cache file /home/llr/cms/falmagne/.crab3
+ERROR 2018-10-29 15:47:53,430: 	 Error: 0 is not a valid CRAB project directory.
+ERROR 2018-10-29 15:47:53,430: 	 Caught exception
+Traceback (most recent call last):
+  File "/cvmfs/cms.cern.ch/crab3/slc6_amd64_gcc493/cms/crabclient/3.3.1809-comp/bin/crab", line 160, in <module>
+    client()
+  File "/cvmfs/cms.cern.ch/crab3/slc6_amd64_gcc493/cms/crabclient/3.3.1809-comp/bin/crab", line 146, in __call__
+    self.cmd = sub_cmd(self.logger, args[1:])
+  File "/cvmfs/cms.cern.ch/crab3/slc6_amd64_gcc493/cms/crabclient/3.3.1809-comp/lib/python2.7/site-packages/CRABClient/Commands/SubCommand.py", line 262, in __init__
+    self.validateOptions()
+  File "/cvmfs/cms.cern.ch/crab3/slc6_amd64_gcc493/cms/crabclient/3.3.1809-comp/lib/python2.7/site-packages/CRABClient/Commands/kill.py", line 55, in validateOptions
+    SubCommand.validateOptions(self)
+  File "/cvmfs/cms.cern.ch/crab3/slc6_amd64_gcc493/cms/crabclient/3.3.1809-comp/lib/python2.7/site-packages/CRABClient/Commands/SubCommand.py", line 575, in validateOptions
+    raise ConfigurationException(msg)
+ConfigurationException: [91mError[0m: 0 is not a valid CRAB project directory.
+DEBUG 2018-10-29 15:51:03,294: 	 Executing command: 'submit'
+DEBUG 2018-10-29 15:51:03,294: 	 Found CRAB cache file /home/llr/cms/falmagne/.crab3
+DEBUG 2018-10-29 15:51:03,317: 	 Checking credentials
+DEBUG 2018-10-29 15:51:03,317: 	 Found proxy file /tmp/x509up_u879
+DEBUG 2018-10-29 15:51:03,317: 	 Getting proxy life time left
+DEBUG 2018-10-29 15:51:04,021: 	 Executing : 
+ command : voms-proxy-info -file /tmp/x509up_u879 -timeleft
+ output : 36892
+
+ error: 
+ retcode : 0
+DEBUG 2018-10-29 15:51:04,725: 	 Executing : 
+ command : voms-proxy-info -file /tmp/x509up_u879 -actimeleft
+ output : 36892
+
+ error: 
+ retcode : 0
+DEBUG 2018-10-29 15:51:04,725: 	 Proxy valid for 10:14:52 hours
+INFO 2018-10-29 15:51:04,725: 	 Will use CRAB configuration file crabConfig_tnp_pp_data.py
+DEBUG 2018-10-29 15:51:04,726: 	 Loading CRAB configuration file.
+DEBUG 2018-10-29 15:51:07,999: 	 Will use CRAB Analysis plugin (i.e. will run an analysis job type).
+ERROR 2018-10-29 15:51:08,000: 	 Working area '/grid_mnt/vol__vol_U__u/llr/cms/falmagne/TnP/CMSSW_9_4_4/src/MuonAnalysis/TagAndProbe/test/jpsiHI/crab_projects/crab_TNP_SingleMu_pp5TeVRun2017G_PromptReco_v1_AOD_20181026' already exists 
+Please change the requestName in the config file
+ERROR 2018-10-29 15:51:08,000: 	 Caught exception
+Traceback (most recent call last):
+  File "/cvmfs/cms.cern.ch/crab3/slc6_amd64_gcc493/cms/crabclient/3.3.1809-comp/bin/crab", line 160, in <module>
+    client()
+  File "/cvmfs/cms.cern.ch/crab3/slc6_amd64_gcc493/cms/crabclient/3.3.1809-comp/bin/crab", line 146, in __call__
+    self.cmd = sub_cmd(self.logger, args[1:])
+  File "/cvmfs/cms.cern.ch/crab3/slc6_amd64_gcc493/cms/crabclient/3.3.1809-comp/lib/python2.7/site-packages/CRABClient/Commands/submit.py", line 34, in __init__
+    SubCommand.__init__(self, logger, cmdargs, disable_interspersed_args=True)
+  File "/cvmfs/cms.cern.ch/crab3/slc6_amd64_gcc493/cms/crabclient/3.3.1809-comp/lib/python2.7/site-packages/CRABClient/Commands/SubCommand.py", line 307, in __init__
+    getattr(self.configuration.General, 'requestName', None))
+  File "/cvmfs/cms.cern.ch/crab3/slc6_amd64_gcc493/cms/crabclient/3.3.1809-comp/lib/python2.7/site-packages/CRABClient/ClientUtilities.py", line 404, in createWorkArea
+    raise ConfigException("Working area '%s' already exists \nPlease change the requestName in the config file" % fullpath)
+ConfigException: Working area '/grid_mnt/vol__vol_U__u/llr/cms/falmagne/TnP/CMSSW_9_4_4/src/MuonAnalysis/TagAndProbe/test/jpsiHI/crab_projects/crab_TNP_SingleMu_pp5TeVRun2017G_PromptReco_v1_AOD_20181026' already exists 
+Please change the requestName in the config file
