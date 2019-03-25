@@ -21,7 +21,7 @@ TTree* copyTreeAndAddWeight(TTree* told, int nentries=0)
   tnew->SetAutoSave(0);
   tnew->SetAutoFlush(0);
   int isTightMuon=-1, passedDXY_TIGHT=-1, passedDZ_TIGHT=-1, passedValidPixelHits=-1, passedTrackerLayers=-1, passedMatchedStations=-1, passedMuHits=-1, passedglbChi2=-1, Glb=-1, PF=-1;
-  int isSoftMuon=-1, isHybridSoftMuon=-1, passedDXY_SOFT=-1, passedDZ_SOFT=-1, passedPixelLayers=-1, TMOST=-1, Track_HP=-1, TM=-1;
+  int isSoftMuon=-1, isHybridSoftMuon2015=-1, isHybridSoftMuon2018=-1, passedDXY_SOFT=-1, passedDZ_SOFT=-1, passedPixelLayers=-1, TMOST=-1, Track_HP=-1, TM=-1;
   float dzPV=-999., dxyPV=-999., dB=-999., tkValidPixelHits=-1., tkPixelLay=-1., tkTrackerLay=-1., numberOfMatchedStations=-1., glbValidMuHits=-1., glbChi2=999., hiBin=-1., genWeight=-999., weight=1.;
 
   told->SetBranchAddress("dzPV",&dzPV);
@@ -50,7 +50,8 @@ TTree* copyTreeAndAddWeight(TTree* told, int nentries=0)
   tnew->Branch("passedMuHits", &passedMuHits, "passedMuHits/I");
   tnew->Branch("passedglbChi2", &passedglbChi2, "passedglbChi2/I");
   tnew->Branch("isSoftMuon", &isSoftMuon, "isSoftMuon/I");
-  tnew->Branch("isHybridSoftMuon", &isHybridSoftMuon, "isHybridSoftMuon/I");
+  tnew->Branch("isHybridSoftMuon2015", &isHybridSoftMuon2015, "isHybridSoftMuon2015/I");
+  tnew->Branch("isHybridSoftMuon2018", &isHybridSoftMuon2018, "isHybridSoftMuon2018/I");
   tnew->Branch("passedDXY_SOFT", &passedDXY_SOFT, "passedDXY_SOFT/I");
   tnew->Branch("passedDZ_SOFT", &passedDZ_SOFT, "passedDZ_SOFT/I");
   tnew->Branch("passedPixelLayers", &passedPixelLayers, "passedPixelLayers/I");
@@ -90,8 +91,9 @@ TTree* copyTreeAndAddWeight(TTree* told, int nentries=0)
     passedPixelLayers = (tkPixelLay > 0.1);
     passedTrackerLayers = (tkTrackerLay > 5.1);
 
-    //HybridSoftMuonID 2015 PbPb
-    isHybridSoftMuon = (Glb==1 && TM==1 && TMOST==1 && fabs(dxyPV)<DXYCUT_SOFT && fabs(dzPV)<DZCUT_SOFT && tkPixelLay>0.1 && tkTrackerLay>5.1);
+    //HybridSoftMuonID PbPb
+    isHybridSoftMuon2015 = (Glb==1 && TM==1 && TMOST==1 && fabs(dxyPV)<DXYCUT_SOFT && fabs(dzPV)<DZCUT_SOFT && tkPixelLay>0.1 && tkTrackerLay>5.1);
+    isHybridSoftMuon2018 = (Glb==1 && TM==1 && fabs(dxyPV)<DXYCUT_SOFT && fabs(dzPV)<DZCUT_SOFT && tkPixelLay>0.1 && tkTrackerLay>5.1);
 
     //Weight
     weight = (nentries/sumWeight);
