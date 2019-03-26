@@ -2,7 +2,7 @@ from CRABClient.UserUtilities import config, getUsernameFromSiteDB
 config = config()
 
 config.section_('General')
-config.General.requestName = 'TnP_HISingleMuon_v1_PbPb5TeV_2018_JPsi_Data_20190310'
+config.General.requestName = 'TnP_HISingleMuon_v1_PbPb5TeV_2018_JPsi_Data_20190324'
 config.General.workArea = 'crab_projects'
 config.General.transferOutputs = True
 config.General.transferLogs = False
@@ -10,7 +10,8 @@ config.General.transferLogs = False
 config.section_('JobType')
 config.JobType.pluginName = 'Analysis'
 config.JobType.psetName = 'tnp_PbPb_data.py'
-config.JobType.maxMemoryMB = 2400
+config.JobType.maxMemoryMB = 2500
+config.JobType.maxJobRuntimeMin = 1200
 
 config.section_('Data')
 config.Data.inputDataset = '/HISingleMuon/HIRun2018A-PromptReco-v1/AOD'
@@ -25,5 +26,5 @@ config.Data.outputDatasetTag = config.General.requestName
 
 config.section_('Site')
 config.Data.ignoreLocality = True
-config.Site.whitelist = ['T1_IT_*','T1_US_*','T2_CH_*','T2_FR_*','T2_US_*']
+config.Site.whitelist = ['T1_US_*','T2_CH_*','T2_FR_*','T2_US_*']
 config.Site.storageSite = 'T2_CH_CERN'
