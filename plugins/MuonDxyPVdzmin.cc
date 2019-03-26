@@ -66,7 +66,7 @@ bs_(consumes<reco::BeamSpot>(edm::InputTag("offlineBeamSpot")))
   produces<edm::ValueMap<float> >("dxyBS");
   produces<edm::ValueMap<float> >("dxyPVdzmin");
   produces<edm::ValueMap<float> >("dzPV");
-  produces<edm::ValueMap<bool> >("dxyzPVCuts");
+  produces<edm::ValueMap<float> >("dxyPV");
 }
 
 
@@ -106,7 +106,7 @@ MuonDxyPVdzmin::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
   std::vector<double> muon_dxyBS;
   std::vector<double> muon_dxy;
   std::vector<double> muon_dz;
-  std::vector<bool> muon_dxyzPVCuts;
+  std::vector<double> muon_dxyPV;
 
   // fill
   View<reco::Muon>::const_iterator probe, endprobes = probes->end();
@@ -117,6 +117,7 @@ MuonDxyPVdzmin::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
     Double_t dxyBS = -99999.;
     Double_t dxy_ivtx_dzmin=65535;
     Double_t dzPV = -99999.;
+    Double_t dxyPV = -99999.;
 
     if(probe->innerTrack().isNonnull()){
       
@@ -132,6 +133,8 @@ MuonDxyPVdzmin::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
       muon_dxyBS.push_back(dxyBS);
       dzPV = muonTrack->dz(primaryVerticesHandle->at(0).position());
       muon_dz.push_back(dzPV);
+      dxyPV = muonTrack->dz(primaryVerticesHandle->at(0).position());
+      muon_dxyPV.push_back(dxyPV);
 
       for(unsigned int iVtx=0; iVtx<primaryVerticesHandle->size(); iVtx++){
 
@@ -167,22 +170,21 @@ MuonDxyPVdzmin::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
       muon_dxy.push_back(dxy_ivtx_dzmin);
     }
 
-    muon_dxyzPVCuts.push_back((fabs(dxy_ivtx_dzmin)<0.3 && fabs(dzPV)<20));
   }// end loop on probes
 
   // convert into ValueMap and store
   std::unique_ptr<ValueMap<float> > dxyBS(new ValueMap<float>());
   std::unique_ptr<ValueMap<float> > dxyPVdzmin(new ValueMap<float>());
   std::unique_ptr<ValueMap<float> > dzPV(new ValueMap<float>());
-  std::unique_ptr<ValueMap<bool> > dxyzPVCuts(new ValueMap<bool>());
+  std::unique_ptr<ValueMap<float> > dxyPV(new ValueMap<float>());
   ValueMap<float>::Filler filler0(*dxyBS);
   ValueMap<float>::Filler filler1(*dxyPVdzmin);
   ValueMap<float>::Filler filler2(*dzPV);
-  ValueMap<bool>::Filler filler3(*dxyzPVCuts);
+  ValueMap<float>::Filler filler3(*dxyPV);
   filler0.insert(probes, muon_dxyBS.begin(), muon_dxyBS.end());
   filler1.insert(probes, muon_dxy.begin(), muon_dxy.end());
   filler2.insert(probes, muon_dz.begin(), muon_dz.end());
-  filler3.insert(probes, muon_dxyzPVCuts.begin(), muon_dxyzPVCuts.end());
+  filler3.insert(probes, muon_dxyPV.begin(), muon_dxyPV.end());
   filler0.fill();
   filler1.fill();
   filler2.fill();
@@ -191,7 +193,7 @@ MuonDxyPVdzmin::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
   iEvent.put(std::move(dxyBS), "dxyBS");
   iEvent.put(std::move(dxyPVdzmin), "dxyPVdzmin");
   iEvent.put(std::move(dzPV), "dzPV");
-  iEvent.put(std::move(dxyzPVCuts), "dxyzPVCuts");
+  iEvent.put(std::move(dxyPV), "dxyPV");
 
 }
 
