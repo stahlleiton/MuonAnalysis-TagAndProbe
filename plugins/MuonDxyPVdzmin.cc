@@ -67,6 +67,7 @@ bs_(consumes<reco::BeamSpot>(edm::InputTag("offlineBeamSpot")))
   produces<edm::ValueMap<float> >("dxyPVdzmin");
   produces<edm::ValueMap<float> >("dzPV");
   produces<edm::ValueMap<float> >("dxyPV");
+  produces<edm::ValueMap<bool> >("dxyzPVCuts");
 }
 
 
@@ -107,6 +108,7 @@ MuonDxyPVdzmin::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
   std::vector<double> muon_dxy;
   std::vector<double> muon_dz;
   std::vector<double> muon_dxyPV;
+  std::vector<bool> muon_dxyzPVCuts;
 
   // fill
   View<reco::Muon>::const_iterator probe, endprobes = probes->end();
@@ -133,7 +135,7 @@ MuonDxyPVdzmin::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
       muon_dxyBS.push_back(dxyBS);
       dzPV = muonTrack->dz(primaryVerticesHandle->at(0).position());
       muon_dz.push_back(dzPV);
-      dxyPV = muonTrack->dz(primaryVerticesHandle->at(0).position());
+      dxyPV = muonTrack->dxy(primaryVerticesHandle->at(0).position());
       muon_dxyPV.push_back(dxyPV);
 
       for(unsigned int iVtx=0; iVtx<primaryVerticesHandle->size(); iVtx++){
@@ -170,6 +172,7 @@ MuonDxyPVdzmin::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
       muon_dxy.push_back(dxy_ivtx_dzmin);
     }
 
+    muon_dxyzPVCuts.push_back((fabs(dxyPV)<0.3 && fabs(dzPV)<20));
   }// end loop on probes
 
   // convert into ValueMap and store
@@ -177,24 +180,28 @@ MuonDxyPVdzmin::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
   std::unique_ptr<ValueMap<float> > dxyPVdzmin(new ValueMap<float>());
   std::unique_ptr<ValueMap<float> > dzPV(new ValueMap<float>());
   std::unique_ptr<ValueMap<float> > dxyPV(new ValueMap<float>());
+  std::unique_ptr<ValueMap<bool> > dxyzPVCuts(new ValueMap<bool>());
   ValueMap<float>::Filler filler0(*dxyBS);
   ValueMap<float>::Filler filler1(*dxyPVdzmin);
   ValueMap<float>::Filler filler2(*dzPV);
   ValueMap<float>::Filler filler3(*dxyPV);
+  ValueMap<bool>::Filler filler4(*dxyzPVCuts);
   filler0.insert(probes, muon_dxyBS.begin(), muon_dxyBS.end());
   filler1.insert(probes, muon_dxy.begin(), muon_dxy.end());
   filler2.insert(probes, muon_dz.begin(), muon_dz.end());
   filler3.insert(probes, muon_dxyPV.begin(), muon_dxyPV.end());
+  filler4.insert(probes, muon_dxyzPVCuts.begin(), muon_dxyzPVCuts.end());
   filler0.fill();
   filler1.fill();
   filler2.fill();
   filler3.fill();
+  filler4.fill();
 
   iEvent.put(std::move(dxyBS), "dxyBS");
   iEvent.put(std::move(dxyPVdzmin), "dxyPVdzmin");
   iEvent.put(std::move(dzPV), "dzPV");
   iEvent.put(std::move(dxyPV), "dxyPV");
-
+  iEvent.put(std::move(dxyzPVCuts), "dxyzPVCuts");
 }
 
 // ------------ method called once each job just before starting event loop  ------------

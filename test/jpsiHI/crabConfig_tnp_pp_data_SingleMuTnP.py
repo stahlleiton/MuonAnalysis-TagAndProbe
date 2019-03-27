@@ -2,7 +2,7 @@ from CRABClient.UserUtilities import config, getUsernameFromSiteDB
 config = config()
 
 config.section_('General')
-config.General.requestName = 'TNP_SingleMu_pp5TeVRun2017G_PromptReco_v1_AOD_20190327'
+config.General.requestName = 'TNP_SingleMuTnP_pp5TeVRun2017G_PromptReco_v1_AOD_20190327'
 config.General.workArea = 'crab_projects'
 config.General.transferOutputs = True
 config.General.transferLogs = True
@@ -14,7 +14,7 @@ config.JobType.maxMemoryMB = 2500
 config.JobType.outputFiles = ['tnpJPsi_Data_pp5TeVRun2017G_AOD.root']
 
 config.section_('Data')
-config.Data.inputDataset = '/SingleMuon/Run2017G-17Nov2017-v1/AOD'
+config.Data.inputDataset = '/SingleMuonTnP/Run2017G-17Nov2017-v1/AOD'
 config.Data.inputDBS = 'global'
 config.Data.unitsPerJob = 40
 config.Data.splitting = 'LumiBased'

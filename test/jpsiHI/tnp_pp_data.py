@@ -195,7 +195,7 @@ process.tpTree = cms.EDAnalyzer("TagProbeFitTreeProducer",
         MuonIDVariables,
         TrackQualityVariables,
         GlobalTrackQualityVariables,
-        dxyBS = cms.InputTag("muonDxyPVdzmin","dxyBS"),
+        #dxyBS = cms.InputTag("muonDxyPVdzmin","dxyBS"),
         dxyPVdzmin = cms.InputTag("muonDxyPVdzmin","dxyPVdzmin"),
         dzPV = cms.InputTag("muonDxyPVdzmin","dzPV"),
         dxyPV = cms.InputTag("muonDxyPVdzmin","dxyPV"),
@@ -211,6 +211,7 @@ process.tpTree = cms.EDAnalyzer("TagProbeFitTreeProducer",
         HybridSoftId_2015 = cms.string(HybridSoftId_2015),
         HybridSoftId_2018 = cms.string(HybridSoftId_2018),
         SoftIdWithoutDxyz = cms.string(SoftId),
+        #dxyzPVCuts = cms.InputTag("muonDxyPVdzmin","dxyzPVCuts"),
     ),
     tagVariables = cms.PSet(
         KinematicVariables,
@@ -218,7 +219,7 @@ process.tpTree = cms.EDAnalyzer("TagProbeFitTreeProducer",
         TrackQualityVariables,
         GlobalTrackQualityVariables,
         nVertices = cms.InputTag("nverticesModule"),
-        dxyBS = cms.InputTag("muonDxyPVdzminTags","dxyBS"),
+        #dxyBS = cms.InputTag("muonDxyPVdzminTags","dxyBS"),
         dxyPVdzmin = cms.InputTag("muonDxyPVdzminTags","dxyPVdzmin"),
         dzPV = cms.InputTag("muonDxyPVdzminTags","dzPV"),
         dxyPV = cms.InputTag("muonDxyPVdzminTags","dxyPV"),
@@ -279,8 +280,8 @@ process.tnpSimpleSequence = cms.Sequence(
 
 process.tagAndProbe = cms.Path(
     process.fastFilter
-    * process.fastPseudoTnP
-    * process.mergedMuons * process.patMuonsWithTriggerSequence
+    * process.fastPseudoTnP ##includes mergedMuons
+    * process.patMuonsWithTriggerSequence
     * process.tnpSimpleSequence
 )
 
@@ -392,8 +393,8 @@ process.RandomNumberGeneratorService.tkTracksNoBestJPsi  = cms.PSet( initialSeed
 
 process.tagAndProbeSta = cms.Path(
     process.fastFilter
-    * process.fastPseudoTnPSta
-    * process.mergedMuons * process.patMuonsWithTriggerSequence
+    * process.fastPseudoTnPSta ##includes mergedMuons
+    * process.patMuonsWithTriggerSequence
     * process.muonsSta * process.patMuonsWithTriggerSequenceSta
     * process.tnpSimpleSequenceSta
 )
@@ -438,7 +439,7 @@ process.tpTreeTrk = cms.EDAnalyzer("TagProbeFitTreeProducer",
     variables = cms.PSet(
       KinematicVariables,
       StaOnlyVariables,
-      dxyBS = cms.InputTag("muonDxyPVdzminTrk","dxyBS"),
+      #dxyBS = cms.InputTag("muonDxyPVdzminTrk","dxyBS"),
       dxyPVdzmin = cms.InputTag("muonDxyPVdzminTrk","dxyPVdzmin"),
       dzPV = cms.InputTag("muonDxyPVdzminTrk","dzPV"),
       dxyPV = cms.InputTag("muonDxyPVdzminTrk","dxyPV"),
@@ -451,6 +452,7 @@ process.tpTreeTrk = cms.EDAnalyzer("TagProbeFitTreeProducer",
       InAcceptance_2015 = cms.string(InAcceptance_2015),
       InAcceptance_2018_Loose = cms.string(InAcceptance_2018_Loose),
       InAcceptance_2018_Tight = cms.string(InAcceptance_2018_Tight),
+      #dxyzPVCuts = cms.InputTag("muonDxyPVdzminTrk","dxyzPVCuts"),
     ),
     tagVariables = cms.PSet(
       TrackQualityVariables,
@@ -497,8 +499,8 @@ process.tnpSimpleSequenceTrk = cms.Sequence(
 
 process.tagAndProbeTrk = cms.Path(
     process.fastFilter
-    * process.fastPseudoTnPTrk
-    * process.mergedMuons * process.patMuonsWithTriggerSequence
+    * process.fastPseudoTnPTrk ##includes mergedMuons
+    * process.patMuonsWithTriggerSequence
     * process.tnpSimpleSequenceTrk
 )
 
@@ -508,4 +510,4 @@ process.schedule = cms.Schedule(
    process.tagAndProbeTrk,
 )
 
-process.TFileService = cms.Service("TFileService", fileName = cms.string("tnpJpsi_MC_PbPb.root"))
+process.TFileService = cms.Service("TFileService", fileName = cms.string("tnpJpsi_data_pp5TeV.root"))
