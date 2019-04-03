@@ -17,7 +17,7 @@ process.load('Configuration.StandardSequences.MagneticField_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_condDBv2_cff')
 process.load("Configuration.StandardSequences.Reconstruction_cff")
 
-process.GlobalTag.globaltag = cms.string('103X_dataRun2_Prompt_v3')
+process.GlobalTag.globaltag = cms.string('103X_dataRun2_v6')
 
 ## PbPb centrality bin producer
 process.load("RecoHI.HiCentralityAlgos.CentralityBin_cfi")

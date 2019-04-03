@@ -133,7 +133,7 @@ MuonDxyPVdzmin::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
       muon_dxyBS.push_back(dxyBS);
       dzPV = muonTrack->dz(primaryVerticesHandle->at(0).position());
       muon_dz.push_back(dzPV);
-      dxyPV = muonTrack->dz(primaryVerticesHandle->at(0).position());
+      dxyPV = muonTrack->dxy(primaryVerticesHandle->at(0).position());
       muon_dxyPV.push_back(dxyPV);
 
       for(unsigned int iVtx=0; iVtx<primaryVerticesHandle->size(); iVtx++){
