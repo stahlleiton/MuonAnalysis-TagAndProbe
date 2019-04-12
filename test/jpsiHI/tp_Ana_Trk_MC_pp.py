@@ -13,18 +13,18 @@ PDFName = "twoGaussPlusPol2"
 process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     # IO parameters:
     #InputFileNames = cms.vstring("root://cms-xrd-global.cern.ch//store/group/phys_heavyions/dileptons/TNPTagAndProbe2015/Data2015/pp502TeV/TTrees/tnpJPsi_Data_pp5TeV_AOD.root"),
-    InputFileNames = cms.vstring("file:/afs/cern.ch/work/v/vabdulla/private/TnP/tnpJPsi_MC_pp5TeV_AOD_dxyzflags.root"),
+    InputFileNames = cms.vstring("file:/home/llr/cms/falmagne/tuples/pp17/TnP/TNP_JpsiMM_5p02TeV_TuneCUETP8M1_RunIIpp5Spring18DR-94X_AODSIM_20190327/tnpJpsi_mc_pp5TeV_PromptJpsi_wAddedFlags.root"),
     InputDirectoryName = cms.string("tpTreeSta"),
     InputTreeName = cms.string("fitter_tree"),
     #numbrer of CPUs to use for fitting
-    OutputFileName = cms.string("file:/afs/cern.ch/work/v/vabdulla/private/TnP/Trk/tnp_Ana_Trk_MC_pp_etapT_220217_ValHits.root"),
-    NumCPU = cms.uint32(25),
+    OutputFileName = cms.string("file:./tnp_fitOutput_Tracking_MC_pp_09042019_pol1.root"),
+    NumCPU = cms.uint32(16),
     # specifies wether to save the RooWorkspace containing the data for each bin and
     # the pdf object with the initial and final state snapshots
     SaveWorkspace = cms.bool(False),
     binsForMassPlots = cms.uint32(50),
-    binnedFit = cms.bool(False),
-    #binsForFit = cms.uint32(45),
+    binnedFit = cms.bool(True),
+    binsForFit = cms.uint32(90),
     WeightVariable = cms.string("weight"),
     
     # defines all the real variables of the probes available in the input tree; can be used to select a subset of the probes
@@ -37,8 +37,7 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
         staQoverP        = cms.vstring("Probe Q/p", "-200", "200", ""),
         staQoverPerror   = cms.vstring("Probe Q/p error", "0", "650", ""),
         staValidStations = cms.vstring("Probe STA valid stations", "0", "15", ""),
-	staNumValidHits  = cms.vstring("Probe Valid Hits", "0", "60", ""),
-        
+	staNumValidHits  = cms.vstring("Probe Valid Hits", "0", "60", ""),        
         tag_pt           = cms.vstring("Tag p_{T}", "0.0", "1000", "GeV/c"),
         tag_eta          = cms.vstring("Tag #eta", "-2.4", "2.4", ""),
         tag_abseta       = cms.vstring("Tag |#eta|", "0", "2.5", ""),
@@ -68,8 +67,8 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
         ),
         
         twoGaussPlusPol2 = cms.vstring(
-            "Gaussian::signal1(mass, mean[3.1,3.05,3.15], sigma1[0.025, 0.01, 0.2])",
-            "Gaussian::signal2(mass, mean, sigma2[0.04,0.05,0.3])",
+            "Gaussian::signal1(mass, mean[3.1,2.97,3.2], sigma1[0.025, 0.01, 0.2])",
+            "Gaussian::signal2(mass, mean, sigma2[0.04,0.05,0.35])",
             "SUM::signal(vFrac[0.8,0,1]*signal1, signal2)",
             "Chebychev::backgroundPass(mass, {cPass[0,-1.0,1.0], cPass2[0,-1.0,1.0]})",
             "Chebychev::backgroundFail(mass, {cFail[0,-1.0,1.0], cFail2[0,-1.0,1.0]})",
