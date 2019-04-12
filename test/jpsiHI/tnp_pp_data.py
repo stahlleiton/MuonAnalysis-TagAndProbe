@@ -17,7 +17,7 @@ process.load('Configuration.StandardSequences.MagneticField_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_condDBv2_cff')
 process.load("Configuration.StandardSequences.Reconstruction_cff")
 
-process.GlobalTag.globaltag = cms.string('94X_dataRun2_Prompt_v2')
+process.GlobalTag.globaltag = cms.string('94X_dataRun2_v11')
 
 InAcceptance_2015       = '((abs(eta)<1.2 && pt>=3.5) || (1.2<=abs(eta) && abs(eta)<2.1 && pt>=5.77-1.89*abs(eta)) || (2.1<=abs(eta) && abs(eta)<2.4 && pt>=1.8))'
 InAcceptance_2018_Tight = '((abs(eta)<1.2 && pt>=3.5) || (1.2<=abs(eta) && abs(eta)<2.1 && pt>=5.47-1.89*abs(eta)) || (2.1<=abs(eta) && abs(eta)<2.4 && pt>=1.5))'
@@ -43,7 +43,7 @@ process.triggerResultsFilter.hltResults = cms.InputTag("TriggerResults","","HLT"
 process.triggerResultsFilter.l1tResults = cms.InputTag("") # keep empty!
 process.triggerResultsFilter.throw = False
 ### Filter sequence
-process.fastFilter = cms.Sequence(process.goodVertexFilter + process.noScraping + process.triggerResultsFilter)
+process.fastFilter = cms.Sequence(process.triggerResultsFilter + process.goodVertexFilter + process.noScraping)
 
 ##    __  __
 ##   |  \/  |_   _  ___  _ __  ___
@@ -88,6 +88,8 @@ process.patTrigger.collections.remove("hltL1extraParticles")
 process.patTrigger.collections.append("hltGtStage2Digis:Muon")
 process.muonMatchHLTL1.matchedCuts = cms.string('coll("hltGtStage2Digis:Muon")')
 process.muonMatchHLTL1.useStage2L1 = cms.bool(True)
+process.muonMatchHLTL1.useMB2InOverlap = cms.bool(True)
+process.muonMatchHLTL1.preselection = cms.string("")
 appendL1MatchingAlgo(process)
 
 ## ==== Tag and probe variables
@@ -97,10 +99,10 @@ process.load("MuonAnalysis.TagAndProbe.common_modules_cff")
 ### Muon Id
 TightIdReco = "isGlobalMuon && isPFMuon && globalTrack.normalizedChi2 < 10 && globalTrack.hitPattern.numberOfValidMuonHits > 0 && numberOfMatchedStations > 1 && track.hitPattern.trackerLayersWithMeasurement > 5 && track.hitPattern.numberOfValidPixelHits > 0"
 TightId = TightIdReco+" && abs(dB) < 0.2"
-HybridSoftIdReco_2018 = "isGlobalMuon && innerTrack.hitPattern.trackerLayersWithMeasurement > 5 && innerTrack.hitPattern.numberOfValidPixelHits > 0"
+HybridSoftIdReco_2018 = "isGlobalMuon && innerTrack.hitPattern.trackerLayersWithMeasurement > 5 && innerTrack.hitPattern.pixelLayersWithMeasurement > 0"
 HybridSoftId_2018 = HybridSoftIdReco_2018
 HybridSoftIdReco_2015 = HybridSoftIdReco_2018
-HybridSoftId_2015 = HybridSoftIdReco_2015 + " && muonID('TMOneStationTight')"
+HybridSoftId_2015 = HybridSoftIdReco_2015 + " && isTrackerMuon && muonID('TMOneStationTight')"
 SoftId = "muonID('TMOneStationTight') && innerTrack.hitPattern.trackerLayersWithMeasurement > 5 && innerTrack.hitPattern.pixelLayersWithMeasurement > 0 && innerTrack.quality(\"highPurity\")"
 ### Trigger
 LowPtTriggerProbeFlags = cms.PSet(
@@ -133,7 +135,7 @@ HighPtTriggerTagFlags = cms.PSet(
     HLT_HIL3Mu20 = cms.string("!triggerObjectMatchesByPath('HLT_HIL3Mu20_v*',1,0).empty()"),
 )
 ### Tracking
-TRACK_CUTS = "track.isNonnull && track.hitPattern.trackerLayersWithMeasurement > 5 && track.hitPattern.numberOfValidPixelHits > 0"
+TRACK_CUTS = "track.isNonnull && track.hitPattern.trackerLayersWithMeasurement > 5 && track.hitPattern.pixelLayersWithMeasurement > 0"
 
 ## ==== Tag muons
 process.tagMuons = cms.EDFilter("PATMuonSelector",
@@ -182,7 +184,8 @@ process.onePair = cms.EDFilter("CandViewCountFilter", src = cms.InputTag("tpPair
 
 process.pseudoPairs = process.tpPairs.clone(decay = cms.string('pseudoTag@+ pseudoProbe@-'))
 process.onePseudoPair = process.onePair.clone(src = cms.InputTag("pseudoPairs"))
-process.fastPseudoTnP = cms.Sequence(process.mergedMuons + process.pseudoTag + process.onePseudoTag + process.pseudoProbe + process.pseudoPairs + process.onePseudoPair)
+process.twoMuons = cms.EDFilter("CandViewCountFilter", src = cms.InputTag("mergedMuons"), minNumber = cms.uint32(2))
+process.fastPseudoTnP = cms.Sequence(process.mergedMuons + process.twoMuons + process.pseudoTag + process.onePseudoTag + process.pseudoProbe + process.pseudoPairs + process.onePseudoPair)
 
 ## ==== Tag and Probe tree
 process.tpTree = cms.EDAnalyzer("TagProbeFitTreeProducer",
@@ -429,7 +432,7 @@ process.onePairTrk = cms.EDFilter("CandViewCountFilter",
 
 process.pseudoPairsTrk = process.tpPairsTrk.clone(decay = cms.string('pseudoTag@+ pseudoProbeTrk@-'))
 process.onePseudoPairTrk = process.onePairTrk.clone(src = cms.InputTag("pseudoPairsTrk"))
-process.fastPseudoTnPTrk = cms.Sequence(process.mergedMuons + process.pseudoTag + process.onePseudoTag + process.pseudoProbeTrk + process.pseudoPairsTrk + process.onePseudoPairTrk)
+process.fastPseudoTnPTrk = cms.Sequence(process.mergedMuons + process.twoMuons + process.pseudoTag + process.onePseudoTag + process.pseudoProbeTrk + process.pseudoPairsTrk + process.onePseudoPairTrk)
 
 process.tpTreeTrk = cms.EDAnalyzer("TagProbeFitTreeProducer",
     # choice of tag and probe pairs, and arbitration
