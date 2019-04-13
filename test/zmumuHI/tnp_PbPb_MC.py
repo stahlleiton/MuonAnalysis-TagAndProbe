@@ -24,7 +24,7 @@ process.load("RecoHI.HiCentralityAlgos.CentralityBin_cfi")
 process.GlobalTag.snapshotTime = cms.string("9999-12-31 23:59:59.000")
 process.GlobalTag.toGet.extend([
     cms.PSet(record = cms.string("HeavyIonRcd"),
-        tag = cms.string("CentralityTable_HFtowers200_HydjetCymbal5Ev8_v1020x01_mc"),
+        tag = cms.string("CentralityTable_HFtowers200_HydjetDrum5F_v1032x01_mc"),
         connect = cms.string("frontier://FrontierProd/CMS_CONDITIONS"),
         label = cms.untracked.string("HFtowers")
         ),
@@ -124,22 +124,23 @@ TRACK_CUTS = "track.isNonnull && track.hitPattern.trackerLayersWithMeasurement >
 ## ==== Tag muons
 process.tagMuons = cms.EDFilter("PATMuonSelector",
     src = cms.InputTag("patMuonsWithTrigger"),
-    cut = cms.string("(pt > 15 && abs(eta) < 2.4) && "+TightId+" && !triggerObjectMatchesByCollection('hltIterL3MuonCandidatesPPOnAA').empty()"),
+    cut = cms.string("(pt > 15 && abs(eta) < 2.4) && "+TightId+" && !triggerObjectMatchesByCollection('hltIterL3MuonCandidatesPPOnAA').empty() && !triggerObjectMatchesByPath('HLT_HIL3Mu15_v*',1,0).empty()"),
 )
+process.oneTag = cms.EDFilter("CandViewCountFilter", src = cms.InputTag("tagMuons"), minNumber = cms.uint32(1))
 process.pseudoTag = cms.EDFilter("MuonSelector",
     src = cms.InputTag("mergedMuons"),
     cut = cms.string("(pt > 15 && abs(eta) < 2.4) && "+TightIdReco),
 )
-process.oneTag = cms.EDFilter("CandViewCountFilter", src = cms.InputTag("tagMuons"), minNumber = cms.uint32(1))
+process.onePseudoTag = process.oneTag.clone(src = cms.InputTag("pseudoTag"))
 
 ## ==== Probe muons
 process.probeMuons = cms.EDFilter("PATMuonSelector",
     src = cms.InputTag("patMuonsWithTrigger"),
-    cut = cms.string("track.isNonnull"),  # no real cut now
+    cut = cms.string("isTrackerMuon || isGlobalMuon || isPFMuon"),
 )
 process.pseudoProbe = cms.EDFilter("MuonSelector",
     src = cms.InputTag("mergedMuons"),
-    cut = cms.string("track.isNonnull"),
+    cut = cms.string("isTrackerMuon || isGlobalMuon || isPFMuon"),
 )
 
 ## ==== Tag and Probe muon pairs
@@ -149,9 +150,9 @@ process.tpPairs = cms.EDProducer("CandViewShallowCloneCombiner",
 )
 process.onePair = cms.EDFilter("CandViewCountFilter", src = cms.InputTag("tpPairs"), minNumber = cms.uint32(1))
 
-process.pseudoPairs = process.tpPairs.clone(decay = "pseudoTag@+ pseudoProbe@-")
-process.onePseudoPair = process.onePair.clone(src = 'pseudoPairs')
-process.fastPseudoTnP = cms.Sequence(process.mergedMuons + process.pseudoTag + process.pseudoProbe + process.pseudoPairs + process.onePseudoPair)
+process.pseudoPairs = process.tpPairs.clone(decay = cms.string('pseudoTag@+ pseudoProbe@-'))
+process.onePseudoPair = process.onePair.clone(src = cms.InputTag("pseudoPairs"))
+process.fastPseudoTnP = cms.Sequence(process.mergedMuons + process.pseudoTag + process.onePseudoTag + process.pseudoProbe + process.pseudoPairs + process.onePseudoPair)
 
 ## ==== Tag and Probe tree
 process.tpTree = cms.EDAnalyzer("TagProbeFitTreeProducer",
@@ -289,7 +290,7 @@ process.muonsSta = cms.EDProducer("RedefineMuonP4FromTrack",
 from PhysicsTools.PatAlgos.tools.helpers import *
 process.patMuonsWithTriggerSequenceSta = cloneProcessingSnippet(process, process.patMuonsWithTriggerSequence, "Sta")
 process.patMuonsWithTriggerSequenceSta.replace(process.patTriggerFullSta, process.patTriggerFull)
-process.patTriggerSta.src = 'patTriggerFull'
+process.patTriggerSta.src = cms.InputTag("patTriggerFull")
 process.muonMatchHLTL2Sta.maxDeltaR = 0.5
 process.muonMatchHLTL3Sta.maxDeltaR = 0.5
 massSearchReplaceAnyInputTag(process.patMuonsWithTriggerSequenceSta, "mergedMuons", "muonsSta")
@@ -304,13 +305,13 @@ process.pseudoProbeSta = cms.EDFilter("MuonSelector",
     cut = cms.string("outerTrack.isNonnull"),
 )
 
-process.tpPairsSta = process.tpPairs.clone(decay = "tagMuons@+ probeMuonsSta@-", cut = '30 < mass < 160')
+process.tpPairsSta = process.tpPairs.clone(decay = cms.string('tagMuons@+ probeMuonsSta@-'), cut = cms.string('30 < mass < 160'))
 
 process.onePairSta = cms.EDFilter("CandViewCountFilter", src = cms.InputTag("tpPairsSta"), minNumber = cms.uint32(1))
 
-process.pseudoPairsSta = process.tpPairsSta.clone(decay = "pseudoTag@+ pseudoProbeSta@-")
-process.onePseudoPairSta = process.onePairSta.clone(src = 'pseudoPairsSta')
-process.fastPseudoTnPSta = cms.Sequence(process.mergedMuons + process.pseudoTag + process.muonsSta + process.pseudoProbeSta + process.pseudoPairsSta + process.onePseudoPairSta)
+process.pseudoPairsSta = process.tpPairsSta.clone(decay = cms.string('pseudoTag@+ pseudoProbeSta@-'))
+process.onePseudoPairSta = process.onePairSta.clone(src = cms.InputTag("pseudoPairsSta"))
+process.fastPseudoTnPSta = cms.Sequence(process.mergedMuons + process.pseudoTag + process.onePseudoTag + process.muonsSta + process.pseudoProbeSta + process.pseudoPairsSta + process.onePseudoPairSta)
 
 process.staToTkMatch.maxDeltaR = 0.3
 process.staToTkMatch.maxDeltaPtRel = 2.
@@ -377,28 +378,6 @@ process.tnpSimpleSequenceSta = cms.Sequence(
     process.tpTreeSta
 )
 
-if True:
-    process.tracksNoMuonSeeded = cms.EDFilter("TrackSelector",
-      src = cms.InputTag("generalTracks"),
-      cut = cms.string(" || ".join("isAlgoInMask('%s')" % a for a in [
-                    'initialStep', 'lowPtTripletStep', 'pixelPairStep', 'detachedTripletStep',
-                    'mixedTripletStep', 'pixelLessStep', 'tobTecStep', 'jetCoreRegionalStep' ] ) )
-    )
-    process.pCutTracks0 = process.pCutTracks.clone(src = 'tracksNoMuonSeeded')
-    process.tkTracks0 = process.tkTracks.clone(src = 'pCutTracks0')
-    process.tkTracksNoZ0 = process.tkTracksNoZ.clone(src = 'tkTracks0')
-    process.preTkMatchSequenceZ.replace(
-            process.tkTracksNoZ, process.tkTracksNoZ +
-            process.tracksNoMuonSeeded + process.pCutTracks0 + process.tkTracks0 + process.tkTracksNoZ0)
-    process.staToTkMatch0 = process.staToTkMatch.clone(matched = 'tkTracks0')
-    process.staToTkMatchNoZ0 = process.staToTkMatchNoZ.clone(matched = 'tkTracksNoZ0')
-    process.staToTkMatchSequenceZ.replace( process.staToTkMatch, process.staToTkMatch + process.staToTkMatch0 )
-    process.staToTkMatchSequenceZ.replace( process.staToTkMatchNoZ, process.staToTkMatchNoZ + process.staToTkMatchNoZ0 )
-    process.tpTreeSta.variables.tk0_deltaR = cms.InputTag("staToTkMatch0","deltaR")
-    process.tpTreeSta.variables.tk0_deltaEta = cms.InputTag("staToTkMatch0","deltaEta")
-    process.tpTreeSta.variables.tk0_deltaR_NoZ = cms.InputTag("staToTkMatchNoZ0","deltaR")
-    process.tpTreeSta.variables.tk0_deltaEta_NoZ = cms.InputTag("staToTkMatchNoZ0","deltaEta")
-
 process.tagAndProbeSta = cms.Path(
     process.fastFilter
     * process.fastPseudoTnPSta
@@ -432,13 +411,13 @@ process.tpPairsTrk = cms.EDProducer("CandViewShallowCloneCombiner",
 )
 
 process.onePairTrk = cms.EDFilter("CandViewCountFilter",
-    src = cms.InputTag('tpPairsTrk'),
+    src = cms.InputTag("tpPairsTrk"),
     minNumber = cms.uint32(1),
 )
 
-process.pseudoPairsTrk = process.tpPairsTrk.clone(decay = "pseudoTag@+ pseudoProbeTrk@-")
-process.onePseudoPairTrk = process.onePairTrk.clone(src = 'pseudoPairsTrk')
-process.fastPseudoTnPTrk = cms.Sequence(process.mergedMuons + process.pseudoTag + process.pseudoProbeTrk + process.pseudoPairsTrk + process.onePseudoPairTrk)
+process.pseudoPairsTrk = process.tpPairsTrk.clone(decay = cms.string('pseudoTag@+ pseudoProbeTrk@-'))
+process.onePseudoPairTrk = process.onePairTrk.clone(src = cms.InputTag("pseudoPairsTrk"))
+process.fastPseudoTnPTrk = cms.Sequence(process.mergedMuons + process.pseudoTag + process.onePseudoTag + process.pseudoProbeTrk + process.pseudoPairsTrk + process.onePseudoPairTrk)
 
 process.tpTreeTrk = cms.EDAnalyzer("TagProbeFitTreeProducer",
     # choice of tag and probe pairs, and arbitration
@@ -455,7 +434,7 @@ process.tpTreeTrk = cms.EDAnalyzer("TagProbeFitTreeProducer",
     ),
     flags = cms.PSet(
       isSTA = cms.string("isStandAloneMuon"),
-      isGlb = cms.string("isGlobalMuon"),
+      Glb   = cms.string("isGlobalMuon"),
       outerValidHits = cms.string("? outerTrack.isNull() ? 0 : outerTrack.numberOfValidHits > 0"),
     ),
     tagVariables = cms.PSet(
@@ -523,7 +502,6 @@ process.schedule = cms.Schedule(
 )
 
 process.RandomNumberGeneratorService.tkTracksNoZ = cms.PSet( initialSeed = cms.untracked.uint32(81) )
-process.RandomNumberGeneratorService.tkTracksNoZ0 = cms.PSet( initialSeed = cms.untracked.uint32(81) )
 
 process.TFileService = cms.Service("TFileService", fileName = cms.string("tnpZ_MC_PbPb.root"))
 
