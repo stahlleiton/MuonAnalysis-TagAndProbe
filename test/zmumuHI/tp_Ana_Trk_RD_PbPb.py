@@ -13,7 +13,7 @@ process = cms.Process("TagProbe")
 process.load('FWCore.MessageService.MessageLogger_cfi')
 process.source = cms.Source("EmptySource")
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1) )    
-PDFName = "BWResCBExp"
+PDFName = "VoigtExp"
 
 
 VEFFICIENCYSET =cms.VPSet(
@@ -189,13 +189,13 @@ OutputFileName = cms.string("tnp_Ana_RD_Trk_PbPb_%s.root" % scenario),
     # specifies whether to save the RooWorkspace containing the data for each bin and
     # the pdf object with the initial and final state snapshots
     binnedFit = cms.bool(True),
-    binsForFit = cms.uint32(90),
-    binsForMassPlots = cms.uint32(90),
+    binsForFit = cms.uint32(65),
+    binsForMassPlots = cms.uint32(65),
     SaveWorkspace = cms.bool(False),
     
     # defines all the real variables of the probes available in the input tree and intended for use in the efficiencies
     Variables = cms.PSet(
-                         mass             = cms.vstring("Tag-Probe Mass", "60.0", "135.0", "GeV/c^{2}"), # mass range syst:         #orig 45
+                         mass             = cms.vstring("Tag-Probe Mass", "70.0", "135.0", "GeV/c^{2}"), # mass range syst:         #orig 45
                          pt               = cms.vstring("Probe p_{T}", "0.0", "1000", "GeV/c"),
                          eta              = cms.vstring("Probe #eta", "-2.4", "2.4", ""),
                          abseta           = cms.vstring("Probe |#eta|", "0", "2.5", ""),
@@ -214,7 +214,7 @@ OutputFileName = cms.string("tnp_Ana_RD_Trk_PbPb_%s.root" % scenario),
     # each pdf needs to define "signal", "backgroundPass", "backgroundFail" pdfs, "efficiency[0.9,0,1]" and "signalFractionInPassing[0.9]" are used for initial values  
     PDFs = cms.PSet(
 	VoigtExp = cms.vstring(
-		"Voigtian::signal(mass, mean[91,80,100], width[3,-5,15], sigma[3,-5,15])", # mean 85-95, width, sigma 1-10
+		"Voigtian::signal(mass, mean[91,75,105], width[3,-5,15], sigma[3,-5,15])", # mean 85-95, width, sigma 1-10
 		"Exponential::backgroundPass(mass, lp[0,-5,5])",
 		"Exponential::backgroundFail(mass, lf[0,-5,5])",
 		"efficiency[0.9,0,1]",
