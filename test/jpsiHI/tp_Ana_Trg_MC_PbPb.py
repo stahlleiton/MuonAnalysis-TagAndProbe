@@ -162,7 +162,7 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     InputFileNames = cms.vstring("file:/eos/cms/store/group/phys_heavyions/dileptons/TNPTagAndProbe2018/MC2018/PbPb502TeV/tnpJpsi_MC_PbPb_mod.root"),
     InputDirectoryName = cms.string("tpTree"),
     InputTreeName = cms.string("fitter_tree"),
-    OutputFileName = cms.string("Output/Trg/tnp_Ana_RD_PbPb_Trg_%s_%s.root" % (filterTag, scenario) ),
+    OutputFileName = cms.string("Output/Trg/tnp_Ana_MC_PbPb_Trg_%s_%s.root" % (filterTag, scenario) ),
     #numbrer of CPUs to use for fitting
     NumCPU = cms.uint32(25),
     # specifies whether to save the RooWorkspace containing the data for each bin and

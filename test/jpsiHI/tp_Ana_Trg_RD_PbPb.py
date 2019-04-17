@@ -139,8 +139,7 @@ VEFFICIENCYSET =cms.VPSet(
          BinnedVariables = cms.PSet(
             pt = cms.vdouble(1.8, 30),
             eta = cms.vdouble(-2.4,2.4),
-            #tag_hiBin = cms.vdouble(0,10,20,40,60,80,100,150,200),
-            tag_hiBin = cms.vdouble(0,10),
+            tag_hiBin = cms.vdouble(0,10,20,40,60,80,100,150,200),
             isHybridSoftMuon2015 = cms.vstring("true"),
             InAcceptance_2018_Tight = cms.vstring("true"),
             ),
