@@ -11,7 +11,7 @@ process = cms.Process("TagProbe")
 process.load('FWCore.MessageService.MessageLogger_cfi')
 process.source = cms.Source("EmptySource")
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1) )
-PDFName = "twoGausPlusPol1"
+PDFName = "twoGausPlusPol1" #twoGausPlusPol1, GausPlusPol1
 
 # defines a set of efficiency calculations, what PDF to use for fitting and how to bin the data;
 # there will be a separate output directory for each calculation that includes a simultaneous fit, side band subtraction and counting. 
@@ -25,7 +25,7 @@ VEFFICIENCYSET =cms.VPSet(
               pt = cms.vdouble(1.8,30.),
               pair_pt = cms.vdouble(3.,30),
               eta = cms.vdouble(-2.4,2.4),
-              tag_hiBin = cms.vdouble(80,200),
+              tag_hiBin = cms.vdouble(100,200),
             ),
             BinToPDFmap = cms.vstring(PDFName)
             )
@@ -38,7 +38,7 @@ VEFFICIENCYSET =cms.VPSet(
               pt = cms.vdouble(1.8, 2.5, 3, 3.5, 4.0, 4.5, 5.0, 6.0, 7.0, 10.0, 30.0),
               pair_pt = cms.vdouble(3., 30),
               eta = cms.vdouble(-2.4, 2.4),
-              tag_hiBin = cms.vdouble(80,200),
+              tag_hiBin = cms.vdouble(100,200),
             ),
             BinToPDFmap = cms.vstring(PDFName)
             )
@@ -51,7 +51,7 @@ VEFFICIENCYSET =cms.VPSet(
               pt = cms.vdouble(3.5, 4.0, 4.5, 5.0, 6.0, 7.0, 10.0, 30.0),
               pair_pt = cms.vdouble(3., 30),
               abseta = cms.vdouble(0.0, 1.2),
-              tag_hiBin = cms.vdouble(80,200),
+              tag_hiBin = cms.vdouble(100,200),
             ),
             BinToPDFmap = cms.vstring(PDFName)
             )
@@ -64,7 +64,7 @@ VEFFICIENCYSET =cms.VPSet(
               pt = cms.vdouble(1.8,2,2.5,3,3.5,4, 5,8, 30),
               pair_pt = cms.vdouble(3.,30),
               abseta = cms.vdouble(1.2, 2.1),
-              tag_hiBin = cms.vdouble(80,200),
+              tag_hiBin = cms.vdouble(100,200),
             ),
             BinToPDFmap = cms.vstring(PDFName)
             )
@@ -77,7 +77,7 @@ VEFFICIENCYSET =cms.VPSet(
               pt = cms.vdouble(1.8,2,2.5,3,3.5,4, 5,8, 30),
               pair_pt = cms.vdouble(3.,30),
               abseta = cms.vdouble(2.1, 2.4),
-              tag_hiBin = cms.vdouble(80,200),
+              tag_hiBin = cms.vdouble(100,200),
             ),
             BinToPDFmap = cms.vstring(PDFName)
             )
@@ -90,7 +90,7 @@ VEFFICIENCYSET =cms.VPSet(
               eta = cms.vdouble(-2.4,-2.1,-1.2,0.,1.2,2.1,2.4),
               pair_pt = cms.vdouble(3.,30),
               pt = cms.vdouble(1.8,30.),
-              tag_hiBin = cms.vdouble(80,200),
+              tag_hiBin = cms.vdouble(100,200),
             ),
             BinToPDFmap = cms.vstring(PDFName)
             )
@@ -103,7 +103,7 @@ VEFFICIENCYSET =cms.VPSet(
               abseta = cms.vdouble(0.,1.2,2.1,2.4),
               pair_pt = cms.vdouble(3.,30),
               pt = cms.vdouble(1.8,30),
-              tag_hiBin = cms.vdouble(80,200),
+              tag_hiBin = cms.vdouble(100,200),
             ),
             BinToPDFmap = cms.vstring(PDFName)
             )
@@ -116,7 +116,7 @@ VEFFICIENCYSET =cms.VPSet(
               pt = cms.vdouble(1.8, 30),
               pair_pt = cms.vdouble(3.,30),
               eta = cms.vdouble(-2.4,2.4),
-              tag_hiBin = cms.vdouble(0,10,20,40,60,80,100,150,200),
+              tag_hiBin = cms.vdouble(100,150,200),
             ),
             BinToPDFmap = cms.vstring(PDFName)
             )
@@ -136,7 +136,7 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     InputFileNames = cms.vstring("file:/eos/cms/store/group/phys_heavyions/dileptons/TNPTagAndProbe2018/Data2018/PbPb502TeV/tnpJpsi_Data_PbPb_mod.root"),
     InputDirectoryName = cms.string("tpTreeTrk"),
     InputTreeName = cms.string("fitter_tree"),
-    OutputFileName = cms.string("Output/Sta/tnp_Ana_RD_PbPb_STA_%s.root" % scenario),
+    OutputFileName = cms.string("Output/Sta/tnp_Ana_RD_PbPb_STA_%s_%s.root" % (PDFName,scenario)),
     #numbrer of CPUs to use for fitting
     NumCPU = cms.uint32(16),
     # specifies wether to save the RooWorkspace containing the data for each bin and
@@ -156,18 +156,15 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
         abseta = cms.vstring("Probe |#eta|", "0", "2.4", ""),
         tag_pt = cms.vstring("Tag p_{T}", "0", "1000", "GeV/c"),
         tag_hiBin = cms.vstring("Centrality", "0", "200", ""),
-
     ),
     # defines all the discrete variables of the probes available in the input tree and intended for use in the efficiency calculations
     Categories = cms.PSet(
          isSTA = cms.vstring("isSTA", "dummy[true=1,false=0]"),
-         outerValidHits = cms.vstring("outerValidHits", "dummy[true=1,false=0]"),
     ),   
 
     # defines all the PDFs that will be available for the efficiency calculations; uses RooFit's "factory" syntax;
     # each pdf needs to define "signal", "backgroundPass", "backgroundFail" pdfs, "efficiency[0.9,0,1]" and "signalFractionInPassing[0.9]" are used for initial values  
     PDFs = cms.PSet(
-
       twoGausPlusPol1 = cms.vstring(
         "Gaussian::signal1(mass, mean[3.08,3.02,3.3], sigma1[0.02, 0.009, 0.2])",
         "Gaussian::signal2(mass, mean, sigma2[0.05, 0.009, 0.2])",
