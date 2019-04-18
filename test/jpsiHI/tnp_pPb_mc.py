@@ -277,4 +277,4 @@ process.schedule = cms.Schedule(
    process.tagAndProbe
 )
 
-process.TFileService = cms.Service("TFileService", fileName = cms.string("tnpJPsi_Data_pPb_AOD.root"))
+process.TFileService = cms.Service("TFileService", fileName = cms.string("tnpJPsi_MC_pPb_AOD.root"))
