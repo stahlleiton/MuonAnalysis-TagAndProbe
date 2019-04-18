@@ -12,8 +12,7 @@ process = cms.Process("TagProbe")
 process.load('FWCore.MessageService.MessageLogger_cfi')
 process.source = cms.Source("EmptySource")
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1) )
-PDFName = "cbPlusPol1"
-
+PDFName = "cbGausPlusPol1" # cbPlusPol1, cbPlusPol2, cbGausPlusPol1, cbGausPlusPol2 
 
 VEFFICIENCYSET =cms.VPSet(
 # Order: 0 total, 1 pT, 2-5 pT fits in abseta bins, 6 abseta, 7 eta, 8 centrality NOTE: IS NOT SAME AS SCENARIO
@@ -143,7 +142,7 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     InputFileNames = cms.vstring("file:/eos/cms/store/group/phys_heavyions/dileptons/TNPTagAndProbe2018/MC2018/PbPb502TeV/tnpJpsi_MC_PbPb_mod.root"),
     InputDirectoryName = cms.string("tpTree"),
     InputTreeName = cms.string("fitter_tree"),
-    OutputFileName = cms.string("Output/MuonID/tnp_Ana_MC_PbPb_MuonID_%s.root" % scenario),
+    OutputFileName = cms.string("Output/MuonID/tnp_Ana_MC_PbPb_MuonID_%s_%s.root" % (PDFName, scenario)),
     #numbrer of CPUs to use for fitting
     NumCPU = cms.uint32(25),
     # specifies whether to save the RooWorkspace containing the data for each bin and
@@ -199,9 +198,17 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
         "efficiency[0.9,0,1]",
         "signalFractionInPassing[0.9]"
       ),
+      cbGausPlusPol2 = cms.vstring(
+        "CBShape::signal1(mass, mean[3.08,3.00,3.3], sigma1[0.03, 0.01, 0.10], alpha[1.85, 0.1, 50], n[1.7, 0.2, 50])",
+        "RooFormulaVar::sigma2('@0*@1',{fracS[1.8,1.2,2.4],sigma1})",
+        "Gaussian::signal2(mass, mean, sigma2)",
+        "SUM::signal(frac[0.8,0.5,1.]*signal1,signal2)",
+        "Chebychev::backgroundPass(mass, {cPass[0.,-1.1,1.1], cPass2[0.,-1.1,1.1]})",
+        "Chebychev::backgroundFail(mass, {cFail[0.,-1.1,1.1], cFail2[0.,-1.1,1.1]})",
+        "efficiency[0.9,0,1]",
+        "signalFractionInPassing[0.9]"
+      ),
     ),
-    # defines a set of efficiency calculations, what PDF to use for fitting and how to bin the data;
-    # there will be a separate output directory for each calculation that includes a simultaneous fit, side band subtraction and counting. 
     Efficiencies = EFFICIENCYSET
 )
 

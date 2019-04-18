@@ -14,7 +14,7 @@ process = cms.Process("TagProbe")
 process.load('FWCore.MessageService.MessageLogger_cfi')
 process.source = cms.Source("EmptySource")
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1) )    
-PDFName = "cbPlusPol1"
+PDFName = "cbGausPlusPol1" #cbPlusPol1, cbPlusPol2, cbGausPlusPol1, cbGausPlusPol2
 
 filterName = "HLT_HIL3Mu0NHitQ10_L2Mu0_MAXdR3p5_M1to5_L2Filter"
 if filterTag == "L3Jpsi" : filterName = "HLT_HIL3Mu0NHitQ10_L2Mu0_MAXdR3p5_M1to5_L3Filter"
@@ -162,7 +162,7 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     InputFileNames = cms.vstring("file:/eos/cms/store/group/phys_heavyions/dileptons/TNPTagAndProbe2018/Data2018/PbPb502TeV/tnpJpsi_Data_PbPb_mod.root"),
     InputDirectoryName = cms.string("tpTree"),
     InputTreeName = cms.string("fitter_tree"),
-    OutputFileName = cms.string("Output/Trg/tnp_Ana_RD_PbPb_Trg_%s_%s.root" % (filterTag, scenario) ),
+    OutputFileName = cms.string("Output/Trg/tnp_Ana_RD_PbPb_Trg_%s_%s_%s.root" % (filterTag, PDFName, scenario) ),
     #numbrer of CPUs to use for fitting
     NumCPU = cms.uint32(25),
     # specifies whether to save the RooWorkspace containing the data for each bin and
@@ -217,6 +217,16 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
         "SUM::signal(frac[0.8,0.1,1.]*signal1,signal2)",
         "Chebychev::backgroundPass(mass, {cPass[0.,-2,2]})",
         "Chebychev::backgroundFail(mass, {cFail[0.,-2,2]})",
+        "efficiency[0.9,0,1]",
+        "signalFractionInPassing[0.9]"
+      ),
+      cbGausPlusPol2 = cms.vstring(
+        "CBShape::signal1(mass, mean[3.08,3.00,3.2], sigma1[0.03, 0.01, 0.10], alpha[1.85, 0.1, 50], n[1.7, 0.2, 50])",
+        "RooFormulaVar::sigma2('@0*@1',{fracS[1.8,1.2,2.4],sigma1})",
+        "Gaussian::signal2(mass, mean, sigma2)",
+        "SUM::signal(frac[0.8,0.1,1.]*signal1,signal2)",
+        "Chebychev::backgroundPass(mass, {cPass[0.,-2,2], cPass2[0.,-2,2]})",
+        "Chebychev::backgroundFail(mass, {cFail[0.,-2,2], cFail2[0.,-2,2]})",
         "efficiency[0.9,0,1]",
         "signalFractionInPassing[0.9]"
       ),
