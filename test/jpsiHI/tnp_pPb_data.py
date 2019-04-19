@@ -42,12 +42,12 @@ process.triggerResultsFilter.throw = False
 ### Filter sequence
 process.fastFilter = cms.Sequence(process.hfCoincFilter + process.primaryVertexFilterPA + process.noScraping + process.triggerResultsFilter)
 
-##    __  __                       
-##   |  \/  |_   _  ___  _ __  ___ 
+##    __  __
+##   |  \/  |_   _  ___  _ __  ___
 ##   | |\/| | | | |/ _ \| '_ \/ __|
 ##   | |  | | |_| | (_) | | | \__ \
 ##   |_|  |_|\__,_|\___/|_| |_|___/
-##                                 
+##
 ## ==== Merge CaloMuons and Tracks into the collection of reco::Muons  ====
 
 InAcceptance = '((abs(eta)<1.2 && pt>=3.5) || (1.2<=abs(eta) && abs(eta)<2.1 && pt>=5.77-1.89*abs(eta)) || (2.1<=abs(eta) && abs(eta)<2.4 && pt>=1.8))'
@@ -56,7 +56,7 @@ from RecoMuon.MuonIdentification.calomuons_cfi import calomuons;
 process.mergedMuons = cms.EDProducer("CaloMuonMerger",
     mergeTracks = cms.bool(True),
     mergeCaloMuons = cms.bool(False), # AOD
-    muons     = cms.InputTag("muons"), 
+    muons     = cms.InputTag("muons"),
     caloMuons = cms.InputTag("calomuons"),
     tracks    = cms.InputTag("generalTracks"),
     minCaloCompatibility = calomuons.minCaloCompatibility,
@@ -108,7 +108,7 @@ SoftId = "muonID('TMOneStationTight') && innerTrack.hitPattern.trackerLayersWith
 ### Tracking
 track_cuts = "track.isNonnull && track.hitPattern.trackerLayersWithMeasurement > 5 && track.hitPattern.pixelLayersWithMeasurement > 0" #currently used only as a flag
 ### Trigger
-TrigProbeFlags = cms.PSet( 
+TrigProbeFlags = cms.PSet(
      HLT_PAL1DoubleMuOpen = cms.string("!triggerObjectMatchesByPath('HLT_PAL1DoubleMuOpen_v*',1,0).empty()"),
      HLT_PAL2DoubleMu0 = cms.string("!triggerObjectMatchesByPath('HLT_PAL2DoubleMu0_v*',1,0).empty()"),
      HLT_PAL3DoubleMu0 = cms.string("!triggerObjectMatchesByPath('HLT_PAL3DoubleMu0_v*',1,0).empty()"),
@@ -160,11 +160,11 @@ process.onePseudoTag = process.oneTag.clone(src = cms.InputTag("pseudoTag"))
 ## ==== Probe muons
 process.probeMuons = cms.EDFilter("PATMuonSelector",
     src = cms.InputTag("patMuonsWithTrigger"),
-    cut = cms.string('innerTrack.isNonnull && innerTrack.originalAlgo<13'), #   muonSeededStepInOut = 13,
+    cut = cms.string('innerTrack.isNonnull'),
 )
 process.pseudoProbe = cms.EDFilter("MuonSelector",
     src = cms.InputTag("mergedMuons"),
-    cut = cms.string('innerTrack.isNonnull && innerTrack.originalAlgo<13'), #   muonSeededStepInOut = 13,
+    cut = cms.string('innerTrack.isNonnull'),
 )
 
 ## ==== Tag and Probe muon pairs
@@ -206,6 +206,7 @@ process.tpTree = cms.EDAnalyzer("TagProbeFitTreeProducer",
        Custom_track_cuts = cms.string(track_cuts),
        StaTkSameCharge = cms.string("outerTrack.isNonnull && innerTrack.isNonnull && (outerTrack.charge == innerTrack.charge)"),
        outerValidHits = cms.string("outerTrack.isNonnull && outerTrack.numberOfValidHits > 0"),
+       isMuonSeeded = cms.string("innerTrack.isNonnull && innerTrack.originalAlgo<13"), #   muonSeededStepInOut = 13,
     ),
     tagVariables = cms.PSet(
         KinematicVariables,
@@ -224,7 +225,7 @@ process.tpTree = cms.EDAnalyzer("TagProbeFitTreeProducer",
     ),
     pairVariables = cms.PSet(
         dz      = cms.string("daughter(0).vz - daughter(1).vz"),
-        pt      = cms.string("pt"), 
+        pt      = cms.string("pt"),
         rapidity = cms.string("rapidity"),
         deltaR   = cms.string("deltaR(daughter(0).eta, daughter(0).phi, daughter(1).eta, daughter(1).phi)"),
         probeMultiplicity = cms.InputTag("probeMultiplicity"),

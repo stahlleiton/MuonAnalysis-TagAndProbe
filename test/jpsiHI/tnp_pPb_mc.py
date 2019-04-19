@@ -160,11 +160,11 @@ process.onePseudoTag = process.oneTag.clone(src = cms.InputTag("pseudoTag"))
 ## ==== Probe muons
 process.probeMuons = cms.EDFilter("PATMuonSelector",
     src = cms.InputTag("patMuonsWithTrigger"),
-    cut = cms.string('innerTrack.isNonnull && innerTrack.originalAlgo<13'), #   muonSeededStepInOut = 13,
+    cut = cms.string('innerTrack.isNonnull'),
 )
 process.pseudoProbe = cms.EDFilter("MuonSelector",
     src = cms.InputTag("mergedMuons"),
-    cut = cms.string('innerTrack.isNonnull && innerTrack.originalAlgo<13'), #   muonSeededStepInOut = 13,
+    cut = cms.string('innerTrack.isNonnull'),
 )
 
 ## ==== Tag and Probe muon pairs
@@ -206,6 +206,7 @@ process.tpTree = cms.EDAnalyzer("TagProbeFitTreeProducer",
        Custom_track_cuts = cms.string(track_cuts),
        StaTkSameCharge = cms.string("outerTrack.isNonnull && innerTrack.isNonnull && (outerTrack.charge == innerTrack.charge)"),
        outerValidHits = cms.string("outerTrack.isNonnull && outerTrack.numberOfValidHits > 0"),
+       isMuonSeeded = cms.string("innerTrack.isNonnull && innerTrack.originalAlgo<13"), #   muonSeededStepInOut = 13,
     ),
     tagVariables = cms.PSet(
         KinematicVariables,
