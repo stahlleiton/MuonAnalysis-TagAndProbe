@@ -20,10 +20,12 @@ TTree* copyTreeAndAddWeight(TTree* told, int nentries=0)
   TTree *tnew = told->CloneTree(0);
   tnew->SetAutoSave(0);
   tnew->SetAutoFlush(0);
+  int TightId=-1, SoftId=-1;
   int isTightMuon=-1, passedDXY_TIGHT=-1, passedDZ_TIGHT=-1, passedValidPixelHits=-1, passedTrackerLayers=-1, passedMatchedStations=-1, passedMuHits=-1, passedglbChi2=-1, Glb=-1, PF=-1;
   int isSoftMuon=-1, isHybridSoftMuon2015=-1, isHybridSoftMuon2018=-1, passedDXY_SOFT=-1, passedDZ_SOFT=-1, passedPixelLayers=-1, TMOST=-1, Track_HP=-1, TM=-1;
-  float dzPV=-999., dxyPV=-999., dB=-999., tkValidPixelHits=-1., tkPixelLay=-1., tkTrackerLay=-1., numberOfMatchedStations=-1., glbValidMuHits=-1., glbChi2=999., hiBin=-1., genWeight=-999., weight=1.;
+  float dzPV=-999., dxyPV=-999., dB=-999., tkValidPixelHits=-1., tkPixelLay=-1., tkTrackerLay=-1., numberOfMatchedStations=-1., glbValidMuHits=-1., glbChi2=999., hiBin=-1., genWeight=-999., weight=1., pT=-999.;
 
+  told->SetBranchAddress("pt",&pT);
   told->SetBranchAddress("dzPV",&dzPV);
   told->SetBranchAddress("dxyPV",&dxyPV);
   told->SetBranchAddress("dB",&dB);
@@ -38,6 +40,8 @@ TTree* copyTreeAndAddWeight(TTree* told, int nentries=0)
   told->SetBranchAddress("TM", &TM);
   told->SetBranchAddress("TMOST", &TMOST);
   told->SetBranchAddress("Track_HP", &Track_HP);
+  told->SetBranchAddress("TightId", &TightId);
+  if (told->GetBranch("SoftId")!=NULL) { told->SetBranchAddress("SoftId", &SoftId); }
   if (told->GetBranch("tag_hiBin")!=NULL) { told->SetBranchAddress("tag_hiBin", &hiBin); }
   if (told->GetBranch("pair_genWeight")!=NULL) { told->SetBranchAddress("pair_genWeight", &genWeight); }
    
@@ -76,6 +80,11 @@ TTree* copyTreeAndAddWeight(TTree* told, int nentries=0)
 
     //TightMuonID
     isTightMuon = (Glb==1 && PF==1 && fabs(dB)<DXYCUT_TIGHT && fabs(dzPV)<DZCUT_TIGHT && tkValidPixelHits>0.1 && tkTrackerLay>5.1 && numberOfMatchedStations>1.1 && glbValidMuHits>0.1 && glbChi2<10.);
+    if (TightId>-1 && isTightMuon!=TightId) {
+        std::cout << "Tight ID muon with pT="<<pT<<" GeV/c is not consistent: Official " << TightId << " and Custom " << isTightMuon << std::endl;
+        std::cout << Glb << "(==1)  " << PF << "(==1)  " << fabs(dB) << "(<0.2)  " << fabs(dxyPV) << "(<0.2)  " << fabs(dzPV) << "(<0.5)  " << tkValidPixelHits << "(>0)  " << tkTrackerLay << "(>5)  " << numberOfMatchedStations << "(>1) " << glbValidMuHits << "(>0)  " << glbChi2 << "(<10) "<< std::endl;
+        isTightMuon = TightId;
+    }
     passedDXY_TIGHT = (fabs(dB) < DXYCUT_TIGHT);
     passedDZ_TIGHT = (fabs(dzPV) < DZCUT_TIGHT);
     passedValidPixelHits = (tkValidPixelHits > 0.1);
@@ -86,6 +95,11 @@ TTree* copyTreeAndAddWeight(TTree* told, int nentries=0)
       
     //SoftMuonID
     isSoftMuon = (TMOST==1 && Track_HP==1 && fabs(dxyPV)<DXYCUT_SOFT && fabs(dzPV)<DZCUT_SOFT && tkPixelLay>0.1 && tkTrackerLay>5.1);
+    if (SoftId>-1 && isSoftMuon!=SoftId) {
+        std::cout << "Soft ID muon with pT="<<pT<<" GeV/c is not consistent: Offical " << SoftId << " and Custom " << isSoftMuon << std::endl;
+        std::cout << TMOST << "(==1)  " << Track_HP << "(==1)  " << fabs(dxyPV) << "(<0.3)  " << fabs(dzPV) << "(<20.0)  " << tkPixelLay << "(>0)  " << tkTrackerLay << "(>5)  " << std::endl;
+        isSoftMuon = SoftId;
+    }
     passedDXY_SOFT = (fabs(dxyPV) < DXYCUT_SOFT);
     passedDZ_SOFT = (fabs(dzPV) < DZCUT_SOFT);
     passedPixelLayers = (tkPixelLay > 0.1);
@@ -93,7 +107,7 @@ TTree* copyTreeAndAddWeight(TTree* told, int nentries=0)
 
     //HybridSoftMuonID PbPb
     isHybridSoftMuon2015 = (Glb==1 && TM==1 && TMOST==1 && fabs(dxyPV)<DXYCUT_SOFT && fabs(dzPV)<DZCUT_SOFT && tkPixelLay>0.1 && tkTrackerLay>5.1);
-    isHybridSoftMuon2018 = (Glb==1 && TM==1 && fabs(dxyPV)<DXYCUT_SOFT && fabs(dzPV)<DZCUT_SOFT && tkPixelLay>0.1 && tkTrackerLay>5.1);
+    isHybridSoftMuon2018 = (Glb==1 && fabs(dxyPV)<DXYCUT_SOFT && fabs(dzPV)<DZCUT_SOFT && tkPixelLay>0.1 && tkTrackerLay>5.1);
 
     //Weight
     weight = (nentries/sumWeight);

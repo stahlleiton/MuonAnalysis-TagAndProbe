@@ -8,6 +8,7 @@
 <use   name="CondFormats/PhysicsToolsObjects"/>
 <use   name="RecoMuon/Records"/>
 <use   name="CondCore/PluginSystem"/>
+<use   name="DataFormats/HeavyIonEvent"/>
 <export>
   <lib   name="1"/>
 </export>
