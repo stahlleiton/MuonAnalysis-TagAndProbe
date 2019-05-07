@@ -11,7 +11,7 @@ process = cms.Process("TagProbe")
 process.load('FWCore.MessageService.MessageLogger_cfi')
 process.source = cms.Source("EmptySource")
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1) )    
-PDFName = "BWResCBExp"
+PDFName = "BWResCBCheb"
 
 VEFFICIENCYSET =cms.VPSet(
 
@@ -139,7 +139,8 @@ VEFFICIENCYSET =cms.VPSet(
              BinnedVariables = cms.PSet(
 #                 tag_nVertices = cms.vdouble(0, 1, 2, 4),
                  pt = cms.vdouble(15, 80),
-                 abseta = cms.vdouble(0,0.9,1.2,1.6,2.1,2.4),
+                 #abseta = cms.vdouble(0,0.9,1.2,1.6,2.1,2.4),
+                 abseta = cms.vdouble(0,0.3,0.5,0.9,1.2,1.6,2.0,2.4),
              ),
              BinToPDFmap = cms.vstring(PDFName)
          )
@@ -154,6 +155,7 @@ VEFFICIENCYSET =cms.VPSet(
                  pt = cms.vdouble(15, 80),
                  #eta = cms.vdouble(-2.4,-2.1,-1.6,-1.2,-0.9,0,0.9,1.2,1.6,2.1,2.4),
                  eta = cms.vdouble(-2.4,-2.1,-1.6,-1.2,-0.9,-0.5,-0.3,-0.2,0.2,0.3,0.5,0.9,1.2,1.6,2.1,2.4),
+                 #abseta = cms.vdouble(0,0.2,0.3,0.5,0.9,1.2,1.6,2.1,2.4),
              ),
              BinToPDFmap = cms.vstring(PDFName)
          )
@@ -190,11 +192,11 @@ if scenario == "0": EFFICIENCYSET = cms.PSet(VEFFICIENCYSET[0],VEFFICIENCYSET[1]
 
 process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     # IO parameters:
-    InputFileNames = cms.vstring("file:./tnpZ_MC_PbPb_mod.root"),
+    InputFileNames = cms.vstring("file:./tnpZ_MC_PbPb_mod_v2.root"),
     InputDirectoryName = cms.string("tpTreeTrk"),
     InputTreeName = cms.string("fitter_tree"),
     #OutputFileName = cms.string("tnp_Ana_Data_RecoSTA_PbPb.root"),
-    OutputFileName = cms.string("tnp_Ana_MC_RecoSTA_PbPb_moreEta.root"),
+    OutputFileName = cms.string("tnp_Ana_MC_STA_PbPb_moreEta_v2_background.root"),
     #numbrer of CPUs to use for fitting
     NumCPU = cms.uint32(16),
     # specifies whether to save the RooWorkspace containing the data for each bin and
@@ -207,6 +209,7 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     
     # defines all the real variables of the probes available in the input tree and intended for use in the efficiencies
     Variables = cms.PSet(
+                    #     mass             = cms.vstring("Tag-Probe Mass", "50.0", "130.0", "GeV/c^{2}"), # mass range syst: 2.8-3.4
                          mass             = cms.vstring("Tag-Probe Mass", "60.0", "120.0", "GeV/c^{2}"), # mass range syst: 2.8-3.4
                          pt               = cms.vstring("Probe p_{T}", "0.0", "1000", "GeV/c"),
                          eta              = cms.vstring("Probe #eta", "-2.4", "2.4", ""),
@@ -240,7 +243,7 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     # each pdf needs to define "signal", "backgroundPass", "backgroundFail" pdfs, "efficiency[0.9,0,1]" and "signalFractionInPassing[0.9]" are used for initial values  
     PDFs = cms.PSet(
 	VoigtExp = cms.vstring(
-		"Voigtian::signal(mass, mean[91,80,100], width[3,-5,15], sigma[3,-5,15])",
+		"Voigtian::signal(mass, mean[91,85,95], width[3,1,10], sigma[3,1,10])",
 		"Exponential::backgroundPass(mass, lp[0,-5,5])",
 		"Exponential::backgroundFail(mass, lf[0,-5,5])",
 		"efficiency[0.9,0,1]",

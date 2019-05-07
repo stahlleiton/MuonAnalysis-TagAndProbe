@@ -14,7 +14,7 @@ process = cms.Process("TagProbe")
 process.load('FWCore.MessageService.MessageLogger_cfi')
 process.source = cms.Source("EmptySource")
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1) )
-PDFName = "BWResCBExp"
+PDFName = "VoigtExp"
 
 
 
@@ -38,7 +38,7 @@ VEFFICIENCYSET =cms.VPSet(
             EfficiencyCategoryAndState = cms.vstring("HLT_HIL3Mu12_Filter", "true"),
             UnbinnedVariables = cms.vstring("mass","weight"),
             BinnedVariables = cms.PSet(
-                pt = cms.vdouble(10, 15, 20, 30, 40, 50, 75, 100, 200),
+                pt = cms.vdouble(15, 20, 30, 40, 50, 75, 100, 200),
                 eta = cms.vdouble(-2.4, 2.4),
                 tag_hiBin = cms.vdouble(0, 200),
                 isTightMuon = cms.vstring("true"),
@@ -51,7 +51,7 @@ VEFFICIENCYSET =cms.VPSet(
             EfficiencyCategoryAndState = cms.vstring("HLT_HIL3Mu12_Filter", "true"),
             UnbinnedVariables = cms.vstring("mass","weight"),
             BinnedVariables = cms.PSet(
-                pt = cms.vdouble(10, 15, 20, 30, 50, 80, 200),
+                pt = cms.vdouble(15, 20, 30, 50, 80, 200),
                 abseta = cms.vdouble(0, 0.9),
                 tag_hiBin = cms.vdouble(0, 200),
                 isTightMuon = cms.vstring("true"),
@@ -64,7 +64,7 @@ VEFFICIENCYSET =cms.VPSet(
             EfficiencyCategoryAndState = cms.vstring("HLT_HIL3Mu12_Filter", "true"),
             UnbinnedVariables = cms.vstring("mass","weight"),
             BinnedVariables = cms.PSet(
-                pt = cms.vdouble(10, 15, 20, 30, 50, 80, 200),
+                pt = cms.vdouble(15, 20, 30, 50, 80, 200),
                 abseta = cms.vdouble(0.9, 1.2),
                 tag_hiBin = cms.vdouble(0, 200),
                 isTightMuon = cms.vstring("true"),
@@ -77,7 +77,7 @@ VEFFICIENCYSET =cms.VPSet(
             EfficiencyCategoryAndState = cms.vstring("HLT_HIL3Mu12_Filter", "true"),
             UnbinnedVariables = cms.vstring("mass","weight"),
             BinnedVariables = cms.PSet(
-                pt = cms.vdouble(10, 15, 20, 30, 50, 80, 200),
+                pt = cms.vdouble(15, 20, 30, 50, 80, 200),
                 abseta = cms.vdouble(0, 1.2),
                 tag_hiBin = cms.vdouble(0, 200),
                 isTightMuon = cms.vstring("true"),
@@ -90,7 +90,7 @@ VEFFICIENCYSET =cms.VPSet(
              EfficiencyCategoryAndState = cms.vstring("HLT_HIL3Mu12_Filter", "true"),
              UnbinnedVariables = cms.vstring("mass","weight"),
              BinnedVariables = cms.PSet(
-                pt = cms.vdouble(10, 15, 20, 30, 50, 80, 200),
+                pt = cms.vdouble(15, 20, 30, 50, 80, 200),
                 abseta = cms.vdouble(1.2, 1.6),
                 tag_hiBin = cms.vdouble(0, 200),
                 isTightMuon = cms.vstring("true"),
@@ -103,7 +103,7 @@ VEFFICIENCYSET =cms.VPSet(
              EfficiencyCategoryAndState = cms.vstring("HLT_HIL3Mu12_Filter", "true"),
              UnbinnedVariables = cms.vstring("mass","weight"),
              BinnedVariables = cms.PSet(
-                pt = cms.vdouble(10, 15, 20, 30, 50, 80, 200),
+                pt = cms.vdouble(15, 20, 30, 50, 80, 200),
                 abseta = cms.vdouble(1.6, 2.1),
                 tag_hiBin = cms.vdouble(0, 200),
                 isTightMuon = cms.vstring("true"),
@@ -116,7 +116,7 @@ VEFFICIENCYSET =cms.VPSet(
              EfficiencyCategoryAndState = cms.vstring("HLT_HIL3Mu12_Filter", "true"),
              UnbinnedVariables = cms.vstring("mass","weight"),
              BinnedVariables = cms.PSet(
-                pt = cms.vdouble(10, 15, 20, 30, 50, 80, 200),
+                pt = cms.vdouble(15, 20, 30, 50, 80, 200),
                 abseta = cms.vdouble(1.2, 2.1),
                 tag_hiBin = cms.vdouble(0, 200),
                 isTightMuon = cms.vstring("true"),
@@ -129,7 +129,7 @@ VEFFICIENCYSET =cms.VPSet(
             EfficiencyCategoryAndState = cms.vstring("HLT_HIL3Mu12_Filter", "true"),
             UnbinnedVariables = cms.vstring("mass","weight"),
             BinnedVariables = cms.PSet(
-                pt = cms.vdouble(10, 15, 20, 30, 50, 80, 200),
+                pt = cms.vdouble(15, 20, 30, 50, 80, 200),
                 abseta = cms.vdouble(2.1, 2.4),
                 tag_hiBin = cms.vdouble(0, 200),
                 isTightMuon = cms.vstring("true"),
@@ -193,10 +193,10 @@ if scenario == "0": EFFICIENCYSET = cms.PSet(VEFFICIENCYSET[0],VEFFICIENCYSET[1]
 process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     # IO parameters:
  #   InputFileNames = cms.vstring("file:/afs/cern.ch/work/o/okukral/TnP_pPb/Data/PASingleMuon_PARun2016C-PromptReco-v1TnpTress_Pbpv1CentralityInfo.root"),
-    InputFileNames = cms.vstring("file:tnpZ_MC_PbPb_mod.root"),
+    InputFileNames = cms.vstring("file:tnpZ_MC_PbPb_mod_v2.root"),
     InputDirectoryName = cms.string("tpTree"),
     InputTreeName = cms.string("fitter_tree"),
-    OutputFileName = cms.string("tnp_Ana_MC_L3Mu12_PbPb_%s.root" % scenario),
+    OutputFileName = cms.string("tnp_Ana_MC_L3Mu12_PbPb_%s_v2_syst.root" % scenario),
     #numbrer of CPUs to use for fitting
     NumCPU = cms.uint32(16),
     # specifies whether to save the RooWorkspace containing the data for each bin and
@@ -209,7 +209,8 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
 
     # defines all the real variables of the probes available in the input tree and intended for use in the efficiencies
     Variables = cms.PSet(
-                         mass   = cms.vstring("Tag-Probe Mass", "60.0", "135.0", "GeV/c^{2}"), # mass range syst: 2.8-3.4
+                         #mass   = cms.vstring("Tag-Probe Mass", "60.0", "135.0", "GeV/c^{2}"), # mass range syst: 2.8-3.4
+                         mass   = cms.vstring("Tag-Probe Mass", "50.0", "130.0", "GeV/c^{2}"), # mass range syst: 2.8-3.4
                          pt     = cms.vstring("Probe p_{T}", "0.0", "1000", "GeV/c"),
                          eta    = cms.vstring("Probe #eta", "-2.4", "2.4", ""),
                          abseta = cms.vstring("Probe |#eta|", "0", "2.5", ""),
@@ -230,12 +231,10 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     # each pdf needs to define "signal", "backgroundPass", "backgroundFail" pdfs, "efficiency[0.9,0,1]" and "signalFractionInPassing[0.9]" are used for initial values
     PDFs = cms.PSet(
 	VoigtExp = cms.vstring(
-		"BreitWigner::bw(mass, m0[91.2,81.2,101.2], width[2.495,1,10])",
-		"RooCBShape::res(mass, peak[0], sigma[1.7,0.01,10], alpha[1.8,0,3], n[0.8,0,10])",
-		"FCONV::signal(mass, bw, res)",
+		"Voigtian::signal(mass, mean[91,85,95], width[3,1,10], sigma[3,1,10])",
 		"Exponential::backgroundPass(mass, lp[0,-5,5])",
 		"Exponential::backgroundFail(mass, lf[0,-5,5])",
-		"efficiency[0.9,0.5,1]",
+		"efficiency[0.9,0.,1]",
 		"signalFractionInPassing[0.9]",
 	),
 	BWResCBExp = cms.vstring(
