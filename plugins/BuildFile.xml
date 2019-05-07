@@ -27,6 +27,5 @@
   <use   name="MagneticField/Records"/>
   <use   name="RecoTracker/TkDetLayers"/>
   <use   name="HLTrigger/HLTcore"/>
+  <use   name="RecoVertex/PrimaryVertexProducer"/>
 </library>
-
-
