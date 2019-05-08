@@ -32,8 +32,8 @@ void plotSFs() {
    etamax = new float[3]; etamax[0]=1.2; etamax[1]=2.1; etamax[2]=2.4;;
 
    const char* tags[3] = {"trg_","muid_","iso_"};
-   const char* names[3] = {"Trigger","MuID","Iso"};
-   const double range[3] = {0.1,0.1,0.1};
+   const char* names[3] = {"MuId","MuID","Iso"};
+   const double range[3] = {0.05,0.1,0.1};
 
    for (int j=0; j<3; j++) {
       // ppb
@@ -77,8 +77,8 @@ void plotSFs() {
          fnom->SetLineColor(kRed);
          fnom->Draw("same");
 
-         if (j==0) tleg->SetHeader(Form("#splitline{pPb, %s}{#eta #in [-2.4,2.4], p_{T}>15 GeV/c}",names[j]));
-         else tleg->SetHeader(Form("#splitline{pPb, %s}{#eta #in [%.1f,%.1f], p_{T}>15 GeV/c}",names[j],etamin[ieta],etamax[ieta]));
+         if (j==0) tleg->SetHeader(Form("#splitline{PbPb, %s}{#eta #in [-2.4,2.4], p_{T}>15 GeV/c}",names[j]));
+         else tleg->SetHeader(Form("#splitline{PbPb, %s}{#eta #in [%.1f,%.1f], p_{T}>15 GeV/c}",names[j],etamin[ieta],etamax[ieta]));
 
          tleg->AddEntry(fnom,"Nominal","l");
          if (j>0) tleg->AddEntry("f1","stat (100 toys)","l");

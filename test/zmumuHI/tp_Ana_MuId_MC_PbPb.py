@@ -13,7 +13,7 @@ process = cms.Process("TagProbe")
 process.load('FWCore.MessageService.MessageLogger_cfi')
 process.source = cms.Source("EmptySource")
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1) )
-PDFName = "BWResCBExp"
+PDFName = "BWResCBFixedNExp"
 
 
 VEFFICIENCYSET =cms.VPSet(
@@ -186,6 +186,62 @@ VEFFICIENCYSET =cms.VPSet(
             BinToPDFmap = cms.vstring(PDFName)
         )
     ),
+        cms.PSet(
+        MuId_absetadep_cent0010 = cms.PSet(
+            EfficiencyCategoryAndState = cms.vstring("isTightMuon", "true"),
+            UnbinnedVariables = cms.vstring("mass", "weight"),
+            BinnedVariables = cms.PSet(
+                pt = cms.vdouble(15, 200),
+                abseta = cms.vdouble(0, 0.9, 1.2, 1.6, 2.1, 2.4),
+                tag_hiBin = cms.vdouble(0, 20),
+                Glb = cms.vstring("true"),
+                PF = cms.vstring("true"),
+            ),
+            BinToPDFmap = cms.vstring(PDFName)
+        )
+    ),
+    cms.PSet(
+        MuId_absetadep_cent1030 = cms.PSet(
+            EfficiencyCategoryAndState = cms.vstring("isTightMuon", "true"),
+            UnbinnedVariables = cms.vstring("mass", "weight"),
+            BinnedVariables = cms.PSet(
+                pt = cms.vdouble(15, 200),
+                abseta = cms.vdouble(0, 0.9, 1.2, 1.6, 2.1, 2.4),
+                tag_hiBin = cms.vdouble(20, 60),
+                Glb = cms.vstring("true"),
+                PF = cms.vstring("true"),
+            ),
+            BinToPDFmap = cms.vstring(PDFName)
+        )
+    ),
+    cms.PSet(
+        MuId_absetadep_cent3050 = cms.PSet(
+            EfficiencyCategoryAndState = cms.vstring("isTightMuon", "true"),
+            UnbinnedVariables = cms.vstring("mass", "weight"),
+            BinnedVariables = cms.PSet(
+                pt = cms.vdouble(15, 200),
+                abseta = cms.vdouble(0, 0.9, 1.2, 1.6, 2.1, 2.4),
+                tag_hiBin = cms.vdouble(60, 100),
+                Glb = cms.vstring("true"),
+                PF = cms.vstring("true"),
+            ),
+            BinToPDFmap = cms.vstring(PDFName)
+        )
+    ),
+    cms.PSet(
+        MuId_absetadep_cent50100 = cms.PSet(
+            EfficiencyCategoryAndState = cms.vstring("isTightMuon", "true"),
+            UnbinnedVariables = cms.vstring("mass", "weight"),
+            BinnedVariables = cms.PSet(
+                pt = cms.vdouble(15, 200),
+                abseta = cms.vdouble(0, 0.9, 1.2, 1.6, 2.1, 2.4),
+                tag_hiBin = cms.vdouble(100, 200),
+                Glb = cms.vstring("true"),
+                PF = cms.vstring("true"),
+            ),
+            BinToPDFmap = cms.vstring(PDFName)
+        )
+    ),
 )
 #Actual selection
 if scenario == "1": EFFICIENCYSET = cms.PSet(VEFFICIENCYSET[0], VEFFICIENCYSET[1])
@@ -196,12 +252,13 @@ if scenario == "5": EFFICIENCYSET = cms.PSet(VEFFICIENCYSET[8])
 if scenario == "6": EFFICIENCYSET = cms.PSet(VEFFICIENCYSET[9])
 if scenario == "7": EFFICIENCYSET = cms.PSet(VEFFICIENCYSET[10])
 if scenario == "8": EFFICIENCYSET = cms.PSet(VEFFICIENCYSET[11])
+if scenario == "9": EFFICIENCYSET = cms.PSet(VEFFICIENCYSET[12], VEFFICIENCYSET[13], VEFFICIENCYSET[14], VEFFICIENCYSET[15])
 if scenario == "0": EFFICIENCYSET = cms.PSet(VEFFICIENCYSET[0],VEFFICIENCYSET[1],VEFFICIENCYSET[2], VEFFICIENCYSET[3],VEFFICIENCYSET[4], VEFFICIENCYSET[5],VEFFICIENCYSET[6], VEFFICIENCYSET[7],VEFFICIENCYSET[8], VEFFICIENCYSET[9], VEFFICIENCYSET[10],VEFFICIENCYSET[11])
 
 
 process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     # IO parameters:
-    InputFileNames = cms.vstring("file:/eos/cms/store/group/phys_heavyions/dileptons/TNPTagAndProbe2018/MC2018/PbPb502TeV/tnpZ_MC_PbPb_mod.root"),
+    InputFileNames = cms.vstring("file:/eos/cms/store/group/phys_heavyions/dileptons/TNPTagAndProbe2018/MC2018/PbPb502TeV/tnpZ_MC_PbPb_mod_v2.root"),
     InputDirectoryName = cms.string("tpTree"),
     InputTreeName = cms.string("fitter_tree"),
     OutputFileName = cms.string("tnp_Ana_MC_MuId_PbPb_%s.root" % scenario),
@@ -244,6 +301,15 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
 	BWResCBExp = cms.vstring(
 		"BreitWigner::bw(mass, m0[91.2,81.2,101.2], width[2.495,1,10])",
 		"RooCBShape::res(mass, peak[0], sigma[1.7,0.01,10], alpha[1.8,0,3], n[0.8,0,10])",
+		"FCONV::signal(mass, bw, res)",
+		"Exponential::backgroundPass(mass, lp[0,-5,5])",
+		"Exponential::backgroundFail(mass, lf[0,-5,5])",
+		"efficiency[0.9,0.5,1]",
+		"signalFractionInPassing[0.9]",
+	),
+    BWResCBFixedNExp = cms.vstring(
+		"BreitWigner::bw(mass, m0[91.2,81.2,101.2], width[2.495,1,10])",
+		"RooCBShape::res(mass, peak[0], sigma[1.7,0.01,10], alpha[1.8,0,5], n[1.02])", #n fixed to integral bin MC
 		"FCONV::signal(mass, bw, res)",
 		"Exponential::backgroundPass(mass, lp[0,-5,5])",
 		"Exponential::backgroundFail(mass, lf[0,-5,5])",

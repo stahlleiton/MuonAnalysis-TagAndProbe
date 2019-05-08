@@ -38,7 +38,7 @@ void CopyDir(TDirectory *source) {
 			TObject *obj = key->ReadObj();
 			adir->cd();
 			obj->Write();
-			delete obj;
+			//delete obj;
 		}
 	}
 	adir->SaveSelf(kTRUE);
@@ -76,7 +76,7 @@ void CopyDirFile(TDirectory *source) {
 			TObject *obj = key->ReadObj();
 			adir->cd();
 			obj->Write();
-			delete obj;
+			//delete obj;
 		}
 	}
 	adir->SaveSelf(kTRUE);

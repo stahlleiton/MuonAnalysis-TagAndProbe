@@ -16,7 +16,7 @@
 
 #include <fstream>
 
-const int nToys = 100;
+const int nToys = 1;
 
 TString formula(TF1 *f, int digits=2);
 
