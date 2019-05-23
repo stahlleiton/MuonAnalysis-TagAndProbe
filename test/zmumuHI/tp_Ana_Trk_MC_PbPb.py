@@ -222,6 +222,13 @@ OutputFileName = cms.string("tnp_Ana_MC_Trk_PbPb_%s.root" % scenario),
 		"efficiency[0.9,0,1]",
 		"signalFractionInPassing[0.9]"
 	),
+    VoigtPol2 = cms.vstring(
+		"Voigtian::signal(mass, mean[91,75,105], width[3,-5,15], sigma[3,-5,15])", # mean 85-95, width, sigma 1-10
+        "Chebychev::backgroundPass(mass, {cPass[0.,-1.1,1.1], cPass2[0.,-1.1,1.1]})",
+        "Chebychev::backgroundFail(mass, {cFail[0.,-1.1,1.1], cFail2[0.,-1.1,1.1]})",
+		"efficiency[0.9,0,1]",
+		"signalFractionInPassing[0.9]"
+	),
 	BWResCBExp = cms.vstring(
 		"BreitWigner::bw(mass, m0[91.2,81.2,101.2], width[2.495,1,10])",
 		"RooCBShape::res(mass, peak[0], sigma[1.7,0.01,10], alpha[1.8,0,3], n[0.8,0,10])",

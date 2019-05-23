@@ -4,10 +4,11 @@
 #include "TH1.h"
 #include "TCanvas.h"
 
-Double_t tnp_weight_ppb_wrapper(Double_t *x, Double_t *par) {
-   if (par[2]<0.5) return tnp_weight_trg_ppb(x[0], par[1]);
-   else if (par[2]<1.5) return tnp_weight_muid_ppb(x[0],par[0],par[1]);
-   else return tnp_weight_iso_ppb(x[0],par[0],par[1]);
+Double_t tnp_weight_pbpb_wrapper(Double_t *x, Double_t *par) {
+   if (par[2]<0.5) return tnp_weight_muid_pbpb(x[0], par[1]);
+   else if (par[2]<1.5) return tnp_weight_trg_pbpb(x[0],par[0],par[1]);
+   else return 0;
+   //else return tnp_weight_iso_pbpb(x[0],par[0],par[1]);
 }
 
 float ptmin(float etamax) {
@@ -31,19 +32,19 @@ void plotSFs() {
    etamin = new float[3]; etamin[0]=0.; etamin[1]=1.2; etamin[2]=2.1;
    etamax = new float[3]; etamax[0]=1.2; etamax[1]=2.1; etamax[2]=2.4;;
 
-   const char* tags[3] = {"trg_","muid_","iso_"};
-   const char* names[3] = {"MuId","MuID","Iso"};
+   const char* tags[3] = {"muid_","trg_","iso_"};
+   const char* names[3] = {"MuId","Trg","Iso"};
    const double range[3] = {0.05,0.1,0.1};
 
-   for (int j=0; j<3; j++) {
-      // ppb
-      int ietamax = (j==0) ? 0 : 2; // for trigger, only 1 plot (eta dependence)
+   for (int j=0; j<2; j++) {
+      // pbpb
+      int ietamax = (j==0) ? 0 : 2; // for muid, only 1 plot (eta dependence)
       for (int ieta=0; ieta<=ietamax; ieta++) {
          if (j>0) {
             haxes->GetYaxis()->SetRangeUser(1-2.*range[j],1+range[j]);
             haxes->Draw();
          } else {
-            haxeseta->GetYaxis()->SetRangeUser(0.85,1.1);
+            haxeseta->GetYaxis()->SetRangeUser(0.93,1.03);
             haxeseta->Draw();
          }
 
@@ -55,24 +56,24 @@ void plotSFs() {
          ptmaxval = j==0 ? 2.4 : 200;
          int imax = (j>0) ? 100 : 2;
          for (int i=1; i<=imax; i++) {
-            TF1 *fnom = new TF1(Form("f%i",i),tnp_weight_ppb_wrapper,ptminval,ptmaxval,3);
+            TF1 *fnom = new TF1(Form("f%i",i),tnp_weight_pbpb_wrapper,ptminval,ptmaxval,3);
             fnom->SetParameters(eta,i,j);
             fnom->SetLineColor(kBlack);
             fnom->Draw("same");
          }
-         TF1 *fp = new TF1("fp",tnp_weight_ppb_wrapper,ptminval,ptmaxval,3);
+         TF1 *fp = new TF1("fp",tnp_weight_pbpb_wrapper,ptminval,ptmaxval,3);
          fp->SetParameters(eta,-1,j);
          fp->SetLineColor(kCyan);
          fp->Draw("same");
-         TF1 *fm = new TF1("fm",tnp_weight_ppb_wrapper,ptminval,ptmaxval,3);
+         TF1 *fm = new TF1("fm",tnp_weight_pbpb_wrapper,ptminval,ptmaxval,3);
          fm->SetParameters(eta,-2,j);
          fm->SetLineColor(kCyan);
          fm->Draw("same");
-         TF1 *fbinned = new TF1("fbinned",tnp_weight_ppb_wrapper,ptminval,ptmaxval,3);
+         TF1 *fbinned = new TF1("fbinned",tnp_weight_pbpb_wrapper,ptminval,ptmaxval,3);
          fbinned->SetParameters(eta,-10,j);
          fbinned->SetLineColor(kGreen+2);
-         if (j>0) fbinned->Draw("same"); // binned only for MuId and Iso
-         TF1 *fnom = new TF1("fnom",tnp_weight_ppb_wrapper,ptminval,ptmaxval,3);
+         if (j>0) fbinned->Draw("same"); // binned only for Trg and Iso
+         TF1 *fnom = new TF1("fnom",tnp_weight_pbpb_wrapper,ptminval,ptmaxval,3);
          fnom->SetParameters(eta,0,j);
          fnom->SetLineColor(kRed);
          fnom->Draw("same");
@@ -86,8 +87,8 @@ void plotSFs() {
          tleg->AddEntry(fp,"syst (+/1#sigma)","l");
          if (j>0) tleg->AddEntry(fbinned,"binned","l");
          tleg->Draw();
-         c1->SaveAs(Form("tnp_ppb_%seta%.1f-%.1f.pdf",tags[j],etamin[ieta],etamax[ieta]));
-         c1->SaveAs(Form("tnp_ppb_%seta%.1f-%.1f.png",tags[j],etamin[ieta],etamax[ieta]));
+         c1->SaveAs(Form("tnp_pbpb_%seta%.1f-%.1f.pdf",tags[j],etamin[ieta],etamax[ieta]));
+         c1->SaveAs(Form("tnp_pbpb_%seta%.1f-%.1f.png",tags[j],etamin[ieta],etamax[ieta]));
       } // eta loop
    } // eff type loop
 }

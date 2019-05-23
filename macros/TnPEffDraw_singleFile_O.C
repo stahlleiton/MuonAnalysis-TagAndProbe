@@ -44,7 +44,7 @@ using namespace std;
 
 // Choose the efficiency type.
 // Possible values: MUIDTRG, TRK, STA, MUID, TRG
-#define MUID
+#define TRK
 
 // pp or PbPb?
 bool isPbPb = true; // if true, will compute the centrality dependence
@@ -59,7 +59,7 @@ TString collTag = "PbPb"; // isPbPb ? "PbPb" : "pp";
 int fitfcn = 2;
 
 // Location of the files
-const int nSyst = 3;//5;
+const int nSyst = 4;//5;
 // the first file is for the nominal case, the following ones are for the systematics
 /*const char* fDataName[nSyst] = {
 	//"tnp_Ana_RD_PbPb_MuonIDTrg_AllMB.root",
@@ -80,12 +80,6 @@ bool doToys = true;
 //   "Nominal",
 //};
 
-// names for systematics
-const char* systName[nSyst] = {
-   "Nominal",
-   "Mass range 65-110",
-   "Bkg - pol2",
-};
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -118,8 +112,14 @@ const double c_ptRange = 200; // how far to plot the pt
 const double c_centralityRange = 200; // how far to plot the centrality (hibin goes to 200)
 //const char* fDataName[nSyst] = { "tnp_Ana_RD_MuId_PbPb_0.root" };
 //const char* fMCName[nSyst] = { "tnp_Ana_MC_MuId_PbPb_0.root" };
-const char* fDataName[nSyst] = { "tnp_Ana_RD_MuId_PbPb_0.root", "tnp_Ana_RD_MuId_PbPb_mass_0.root", "tnp_Ana_RD_MuId_PbPb_bkg_0.root" };
-const char* fMCName[nSyst] = { "tnp_Ana_MC_MuId_PbPb_0.root", "tnp_Ana_MC_MuId_PbPb_mass_0.root", "tnp_Ana_MC_MuId_PbPb_bkg_0.root" };
+const char* fDataName[nSyst] = { "tnp_Ana_RD_MuId_PbPb_0.root", "tnp_Ana_RD_MuId_PbPb_mass_0.root", "tnp_Ana_RD_MuId_PbPb_sig_0.root", "tnp_Ana_RD_MuId_PbPb_bkg_0.root" };
+const char* fMCName[nSyst] = { "tnp_Ana_MC_MuId_PbPb_0.root", "tnp_Ana_MC_MuId_PbPb_mass_0.root", "tnp_Ana_MC_MuId_PbPb_sig_0.root", "tnp_Ana_MC_MuId_PbPb_bkg_0.root" };
+const char* systName[nSyst] = {
+   "Nominal",
+   "Mass range 65-110",
+   "Sig - CB+Gauss",
+   "Bkg - pol2",
+};
 
 #endif
 
@@ -148,7 +148,12 @@ const double c_ptRange = 200; // how far to plot the pt
 const double c_centralityRange = 200; // how far to plot the centrality (hibin goes to 200)
 const char* fDataName[nSyst] = { "tnp_Ana_RD_PbPb_Trg_AllMB.root" };
 const char* fMCName[nSyst] = { "tnp_Ana_MC_PbPb_Trg_AllMB.root" };
-
+const char* systName[nSyst] = {
+   "Nominal",
+   "Mass range 65-110",
+   "Sig - CB+Gauss",
+   "Bkg - pol2",
+};
 #endif
 
 
@@ -175,7 +180,12 @@ const double c_ptRange = 80; // how far to plot the pt
 const double c_centralityRange = 200; // how far to plot the centrality (hibin goes to 200)
 const char* fDataName[nSyst] = { "tnp_Ana_Data_RecoSTA_PbPb.root" };
 const char* fMCName[nSyst] = { "tnp_Ana_MC_STA_PbPb.root" };
-
+const char* systName[nSyst] = {
+   "Nominal",
+   "Mass range 65-110",
+   "Sig - CB+Gauss",
+   "Bkg - pol2",
+};
 #endif
 
 #ifdef TRK
@@ -196,11 +206,15 @@ TString treeTag("tpTreeSta");
 TString cutLegend("Inner tracking");
 const double effmin = 0.8;
 const double effmax = 1.05;
-const double sfrange = 0.03;
+const double sfrange = 0.08;
 const double c_ptRange = 80; // how far to plot the pt
 const double c_centralityRange = 200; // how far to plot the centrality (hibin goes to 200)
-const char* fDataName[nSyst] = { "tnp_Ana_RD_Trk_PbPb.root" };
-const char* fMCName[nSyst] = { "tnp_Ana_MC_Trk_PbPb.root" };
+const char* fDataName[nSyst] = { "tnp_Ana_RD_Trk_PbPb_0.root", "tnp_Ana_RD_Trk_PbPb_mass_0.root", "tnp_Ana_RD_Trk_PbPb_sig_0.root", "tnp_Ana_RD_Trk_PbPb_bkg_0.root" };
+const char* fMCName[nSyst] = { "tnp_Ana_MC_Trk_PbPb_0.root", "tnp_Ana_MC_Trk_PbPb_mass_0.root", "tnp_Ana_MC_Trk_PbPb_sig_0.root", "tnp_Ana_MC_Trk_PbPb_bkg_0.root" };
+const char* systName[nSyst] = {"Nominal", "Mass range 65-145", "Sig - Conv(CB,Gauss)", "Bkg - pol2"}; //name for systematics
+
+//const char* fDataName[nSyst] = { "tnp_Ana_RD_Trk_PbPb.root" };
+//const char* fMCName[nSyst] = { "tnp_Ana_MC_Trk_PbPb.root" };
 
 #endif
 
