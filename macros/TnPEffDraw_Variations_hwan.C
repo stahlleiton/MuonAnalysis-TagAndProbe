@@ -1,4 +1,4 @@
-/////////////  Check 1 file, otherwise same as the main TnPDraw (thus some redundant structure). Original (and fairly bad) naming schemes mostly kept.
+/////////////  Check 1 file, otherwise same
 
 #include <iostream>
 #include <fstream>
@@ -51,15 +51,15 @@ bool isPbPb = true; // if true, will compute the centrality dependence
 TString collTag = "PbPb"; // isPbPb ? "PbPb" : "pp";
 
 // do the toy study for the correction factors? (only applies if MUIDTRG)
-bool doToys = false;
+bool doToys = true;
 
 // how to fit efficiencies?
 // 0 = [0]*Erf((x-[1])/[2])
 // 1 = [0]*Erf((x-[1])/[2]) + [3]
-// 2 = ([0]*Erf((x-[1])/[2]))*Exp([4]*x)+ [3]
+// 2 = ([0]*Erf((x-[1])/[2]))*Exp(x/[4])+ [3]
 // 3 = [0]
-// 4 = [0]-[1]*TMath::Exp(-[2]*x) 
-// 
+// 4 = [0]*Erf((x-[1])/[2]) + [3] + [4]*x
+// 5 =[0]+[1]*x
 int fitfcn = 4;
 
 // Location of the files
@@ -67,28 +67,19 @@ const int nSyst = 1;//5;
 // the first file is for the nominal case, the following ones are for the systematics
 /*const char* fDataName[nSyst] = {
 	//"tnp_Ana_RD_PbPb_MuonIDTrg_AllMB.root",
-	"./190507/tnp_Ana_Data_RecoSTA_PbPb_moreEta_v2.root",
-	"./190502/tnp_Ana_Data_RecoSTA_PbPb_moreEta_v2_signal.root",
-	"./190502/tnp_Ana_Data_RecoSTA_PbPb_moreEta_v2_background.root",
-	"./190502/tnp_Ana_Data_RecoSTA_PbPb_moreEta_v2_mass.root",
+	"tnp_Ana_RD_PbPb_MuonTrk_AllMB_isGlbPol2.root", 
 };
 const char* fMCName[nSyst] = {
    //"tnp_Ana_MC_PbPb_MuonIDTrg_AllMB.root",
-	"./190430/tnp_Ana_MC_STA_PbPb_moreEta_v2.root",
-	"./190502/tnp_Ana_MC_STA_PbPb_moreEta_v2_signal.root",
-	"./190502/tnp_Ana_MC_STA_PbPb_moreEta_v2_background.root",
-	"./190502/tnp_Ana_MC_STA_PbPb_moreEta_v2_mass.root",
-};//
-*/
+	"tnp_Ana_MC_PbPb_MuonTrk_AllMB_isGlbPol2.root",
+};//*/
+
 // names for systematics
 const char* systName[nSyst] = {
-//   "nominal","background","mass","signal"
-   "nominal"
+   "nominal",
 };
 
-const double c_ptRange = 80; // how far to plot the pt
-const double c_centralityRange = 200; // how far to plot the centrality (hibin goes to 200)
-const double c_runRange = 327600; // how far to plot the run number
+
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -105,7 +96,7 @@ TString centVar("tag_hiBin");
 ofstream file_sfs("correction_functions.txt");
 ofstream file_Eta("EtaValues_MuIdTrg.txt");
 ofstream file_Cent("CentValues_MuIdTrg.txt");
-TString treeTag("tpTree");
+TString cutTag("tpTree");
 TString cutLegend("Muon ID + trigger");
 const double effmin = 0.;
 const double sfrange = 0.35;
@@ -116,48 +107,72 @@ const char* fMCName[nSyst] = { "tnp_Ana_MC_PbPb_MuIDTrg_AllMB.root" };
 #ifdef MUID
 TString etaTag("MuId_etadep");
 TString absetaTag("MuId_absetadep");
-TString centTag("MuId_centdep");
-//TString centTag("MuId_centdepHF");
+//TString centTag("MuId_centdep");
+TString centTag("MuId_centdepHF");
 const int nAbsEtaBins = 8;
 TString ptTag[nAbsEtaBins] = {"MuId_pt","MuId_abseta00_09","MuId_abseta09_12", "MuId_abseta00_12", "MuId_abseta12_16", "MuId_abseta16_21", "MuId_abseta12_21", "MuId_abseta21_24" };
 TString allTag("MuId_1bin");
 TString absetaVar("abseta");
 //TString centVar("tag_hiNtracks");
-TString centVar("tag_hiBin");
+TString centVar("tag_hiHF");
 ofstream file_sfs("correction_functions.txt");
 ofstream file_Eta("EtaValues_MuId.txt");
 ofstream file_Cent("CentValues_MuId.txt");
 ofstream file_TestErr("MuId_ExpErr.txt");
-TString treeTag("tpTree");
+TString cutTag("tpTree");
 TString cutLegend("Tight ID");
 const double effmin = 0.8;
-const double sfrange = 0.3;
-const char* fDataName[nSyst] = { "tnp_Ana_RD_MuId_PbPb.root" };
-const char* fMCName[nSyst] = { "tnp_Ana_MC_MuId_PbPb.root" };
+const double sfrange = 0.05;
+const char* fDataName[nSyst] = { "tnp_Ana_RD_MuId_nom_0.root" };
+const char* fMCName[nSyst] = { "tnp_Ana_MC_MuId_nom_0.root" };
 #endif
 
 //#ifdef MUID
 //TString etaTag("Iso_etadep");
 //TString absetaTag("Iso_absetadep");
-//TString centTag("Iso_centdep");
-////TString centTag("Iso_centdepHF");
+////TString centTag("Iso_centdep");
+//TString centTag("Iso_centdepHF");
 //const int nAbsEtaBins = 8;
 //TString ptTag[nAbsEtaBins] = { "Iso_pt", "Iso_abseta00_09","Iso_abseta09_12", "Iso_abseta00_12", "Iso_abseta12_16", "Iso_abseta16_21", "Iso_abseta12_21", "Iso_abseta21_24" };
 //TString allTag("Iso_1bin");
 //TString absetaVar("abseta");
-//TString centVar("tag_hiNtracks");
-////TString centVar("tag_hiHF");
+////TString centVar("tag_hiNtracks");
+//TString centVar("tag_hiHF");
 //ofstream file_sfs("correction_functions.txt");
 //ofstream file_Eta("EtaValues_Iso.txt");
 //ofstream file_Cent("CentValues_Iso.txt");
 //ofstream file_TestErr("Iso_ExpErr.txt");
-//TString treeTag("tpTree");
+//TString cutTag("tpTree");
 //TString cutLegend("Iso");
 //const double effmin = 0.7;
-//const double sfrange = 0.2;
-//const char* fDataName[nSyst] = { "tnp_Ana_RD_Iso_Pbp_0.root" };
-//const char* fMCName[nSyst] = { "tnp_Ana_MC_Iso_Pbp_0.root" };
+//const double sfrange = 0.05;
+//const char* fDataName[nSyst] = { "tnp_Ana_RD_Iso_nom_0.root" };
+//const char* fMCName[nSyst] = { "tnp_Ana_MC_Iso_nom_0.root" };
 //#endif
+
+//#ifdef MUID   //MuIdMuIdIso
+//TString etaTag("MuIdIso_etadep");
+//TString absetaTag("MuIdIso_absetadep");
+////TString centTag("MuIdIso_centdep");
+//TString centTag("MuIdIso_centdepHF");
+//const int nAbsEtaBins = 8;
+//TString ptTag[nAbsEtaBins] = { "MuIdIso_pt", "MuIdIso_abseta00_09","MuIdIso_abseta09_12", "MuIdIso_abseta00_12", "MuIdIso_abseta12_16", "MuIdIso_abseta16_21", "MuIdIso_abseta12_21", "MuIdIso_abseta21_24" };
+//TString allTag("MuIdIso_1bin");
+//TString absetaVar("abseta");
+////TString centVar("tag_hiNtracks");
+//TString centVar("tag_hiHF");
+//ofstream file_sfs("correction_functions.txt");
+//ofstream file_Eta("EtaValues_MuIdIso.txt");
+//ofstream file_Cent("CentValues_MuIdIso.txt");
+//ofstream file_TestErr("MuIdIso_ExpErr.txt");
+//TString cutTag("tpTree");
+//TString cutLegend("MuIdIso");
+//const double effmin = 0.7;
+//const double sfrange = 0.05;
+//const char* fDataName[nSyst] = { "tnp_Ana_RD_CombIdIso_restricted_0.root" };
+//const char* fMCName[nSyst] = { "tnp_Ana_MC_CombIdIso_restricted_0.root" };
+//#endif
+
 
 
 //#ifdef MUID
@@ -173,7 +188,7 @@ const char* fMCName[nSyst] = { "tnp_Ana_MC_MuId_PbPb.root" };
 //ofstream file_Eta("EtaValues_Iso.txt");
 //ofstream file_Cent("CentValues_Iso.txt");
 //ofstream file_TestErr("Iso_ExpErr.txt");
-//TString treeTag("tpTree");
+//TString cutTag("tpTree");
 //TString cutLegend("Iso");
 //const double effmin = 0.;
 //const double sfrange = 0.2;
@@ -186,33 +201,34 @@ const char* fMCName[nSyst] = { "tnp_Ana_MC_MuId_PbPb.root" };
 TString etaTag("Trg_etadep");
 TString absetaTag("Trg_absetadep");
 TString centTag("Trg_centdep");
-TString runTag("Trg_rundep");
 const int nAbsEtaBins = 8;
 TString ptTag[nAbsEtaBins] = { "Trg_pt", "Trg_abseta00_09", "Trg_abseta00_12", "Trg_abseta09_12", "Trg_abseta12_16", "Trg_abseta12_21", "Trg_abseta16_21", "Trg_abseta21_24" };
 TString allTag("Trg_1bin");
 TString absetaVar("abseta");
 TString centVar("tag_hiBin");
-TString runVar("run");
 ofstream file_sfs("correction_functions.txt");
 ofstream file_Eta("EtaValues_Trg.txt");
 ofstream file_Cent("CentValues_Trg.txt");
-ofstream file_Run("RunValues_Trg.txt");
 ofstream file_TestErr("Trg_ExpErr.txt");
-TString treeTag("tpTree");
+TString cutTag("tpTree");
 TString cutLegend("Trigger");
 const double effmin = 0.6;
 const double sfrange = 0.1;
 const char* fDataName[nSyst] = { 
 	"./190507/tnp_Ana_RD_L3Mu12_PbPb_0_v2.root",
+	/*
 	"./190507/tnp_Ana_RD_L3Mu12_PbPb_0_v2_background.root",
 	"./190507/tnp_Ana_RD_L3Mu12_PbPb_0_v2_mass.root",
 	"./190507/tnp_Ana_RD_L3Mu12_PbPb_0_v2_signal.root",
+	*/
 	};
 const char* fMCName[nSyst] = { 
 	"./190507/tnp_Ana_MC_L3Mu12_PbPb_0_v2.root",
+	/*
 	"./190507/tnp_Ana_MC_L3Mu12_PbPb_0_v2_background.root",
 	"./190507/tnp_Ana_MC_L3Mu12_PbPb_0_v2_mass.root",
 	"./190507/tnp_Ana_MC_L3Mu12_PbPb_0_v2_signal.root",
+	*/
 	};
 #endif
 
@@ -229,13 +245,10 @@ TString centVar("tag_hiBin");
 ofstream file_sfs("correction_functions.txt");
 ofstream file_Eta("EtaValues_Sta.txt");
 ofstream file_Cent("CentValues_Sta.txt");
-TString treeTag("tpTreeTrk");
+TString cutTag("tpTreeTrk");
 TString cutLegend("Standalone");
 const double effmin = 0.7;
 const double sfrange = 0.2;
-//const char* fDataName[nSyst] = { "tnp_Ana_Data_RecoSTA_PbPb.root" };
-//const char* fMCName[nSyst] = { "tnp_Ana_MC_STA_PbPb.root" };
-
 const char* fDataName[nSyst] = { 
 	"./190507/tnp_Ana_Data_RecoSTA_PbPb_moreEta_v2.root",
 	/*
@@ -250,9 +263,8 @@ const char* fMCName[nSyst] = {
 	"./190502/tnp_Ana_MC_STA_PbPb_moreEta_v2_background.root",
 	"./190502/tnp_Ana_MC_STA_PbPb_moreEta_v2_mass.root",
 	"./190502/tnp_Ana_MC_STA_PbPb_moreEta_v2_signal.root"
-	*/
+	*/ 
 };
-
 #endif
 
 #ifdef TRK
@@ -267,12 +279,12 @@ TString centVar("tag_hiBin");
 ofstream file_sfs("correction_functions.txt");
 ofstream file_Eta("EtaValues_Trk.txt");
 ofstream file_Cent("CentValues_Trk.txt");
-TString treeTag("tpTreeSta");
+TString cutTag("tpTreeSta");
 TString cutLegend("Inner tracking");
 const double effmin = 0.8;
 const double sfrange = 0.08;
-const char* fDataName[nSyst] = { "tnp_Ana_RD_Trk_PbPb.root" };
-const char* fMCName[nSyst] = { "tnp_Ana_MC_Trk_PbPb.root" };
+const char* fDataName[nSyst] = { "tnp_Ana_RD_PbPb_MuonTrk_AllMB.root" };
+const char* fMCName[nSyst] = { "tnp_Ana_MC_PbPb_MuonTrk_AllMB.root" };
 #endif
 
 // Function Define
@@ -292,7 +304,7 @@ TF1 *ratiofunc(const char* fname, TF1 *fnum, TF1 *fden);
 ofstream file_binnedsfs("correction_binned.txt");
 
 // From here you need to set up your environments.
-void TnPEffDraw_singleFile_hwan() {
+void TnPEffDraw_Variations() {
 
 	// gROOT->Macro("~/logon.C");
 	gROOT->SetStyle("Plain");
@@ -314,98 +326,81 @@ void TnPEffDraw_singleFile_hwan() {
 
 	TCanvas *c1 = new TCanvas("c1", "", 700, 600);
 
-	// Loading the values for abseta bins
-	vector<RooDataSet*> rds_absetaPtDep_MC[nSyst], rds_absetaPtDep_RD[nSyst];  
+	vector<RooDataSet*> daPtData0[nSyst], daPtData1[nSyst];
 
 	for (int k = 0; k < nSyst; k++) {
 		for (int i = 0; i < nAbsEtaBins; i++)
 		{
-			rds_absetaPtDep_MC[k].push_back((RooDataSet*)fMC[k]->Get(treeTag + "/" + ptTag[i] + "/fit_eff"));
-			rds_absetaPtDep_RD[k].push_back((RooDataSet*)fData[k]->Get(treeTag + "/" + ptTag[i] + "/fit_eff"));
+			daPtData0[k].push_back((RooDataSet*)fMC[k]->Get(cutTag + "/" + ptTag[i] + "/fit_eff"));
+			daPtData1[k].push_back((RooDataSet*)fData[k]->Get(cutTag + "/" + ptTag[i] + "/fit_eff"));
 		}
 	}
 
-	vector<TGraphAsymmErrors*> ComPt_MC[nSyst], ComPt_RD[nSyst];
+	vector<TGraphAsymmErrors*> ComPt0[nSyst], ComPt1[nSyst];
 
-	//Loading the TGraphAsymmErrors for  abseta bins - 1 bin
 	for (int k = 0; k < nSyst; k++) {
-		for (unsigned int i = 0; i < rds_absetaPtDep_MC[k].size(); i++)
+		for (unsigned int i = 0; i < daPtData0[k].size(); i++)
 		{
-			cout << k << " " << i << " " << rds_absetaPtDep_RD[k][i] << endl;
-			ComPt_MC[k].push_back(plotEff_1bin(rds_absetaPtDep_MC[k][i], 1, "pt"));
-			cout << k << " " << i << " " << rds_absetaPtDep_RD[k][i] << endl;
-			ComPt_RD[k].push_back(plotEff_1bin(rds_absetaPtDep_RD[k][i], 1, "pt"));
+			cout << k << " " << i << " " << daPtData1[k][i] << endl;
+			ComPt0[k].push_back(plotEff_1bin(daPtData0[k][i], 1, "pt"));
+			cout << k << " " << i << " " << daPtData1[k][i] << endl;
+			ComPt1[k].push_back(plotEff_1bin(daPtData1[k][i], 1, "pt"));
 		}
 	}
 	cout << "HERE1" << endl;
-
-	//Loading the eta dependence
-	RooDataSet* rds_eta_MC[nSyst];
-	RooDataSet* rds_eta_RD[nSyst];
+	RooDataSet* daEtaData0[nSyst];
+	RooDataSet* daEtaData1[nSyst];
 
 	for (int i = 0; i < nSyst; i++) {
-		rds_eta_MC[i] = (RooDataSet*)fMC[i]->Get(treeTag + "/" + etaTag + "/fit_eff");
-		rds_eta_RD[i] = (RooDataSet*)fData[i]->Get(treeTag + "/" + etaTag + "/fit_eff");
+		daEtaData0[i] = (RooDataSet*)fMC[i]->Get(cutTag + "/" + etaTag + "/fit_eff");
+		daEtaData1[i] = (RooDataSet*)fData[i]->Get(cutTag + "/" + etaTag + "/fit_eff");
 	}
 
-	// Loading the TGraphAsymmErrors for  eta bins - 1 bin
-	TGraphAsymmErrors* ComEta_MC[nSyst];
-	TGraphAsymmErrors* ComEta_RD[nSyst];
-	cout << "HERE1a" << endl;
+	TGraphAsymmErrors* ComEta0[nSyst];
+	TGraphAsymmErrors* ComEta1[nSyst];
+
 	for (int i = 0; i < nSyst; i++) {
-		ComEta_MC[i] = plotEff_1bin(rds_eta_MC[i], 1, "eta");
-		ComEta_RD[i] = plotEff_1bin(rds_eta_RD[i], 1, "eta");
+		ComEta0[i] = plotEff_1bin(daEtaData0[i], 1, "eta");
+		ComEta1[i] = plotEff_1bin(daEtaData1[i], 1, "eta");
 	}
-	cout << "HERE1b" << endl;
 
-	// Loading the other data sets
-	RooDataSet* rds_bin0_MC[nSyst];
-	RooDataSet* rds_bin0_RD[nSyst];
-	RooDataSet* rds_abseta_MC[nSyst];
-	RooDataSet* rds_abseta_RD[nSyst];
-	RooDataSet* rds_cent_MC[nSyst];
-	RooDataSet* rds_cent_RD[nSyst];
-//	RooDataSet* rds_run_RD[nSyst];
+	RooDataSet* daPtMC1Bin0[nSyst];
+	RooDataSet* daPtData1Bin0[nSyst];
+	RooDataSet* daAbsEtaMC1[nSyst];
+	RooDataSet* daAbsEtaData1[nSyst];
+	RooDataSet* daCentMC1[nSyst];
+	RooDataSet* daCentData1[nSyst];
 
 	for (int i = 0; i < nSyst; i++) {
-		rds_bin0_MC[i] = (RooDataSet*)fMC[i]->Get(treeTag + "/" + allTag + "/fit_eff");
-		rds_bin0_RD[i] = (RooDataSet*)fData[i]->Get(treeTag + "/" + allTag + "/fit_eff");
-		rds_abseta_MC[i] = (RooDataSet*)fMC[i]->Get(treeTag + "/" + absetaTag + "/fit_eff");
-		rds_abseta_RD[i] = (RooDataSet*)fData[i]->Get(treeTag + "/" + absetaTag + "/fit_eff");
-		//rds_run_RD[i] = (RooDataSet*)fData[i]->Get(treeTag + "/" + runTag + "/fit_eff");
+		daPtMC1Bin0[i] = (RooDataSet*)fMC[i]->Get(cutTag + "/" + allTag + "/fit_eff");
+		daPtData1Bin0[i] = (RooDataSet*)fData[i]->Get(cutTag + "/" + allTag + "/fit_eff");
+		daAbsEtaMC1[i] = (RooDataSet*)fMC[i]->Get(cutTag + "/" + absetaTag + "/fit_eff");
+		daAbsEtaData1[i] = (RooDataSet*)fData[i]->Get(cutTag + "/" + absetaTag + "/fit_eff");
 		if (isPbPb) {
-			rds_cent_MC[i] = (RooDataSet*)fMC[i]->Get(treeTag + "/" + centTag + "/fit_eff");
-			rds_cent_RD[i] = (RooDataSet*)fData[i]->Get(treeTag + "/" + centTag + "/fit_eff");
+			daCentMC1[i] = (RooDataSet*)fMC[i]->Get(cutTag + "/" + centTag + "/fit_eff");
+			daCentData1[i] = (RooDataSet*)fData[i]->Get(cutTag + "/" + centTag + "/fit_eff");
 		}
 	}
 
-	TGraphAsymmErrors* eff1bin_MC[nSyst];
-	TGraphAsymmErrors* eff1bin_RD[nSyst];
-	vector<TGraphAsymmErrors*> effAbsEta_MC[nSyst];
-	vector<TGraphAsymmErrors*> effAbsEta_RD[nSyst];
-	TGraphAsymmErrors* effabsEta_MC = NULL;
-	TGraphAsymmErrors* effabsEta_RD = NULL;
+	TGraphAsymmErrors* effPtMC[nSyst];
+	TGraphAsymmErrors* effPtData[nSyst];
+	vector<TGraphAsymmErrors*> effAbsEtaMC[nSyst];
+	vector<TGraphAsymmErrors*> effAbsEtaData[nSyst];
 	TGraphAsymmErrors* effCentMC = NULL;
 	TGraphAsymmErrors* effCentData = NULL;
-//	TGraphAsymmErrors* effRunData = NULL;
 	cout << "HERE2" << endl;
 	for (int k = 0; k < nSyst; k++) {
-		eff1bin_MC[k] = plotEff_1bin(rds_bin0_MC[k], 0, "eta");
-		eff1bin_RD[k] = plotEff_1bin(rds_bin0_RD[k], 0, "eta");
-		effAbsEta_MC[k] = plotEff_Nbins(rds_abseta_MC[k], 0, "pt", absetaVar);
-		effAbsEta_RD[k] = plotEff_Nbins(rds_abseta_RD[k], 0, "pt", absetaVar);
-		effabsEta_MC = plotEff_1bin(rds_abseta_MC[k], 0, absetaVar);
-		effabsEta_RD = plotEff_1bin(rds_abseta_RD[k], 0, absetaVar);
-		//effRunData = plotEff_1bin(rds_run_RD[k], 0, runVar);
+		effPtMC[k] = plotEff_1bin(daPtMC1Bin0[k], 0, "eta");
+		effPtData[k] = plotEff_1bin(daPtData1Bin0[k], 0, "eta");
+		effAbsEtaMC[k] = plotEff_Nbins(daAbsEtaMC1[k], 0, "pt", absetaVar);
+		effAbsEtaData[k] = plotEff_Nbins(daAbsEtaData1[k], 0, "pt", absetaVar);
 		if (isPbPb && k == 0) {
-			effCentMC = plotEff_1bin(rds_cent_MC[k], 0, centVar);
-			effCentData = plotEff_1bin(rds_cent_RD[k], 0, centVar);
+			effCentMC = plotEff_1bin(daCentMC1[k], 0, centVar);
+			effCentData = plotEff_1bin(daCentData1[k], 0, centVar);
 		}
 	}
 
-	cout << endl<< "Loading of roo data sets and efficiencies done " << endl << endl;
 
-	// loading done, set style
 	if (isPbPb) {
 		effCentMC->SetMarkerStyle(20);
 		effCentMC->SetMarkerSize(1.4);
@@ -417,45 +412,36 @@ void TnPEffDraw_singleFile_hwan() {
 		effCentData->SetLineColor(kBlue + 1);
 	}
 
-		effabsEta_MC->SetMarkerStyle(20);
-		effabsEta_MC->SetMarkerSize(1.4);
-		effabsEta_MC->SetMarkerColor(kRed + 1);
-		effabsEta_MC->SetLineColor(kRed + 1);
-		effabsEta_RD->SetMarkerStyle(25);
-		effabsEta_RD->SetMarkerSize(1.4);
-		effabsEta_RD->SetMarkerColor(kBlue + 1);
-		effabsEta_RD->SetLineColor(kBlue + 1);
-
-
-	int nbins_abseta = ComPt_MC[0].size();
+	int nbins_abseta = ComPt0[0].size();
+	cout << "HERE " << nbins_abseta<< endl;
 	for (int k = 0; k < nSyst; k++)
 	{
 		for (int i = 0; i < nbins_abseta; i++)
 		{
-			ComPt_MC[k][i]->SetMarkerStyle(20);
-			ComPt_MC[k][i]->SetMarkerSize(1.4);
-			ComPt_MC[k][i]->SetMarkerColor(kRed + 1);
-			ComPt_MC[k][i]->SetLineColor(kRed + 1);
-			ComPt_RD[k][i]->SetMarkerStyle(25);
-			ComPt_RD[k][i]->SetMarkerSize(1.4);
-			ComPt_RD[k][i]->SetMarkerColor(kBlue + 1);
-			ComPt_RD[k][i]->SetLineColor(kBlue + 1);
+			ComPt0[k][i]->SetMarkerStyle(20);
+			ComPt0[k][i]->SetMarkerSize(1.4);
+			ComPt0[k][i]->SetMarkerColor(kRed + 1);
+			ComPt0[k][i]->SetLineColor(kRed + 1);
+			ComPt1[k][i]->SetMarkerStyle(25);
+			ComPt1[k][i]->SetMarkerSize(1.4);
+			ComPt1[k][i]->SetMarkerColor(kBlue + 1);
+			ComPt1[k][i]->SetLineColor(kBlue + 1);
 		}
 
-		ComEta_MC[k]->SetMarkerStyle(20);
-		ComEta_MC[k]->SetMarkerSize(1.4);
-		ComEta_MC[k]->SetMarkerColor(kRed + 1);
-		ComEta_MC[k]->SetLineColor(kRed + 1);
-		ComEta_RD[k]->SetMarkerStyle(25);
-		ComEta_RD[k]->SetMarkerSize(1.4);
-		ComEta_RD[k]->SetMarkerColor(kBlue + 1);
-		ComEta_RD[k]->SetLineColor(kBlue + 1);
+		ComEta0[k]->SetMarkerStyle(20);
+		ComEta0[k]->SetMarkerSize(1.4);
+		ComEta0[k]->SetMarkerColor(kRed + 1);
+		ComEta0[k]->SetLineColor(kRed + 1);
+		ComEta1[k]->SetMarkerStyle(25);
+		ComEta1[k]->SetMarkerSize(1.4);
+		ComEta1[k]->SetMarkerColor(kBlue + 1);
+		ComEta1[k]->SetLineColor(kBlue + 1);
 	}
 
-////////////////// get some averages
 
-	double Trk0[nSyst][4];
-	double Trk1[nSyst][4];
+	// 1 Bin
+	double Trk0[nSyst][nAbsEtaBins];
+	double Trk1[nSyst][nAbsEtaBins];
 	double*** TrkAbsEta0 = new double**[nSyst];
 	double*** TrkAbsEta1 = new double**[nSyst];
 
@@ -465,19 +451,29 @@ void TnPEffDraw_singleFile_hwan() {
 
 		for (int i = 0; i < nbins_abseta; i++)
 		{
-			TrkAbsEta0[k][i] = new double[4]; //	b[0] = sum / nBins;			b[1] = sqrt(sqSumHigh) / nBins; 		b[2] = sqrt(sqSumLow) / nBins;     b[3] unused
-			TrkAbsEta1[k][i] = new double[4];
+			TrkAbsEta0[k][i] = new double[nAbsEtaBins];
+			TrkAbsEta1[k][i] = new double[nAbsEtaBins];
 		}
 
-		CalEffErr(eff1bin_MC[k], Trk0[k]);
-		CalEffErr(eff1bin_RD[k], Trk1[k]);
-		CalEffErr(effAbsEta_MC[k], TrkAbsEta0[k]);
-		CalEffErr(effAbsEta_RD[k], TrkAbsEta1[k]);
+		CalEffErr(effPtMC[k], Trk0[k]);
+		CalEffErr(effPtData[k], Trk1[k]);
+		CalEffErr(effAbsEtaMC[k], TrkAbsEta0[k]);
+
+		CalEffErr(effAbsEtaData[k], TrkAbsEta1[k]);
 	}
 
-	///////////////////////////////////////////////
-	////////////////// start plotting  ///////////
-	//////////////////////////////////////////////
+	for (int k = 0; k < nSyst; k++) {
+		for (int i = 0; i < nbins_abseta; i++)
+		{
+
+			for (int j= 0; j < 3; j++)
+			{
+				cout<<k<< " "<<i<<"  "<< j<< "   "<<TrkAbsEta0[k][i][j]<<endl ;
+				cout << k << " " << i << "  " << j << "   " << TrkAbsEta1[k][i][j] << endl;
+			}
+		}
+
+	}
 
 	c1->cd();
 	TPad *pad1 = new TPad("pad1", "pad1", 0, 0.26, 1, 1);
@@ -497,14 +493,12 @@ void TnPEffDraw_singleFile_hwan() {
 	// lTextSize *= 1./0.7;
 
 
-	TH1F *hPad = new TH1F("hPad", ";p^{#mu}_{T} [GeV/c];Single #mu Efficiency", 5, 0, c_ptRange);
+	TH1F *hPad = new TH1F("hPad", ";p^{#mu}_{T} [GeV/c];Single #mu Efficiency", 5, 0, 200);
 	TH1F *hPad1 = new TH1F("hPad1", ";#eta^{#mu};Single #mu Efficiency", 5, -2.4, 2.4);
-	TH1F *hPad2 = new TH1F("hPad2", ";Centrality - hiBin ;Single #mu Efficiency", 5, 0, c_centralityRange);
-	TH1F *hPad4 = new TH1F("hPad4", ";|#eta^{#mu}|;Single #mu Efficiency", 5, 0, 2.4);
+	TH1F *hPad2 = new TH1F("hPad2", ";Centrality - HF ;Single #mu Efficiency", 5, 0, 300);
 	hPad->GetXaxis()->CenterTitle();
 	hPad1->GetXaxis()->CenterTitle();
 	hPad2->GetXaxis()->CenterTitle();
-	hPad4->GetXaxis()->CenterTitle();
 	hPad->GetXaxis()->SetLabelSize(0.05);
 	hPad->GetXaxis()->SetTitleSize(0.05);
 	hPad->GetXaxis()->SetTitleOffset(1.2);
@@ -523,18 +517,11 @@ void TnPEffDraw_singleFile_hwan() {
 	hPad2->GetYaxis()->SetLabelSize(0.05);
 	hPad2->GetYaxis()->SetTitleSize(0.05);
 	hPad2->GetYaxis()->SetTitleOffset(1.);
-	hPad4->GetXaxis()->SetLabelSize(0.05);
-	hPad4->GetXaxis()->SetTitleSize(0.05);
-	hPad4->GetXaxis()->SetTitleOffset(1.2);
-	hPad4->GetYaxis()->SetLabelSize(0.05);
-	hPad4->GetYaxis()->SetTitleSize(0.05);
-	hPad4->GetYaxis()->SetTitleOffset(1.);
 
 
 	hPad->GetYaxis()->SetRangeUser(effmin, 1.05);
 	hPad1->GetYaxis()->SetRangeUser(effmin, 1.05);
 	hPad2->GetYaxis()->SetRangeUser(effmin, 1.05);
-	hPad4->GetYaxis()->SetRangeUser(effmin, 1.05);
 
 	pad2->cd();
 	pad2->SetGridy();
@@ -549,7 +536,6 @@ void TnPEffDraw_singleFile_hwan() {
 	TH1F *hPadr_syst = (TH1F*)hPadr->Clone("hPadr_syst");hPadr_syst->GetYaxis()->SetRangeUser(1. - .1, 1. + .1);
 	TH1F *hPad_syst = (TH1F*)hPad->Clone("hPad_syst");
 	TH1F *hPad1r = (TH1F*)hPad1->Clone("hPad1r"); hPad1r->GetYaxis()->SetRangeUser(1. - sfrange, 1. + sfrange);
-	TH1F *hPad4r = (TH1F*)hPad4->Clone("hPad4r"); hPad4r->GetYaxis()->SetRangeUser(1. - sfrange, 1. + sfrange);
 	hPad1r->GetYaxis()->SetTitle("Scale Factor");
 	hPad1r->GetXaxis()->SetTitleSize(tsize);
 	hPad1r->GetXaxis()->SetLabelSize(tsize);
@@ -565,19 +551,9 @@ void TnPEffDraw_singleFile_hwan() {
 	hPad2r->GetYaxis()->SetTitleSize(tsize);
 	hPad2r->GetYaxis()->SetLabelSize(tsize);
 	hPad2r->GetYaxis()->SetNdivisions(504, kTRUE);
-	hPad4r->GetYaxis()->SetTitle("Scale Factor");
-	hPad4r->GetXaxis()->SetTitleSize(tsize);
-	hPad4r->GetXaxis()->SetLabelSize(tsize);
-	hPad4r->GetYaxis()->SetTitleSize(tsize);
-	hPad4r->GetYaxis()->SetLabelSize(tsize);
-	hPad4r->GetYaxis()->SetNdivisions(504, kTRUE);
-	TH1F *hPad4r_syst = (TH1F*)hPad4r->Clone("hPad4r_syst");hPad4r_syst->GetYaxis()->SetRangeUser(1. - .1, 1. + .1);
-	TH1F *hPad4_syst = (TH1F*)hPad4->Clone("hPad4_syst");
-
 
 	pad1->cd();
 
-	// draw pt dependence in abseta bins 
 	TString header;
 	for (int i = 0; i < nbins_abseta; i++)
 	{
@@ -593,41 +569,40 @@ void TnPEffDraw_singleFile_hwan() {
 			lt1->SetNDC();
 
 			char legs[512];
-			TLegend *leg1 = new TLegend(0.55, 0.10, 0.76, 0.33); //(x1, y1, x2, y2);
+			TLegend *leg1 = new TLegend(0.25, 0.05, 0.66, 0.43); //(0.43, 0.05, 0.66, 0.43);
 			leg1->SetFillStyle(0);
 			leg1->SetFillColor(0);
 			leg1->SetBorderSize(0);
 			leg1->SetTextSize(0.030);
-			ptmin = ((RooRealVar*)rds_absetaPtDep_MC[k][i]->get()->find("pt"))->getBinning().binLow(0);
+			ptmin = ((RooRealVar*)daPtData0[k][i]->get()->find("pt"))->getBinning().binLow(0);
 			double etamin, etamax;
-			if (rds_absetaPtDep_MC[k][i]->get()->find("abseta"))
+			if (daPtData0[k][i]->get()->find("abseta"))
 			{
-				etamin = ((RooRealVar*)rds_absetaPtDep_MC[k][i]->get()->find("abseta"))->getBinning().binLow(0);
-				etamax = ((RooRealVar*)rds_absetaPtDep_MC[k][i]->get()->find("abseta"))->getBinning().binHigh(0);
+				etamin = ((RooRealVar*)daPtData0[k][i]->get()->find("abseta"))->getBinning().binLow(0);
+				etamax = ((RooRealVar*)daPtData0[k][i]->get()->find("abseta"))->getBinning().binHigh(0);
 				header = TString("#splitline{") + cutLegend + Form(" Efficiency}{(p^{#mu}_{T}>%.1f, |#eta| #in [%.1f, %.1f])}", ptmin, etamin, etamax);
 			}
 			else
 			{
-				etamin = ((RooRealVar*)rds_absetaPtDep_MC[k][i]->get()->find("eta"))->getBinning().binLow(0);
-				etamax = ((RooRealVar*)rds_absetaPtDep_MC[k][i]->get()->find("eta"))->getBinning().binHigh(0);
+				etamin = ((RooRealVar*)daPtData0[k][i]->get()->find("eta"))->getBinning().binLow(0);
+				etamax = ((RooRealVar*)daPtData0[k][i]->get()->find("eta"))->getBinning().binHigh(0);
 				header = TString("#splitline{") + cutLegend + Form(" Efficiency}{(p^{#mu}_{T}>%.1f, #eta #in [%.1f, %.1f])}", ptmin, etamin, etamax);
 			}
 			leg1->SetHeader(header);
 			sprintf(legs, "MC PYTHIA+EvtGen: %.4f^{ + %.3f}_{ - %.3f}", TrkAbsEta0[k][i][0], TrkAbsEta0[k][i][1], TrkAbsEta0[k][i][2]);
 			//sprintf(legs, "MC Pbp: %.4f^{ + %.3f}_{ - %.3f}", TrkAbsEta0[k][i][0], TrkAbsEta0[k][i][1], TrkAbsEta0[k][i][2]);
-			leg1->AddEntry(ComPt_MC[k][i], legs, "pl");
+			leg1->AddEntry(ComPt0[k][i], legs, "pl");
 			sprintf(legs, "Data: %.4f^{ + %.3f}_{ - %.3f}", TrkAbsEta1[k][i][0], TrkAbsEta1[k][i][1], TrkAbsEta1[k][i][2]);
 			//sprintf(legs, "MC pPb: %.4f^{ + %.3f}_{ - %.3f}", TrkAbsEta1[k][i][0], TrkAbsEta1[k][i][1], TrkAbsEta1[k][i][2]);
-			leg1->AddEntry(ComPt_RD[k][i], legs, "pl");
+			leg1->AddEntry(ComPt1[k][i], legs, "pl");
 			leg1->Draw("same");
 
-			ComPt_MC[k][i]->Draw("pz same");
-			ComPt_RD[k][i]->Draw("pz same");
+			ComPt0[k][i]->Draw("pz same");
+			ComPt1[k][i]->Draw("pz same");
 
 			lt1->SetTextSize(0.05);
-			lt1->DrawLatex(0.20, 0.30, "CMS Preliminary");
-			//lt1->DrawLatex(0.20, 0.24, collTag + "  #sqrt{s_{NN}} = 8.16 TeV");
-			lt1->DrawLatex(0.20, 0.24, collTag + "  #sqrt{s_{NN}} = 5.02 TeV");
+			lt1->DrawLatex(0.43, 0.55, "CMS Preliminary");
+			lt1->DrawLatex(0.43, 0.49, collTag + "  #sqrt{s_{NN}} = 8.16 TeV");
 
 			// now take care of the data/mc ratio panel
 			c1->cd();
@@ -636,8 +611,8 @@ void TnPEffDraw_singleFile_hwan() {
 			pad2->cd();
 			hPadr->Draw();
 
-			int nbins_mc = ComPt_MC[k][i]->GetN();
-			int nbins = ComPt_RD[k][i]->GetN();
+			int nbins_mc = ComPt0[k][i]->GetN();
+			int nbins = ComPt1[k][i]->GetN();
 			double *xr = new double[nbins];
 			double *yr = new double[nbins];
 			double *xrlo = new double[nbins];
@@ -647,7 +622,7 @@ void TnPEffDraw_singleFile_hwan() {
 
 			TGraphAsymmErrors* ComPt0_forRatio = NULL;
 			if (nbins_mc == nbins) {
-				ComPt0_forRatio = ComPt_MC[k][i];
+				ComPt0_forRatio = ComPt0[k][i];
 			}
 			else {
 				double* tntot = new double[nbins_mc];
@@ -655,7 +630,7 @@ void TnPEffDraw_singleFile_hwan() {
 				for (int j = 0; j < nbins_mc; j++) {
 					RooFitResult *fitres = NULL;
 					// Loop on the directories to find the one we are looking for
-					TDirectory *tdir = (TDirectory*)fMC[0]->Get(treeTag + "/" + ptTag[i]);
+					TDirectory *tdir = (TDirectory*)fMC[0]->Get(cutTag + "/" + ptTag[i]);
 					TIter next(tdir->GetListOfKeys()); TObject *obj;
 					while ((obj = next())) {
 						obj = ((TKey*)obj)->ReadObj();
@@ -668,19 +643,19 @@ void TnPEffDraw_singleFile_hwan() {
 					tntot[j] = ((RooRealVar*)fitres->floatParsFinal().find("numTot"))->getVal() * (((RooRealVar*)fitres->floatParsFinal().find("fSigAll"))->getVal());
 					delete fitres;
 				}
-				ComPt0_forRatio = plotEff_1bin(rds_absetaPtDep_MC[k][i], 1, "pt", nbins_mc / nbins, tntot);
+				ComPt0_forRatio = plotEff_1bin(daPtData0[k][i], 1, "pt", nbins_mc / nbins, tntot);
 				delete[] tntot;
 			}
 
 			// here we assume that the mc uncertainty is negligible compared to the data one: simply scale everything by the central value.
 			for (int j = 0; j < nbins; j++)
 			{
-				xr[j] = ComPt_RD[k][i]->GetX()[j];
-				xrlo[j] = ComPt_RD[k][i]->GetErrorXlow(j);
-				xrhi[j] = ComPt_RD[k][i]->GetErrorXhigh(j);
-				yr[j] = ComPt_RD[k][i]->GetY()[j] / ComPt0_forRatio->GetY()[j];
-				yrlo[j] = ComPt_RD[k][i]->GetErrorYlow(j) / ComPt0_forRatio->GetY()[j];
-				yrhi[j] = ComPt_RD[k][i]->GetErrorYhigh(j) / ComPt0_forRatio->GetY()[j];
+				xr[j] = ComPt1[k][i]->GetX()[j];
+				xrlo[j] = ComPt1[k][i]->GetErrorXlow(j);
+				xrhi[j] = ComPt1[k][i]->GetErrorXhigh(j);
+				yr[j] = ComPt1[k][i]->GetY()[j] / ComPt0_forRatio->GetY()[j];
+				yrlo[j] = ComPt1[k][i]->GetErrorYlow(j) / ComPt0_forRatio->GetY()[j];
+				yrhi[j] = ComPt1[k][i]->GetErrorYhigh(j) / ComPt0_forRatio->GetY()[j];
 			}
 			TGraphAsymmErrors *gratio = new TGraphAsymmErrors(nbins, xr, yr, xrlo, xrhi, yrlo, yrhi);
 			gratio->SetMarkerStyle(20);
@@ -692,52 +667,50 @@ void TnPEffDraw_singleFile_hwan() {
 
 			// save (nominal only)
 			if (k == 0) {
-				c1->SaveAs("./Efficiency/" + treeTag + Form("Eff%i_", i) + collTag + "_RD_MC_PT.root");
-				c1->SaveAs("./Efficiency/" + treeTag + Form("Eff%i_", i) + collTag + "_RD_MC_PT.pdf");
-				c1->SaveAs("./Efficiency/" + treeTag + Form("Eff%i_", i) + collTag + "_RD_MC_PT.png");
+				c1->SaveAs("./toyStudy/" + cutTag + Form("Eff%i_", i) + collTag + "_RD_MC_PT.root");
+				c1->SaveAs("./toyStudy/" + cutTag + Form("Eff%i_", i) + collTag + "_RD_MC_PT.pdf");
+				c1->SaveAs("./toyStudy/" + cutTag + Form("Eff%i_", i) + collTag + "_RD_MC_PT.png");
 			}
 
-			cout << "Done with the first part of abseta fitting" << endl;
-
 			// in case we are looking at muon Id + trigger: get the scale factor at the same time
-			#if defined MUIDTRG || defined STA || defined MUID || defined TRG
+#if defined MUIDTRG || defined STA || defined MUID || defined TRG
 			pad1->cd();
-			ptmax = ((RooRealVar*)rds_absetaPtDep_MC[k][i]->get()->find("pt"))->getMax();
+			ptmax = ((RooRealVar*)daPtData0[k][i]->get()->find("pt"))->getMax();
 			TLatex tchi; tchi.SetNDC();
 			tchi.SetTextSize(0.035);
 			double chi2, pval; int dof;
 
 			if (k == 0) {
 				// fit data
-				fdata = initfcn("fdata", fitfcn, ptmin, ptmax, 0.8);// ComPt_RD[k][i]->GetX()[ComPt_RD[k][i]->GetN() - 1]);
+				fdata = initfcn("fdata", fitfcn, ptmin, ptmax, 0.8);// ComPt1[k][i]->GetX()[ComPt1[k][i]->GetN() - 1]);
 				fdata->SetLineWidth(2);
 				fdata->SetLineColor(kBlue);
-				/*ComPt_RD[k][i]->Fit(fdata, "RME");
+				/*ComPt1[k][i]->Fit(fdata, "RME");
 				leg1->AddEntry(fdata, formula(fdata), "pl");
 
-				chi2 = ComPt_RD[k][i]->Chisquare(fdata);
-				dof = ComPt_RD[k][i]->GetN() - fdata->GetNpar();
+				chi2 = ComPt1[k][i]->Chisquare(fdata);
+				dof = ComPt1[k][i]->GetN() - fdata->GetNpar();
 				pval = TMath::Prob(chi2, dof);
 				tchi.SetTextColor(kBlue);
 				tchi.DrawLatex(0.6, 0.92, Form("#chi^{2}/dof = %.1f/%d (p-value: %.2f)", chi2, dof, pval));*/
 
 				// in the case of the exponential fall at high pt, do the fit first without it
-				if (fitfcn == 2) {  //O: check whether not better to be removed
+				if (fitfcn == 2) {
 					fdata->FixParameter(4, 0);
-					ComPt_RD[k][i]->Fit(fdata, "RME");
+					ComPt1[k][i]->Fit(fdata, "RME");
 					fdata->SetParLimits(4, -1.5, 0);
 				}
-				ComPt_RD[k][i]->Fit(fdata, "RME");
+				ComPt1[k][i]->Fit(fdata, "RME");//WRME
 
 				// fit mc
 				//fmc = (TF1*)fdata->Clone("fmc");
 				fmc = initfcn("fmc", fitfcn, ptmin, ptmax, 0.8);
 				// Initialize the normalization to the efficiency in the last point
-				//if (isPbPb) fmc->SetParameters(ComPt_MC[k][i]->GetX()[ComPt_MC[k][i]->GetN() - 1], 0.5, 2.5);
-				//else fmc->SetParameters(ComPt_MC[k][i]->GetX()[ComPt_MC[k][i]->GetN() - 1], 2.2, 1.5);
+				//if (isPbPb) fmc->SetParameters(ComPt0[k][i]->GetX()[ComPt0[k][i]->GetN() - 1], 0.5, 2.5);
+				//else fmc->SetParameters(ComPt0[k][i]->GetX()[ComPt0[k][i]->GetN() - 1], 2.2, 1.5);
 				fmc->SetLineColor(kRed);
-				//ComPt_MC[k][i]->Fit(fmc, "WRME");
-				ComPt_MC[k][i]->Fit(fmc, "RME");
+				ComPt0[k][i]->Fit(fmc, "RME"); //WRME
+				//ComPt0[k][i]->Fit(fmc, "RME");
 
 
 
@@ -756,15 +729,15 @@ void TnPEffDraw_singleFile_hwan() {
 				leg1->AddEntry(fmc, formula(fmc,5), "pl");
 				leg1->AddEntry(fdata, formula(fdata,5), "pl");
 
-				chi2 = ComPt_RD[k][i]->Chisquare(fdata);
-				dof = ComPt_RD[k][i]->GetN() - fdata->GetNpar();
+				chi2 = ComPt1[k][i]->Chisquare(fdata);
+				dof = ComPt1[k][i]->GetN() - fdata->GetNpar();
 				pval = TMath::Prob(chi2, dof);
 				tchi.SetTextColor(kBlue);
 				tchi.DrawLatex(0.6, 0.92, Form("#chi^{2}/dof = %.1f/%d (p-value: %.2f)", chi2, dof, pval));
 
 
-				chi2 = ComPt_MC[k][i]->Chisquare(fmc);
-				dof = ComPt_MC[k][i]->GetN() - fmc->GetNpar();
+				chi2 = ComPt0[k][i]->Chisquare(fmc);
+				dof = ComPt0[k][i]->GetN() - fmc->GetNpar();
 				pval = TMath::Prob(chi2, dof);
 				tchi.SetTextColor(kRed);
 				tchi.DrawLatex(0.6, 0.88, Form("#chi^{2}/dof = %.1f/%d (p-value: %.2f)", chi2, dof, pval));
@@ -785,9 +758,9 @@ void TnPEffDraw_singleFile_hwan() {
 				tchi.DrawLatex(0.6, 0.8, Form("#chi^{2}/dof = %.1f/%d (p-value: %.2f)", chi2, dof, pval));
 
 				// save (nominal only)
-				c1->SaveAs("./Efficiency/" + treeTag + Form("SF%i_", i) + collTag + "_RD_MC_PT.root");
-				c1->SaveAs("./Efficiency/" + treeTag + Form("SF%i_", i) + collTag + "_RD_MC_PT.pdf");
-				c1->SaveAs("./Efficiency/" + treeTag + Form("SF%i_", i) + collTag + "_RD_MC_PT.png");
+				c1->SaveAs("./toyStudy/" + cutTag + Form("SF%i_", i) + collTag + "_RD_MC_PT.root");
+				c1->SaveAs("./toyStudy/" + cutTag + Form("SF%i_", i) + collTag + "_RD_MC_PT.pdf");
+				c1->SaveAs("./toyStudy/" + cutTag + Form("SF%i_", i) + collTag + "_RD_MC_PT.png");
 
 				// print the fit results to file
 				file_sfs << "Data " << etamin << " " << etamax << endl;
@@ -806,20 +779,18 @@ void TnPEffDraw_singleFile_hwan() {
 			}
 		}
 
-
-		// plot systematics //still abseta
+		// plot systematics
 		TGraphAsymmErrors *graphssyst_data[nSyst];
 		//data
-		for (int k = 0; k < nSyst; k++) graphssyst_data[k] = ComPt_RD[k][i];
+		for (int k = 0; k < nSyst; k++) graphssyst_data[k] = ComPt1[k][i];
 		plotSysts(graphssyst_data, c1, pad1, hPad_syst, pad2, hPadr_syst, header, Form("syst_data_pt_%i", i));
 		//mc
 		TGraphAsymmErrors *graphssyst_mc[nSyst];
-		for (int k = 0; k < nSyst; k++) graphssyst_mc[k] = ComPt_MC[k][i];
+		for (int k = 0; k < nSyst; k++) graphssyst_mc[k] = ComPt0[k][i];
 		plotSysts(graphssyst_mc, c1, pad1, hPad_syst, pad2, hPadr_syst, header, Form("syst_mc_pt_%i", i));
 
 		// toys study 
-		if (doToys) toyStudy(nSyst, graphssyst_data, graphssyst_mc, fdata, fmc, treeTag + Form("toys%i_", i) + collTag + "_RD_MC_PT", 0);
-
+		if (doToys) toyStudy(nSyst, graphssyst_data, graphssyst_mc, fdata, fmc, cutTag + Form("toys%i_", i) + collTag + "_RD_MC_PT", 0);
 		cout << "SURVIVED SO FAR" << endl;
 #else
 	}
@@ -827,15 +798,52 @@ void TnPEffDraw_singleFile_hwan() {
 	}
 
 	//---------- This is for eta dependence
-	TLegend *leg1 = new TLegend(0.43, 0.05, 0.66, 0.26);
+	TLegend *leg1 = new TLegend(0.43, 0.11, 0.66, 0.33);
 	TLatex *lt1 = new TLatex();
+	TGraphAsymmErrors* ComEta1Flipped[nSyst];
+
 	for (int k = 0; k < nSyst; k++)
 	{
 		pad1->cd();
 		hPad1->Draw();
 
-		ComEta_MC[k]->Draw("pz same");
-		ComEta_RD[k]->Draw("pz same");
+		int nbinsF = ComEta1[k]->GetN();
+		ComEta1Flipped[k] = new TGraphAsymmErrors(nbinsF);
+		double x, y, xeLow, xeHigh, yeLow, yeHigh;
+		for (int i = 0; i < nbinsF;i++)
+		{
+			ComEta1[k]->GetPoint((nbinsF-i-1), x, y);
+			ComEta1Flipped[k]->SetPoint(i,-x,y);
+			ComEta1Flipped[k]->SetPointEXlow(i, ComEta1[k]->GetErrorXhigh(nbinsF - i - 1));
+			ComEta1Flipped[k]->SetPointEXhigh(i, ComEta1[k]->GetErrorXlow(nbinsF - i - 1));
+			ComEta1Flipped[k]->SetPointEYhigh(i, ComEta1[k]->GetErrorYhigh(nbinsF - i - 1));
+			ComEta1Flipped[k]->SetPointEYlow(i, ComEta1[k]->GetErrorYlow(nbinsF - i - 1));
+		}
+		ComEta1Flipped[k]->SetMarkerStyle(25);
+		ComEta1Flipped[k]->SetMarkerSize(1.4);
+		ComEta1Flipped[k]->SetMarkerColor(kBlue + 1);
+		ComEta1Flipped[k]->SetLineColor(kBlue + 1);
+
+
+
+		ComEta0[k]->SetMarkerStyle(20);
+		ComEta0[k]->SetMarkerSize(1.4);
+		ComEta0[k]->SetMarkerColor(kRed + 1);
+		ComEta0[k]->SetLineColor(kRed + 1);
+		ComEta1[k]->SetMarkerStyle(25);
+		ComEta1[k]->SetMarkerSize(1.4);
+		ComEta1[k]->SetMarkerColor(kBlue + 1);
+		ComEta1[k]->SetLineColor(kBlue + 1);
+	
+
+		ComEta0[k]->Draw("pz same");
+		ComEta1[k]->Draw("pz same");
+		//ComEta1Flipped[k]->Draw("pz same");
+
+
+
+
+
 
 		lt1->SetNDC();
 		char legs[512];
@@ -843,21 +851,21 @@ void TnPEffDraw_singleFile_hwan() {
 		leg1->SetFillColor(0);
 		leg1->SetBorderSize(0);
 		leg1->SetTextSize(0.035);
-		double ptmin = ((RooRealVar*)rds_eta_MC[k]->get()->find("pt"))->getBinning().binLow(0);
+		double ptmin = ((RooRealVar*)daEtaData0[k]->get()->find("pt"))->getBinning().binLow(0);
 		leg1->SetHeader(TString("#splitline{") + cutLegend + Form(" Efficiency}{(p^{#mu}_{T}>%.1f)}", ptmin));
 		sprintf(legs, "MC PYTHIA+EvtGen: %.4f^{ + %.3f}_{ - %.3f}", Trk0[k][0], Trk0[k][1], Trk0[k][2]);
 		//sprintf(legs, "MC Pbp: %.4f^{ + %.3f}_{ - %.3f}", Trk0[k][0], Trk0[k][1], Trk0[k][2]);
-		leg1->AddEntry(ComEta_MC[k], legs, "pl");
+		leg1->AddEntry(ComEta0[k], legs, "pl");
 		sprintf(legs, "Data: %.4f^{ + %.3f}_{ - %.3f}", Trk1[k][0], Trk1[k][1], Trk1[k][2]);
 		//sprintf(legs, "MC pPb: %.4f^{ + %.3f}_{ - %.3f}", Trk1[k][0], Trk1[k][1], Trk1[k][2]);
-		leg1->AddEntry(ComEta_RD[k], legs, "pl");
+		leg1->AddEntry(ComEta1[k], legs, "pl");
 		leg1->Draw("same");
 		leg1->Draw("same");
 
 		lt1->SetTextSize(0.05);
-		lt1->DrawLatex(0.43, 0.40, "CMS Preliminary");
-		lt1->DrawLatex(0.43, 0.34, collTag + "  #sqrt{s_{NN}} = 5.02 TeV");
-		//lt1->DrawLatex(0.43, 0.34, collTag + "  #sqrt{s_{NN}} = 8.16 TeV");
+		lt1->DrawLatex(0.43, 0.50, "CMS Preliminary");
+		//lt1->DrawLatex(0.43,0.54,"pp  #sqrt{s} = 5.02 TeV");
+		lt1->DrawLatex(0.43, 0.44, collTag + "  #sqrt{s_{NN}} = 8.16 TeV");
 
 		// now take care of the data/mc ratio panel
 		c1->cd();
@@ -866,7 +874,7 @@ void TnPEffDraw_singleFile_hwan() {
 		pad2->cd();
 		hPad1r->Draw();
 
-		int nbins = ComEta_MC[k]->GetN();
+		int nbins = ComEta0[k]->GetN();
 		double *xr = new double[nbins];
 		double *yr = new double[nbins];
 		double *xrlo = new double[nbins];
@@ -875,15 +883,26 @@ void TnPEffDraw_singleFile_hwan() {
 		double *yrhi = new double[nbins];
 
 		// here we assume that the mc uncertainty is negligible compared to the data one: simply scale everything by the central value.
+		//for (int j = 0; j < nbins; j++)
+		//{
+		//	xr[j] = ComEta1Flipped[k]->GetX()[j];
+		//	xrlo[j] = ComEta1Flipped[k]->GetErrorXlow(j);
+		//	xrhi[j] = ComEta1Flipped[k]->GetErrorXhigh(j);
+		//	yr[j] = ComEta1Flipped[k]->GetY()[j] / ComEta0[k]->GetY()[j];
+		//	yrlo[j] = ComEta1Flipped[k]->GetErrorYlow(j) / ComEta0[k]->GetY()[j];
+		//	yrhi[j] = ComEta1Flipped[k]->GetErrorYhigh(j) / ComEta0[k]->GetY()[j];
+		//}
+
 		for (int j = 0; j < nbins; j++)
 		{
-			xr[j] = ComEta_RD[k]->GetX()[j];
-			xrlo[j] = ComEta_RD[k]->GetErrorXlow(j);
-			xrhi[j] = ComEta_RD[k]->GetErrorXhigh(j);
-			yr[j] = ComEta_RD[k]->GetY()[j] / ComEta_MC[k]->GetY()[j];
-			yrlo[j] = ComEta_RD[k]->GetErrorYlow(j) / ComEta_MC[k]->GetY()[j];
-			yrhi[j] = ComEta_RD[k]->GetErrorYhigh(j) / ComEta_MC[k]->GetY()[j];
+			xr[j] = ComEta1[k]->GetX()[j];
+			xrlo[j] = ComEta1[k]->GetErrorXlow(j);
+			xrhi[j] = ComEta1[k]->GetErrorXhigh(j);
+			yr[j] = ComEta1[k]->GetY()[j] / ComEta0[k]->GetY()[j];
+			yrlo[j] = ComEta1[k]->GetErrorYlow(j) / ComEta0[k]->GetY()[j];
+			yrhi[j] = ComEta1[k]->GetErrorYhigh(j) / ComEta0[k]->GetY()[j];
 		}
+
 		TGraphAsymmErrors *gratio1 = new TGraphAsymmErrors(nbins, xr, yr, xrlo, xrhi, yrlo, yrhi);
 		gratio1->SetMarkerStyle(20);
 		gratio1->SetMarkerColor(kBlack);
@@ -893,148 +912,41 @@ void TnPEffDraw_singleFile_hwan() {
 		gratio1->Draw("pz same");
 
 		if (k == 0) {
-			c1->SaveAs("./Efficiency/" + treeTag + "Eff_" + collTag + "_RD_MC_Eta.root");
-			c1->SaveAs("./Efficiency/" + treeTag + "Eff_" + collTag + "_RD_MC_Eta.pdf");
-			c1->SaveAs("./Efficiency/" + treeTag + "Eff_" + collTag + "_RD_MC_Eta.png");
+			c1->SaveAs("./toyStudy/" + cutTag + "Eff_" + collTag + "_RD_MC_Eta.root");
+			c1->SaveAs("./toyStudy/" + cutTag + "Eff_" + collTag + "_RD_MC_Eta.pdf");
+			c1->SaveAs("./toyStudy/" + cutTag + "Eff_" + collTag + "_RD_MC_Eta.png");
 
 
 			// print the eta dependence to file
 			double xVal, yVal, ErrDown, ErrUp;
 			file_Eta << "Data " << endl << endl;
 			file_Eta << "Eta Value ErrDown ErrUp" << endl;
-			for (int bin = 0; bin < ComEta_RD[k]->GetN(); bin++)
+			for (int bin = 0; bin < ComEta1[k]->GetN(); bin++)
 			{
-				ComEta_RD[k]->GetPoint(bin, xVal, yVal);
-				ErrDown = ComEta_RD[k]->GetErrorYlow(bin);
-				ErrUp = ComEta_RD[k]->GetErrorYhigh(bin);
+				ComEta1[k]->GetPoint(bin, xVal, yVal);
+				ErrDown = ComEta1[k]->GetErrorYlow(bin);
+				ErrUp = ComEta1[k]->GetErrorYhigh(bin);
 				file_Eta << xVal << " " << yVal << " " << ErrDown << " " << ErrUp << endl;
 			}
 
 			file_Eta << endl << endl << "MC " << endl << endl;
 			file_Eta << "Eta Value ErrDown ErrUp" << endl;
-			for (int bin = 0; bin < ComEta_MC[k]->GetN(); bin++)
+			for (int bin = 0; bin < ComEta0[k]->GetN(); bin++)
 			{
-				ComEta_MC[k]->GetPoint(bin, xVal, yVal);
-				ErrDown = ComEta_MC[k]->GetErrorYlow(bin);
-				ErrUp = ComEta_MC[k]->GetErrorYhigh(bin);
+				ComEta0[k]->GetPoint(bin, xVal, yVal);
+				ErrDown = ComEta0[k]->GetErrorYlow(bin);
+				ErrUp = ComEta0[k]->GetErrorYhigh(bin);
 				file_Eta << xVal << " " << yVal << " " << ErrDown << " " << ErrUp << endl;
 			}
 			file_Eta.close();
 		}
-
-		// plot systematics
-		//data
-		plotSysts(ComEta_RD, c1, pad1, hPad1_syst, pad2, hPad1r_syst, header, "syst_data_eta");
-		//mc
-		plotSysts(ComEta_MC, c1, pad1, hPad1_syst, pad2, hPad1r_syst, header, "syst_mc_eta");
 	}
 
-	//---------- This is for abseta dependence
-//	TLegend *leg1 = new TLegend(0.43, 0.05, 0.66, 0.26);
-//	TLatex *lt1 = new TLatex();
-	for (int k = 0; k < nSyst; k++)
-	{
-		hPad4->GetXaxis()->SetRangeUser(0,2.4);
-		hPad4r->GetXaxis()->SetRangeUser(0,2.4);
-		pad1->cd();
-		hPad4->Draw();
-
-		effabsEta_MC->Draw("pz same");
-		effabsEta_RD->Draw("pz same");
-
-		lt1->SetNDC();
-		leg1->Clear();
-		char legs[512];
-		leg1->SetFillStyle(0);
-		leg1->SetFillColor(0);
-		leg1->SetBorderSize(0);
-		leg1->SetTextSize(0.035);
-		//double ptmin = ((RooRealVar*)rds_eta_MC[k]->get()->find("pt"))->getBinning().binLow(0);
-		double ptmin = ((RooRealVar*)rds_abseta_MC[k]->get()->find("pt"))->getBinning().binLow(0);
-		leg1->SetHeader(TString("#splitline{") + cutLegend + Form(" Efficiency}{(p^{#mu}_{T}>%.1f)}", ptmin));
-		sprintf(legs, "MC PYTHIA+EvtGen: %.4f^{ + %.3f}_{ - %.3f}", Trk0[k][0], Trk0[k][1], Trk0[k][2]);
-		//sprintf(legs, "MC Pbp: %.4f^{ + %.3f}_{ - %.3f}", Trk0[k][0], Trk0[k][1], Trk0[k][2]);
-		leg1->AddEntry(effabsEta_MC, legs, "pl");
-		sprintf(legs, "Data: %.4f^{ + %.3f}_{ - %.3f}", Trk1[k][0], Trk1[k][1], Trk1[k][2]);
-		//sprintf(legs, "MC pPb: %.4f^{ + %.3f}_{ - %.3f}", Trk1[k][0], Trk1[k][1], Trk1[k][2]);
-		leg1->AddEntry(effabsEta_RD, legs, "pl");
-		leg1->Draw("same");
-		leg1->Draw("same");
-
-		lt1->SetTextSize(0.05);
-		lt1->DrawLatex(0.43, 0.40, "CMS Preliminary");
-		lt1->DrawLatex(0.43, 0.34, collTag + "  #sqrt{s_{NN}} = 5.02 TeV");
-		//lt1->DrawLatex(0.43, 0.34, collTag + "  #sqrt{s_{NN}} = 8.16 TeV");
-
-		// now take care of the data/mc ratio panel
-		c1->cd();
-		// pad2->SetFrameFillStyle(4000);
-		pad2->Draw();
-		pad2->cd();
-		hPad4r->Draw();
-
-		int nbins = effabsEta_MC->GetN();
-		double *xr = new double[nbins];
-		double *yr = new double[nbins];
-		double *xrlo = new double[nbins];
-		double *yrlo = new double[nbins];
-		double *xrhi = new double[nbins];
-		double *yrhi = new double[nbins];
-
-		// here we assume that the mc uncertainty is negligible compared to the data one: simply scale everything by the central value.
-		for (int j = 0; j < nbins; j++)
-		{
-			xr[j] = effabsEta_RD->GetX()[j];
-			xrlo[j] = effabsEta_RD->GetErrorXlow(j);
-			xrhi[j] = effabsEta_RD->GetErrorXhigh(j);
-			yr[j] = effabsEta_RD->GetY()[j] / ComEta_MC[k]->GetY()[j];
-			yrlo[j] = effabsEta_RD->GetErrorYlow(j) / ComEta_MC[k]->GetY()[j];
-			yrhi[j] = effabsEta_RD->GetErrorYhigh(j) / ComEta_MC[k]->GetY()[j];
-		}
-		TGraphAsymmErrors *gratio1 = new TGraphAsymmErrors(nbins, xr, yr, xrlo, xrhi, yrlo, yrhi);
-		gratio1->SetMarkerStyle(20);
-		gratio1->SetMarkerColor(kBlack);
-		gratio1->SetMarkerSize(1.0);
-		gratio1->SetLineColor(kBlack);
-		gratio1->SetLineWidth(1);
-		gratio1->Draw("pz same");
-
-		if (k == 0) {
-			c1->SaveAs("./Efficiency/" + treeTag + "Eff_" + collTag + "_RD_MC_absEta.root");
-			c1->SaveAs("./Efficiency/" + treeTag + "Eff_" + collTag + "_RD_MC_absEta.pdf");
-			c1->SaveAs("./Efficiency/" + treeTag + "Eff_" + collTag + "_RD_MC_absEta.png");
-
-
-			// print the eta dependence to file
-			double xVal, yVal, ErrDown, ErrUp;
-//			file_Eta << "Data " << endl << endl;
-//			file_Eta << "Eta Value ErrDown ErrUp" << endl;
-			for (int bin = 0; bin < effabsEta_RD->GetN(); bin++)
-			{
-				effabsEta_RD->GetPoint(bin, xVal, yVal);
-				ErrDown = effabsEta_RD->GetErrorYlow(bin);
-				ErrUp = effabsEta_RD->GetErrorYhigh(bin);
-//				file_Eta << xVal << " " << yVal << " " << ErrDown << " " << ErrUp << endl;
-			}
-
-			file_Eta << endl << endl << "MC " << endl << endl;
-			file_Eta << "Eta Value ErrDown ErrUp" << endl;
-			for (int bin = 0; bin < effabsEta_MC->GetN(); bin++)
-			{
-				effabsEta_MC->GetPoint(bin, xVal, yVal);
-				ErrDown = effabsEta_MC->GetErrorYlow(bin);
-				ErrUp = effabsEta_MC->GetErrorYhigh(bin);
-//				file_Eta << xVal << " " << yVal << " " << ErrDown << " " << ErrUp << endl;
-			}
-//			file_Eta.close();
-		}
-		// plot systematics
-		//data
-		//plotSysts(effabsEta_RD, c1, pad1, hPad4_syst, pad2, hPad4r_syst, header, "syst_data_abseta");
-		//mc
-		//plotSysts(effabsEta_MC, c1, pad1, hPad4_syst, pad2, hPad4r_syst, header, "syst_mc_abseta");
-	}
-
+	// plot systematics
+	//data
+	plotSysts(ComEta1, c1, pad1, hPad1_syst, pad2, hPad1r_syst, header, "syst_data_eta");
+	//mc
+	plotSysts(ComEta0, c1, pad1, hPad1_syst, pad2, hPad1r_syst, header, "syst_mc_eta");
 
 	//-------- This is for centrality dependence
 	if (isPbPb) {
@@ -1047,9 +959,9 @@ void TnPEffDraw_singleFile_hwan() {
 		leg1->Draw("same");
 
 		lt1->SetTextSize(0.05);
-		lt1->DrawLatex(0.43, 0.45, "CMS Preliminary");
-		lt1->DrawLatex(0.43, 0.39, collTag + "  #sqrt{s_{NN}} = 5.02 TeV");
-		//lt1->DrawLatex(0.43, 0.39, collTag + "  #sqrt{s_{NN}} = 8.16 TeV");
+		lt1->DrawLatex(0.43, 0.50, "CMS Preliminary");
+		//lt1->DrawLatex(0.43,0.54,"pp  #sqrt{s} = 5.02 TeV");
+		lt1->DrawLatex(0.43, 0.44, collTag + "  #sqrt{s_{NN}} = 8.16 TeV");
 
 		// now take care of the data/mc ratio panel
 		c1->cd();
@@ -1084,9 +996,9 @@ void TnPEffDraw_singleFile_hwan() {
 		gratio2->SetLineWidth(1);
 		gratio2->Draw("pz same");
 
-		c1->SaveAs("./Efficiency/" + treeTag + "Eff_" + collTag + "_RD_MC_Cent.root");
-		c1->SaveAs("./Efficiency/" + treeTag + "Eff_" + collTag + "_RD_MC_Cent.pdf");
-		c1->SaveAs("./Efficiency/" + treeTag + "Eff_" + collTag + "_RD_MC_Cent.png");
+		c1->SaveAs("./toyStudy/" + cutTag + "Eff_" + collTag + "_RD_MC_Cent.root");
+		c1->SaveAs("./toyStudy/" + cutTag + "Eff_" + collTag + "_RD_MC_Cent.pdf");
+		c1->SaveAs("./toyStudy/" + cutTag + "Eff_" + collTag + "_RD_MC_Cent.png");
 
 		// print the centrality dependence to file
 		double xVal, yVal, ErrDown, ErrUp;
@@ -1115,140 +1027,7 @@ void TnPEffDraw_singleFile_hwan() {
 
 	file_sfs.close();
 	file_binnedsfs.close();
-
-
-	#ifdef TRG
-	RooDataSet* rds_run_RD[nSyst];
-	for (int i = 0; i < nSyst; i++)
-	{
-		rds_run_RD[i] = (RooDataSet*)fData[i]->Get(treeTag + "/" + runTag + "/fit_eff");
-	}
-	TGraphAsymmErrors* effRunData = NULL;
-	for (int k = 0; k < nSyst; k++){
-		effRunData = plotEff_1bin(rds_run_RD[k], 0, runVar);
-	}
-		
-	// ------- This is for run dependence ------
-	TCanvas *c2 = new TCanvas("c2", "", 600, 600);
-	c2->cd();
-	TLegend *leg2 = new TLegend(0.2, 0.25, 0.6, 0.4);
-	TLatex *lt2 = new TLatex();
-
-	TF1 *runFit = new TF1("runFit","[0]*((x-326973)/592)+[1]",326380,c_runRange);
-
-	runFit->SetLineColor(kBlue+2);
-
-
-	TH1F *hPad3 = new TH1F("hPad3", ";Run ;Single #mu Efficiency",5, 326380, c_runRange);
-	hPad3->GetXaxis()->CenterTitle();
-	hPad3->GetXaxis()->SetLabelSize(0.03);
-	hPad3->GetXaxis()->SetTitleSize(0.04);
-	hPad3->GetXaxis()->SetTitleOffset(1.2);
-	hPad3->GetYaxis()->SetLabelSize(0.03);
-	hPad3->GetYaxis()->SetTitleSize(0.04);
-	hPad3->GetYaxis()->SetTitleOffset(1.25);
-	hPad3->GetYaxis()->SetRangeUser(0.8, 1.05);
-	hPad3->Draw();
-
-	lt2->SetNDC();
-	for (int k = 0; k < nSyst; k++)
-	{
-		//effCentMC->Draw("pz same");
-		effRunData->Draw("pz same");
-	
-		char legs[512];
-		double ptmin = ((RooRealVar*)rds_run_RD[k]->get()->find("pt"))->getBinning().binLow(0);
-		leg2->SetFillStyle(0);
-		leg2->SetFillColor(0);
-		leg2->SetBorderSize(0);
-		leg2->SetTextSize(0.035);
-		leg2->SetHeader(TString("#splitline{") + cutLegend + Form(" Efficiency}{(p^{#mu}_{T}>%.1f)}", ptmin));
-		//sprintf(legs, "Data: %.4f^{ + %.3f}_{ - %.3f}", Trk1[k][0], Trk1[k][1], Trk1[k][2]);
-		leg2->AddEntry(effRunData, "Data", "pl");
-		leg2->AddEntry(runFit,"Fit : -0.00603325*((x-326973)/592)+0.935762","l");
-		leg2->Draw("same");
-	
-		lt2->SetTextSize(0.04);
-		lt2->DrawLatex(0.5, 0.85, "CMS Preliminary");
-		lt2->DrawLatex(0.5, 0.79, collTag + "  #sqrt{s_{NN}} = 5.02 TeV");
-		int nbins2 = effRunData->GetN();
-		double* xr2 = new double[nbins2];
-		//	double* yr2 = new double[nbins2];
-		double* xr2lo = new double[nbins2];
-		//	double* yr2lo = new double[nbins2];
-		double* xr2hi = new double[nbins2];
-		//	double* yr2hi = new double[nbins2];
-	
-		// here we assume that the mc uncertainty is negligible compared to the data one: simply scale everything by the central value.
-		for (int j = 0; j < nbins2; j++)
-		{
-			xr2[j] = effRunData->GetX()[j];
-			xr2lo[j] = effRunData->GetErrorXlow(j);
-			xr2hi[j] = effRunData->GetErrorXhigh(j);
-			//yr2[j] = effRunData->GetY()[j] / effRunMC->GetY()[j];
-			//yr2lo[j] = effRunData->GetErrorYlow(j) / effRunMC->GetY()[j];
-			//yr2hi[j] = effRunData->GetErrorYhigh(j) / effRunMC->GetY()[j];
-		}
-		TGraphAsymmErrors *gratio2 = new TGraphAsymmErrors(nbins2, xr2, xr2lo, xr2hi);
-		gratio2->SetMarkerStyle(20);
-		gratio2->SetMarkerColor(kBlack);
-		gratio2->SetMarkerSize(1.0);
-		gratio2->SetLineColor(kBlack);
-		gratio2->SetLineWidth(1);
-		gratio2->Draw("pz same");
-
-		effRunData->Fit(runFit,"rmq");
-		//lt2->DrawLatex(0.43,0.23,Form("%0.5f*x+%0.5f",runFit->GetParameter(0),runFit->GetParameter(1)));
-
-		c2->SaveAs("./Efficiency/" + treeTag + "Eff_" + collTag + "_RD_Run.root");
-		c2->SaveAs("./Efficiency/" + treeTag + "Eff_" + collTag + "_RD_Run.pdf");
-		c2->SaveAs("./Efficiency/" + treeTag + "Eff_" + collTag + "_RD_Run.png");
-	
-		// print the centrality dependence to file
-		double xVal, yVal, ErrDown, ErrUp;
-		file_Run << "Data " << endl << endl;
-		file_Run << "Run Value ErrDown ErrUp" << endl;
-		for (int bin = 0; bin < effRunData->GetN(); bin++)
-		{
-			effRunData->GetPoint(bin, xVal, yVal);
-			ErrDown = effRunData->GetErrorYlow(bin);
-			ErrUp = effRunData->GetErrorYhigh(bin);
-			file_Run << xVal << " " << yVal << " " << ErrDown << " " << ErrUp << endl;
-		}
-		file_Run.close();
-
-		cout << "Parameter 0 : " << runFit->GetParameter(0) << endl;
-		cout << "Parameter 1 : " << runFit->GetParameter(1) << endl;
-		cout << "Error 0 : " << runFit->GetParError(0) << endl;
-		cout << "Error 1 : " << runFit->GetParError(1) << endl;
-	}
-	#endif
-/*	
-	file_Cent << endl << endl << "MC " << endl << endl;
-	file_Cent << "Centrality Value ErrDown ErrUp" << endl;
-	for (int bin = 0; bin < effRunMC->GetN(); bin++)
-	{
-		effCentMC->GetPoint(bin, xVal, yVal);
-		ErrDown = effCentMC->GetErrorYlow(bin);
-		ErrUp = effCentMC->GetErrorYhigh(bin);
-		file_Cent << xVal << " " << yVal << " " << ErrDown << " " << ErrUp << endl;
-	}
-	}
-*/	
-	
-	file_sfs.close();
-	file_binnedsfs.close();
 }
-
-
-
-
-
-
-/////////////////////////
-/// FUNCTION DECLARATION
-////////////////////////
-
 
 void formatTH1F(TH1* a, int b, int c, int d) {
 	a->SetLineWidth(2);
@@ -1540,7 +1319,6 @@ void CalEffErr(TGraph *a, double *b) {
 void CalEffErr(vector<TGraphAsymmErrors*> a, double **b) {
 	const int nbins = 100;
 	const int vsize = a.size();
-
 	for (int vbin = 0; vbin < vsize; vbin++)
 	{
 		double x[nbins], y[nbins];
@@ -1649,9 +1427,9 @@ void plotSysts(TGraphAsymmErrors *graphs[nSyst], TCanvas *c1, TPad *p1, TH1F *h1
 	}
 
 	// save
-	c1->SaveAs("./Efficiency/" + tag + ".root");
-	c1->SaveAs("./Efficiency/" + tag + ".pdf");
-	c1->SaveAs("./Efficiency/" + tag + ".png");
+	c1->SaveAs("./toyStudy/" + tag + ".root");
+	c1->SaveAs("./toyStudy/" + tag + ".pdf");
+	c1->SaveAs("./toyStudy/" + tag + ".png");
 }
 
 TF1 *initfcn(const char* fname, int ifcn, double ptmin, double ptmax, double effguess) {
@@ -1660,26 +1438,27 @@ TF1 *initfcn(const char* fname, int ifcn, double ptmin, double ptmax, double eff
 	else if (ifcn == 1) formula = "[0]*TMath::Erf((x-[1])/[2])+[3]";
 	else if (ifcn == 2) formula = "[0]*(TMath::Erf((x-[1])/[2])*TMath::Exp([4]*x)) + [3]";
 	else if (ifcn == 3) formula = "[0]";
-	//else if (ifcn == 4) formula = "[0]-[1]*TMath::Exp(-[2]*x)";
+	//else if (ifcn == 4) formula = "[0]*TMath::Erf((x-[1])/[2]) + [3] + [4]*x";
 	else if (ifcn == 4) formula = "[0]*(1-[1]*TMath::Exp(-x/[2]))";
-	else formula = "[0]";
+	else if (ifcn == 5) formula = "[0]+[1]*x";
+	else formula = "[0]*(TMath::Erf((x-[1])/[2])*TMath::Exp([4]*x)) + [3]";
 	TF1 *ans = new TF1(fname, formula, ptmin, ptmax);
 	if (ifcn == 0) {
 		ans->SetParNames("eff0", "x0", "m");
 		// Initialize the normalization to the efficiency in the last point
-		ans->SetParLimits(0, 0, 1);
-		ans->SetParLimits(1, -5.5, 10.);
-		ans->SetParLimits(2, 0, 20.);
-		ans->SetParameters(effguess, 0.1, 0.5);
+		ans->SetParLimits(0, 0, 10);
+		ans->SetParLimits(1, -5.5, 100.);
+		ans->SetParLimits(2, 0, 200.);
+		ans->SetParameters(effguess, 0.1, 5);
 	}
 	else if (ifcn == 1) {
 		ans->SetParNames("eff0", "x0", "m", "cst");
 		// Initialize the normalization to the efficiency in the last point
 		ans->SetParLimits(0, 0, 9.5);
-		ans->SetParLimits(1, -10., 10.);
-		ans->SetParLimits(2, 0, 50.);
+		ans->SetParLimits(1, -10., 100.);
+		ans->SetParLimits(2, 0, 150.);
 		ans->SetParLimits(3, -2., 2.);
-		ans->SetParameters(effguess, 2., 1.0, 0.);
+		ans->SetParameters(effguess, 2., 10.0, 0.);
 	}
 	else if (ifcn == 2) {
 		ans->SetParNames("eff0", "x0", "m", "cst", "fall");
@@ -1697,12 +1476,21 @@ TF1 *initfcn(const char* fname, int ifcn, double ptmin, double ptmax, double eff
 		ans->SetParameter(0, effguess);
 	}
 	else if (ifcn == 4) {
-		ans->SetParLimits(0,0.0,1.4);
-		ans->SetParLimits(1,-1.0,10.0);
-		ans->SetParLimits(2,0.1,100.0);
+//		ans->SetParNames("erfconst", "x0", "m", "const", "lin");
+		// Initialize the normalization to the efficiency in the last point
+		ans->SetParLimits(0, 0, 1.4);
+		ans->SetParLimits(1, -1.0, 10.);
+		ans->SetParLimits(2, 0.1, 100.);
 		ans->SetParameter(0,0.9);
 		ans->SetParameter(1,0.4);
 		ans->SetParameter(2,8.0);
+	}
+	else if (ifcn == 5) {
+		ans->SetParNames("a0", "a1");
+		// Initialize the normalization to the efficiency in the last point
+		ans->SetParLimits(0, 0, 2.0);
+		ans->SetParLimits(1, -1.0, 0.1);
+		ans->SetParameters(effguess, -0.001);
 	}
 	return ans;
 }
@@ -1725,6 +1513,7 @@ TF1 *ratiofunc(const char* fname, TF1 *fnum, TF1 *fden) {
 		formden.ReplaceAll(Form("[%s]", fden->GetParName(i)), Form("[%i]", i + nparnum));
 	}
 	double xmin, xmax; fnum->GetRange(xmin, xmax);
+    //xmin = 15;
 	TF1 *ans = new TF1(fname, TString("(") + formnum + ")/(" + formden + ")", xmin, xmax);
 	for (int i = 0; i<nparnum; i++) ans->SetParameter(i, fnum->GetParameter(i));
 	for (int i = 0; i<nparden; i++) ans->SetParameter(i + nparnum, fden->GetParameter(i));
