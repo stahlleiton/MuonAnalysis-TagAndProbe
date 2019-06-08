@@ -116,7 +116,7 @@ process.load("MuonAnalysis.TagAndProbe.heavyIon_modules_cff")
 ## Flags
 ### Muon Id
 TightId = "passed('CutBasedIdTight')"
-HybridSoftIdReco_2018 = "isGlobalMuon && innerTrack.hitPattern.trackerLayersWithMeasurement > 5 && innerTrack.hitPattern.pixelLayersWithMeasurement > 0"
+HybridSoftIdReco_2018 = "isGlobalMuon && isTrackerMuon && innerTrack.hitPattern.trackerLayersWithMeasurement > 5 && innerTrack.hitPattern.pixelLayersWithMeasurement > 0"
 HybridSoftId_2018 = HybridSoftIdReco_2018 + " && abs(dB('PV2D')) < 0.3 && abs(dB('PVDZ')) < 20.0"
 HybridSoftIdReco_2015 = HybridSoftIdReco_2018
 HybridSoftId_2015 = HybridSoftId_2018 + " && muonID('TMOneStationTight')"

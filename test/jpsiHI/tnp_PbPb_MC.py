@@ -8,7 +8,7 @@ process.options   = cms.untracked.PSet( wantSummary = cms.untracked.bool(True))
 process.MessageLogger.cerr.FwkReport.reportEvery = 1000
 
 process.source = cms.Source("PoolSource",
-    fileNames = cms.untracked.vstring('/store/user/anstahll/Dilepton/MC/Embedded/JPsiMM_5p02TeV_TuneCP5_Embd_RECO_20190326/JPsiMM_5p02TeV_TuneCP5_Embd/JPsiMM_5p02TeV_TuneCP5_Embd_RECO_20190326/190327_060527/0000/HIN-HINPbPbAutumn18DRHIMix-00008_step2_763.root')
+    fileNames = cms.untracked.vstring('/store/himc/HINPbPbAutumn18DR/JPsi_pThat-2_TuneCP5_HydjetDrumMB_5p02TeV_Pythia8/AODSIM/mva98_103X_upgrade2018_realistic_HI_v11-v1/280001/2F35FF90-AE38-3540-8917-FA1BF93A278E.root')
 )
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
 
@@ -17,7 +17,7 @@ process.load('Configuration.StandardSequences.MagneticField_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_condDBv2_cff')
 process.load("Configuration.StandardSequences.Reconstruction_cff")
 
-process.GlobalTag.globaltag = cms.string('103X_upgrade2018_realistic_HI_v12')
+process.GlobalTag.globaltag = cms.string('103X_upgrade2018_realistic_HI_v11')
 
 ## PbPb centrality bin producer
 process.load("RecoHI.HiCentralityAlgos.CentralityBin_cfi")
@@ -116,7 +116,7 @@ process.load("MuonAnalysis.TagAndProbe.heavyIon_modules_cff")
 ## Flags
 ### Muon Id
 TightId = "passed('CutBasedIdTight')"
-HybridSoftIdReco_2018 = "isGlobalMuon && innerTrack.hitPattern.trackerLayersWithMeasurement > 5 && innerTrack.hitPattern.pixelLayersWithMeasurement > 0"
+HybridSoftIdReco_2018 = "isGlobalMuon && isTrackerMuon && innerTrack.hitPattern.trackerLayersWithMeasurement > 5 && innerTrack.hitPattern.pixelLayersWithMeasurement > 0"
 HybridSoftId_2018 = HybridSoftIdReco_2018 + " && abs(dB('PV2D')) < 0.3 && abs(dB('PVDZ')) < 20.0"
 HybridSoftIdReco_2015 = HybridSoftIdReco_2018
 HybridSoftId_2015 = HybridSoftId_2018 + " && muonID('TMOneStationTight')"

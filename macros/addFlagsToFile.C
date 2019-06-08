@@ -2,6 +2,7 @@
 #include "TFile.h"
 #include <iostream>
 #include <memory>
+#include "pres.C"
 
 #define DXYCUT_TIGHT 0.2
 #define DZCUT_TIGHT 0.5
@@ -24,6 +25,13 @@ TTree* copyTreeAndAddWeight(TTree* told, int nentries=0)
   int isTightMuon=-1, passedDXY_TIGHT=-1, passedDZ_TIGHT=-1, passedValidPixelHits=-1, passedTrackerLayers=-1, passedMatchedStations=-1, passedMuHits=-1, passedglbChi2=-1, Glb=-1, PF=-1;
   int isSoftMuon=-1, isHybridSoftMuon2015=-1, isHybridSoftMuon2018=-1, passedDXY_SOFT=-1, passedDZ_SOFT=-1, passedPixelLayers=-1, TMOST=-1, Track_HP=-1, TM=-1;
   float dzPV=-999., dxyPV=-999., dB=-999., tkValidPixelHits=-1., tkPixelLay=-1., tkTrackerLay=-1., numberOfMatchedStations=-1., glbValidMuHits=-1., glbChi2=999., hiBin=-1., genWeight=-999., weight=1., pT=-999.;
+
+  auto hist = pres();
+  uint run=-1, ls=-1;
+  int isUnprescaled=-1;
+  told->SetBranchAddress("run",&run);
+  told->SetBranchAddress("lumi",&ls);
+  tnew->Branch("isUnprescaled", &isUnprescaled, "isUnprescaled/I");
 
   told->SetBranchAddress("pt",&pT);
   told->SetBranchAddress("dzPV",&dzPV);
@@ -92,6 +100,9 @@ TTree* copyTreeAndAddWeight(TTree* told, int nentries=0)
     passedMatchedStations = (numberOfMatchedStations > 1.1);
     passedMuHits = (glbValidMuHits > 0.1);
     passedglbChi2 = (glbChi2 < 10.);
+
+    const auto& val = hist->GetBinContent(hist->FindBin(ls, run));
+    isUnprescaled = (val>0.9 && val<1.1);
       
     //SoftMuonID
     isSoftMuon = (TMOST==1 && Track_HP==1 && fabs(dxyPV)<DXYCUT_SOFT && fabs(dzPV)<DZCUT_SOFT && tkPixelLay>0.1 && tkTrackerLay>5.1);
@@ -107,7 +118,7 @@ TTree* copyTreeAndAddWeight(TTree* told, int nentries=0)
 
     //HybridSoftMuonID PbPb
     isHybridSoftMuon2015 = (Glb==1 && TM==1 && TMOST==1 && fabs(dxyPV)<DXYCUT_SOFT && fabs(dzPV)<DZCUT_SOFT && tkPixelLay>0.1 && tkTrackerLay>5.1);
-    isHybridSoftMuon2018 = (Glb==1 && fabs(dxyPV)<DXYCUT_SOFT && fabs(dzPV)<DZCUT_SOFT && tkPixelLay>0.1 && tkTrackerLay>5.1);
+    isHybridSoftMuon2018 = (Glb==1 && TM==1 && fabs(dxyPV)<DXYCUT_SOFT && fabs(dzPV)<DZCUT_SOFT && tkPixelLay>0.1 && tkTrackerLay>5.1);
 
     //Weight
     weight = (nentries/sumWeight);
