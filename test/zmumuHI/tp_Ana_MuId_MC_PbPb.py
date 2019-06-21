@@ -258,7 +258,7 @@ if scenario == "0": EFFICIENCYSET = cms.PSet(VEFFICIENCYSET[0],VEFFICIENCYSET[1]
 
 process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     # IO parameters:
-    InputFileNames = cms.vstring("file:/eos/cms/store/group/phys_heavyions/dileptons/TNPTagAndProbe2018/MC2018/PbPb502TeV/tnpZ_MC_PbPb_mod_v2.root"),
+    InputFileNames = cms.vstring("file:/eos/cms/store/group/phys_heavyions/dileptons/TNPTagAndProbe2018/MC2018/PbPb502TeV/tnpZ_MC_PbPb_Official_mod_v3.root"),
     InputDirectoryName = cms.string("tpTree"),
     InputTreeName = cms.string("fitter_tree"),
     OutputFileName = cms.string("tnp_Ana_MC_MuId_PbPb_%s.root" % scenario),

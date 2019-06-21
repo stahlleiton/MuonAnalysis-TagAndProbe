@@ -59,7 +59,7 @@ TString collTag = "PbPb"; // isPbPb ? "PbPb" : "pp";
 int fitfcn = 2;
 
 // Location of the files
-const int nSyst = 4;//5;
+const int nSyst = 1;//5;
 // the first file is for the nominal case, the following ones are for the systematics
 /*const char* fDataName[nSyst] = {
 	//"tnp_Ana_RD_PbPb_MuonIDTrg_AllMB.root",
@@ -71,14 +71,12 @@ const char* fMCName[nSyst] = {
 };//*/
 
 const bool bPlotAbseta = true;
-bool bPlotSyst = true;
+bool bPlotSyst = false;
 
 // do the toy study for the correction factors?
-bool doToys = true;
+bool doToys = false;
 
-//const char* systName[nSyst] = {
-//   "Nominal",
-//};
+
 
 
 
@@ -112,6 +110,9 @@ const double c_ptRange = 200; // how far to plot the pt
 const double c_centralityRange = 200; // how far to plot the centrality (hibin goes to 200)
 //const char* fDataName[nSyst] = { "tnp_Ana_RD_MuId_PbPb_0.root" };
 //const char* fMCName[nSyst] = { "tnp_Ana_MC_MuId_PbPb_0.root" };
+//const char* systName[nSyst] = {
+  // "Nominal",
+//};
 const char* fDataName[nSyst] = { "tnp_Ana_RD_MuId_PbPb_0.root", "tnp_Ana_RD_MuId_PbPb_mass_0.root", "tnp_Ana_RD_MuId_PbPb_sig_0.root", "tnp_Ana_RD_MuId_PbPb_bkg_0.root" };
 const char* fMCName[nSyst] = { "tnp_Ana_MC_MuId_PbPb_0.root", "tnp_Ana_MC_MuId_PbPb_mass_0.root", "tnp_Ana_MC_MuId_PbPb_sig_0.root", "tnp_Ana_MC_MuId_PbPb_bkg_0.root" };
 const char* systName[nSyst] = {
@@ -206,15 +207,17 @@ TString treeTag("tpTreeSta");
 TString cutLegend("Inner tracking");
 const double effmin = 0.8;
 const double effmax = 1.05;
-const double sfrange = 0.08;
+const double sfrange = 0.03;
 const double c_ptRange = 80; // how far to plot the pt
 const double c_centralityRange = 200; // how far to plot the centrality (hibin goes to 200)
-const char* fDataName[nSyst] = { "tnp_Ana_RD_Trk_PbPb_0.root", "tnp_Ana_RD_Trk_PbPb_mass_0.root", "tnp_Ana_RD_Trk_PbPb_sig_0.root", "tnp_Ana_RD_Trk_PbPb_bkg_0.root" };
-const char* fMCName[nSyst] = { "tnp_Ana_MC_Trk_PbPb_0.root", "tnp_Ana_MC_Trk_PbPb_mass_0.root", "tnp_Ana_MC_Trk_PbPb_sig_0.root", "tnp_Ana_MC_Trk_PbPb_bkg_0.root" };
-const char* systName[nSyst] = {"Nominal", "Mass range 65-145", "Sig - Conv(CB,Gauss)", "Bkg - pol2"}; //name for systematics
+//const char* fDataName[nSyst] = { "tnp_Ana_RD_Trk_PbPb_0.root", "tnp_Ana_RD_Trk_PbPb_mass_0.root", "tnp_Ana_RD_Trk_PbPb_sig_0.root", "tnp_Ana_RD_Trk_PbPb_bkg_0.root" };
+//const char* fMCName[nSyst] = { "tnp_Ana_MC_Trk_PbPb_0.root", "tnp_Ana_MC_Trk_PbPb_mass_0.root", "tnp_Ana_MC_Trk_PbPb_sig_0.root", "tnp_Ana_MC_Trk_PbPb_bkg_0.root" };
+//const char* systName[nSyst] = {"Nominal", "Mass range 65-145", "Sig - Conv(CB,Gauss)", "Bkg - pol2"}; //name for systematics
 
-//const char* fDataName[nSyst] = { "tnp_Ana_RD_Trk_PbPb.root" };
-//const char* fMCName[nSyst] = { "tnp_Ana_MC_Trk_PbPb.root" };
+
+const char* fDataName[nSyst] = { "tnp_Ana_RD_Trk_PbPb_0.root" };
+const char* fMCName[nSyst] = { "tnp_Ana_MC_Trk_PbPb_0.root" };
+const char* systName[nSyst] = {"Nominal"};
 
 #endif
 
@@ -543,7 +546,7 @@ void TnPEffDraw_singleFile_O() {
 				header = TString("#splitline{") + cutLegend + Form(" Efficiency}{(p^{#mu}_{T}>%.1f, #eta #in [%.1f, %.1f])}", ptmin, etamin, etamax);
 			}
 			leg1->SetHeader(header);
-			sprintf(legs, "MC PYTHIA+EvtGen: %.4f^{ + %.3f}_{ - %.3f}", TrkAbsEta0[k][i][0], TrkAbsEta0[k][i][1], TrkAbsEta0[k][i][2]);
+			sprintf(legs, "MC PYTHIA + HYDJET: %.4f^{ + %.3f}_{ - %.3f}", TrkAbsEta0[k][i][0], TrkAbsEta0[k][i][1], TrkAbsEta0[k][i][2]);
 			//sprintf(legs, "MC Pbp: %.4f^{ + %.3f}_{ - %.3f}", TrkAbsEta0[k][i][0], TrkAbsEta0[k][i][1], TrkAbsEta0[k][i][2]);
 			leg1->AddEntry(ComPt_MC[k][i], legs, "pl");
 			sprintf(legs, "Data: %.4f^{ + %.3f}_{ - %.3f}", TrkAbsEta1[k][i][0], TrkAbsEta1[k][i][1], TrkAbsEta1[k][i][2]);
@@ -785,7 +788,7 @@ void TnPEffDraw_singleFile_O() {
 			leg1->SetTextSize(0.035);
 			double ptmin = ((RooRealVar*)rds_abseta_MC[k]->get()->find("pt"))->getBinning().binLow(0);
 			leg1->SetHeader(TString("#splitline{") + cutLegend + Form(" Efficiency}{(p^{#mu}_{T}>%.1f)}", ptmin));
-			sprintf(legs, "MC PYTHIA+EvtGen: %.4f^{ + %.3f}_{ - %.3f}", Trk0[k][0], Trk0[k][1], Trk0[k][2]);
+			sprintf(legs, "MC PYTHIA + HYDJET: %.4f^{ + %.3f}_{ - %.3f}", Trk0[k][0], Trk0[k][1], Trk0[k][2]);
 			//sprintf(legs, "MC Pbp: %.4f^{ + %.3f}_{ - %.3f}", Trk0[k][0], Trk0[k][1], Trk0[k][2]);
 			leg1->AddEntry(ComPt_MC[k][0], legs, "pl");
 			sprintf(legs, "Data: %.4f^{ + %.3f}_{ - %.3f}", Trk1[k][0], Trk1[k][1], Trk1[k][2]);
@@ -865,7 +868,7 @@ void TnPEffDraw_singleFile_O() {
 		leg1->SetTextSize(0.035);
 		double ptmin = ((RooRealVar*)rds_eta_MC[k]->get()->find("pt"))->getBinning().binLow(0);
 		leg1->SetHeader(TString("#splitline{") + cutLegend + Form(" Efficiency}{(p^{#mu}_{T}>%.1f)}", ptmin));
-		sprintf(legs, "MC PYTHIA+EvtGen: %.4f^{ + %.3f}_{ - %.3f}", Trk0[k][0], Trk0[k][1], Trk0[k][2]);
+		sprintf(legs, "MC PYTHIA + HYDJET: %.4f^{ + %.3f}_{ - %.3f}", Trk0[k][0], Trk0[k][1], Trk0[k][2]);
 		//sprintf(legs, "MC Pbp: %.4f^{ + %.3f}_{ - %.3f}", Trk0[k][0], Trk0[k][1], Trk0[k][2]);
 		leg1->AddEntry(ComPt_MC[k][0], legs, "pl");
 		sprintf(legs, "Data: %.4f^{ + %.3f}_{ - %.3f}", Trk1[k][0], Trk1[k][1], Trk1[k][2]);

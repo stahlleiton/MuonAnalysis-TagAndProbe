@@ -184,7 +184,7 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     InputFileNames = cms.vstring("file:/eos/cms/store/group/phys_heavyions/dileptons/TNPTagAndProbe2018/MC2018/PbPb502TeV/tnpZ_MC_PbPb_Official_mod_v3.root"),
     InputDirectoryName = cms.string("tpTreeSta"),
     InputTreeName = cms.string("fitter_tree"),
-OutputFileName = cms.string("tnp_Ana_MC_Trk_PbPb_%s.root" % scenario),
+OutputFileName = cms.string("tnp_Ana_MC_Trk_PbPb_mass_%s.root" % scenario),
     #numbrer of CPUs to use for fitting
     NumCPU = cms.uint32(16),
     # specifies whether to save the RooWorkspace containing the data for each bin and
@@ -197,7 +197,7 @@ OutputFileName = cms.string("tnp_Ana_MC_Trk_PbPb_%s.root" % scenario),
     
     # defines all the real variables of the probes available in the input tree and intended for use in the efficiencies
     Variables = cms.PSet(
-                         mass             = cms.vstring("Tag-Probe Mass", "70.0", "135.0", "GeV/c^{2}"), # mass range syst:       #orig 45
+                         mass             = cms.vstring("Tag-Probe Mass", "65.0", "145.0", "GeV/c^{2}"), # mass range syst:       #orig 45
                          pt               = cms.vstring("Probe p_{T}", "0.0", "1000", "GeV/c"),
                          eta              = cms.vstring("Probe #eta", "-2.4", "2.4", ""),
                          abseta           = cms.vstring("Probe |#eta|", "0", "2.5", ""),
@@ -219,13 +219,6 @@ OutputFileName = cms.string("tnp_Ana_MC_Trk_PbPb_%s.root" % scenario),
 		"Voigtian::signal(mass, mean[91,75,105], width[3,-5,15], sigma[3,-5,15])", # mean 85-95, width, sigma 1-10
 		"Exponential::backgroundPass(mass, lp[0,-5,5])",
 		"Exponential::backgroundFail(mass, lf[0,-5,5])",
-		"efficiency[0.9,0,1]",
-		"signalFractionInPassing[0.9]"
-	),
-    VoigtPol2 = cms.vstring(
-		"Voigtian::signal(mass, mean[91,75,105], width[3,-5,15], sigma[3,-5,15])", # mean 85-95, width, sigma 1-10
-        "Chebychev::backgroundPass(mass, {cPass[0.,-1.1,1.1], cPass2[0.,-1.1,1.1]})",
-        "Chebychev::backgroundFail(mass, {cFail[0.,-1.1,1.1], cFail2[0.,-1.1,1.1]})",
 		"efficiency[0.9,0,1]",
 		"signalFractionInPassing[0.9]"
 	),
