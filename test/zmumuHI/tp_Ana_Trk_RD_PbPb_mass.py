@@ -16,13 +16,12 @@ process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1) )
 PDFName = "VoigtExp"
 
 
-
 VEFFICIENCYSET =cms.VPSet(
 # Order: 0 total, 1 pT, 2-8 pT fits in abseta bins, 9 abseta, 10 eta, 11-12 centrality   NOTE: IS NOT SAME AS SCENARIO, SCENARIO DEFINED BELOW
     cms.PSet(
         Trk_1bin = cms.PSet(
             EfficiencyCategoryAndState = cms.vstring("Glb","true","PF","true"),
-            UnbinnedVariables = cms.vstring("mass", "weight"),
+            UnbinnedVariables = cms.vstring("mass"),
             BinnedVariables = cms.PSet(
 #                tag_nVertices = cms.vdouble(0, 6),
                 pt = cms.vdouble(15, 80),
@@ -34,7 +33,7 @@ VEFFICIENCYSET =cms.VPSet(
    cms.PSet(
        Trk_pt = cms.PSet(
            EfficiencyCategoryAndState = cms.vstring("Glb","true","PF","true"),
-           UnbinnedVariables = cms.vstring("mass", "weight"),
+           UnbinnedVariables = cms.vstring("mass"),
            BinnedVariables = cms.PSet(
                pt = cms.vdouble(15, 30, 50, 80),
                eta = cms.vdouble(-2.4,2.4),
@@ -46,7 +45,7 @@ VEFFICIENCYSET =cms.VPSet(
     cms.PSet(
         Trk_abseta00_09 = cms.PSet(
             EfficiencyCategoryAndState = cms.vstring("Glb","true","PF","true"),
-            UnbinnedVariables = cms.vstring("mass", "weight"),
+            UnbinnedVariables = cms.vstring("mass"),
             BinnedVariables = cms.PSet(
 #                tag_nVertices = cms.vdouble(0, 1, 2, 6),
                 pt = cms.vdouble(15, 30, 50, 80),
@@ -58,7 +57,7 @@ VEFFICIENCYSET =cms.VPSet(
     cms.PSet(
          Trk_abseta09_12 = cms.PSet(
              EfficiencyCategoryAndState = cms.vstring("Glb","true","PF","true"),
-             UnbinnedVariables = cms.vstring("mass", "weight"),
+             UnbinnedVariables = cms.vstring("mass"),
              BinnedVariables = cms.PSet(
 #                 tag_nVertices = cms.vdouble(0, 1, 2, 6),
                  pt = cms.vdouble(15, 30, 50, 80),
@@ -70,7 +69,7 @@ VEFFICIENCYSET =cms.VPSet(
     cms.PSet(
          Trk_abseta00_12 = cms.PSet(
              EfficiencyCategoryAndState = cms.vstring("Glb","true","PF","true"),
-             UnbinnedVariables = cms.vstring("mass", "weight"),
+             UnbinnedVariables = cms.vstring("mass"),
              BinnedVariables = cms.PSet(
 #                 tag_nVertices = cms.vdouble(0, 1, 2, 6),
                  pt = cms.vdouble(15, 30, 50, 80),
@@ -82,7 +81,7 @@ VEFFICIENCYSET =cms.VPSet(
     cms.PSet(
          Trk_abseta12_16 = cms.PSet(
              EfficiencyCategoryAndState = cms.vstring("Glb","true","PF","true"),
-             UnbinnedVariables = cms.vstring("mass", "weight"),
+             UnbinnedVariables = cms.vstring("mass"),
              BinnedVariables = cms.PSet(
 #                 tag_nVertices = cms.vdouble(0, 1, 2, 6),
                  pt = cms.vdouble(15, 30, 50, 80),
@@ -94,7 +93,7 @@ VEFFICIENCYSET =cms.VPSet(
     cms.PSet(
          Trk_abseta16_21 = cms.PSet(
              EfficiencyCategoryAndState = cms.vstring("Glb","true","PF","true"),
-             UnbinnedVariables = cms.vstring("mass", "weight"),
+             UnbinnedVariables = cms.vstring("mass"),
              BinnedVariables = cms.PSet(
 #                 tag_nVertices = cms.vdouble(0, 1, 2, 6),
                  pt = cms.vdouble(15, 30, 50, 80),
@@ -106,7 +105,7 @@ VEFFICIENCYSET =cms.VPSet(
     cms.PSet(
          Trk_abseta12_21 = cms.PSet(
              EfficiencyCategoryAndState = cms.vstring("Glb","true","PF","true"),
-             UnbinnedVariables = cms.vstring("mass", "weight"),
+             UnbinnedVariables = cms.vstring("mass"),
              BinnedVariables = cms.PSet(
 #                 tag_nVertices = cms.vdouble(0, 1, 2, 6),
                  pt = cms.vdouble(15, 30, 50, 80),
@@ -118,7 +117,7 @@ VEFFICIENCYSET =cms.VPSet(
     cms.PSet(
          Trk_abseta21_24 = cms.PSet(
              EfficiencyCategoryAndState = cms.vstring("Glb","true","PF","true"),
-             UnbinnedVariables = cms.vstring("mass", "weight"),
+             UnbinnedVariables = cms.vstring("mass"),
              BinnedVariables = cms.PSet(
 #                 tag_nVertices = cms.vdouble(0, 1, 2, 6),
                  pt = cms.vdouble(15, 30, 50, 80),
@@ -130,7 +129,7 @@ VEFFICIENCYSET =cms.VPSet(
     cms.PSet(
           Trk_absetadep = cms.PSet(
              EfficiencyCategoryAndState = cms.vstring("Glb","true","PF","true"),
-             UnbinnedVariables = cms.vstring("mass", "weight"),
+             UnbinnedVariables = cms.vstring("mass"),
              BinnedVariables = cms.PSet(
 #                 tag_nVertices = cms.vdouble(0, 1, 2, 6),
                  pt = cms.vdouble(15, 80),
@@ -142,7 +141,7 @@ VEFFICIENCYSET =cms.VPSet(
     cms.PSet(
          Trk_etadep = cms.PSet(
              EfficiencyCategoryAndState = cms.vstring("Glb","true","PF","true"),
-             UnbinnedVariables = cms.vstring("mass", "weight"),
+             UnbinnedVariables = cms.vstring("mass"),
              BinnedVariables = cms.PSet(
 #                 tag_nVertices = cms.vdouble(0, 1, 2, 6),
                  pt = cms.vdouble(15, 80),
@@ -154,9 +153,9 @@ VEFFICIENCYSET =cms.VPSet(
     cms.PSet(
         Trk_centdep = cms.PSet(
              EfficiencyCategoryAndState = cms.vstring("Glb","true","PF","true"),
-             UnbinnedVariables = cms.vstring("mass", "weight"),
+             UnbinnedVariables = cms.vstring("mass"),
              BinnedVariables = cms.PSet(
-                 pt = cms.vdouble(15, 80),
+                 pt = cms.vdouble(15, 200),
                  eta = cms.vdouble(-2.4,2.4),
                  tag_hiBin = cms.vdouble(0, 20, 40, 60, 80, 100, 200),
             ),
@@ -181,10 +180,10 @@ if scenario == "0": EFFICIENCYSET = cms.PSet(VEFFICIENCYSET[0],VEFFICIENCYSET[1]
 
 process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     # IO parameters:
-    InputFileNames = cms.vstring("file:/eos/cms/store/group/phys_heavyions/dileptons/TNPTagAndProbe2018/MC2018/PbPb502TeV/tnpZ_MC_PbPb_Official_mod_v3.root"),
+    InputFileNames = cms.vstring("file:/eos/cms/store/group/phys_heavyions/dileptons/TNPTagAndProbe2018/Data2018/PbPb502TeV/tnpZ_Data_PbPb_mod_v3.root"),
     InputDirectoryName = cms.string("tpTreeSta"),
     InputTreeName = cms.string("fitter_tree"),
-OutputFileName = cms.string("tnp_Ana_MC_Trk_PbPb_%s.root" % scenario),
+OutputFileName = cms.string("tnp_Ana_RD_Trk_PbPb_mass_%s.root" % scenario),
     #numbrer of CPUs to use for fitting
     NumCPU = cms.uint32(16),
     # specifies whether to save the RooWorkspace containing the data for each bin and
@@ -193,20 +192,19 @@ OutputFileName = cms.string("tnp_Ana_MC_Trk_PbPb_%s.root" % scenario),
     binsForFit = cms.uint32(65),
     binsForMassPlots = cms.uint32(65),
     SaveWorkspace = cms.bool(False),
-    WeightVariable = cms.string("weight"),
     
     # defines all the real variables of the probes available in the input tree and intended for use in the efficiencies
     Variables = cms.PSet(
-                         mass             = cms.vstring("Tag-Probe Mass", "70.0", "135.0", "GeV/c^{2}"), # mass range syst:       #orig 45
+                         mass             = cms.vstring("Tag-Probe Mass", "65.0", "145.0", "GeV/c^{2}"), # mass range syst:         #orig 45
                          pt               = cms.vstring("Probe p_{T}", "0.0", "1000", "GeV/c"),
                          eta              = cms.vstring("Probe #eta", "-2.4", "2.4", ""),
                          abseta           = cms.vstring("Probe |#eta|", "0", "2.5", ""),
                          tag_hiBin        = cms.vstring("Centrality bin", "0", "200", ""),
-                         weight           = cms.vstring("weight", "0", "10000", ""),
 
     ),
     # defines all the discrete variables of the probes available in the input tree and intended for use in the efficiency calculations
     Categories = cms.PSet(
+			 # MuIDForOutsideInTk = cms.vstring("OITK Seed", "dummy[pass=1,fail=0]"),
 			             Glb = cms.vstring("Glb", "dummy[true=1,false=0]"),
                          PF  = cms.vstring("PF", "dummy[true=1, false=0]"),
 
@@ -219,13 +217,6 @@ OutputFileName = cms.string("tnp_Ana_MC_Trk_PbPb_%s.root" % scenario),
 		"Voigtian::signal(mass, mean[91,75,105], width[3,-5,15], sigma[3,-5,15])", # mean 85-95, width, sigma 1-10
 		"Exponential::backgroundPass(mass, lp[0,-5,5])",
 		"Exponential::backgroundFail(mass, lf[0,-5,5])",
-		"efficiency[0.9,0,1]",
-		"signalFractionInPassing[0.9]"
-	),
-    VoigtPol2 = cms.vstring(
-		"Voigtian::signal(mass, mean[91,75,105], width[3,-5,15], sigma[3,-5,15])", # mean 85-95, width, sigma 1-10
-        "Chebychev::backgroundPass(mass, {cPass[0.,-1.1,1.1], cPass2[0.,-1.1,1.1]})",
-        "Chebychev::backgroundFail(mass, {cFail[0.,-1.1,1.1], cFail2[0.,-1.1,1.1]})",
 		"efficiency[0.9,0,1]",
 		"signalFractionInPassing[0.9]"
 	),

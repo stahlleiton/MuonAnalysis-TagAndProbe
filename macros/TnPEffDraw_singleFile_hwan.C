@@ -44,7 +44,7 @@ using namespace std;
 
 // Choose the efficiency type.
 // Possible values: MUIDTRG, TRK, STA, MUID, TRG
-#define TRG 
+#define STA 
 
 // pp or PbPb?
 bool isPbPb = true; // if true, will compute the centrality dependence
@@ -59,11 +59,12 @@ bool doToys = false;
 // 2 = ([0]*Erf((x-[1])/[2]))*Exp([4]*x)+ [3]
 // 3 = [0]
 // 4 = [0]-[1]*TMath::Exp(-[2]*x) 
-// 
-int fitfcn = 4;
+// 5 = [0]*TMath::Erf((x-[1])/[2]) 
+//
+int fitfcn = 3;
 
 // Location of the files
-const int nSyst = 1;//5;
+const int nSyst = 4;//5;
 // the first file is for the nominal case, the following ones are for the systematics
 /*const char* fDataName[nSyst] = {
 	//"tnp_Ana_RD_PbPb_MuonIDTrg_AllMB.root",
@@ -82,8 +83,8 @@ const char* fMCName[nSyst] = {
 */
 // names for systematics
 const char* systName[nSyst] = {
-//   "nominal","background","mass","signal"
-   "nominal"
+   "nominal","background","mass","signal"
+//   "nominal"
 };
 
 const double c_ptRange = 80; // how far to plot the pt
@@ -203,16 +204,20 @@ TString cutLegend("Trigger");
 const double effmin = 0.6;
 const double sfrange = 0.1;
 const char* fDataName[nSyst] = { 
-	"./190507/tnp_Ana_RD_L3Mu12_PbPb_0_v2.root",
-	"./190507/tnp_Ana_RD_L3Mu12_PbPb_0_v2_background.root",
-	"./190507/tnp_Ana_RD_L3Mu12_PbPb_0_v2_mass.root",
-	"./190507/tnp_Ana_RD_L3Mu12_PbPb_0_v2_signal.root",
+	"./v3/tnp_Ana_RD_L3Mu12_PbPb_0_v3_nominal.root",
+	/*
+	"./v3/tnp_Ana_RD_L3Mu12_PbPb_0_v3_bkg.root",
+	"./v3/tnp_Ana_RD_L3Mu12_PbPb_0_v3_mass.root",
+	"./v3/tnp_Ana_RD_L3Mu12_PbPb_0_v3_signal.root",
+	*/
 	};
 const char* fMCName[nSyst] = { 
-	"./190507/tnp_Ana_MC_L3Mu12_PbPb_0_v2.root",
-	"./190507/tnp_Ana_MC_L3Mu12_PbPb_0_v2_background.root",
-	"./190507/tnp_Ana_MC_L3Mu12_PbPb_0_v2_mass.root",
-	"./190507/tnp_Ana_MC_L3Mu12_PbPb_0_v2_signal.root",
+	"./v3/tnp_Ana_MC_L3Mu12_PbPb_0_v3_nominal.root",
+	/*
+	"./v3/tnp_Ana_MC_L3Mu12_PbPb_0_v3_bkg.root",
+	"./v3/tnp_Ana_MC_L3Mu12_PbPb_0_v3_mass.root",
+	"./v3/tnp_Ana_MC_L3Mu12_PbPb_0_v3_signal.root",
+	*/
 	};
 #endif
 
@@ -237,20 +242,17 @@ const double sfrange = 0.2;
 //const char* fMCName[nSyst] = { "tnp_Ana_MC_STA_PbPb.root" };
 
 const char* fDataName[nSyst] = { 
-	"./190507/tnp_Ana_Data_RecoSTA_PbPb_moreEta_v2.root",
-	/*
-	"./190507/tnp_Ana_Data_RecoSTA_PbPb_moreEta_v2_background.root",
-	"./190507/tnp_Ana_Data_RecoSTA_PbPb_moreEta_v2_mass.root",
-	"./190507/tnp_Ana_Data_RecoSTA_PbPb_moreEta_v2_signal.root"
-	*/
+	"./v3/tnp_Ana_Data_RecoSTA_PbPb_moreEta_v3_nominal_0.root",
+	"./v3/tnp_Ana_Data_RecoSTA_PbPb_moreEta_v3_bkg_0.root",
+	"./v3/tnp_Ana_Data_RecoSTA_PbPb_moreEta_v3_mass_0.root",
+	"./v3/tnp_Ana_Data_RecoSTA_PbPb_moreEta_v3_signal_0.root",
+
 };
 const char* fMCName[nSyst] = { 
-	"./190430/tnp_Ana_MC_STA_PbPb_moreEta_v2.root",
-	/*
-	"./190502/tnp_Ana_MC_STA_PbPb_moreEta_v2_background.root",
-	"./190502/tnp_Ana_MC_STA_PbPb_moreEta_v2_mass.root",
-	"./190502/tnp_Ana_MC_STA_PbPb_moreEta_v2_signal.root"
-	*/
+	"./v3/tnp_Ana_MC_STA_PbPb_moreEta_v3_nominal.root",
+	"./v3/tnp_Ana_MC_STA_PbPb_moreEta_v3_bkg.root",
+	"./v3/tnp_Ana_MC_STA_PbPb_moreEta_v3_mass.root",
+	"./v3/tnp_Ana_MC_STA_PbPb_moreEta_v3_signal.root",
 };
 
 #endif
@@ -613,7 +615,7 @@ void TnPEffDraw_singleFile_hwan() {
 				header = TString("#splitline{") + cutLegend + Form(" Efficiency}{(p^{#mu}_{T}>%.1f, #eta #in [%.1f, %.1f])}", ptmin, etamin, etamax);
 			}
 			leg1->SetHeader(header);
-			sprintf(legs, "MC PYTHIA+EvtGen: %.4f^{ + %.3f}_{ - %.3f}", TrkAbsEta0[k][i][0], TrkAbsEta0[k][i][1], TrkAbsEta0[k][i][2]);
+			sprintf(legs, "MC PYTHIA+HYDJET: %.4f^{ + %.3f}_{ - %.3f}", TrkAbsEta0[k][i][0], TrkAbsEta0[k][i][1], TrkAbsEta0[k][i][2]);
 			//sprintf(legs, "MC Pbp: %.4f^{ + %.3f}_{ - %.3f}", TrkAbsEta0[k][i][0], TrkAbsEta0[k][i][1], TrkAbsEta0[k][i][2]);
 			leg1->AddEntry(ComPt_MC[k][i], legs, "pl");
 			sprintf(legs, "Data: %.4f^{ + %.3f}_{ - %.3f}", TrkAbsEta1[k][i][0], TrkAbsEta1[k][i][1], TrkAbsEta1[k][i][2]);
@@ -845,7 +847,7 @@ void TnPEffDraw_singleFile_hwan() {
 		leg1->SetTextSize(0.035);
 		double ptmin = ((RooRealVar*)rds_eta_MC[k]->get()->find("pt"))->getBinning().binLow(0);
 		leg1->SetHeader(TString("#splitline{") + cutLegend + Form(" Efficiency}{(p^{#mu}_{T}>%.1f)}", ptmin));
-		sprintf(legs, "MC PYTHIA+EvtGen: %.4f^{ + %.3f}_{ - %.3f}", Trk0[k][0], Trk0[k][1], Trk0[k][2]);
+		sprintf(legs, "MC PYTHIA+HYDJET: %.4f^{ + %.3f}_{ - %.3f}", Trk0[k][0], Trk0[k][1], Trk0[k][2]);
 		//sprintf(legs, "MC Pbp: %.4f^{ + %.3f}_{ - %.3f}", Trk0[k][0], Trk0[k][1], Trk0[k][2]);
 		leg1->AddEntry(ComEta_MC[k], legs, "pl");
 		sprintf(legs, "Data: %.4f^{ + %.3f}_{ - %.3f}", Trk1[k][0], Trk1[k][1], Trk1[k][2]);
@@ -952,7 +954,7 @@ void TnPEffDraw_singleFile_hwan() {
 		//double ptmin = ((RooRealVar*)rds_eta_MC[k]->get()->find("pt"))->getBinning().binLow(0);
 		double ptmin = ((RooRealVar*)rds_abseta_MC[k]->get()->find("pt"))->getBinning().binLow(0);
 		leg1->SetHeader(TString("#splitline{") + cutLegend + Form(" Efficiency}{(p^{#mu}_{T}>%.1f)}", ptmin));
-		sprintf(legs, "MC PYTHIA+EvtGen: %.4f^{ + %.3f}_{ - %.3f}", Trk0[k][0], Trk0[k][1], Trk0[k][2]);
+		sprintf(legs, "MC PYTHIA+HYDJET: %.4f^{ + %.3f}_{ - %.3f}", Trk0[k][0], Trk0[k][1], Trk0[k][2]);
 		//sprintf(legs, "MC Pbp: %.4f^{ + %.3f}_{ - %.3f}", Trk0[k][0], Trk0[k][1], Trk0[k][2]);
 		leg1->AddEntry(effabsEta_MC, legs, "pl");
 		sprintf(legs, "Data: %.4f^{ + %.3f}_{ - %.3f}", Trk1[k][0], Trk1[k][1], Trk1[k][2]);
@@ -1662,6 +1664,7 @@ TF1 *initfcn(const char* fname, int ifcn, double ptmin, double ptmax, double eff
 	else if (ifcn == 3) formula = "[0]";
 	//else if (ifcn == 4) formula = "[0]-[1]*TMath::Exp(-[2]*x)";
 	else if (ifcn == 4) formula = "[0]*(1-[1]*TMath::Exp(-x/[2]))";
+	else if (ifcn == 5) formula = "[0]*TMath::Erf((x+[1])/[2])";
 	else formula = "[0]";
 	TF1 *ans = new TF1(fname, formula, ptmin, ptmax);
 	if (ifcn == 0) {
@@ -1697,12 +1700,20 @@ TF1 *initfcn(const char* fname, int ifcn, double ptmin, double ptmax, double eff
 		ans->SetParameter(0, effguess);
 	}
 	else if (ifcn == 4) {
-		ans->SetParLimits(0,0.0,1.4);
-		ans->SetParLimits(1,-1.0,10.0);
+		ans->SetParLimits(0,0.0,1.1);
+		ans->SetParLimits(1,0,3.99);
 		ans->SetParLimits(2,0.1,100.0);
 		ans->SetParameter(0,0.9);
-		ans->SetParameter(1,0.4);
+		ans->SetParameter(1,3);
 		ans->SetParameter(2,8.0);
+	}
+	else if (ifcn == 5) {
+		ans->SetParLimits(0,0.0,1.);
+		ans->SetParLimits(1,2.5,150);
+		ans->SetParLimits(2,1,76.0);
+		ans->SetParameter(0,0.7);
+		ans->SetParameter(1,40);
+		ans->SetParameter(2,70.0);
 	}
 	return ans;
 }
