@@ -129,141 +129,141 @@ double tnp_weight_trig_pbpb(double pt, double eta, int idx)
 
   // MC
   if (fabs(eta) > 0 && fabs(eta) <= 1.2) { 
-    if (pt > 15 && pt <= 20) den = 0.929682;
-    else if (pt > 20 && pt <= 30) den = 0.955507;
-    else if (pt > 30 && pt <= 50) den = 0.964566;
-    else if (pt > 50 && pt <= 80) den = 0.967298;
-    else if (pt > 80 && pt <= 9999) den = 0.958746;
+    if (pt > 15 && pt <= 20) den = 0.940563;
+    else if (pt > 20 && pt <= 30) den = 0.953007;
+    else if (pt > 30 && pt <= 50) den = 0.964625;
+    else if (pt > 50 && pt <= 80) den = 0.966917;
+    else if (pt > 80 && pt <= 9999) den = 0.958959;
   }
   else if (fabs(eta) > 1.2 && fabs(eta) <= 2.1) { 
-    if (pt > 15 && pt <= 20) den = 0.918536;
-    else if (pt > 20 && pt <= 30) den = 0.943554;
-    else if (pt > 30 && pt <= 50) den = 0.95398;
-    else if (pt > 50 && pt <= 80) den = 0.959336;
-    else if (pt > 80 && pt <= 9999) den = 0.958833;
+    if (pt > 15 && pt <= 20) den = 0.9281;
+    else if (pt > 20 && pt <= 30) den = 0.940129;
+    else if (pt > 30 && pt <= 50) den = 0.953978;
+    else if (pt > 50 && pt <= 80) den = 0.958659;
+    else if (pt > 80 && pt <= 9999) den = 0.961068;
   }
   else if (fabs(eta) > 2.1 && fabs(eta) <= 2.4) { 
-    if (pt > 15 && pt <= 20) den = 0.892248;
-    else if (pt > 20 && pt <= 30) den = 0.911687;
-    else if (pt > 30 && pt <= 50) den = 0.936458;
-    else if (pt > 50 && pt <= 80) den = 0.941882;
-    else if (pt > 80 && pt <= 9999) den = 0.928107;
+    if (pt > 15 && pt <= 20) den = 0.890849;
+    else if (pt > 20 && pt <= 30) den = 0.914955;
+    else if (pt > 30 && pt <= 50) den = 0.934417;
+    else if (pt > 50 && pt <= 80) den = 0.943679;
+    else if (pt > 80 && pt <= 9999) den = 0.947818;
   }
 
   // data
   if (idx <= 0 || idx > 10) { // nominal
     if (fabs(eta) > 0 && fabs(eta) <= 1.2) { 
-      if (pt > 15 && pt <= 20) num = 0.875758;
-      else if (pt > 20 && pt <= 30) num = 0.933211;
-      else if (pt > 30 && pt <= 50) num = 0.948737;
-      else if (pt > 50 && pt <= 80) num = 0.949324;
-      else if (pt > 80 && pt <= 9999) num = 0.940581;
+      if (pt > 15 && pt <= 20) num = 0.875759;
+      else if (pt > 20 && pt <= 30) num = 0.92399;
+      else if (pt > 30 && pt <= 50) num = 0.948799;
+      else if (pt > 50 && pt <= 80) num = 0.949345;
+      else if (pt > 80 && pt <= 9999) num = 0.940723;
     }
     else if (fabs(eta) > 1.2 && fabs(eta) <= 2.1) { 
-      if (pt > 15 && pt <= 20) num = 0.893972;
-      else if (pt > 20 && pt <= 30) num = 0.906514;
-      else if (pt > 30 && pt <= 50) num = 0.925745;
-      else if (pt > 50 && pt <= 80) num = 0.934989;
-      else if (pt > 80 && pt <= 9999) num = 0.925771;
+      if (pt > 15 && pt <= 20) num = 0.893974;
+      else if (pt > 20 && pt <= 30) num = 0.906569;
+      else if (pt > 30 && pt <= 50) num = 0.926756;
+      else if (pt > 50 && pt <= 80) num = 0.940292;
+      else if (pt > 80 && pt <= 9999) num = 0.928692;
     }
     else if (fabs(eta) > 2.1 && fabs(eta) <= 2.4) { 
-      if (pt > 15 && pt <= 20) num = 0.828838;
-      else if (pt > 20 && pt <= 30) num = 0.87173;
-      else if (pt > 30 && pt <= 50) num = 0.898914;
-      else if (pt > 50 && pt <= 80) num = 0.914083;
-      else if (pt > 80 && pt <= 9999) num = 0.88936;
+      if (pt > 15 && pt <= 20) num = 0.828836;
+      else if (pt > 20 && pt <= 30) num = 0.871728;
+      else if (pt > 30 && pt <= 50) num = 0.898965;
+      else if (pt > 50 && pt <= 80) num = 0.91405;
+      else if (pt > 80 && pt <= 9999) num = 0.889446;
     }
   }
   else if (idx == 1) { // stat up
     if (fabs(eta) > 0 && fabs(eta) <= 1.2) { 
-      if (pt > 15 && pt <= 20) num = 0.890679;
-      else if (pt > 20 && pt <= 30) num = 0.93825;
-      else if (pt > 30 && pt <= 50) num = 0.950599;
-      else if (pt > 50 && pt <= 80) num = 0.954049;
-      else if (pt > 80 && pt <= 9999) num = 0.953723;
+      if (pt > 15 && pt <= 20) num = 0.890676;
+      else if (pt > 20 && pt <= 30) num = 0.928769;
+      else if (pt > 30 && pt <= 50) num = 0.952176;
+      else if (pt > 50 && pt <= 80) num = 0.954073;
+      else if (pt > 80 && pt <= 9999) num = 0.953832;
     }
     else if (fabs(eta) > 1.2 && fabs(eta) <= 2.1) { 
       if (pt > 15 && pt <= 20) num = 0.908596;
-      else if (pt > 20 && pt <= 30) num = 0.913665;
-      else if (pt > 30 && pt <= 50) num = 0.928577;
-      else if (pt > 50 && pt <= 80) num = 0.941448;
-      else if (pt > 80 && pt <= 9999) num = 0.945669;
+      else if (pt > 20 && pt <= 30) num = 0.913711;
+      else if (pt > 30 && pt <= 50) num = 0.929705;
+      else if (pt > 50 && pt <= 80) num = 0.94689;
+      else if (pt > 80 && pt <= 9999) num = 0.948762;
     }
     else if (fabs(eta) > 2.1 && fabs(eta) <= 2.4) { 
       if (pt > 15 && pt <= 20) num = 0.85611;
       else if (pt > 20 && pt <= 30) num = 0.886324;
-      else if (pt > 30 && pt <= 50) num = 0.905769;
-      else if (pt > 50 && pt <= 80) num = 0.929944;
-      else if (pt > 80 && pt <= 9999) num = 0.940082;
+      else if (pt > 30 && pt <= 50) num = 0.905823;
+      else if (pt > 50 && pt <= 80) num = 0.929945;
+      else if (pt > 80 && pt <= 9999) num = 0.940054;
     }
   }
   else if (idx == 2) { // stat down
     if (fabs(eta) > 0 && fabs(eta) <= 1.2) { 
-      if (pt > 15 && pt <= 20) num = 0.860029;
-      else if (pt > 20 && pt <= 30) num = 0.927955;
-      else if (pt > 30 && pt <= 50) num = 0.946871;
-      else if (pt > 50 && pt <= 80) num = 0.94431;
-      else if (pt > 80 && pt <= 9999) num = 0.925323;
+      if (pt > 15 && pt <= 20) num = 0.859607;
+      else if (pt > 20 && pt <= 30) num = 0.919003;
+      else if (pt > 30 && pt <= 50) num = 0.945421;
+      else if (pt > 50 && pt <= 80) num = 0.944336;
+      else if (pt > 80 && pt <= 9999) num = 0.925502;
     }
     else if (fabs(eta) > 1.2 && fabs(eta) <= 2.1) { 
       if (pt > 15 && pt <= 20) num = 0.878284;
-      else if (pt > 20 && pt <= 30) num = 0.899086;
-      else if (pt > 30 && pt <= 50) num = 0.922844;
-      else if (pt > 50 && pt <= 80) num = 0.928099;
-      else if (pt > 80 && pt <= 9999) num = 0.901912;
+      else if (pt > 20 && pt <= 30) num = 0.899137;
+      else if (pt > 30 && pt <= 50) num = 0.923753;
+      else if (pt > 50 && pt <= 80) num = 0.933253;
+      else if (pt > 80 && pt <= 9999) num = 0.904548;
     }
     else if (fabs(eta) > 2.1 && fabs(eta) <= 2.4) { 
       if (pt > 15 && pt <= 20) num = 0.798669;
       else if (pt > 20 && pt <= 30) num = 0.856249;
-      else if (pt > 30 && pt <= 50) num = 0.891752;
-      else if (pt > 50 && pt <= 80) num = 0.896096;
-      else if (pt > 80 && pt <= 9999) num = 0.819909;
+      else if (pt > 30 && pt <= 50) num = 0.891814;
+      else if (pt > 50 && pt <= 80) num = 0.896099;
+      else if (pt > 80 && pt <= 9999) num = 0.819963;
     }
   }
   else if (idx == -1) { // syst up
     if (fabs(eta) > 0 && fabs(eta) <= 1.2) { 
-      if (pt > 15 && pt <= 20) num = 0.930309;
-      else if (pt > 20 && pt <= 30) num = 0.933686;
-      else if (pt > 30 && pt <= 50) num = 0.949212;
-      else if (pt > 50 && pt <= 80) num = 0.949755;
-      else if (pt > 80 && pt <= 9999) num = 0.940849;
+      if (pt > 15 && pt <= 20) num = 0.895387;
+      else if (pt > 20 && pt <= 30) num = 0.924118;
+      else if (pt > 30 && pt <= 50) num = 0.948927;
+      else if (pt > 50 && pt <= 80) num = 0.949456;
+      else if (pt > 80 && pt <= 9999) num = 0.940785;
     }
     else if (fabs(eta) > 1.2 && fabs(eta) <= 2.1) { 
-      if (pt > 15 && pt <= 20) num = 0.899185;
-      else if (pt > 20 && pt <= 30) num = 0.907991;
-      else if (pt > 30 && pt <= 50) num = 0.92848;
-      else if (pt > 50 && pt <= 80) num = 0.940241;
-      else if (pt > 80 && pt <= 9999) num = 0.93228;
+      if (pt > 15 && pt <= 20) num = 0.896058;
+      else if (pt > 20 && pt <= 30) num = 0.907145;
+      else if (pt > 30 && pt <= 50) num = 0.927375;
+      else if (pt > 50 && pt <= 80) num = 0.940996;
+      else if (pt > 80 && pt <= 9999) num = 0.929439;
     }
     else if (fabs(eta) > 2.1 && fabs(eta) <= 2.4) { 
-      if (pt > 15 && pt <= 20) num = 0.847212;
-      else if (pt > 20 && pt <= 30) num = 0.873167;
-      else if (pt > 30 && pt <= 50) num = 0.902384;
-      else if (pt > 50 && pt <= 80) num = 0.921622;
-      else if (pt > 80 && pt <= 9999) num = 0.898933;
+      if (pt > 15 && pt <= 20) num = 0.842806;
+      else if (pt > 20 && pt <= 30) num = 0.872792;
+      else if (pt > 30 && pt <= 50) num = 0.900029;
+      else if (pt > 50 && pt <= 80) num = 0.915114;
+      else if (pt > 80 && pt <= 9999) num = 0.89051;
     }
   }
   else if (idx == -2) { // syst down
     if (fabs(eta) > 0 && fabs(eta) <= 1.2) { 
-      if (pt > 15 && pt <= 20) num = 0.821206;
-      else if (pt > 20 && pt <= 30) num = 0.932736;
-      else if (pt > 30 && pt <= 50) num = 0.948261;
-      else if (pt > 50 && pt <= 80) num = 0.948893;
-      else if (pt > 80 && pt <= 9999) num = 0.940313;
+      if (pt > 15 && pt <= 20) num = 0.856131;
+      else if (pt > 20 && pt <= 30) num = 0.923862;
+      else if (pt > 30 && pt <= 50) num = 0.948671;
+      else if (pt > 50 && pt <= 80) num = 0.949234;
+      else if (pt > 80 && pt <= 9999) num = 0.940661;
     }
     else if (fabs(eta) > 1.2 && fabs(eta) <= 2.1) { 
-      if (pt > 15 && pt <= 20) num = 0.888759;
-      else if (pt > 20 && pt <= 30) num = 0.905038;
-      else if (pt > 30 && pt <= 50) num = 0.923011;
-      else if (pt > 50 && pt <= 80) num = 0.929738;
-      else if (pt > 80 && pt <= 9999) num = 0.919261;
+      if (pt > 15 && pt <= 20) num = 0.89189;
+      else if (pt > 20 && pt <= 30) num = 0.905993;
+      else if (pt > 30 && pt <= 50) num = 0.926137;
+      else if (pt > 50 && pt <= 80) num = 0.939587;
+      else if (pt > 80 && pt <= 9999) num = 0.927945;
     }
     else if (fabs(eta) > 2.1 && fabs(eta) <= 2.4) { 
-      if (pt > 15 && pt <= 20) num = 0.810465;
-      else if (pt > 20 && pt <= 30) num = 0.870294;
-      else if (pt > 30 && pt <= 50) num = 0.895443;
-      else if (pt > 50 && pt <= 80) num = 0.906544;
-      else if (pt > 80 && pt <= 9999) num = 0.879788;
+      if (pt > 15 && pt <= 20) num = 0.814865;
+      else if (pt > 20 && pt <= 30) num = 0.870664;
+      else if (pt > 30 && pt <= 50) num = 0.897901;
+      else if (pt > 50 && pt <= 80) num = 0.912986;
+      else if (pt > 80 && pt <= 9999) num = 0.888382;
     }
   }
 
