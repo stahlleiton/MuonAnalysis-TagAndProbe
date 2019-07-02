@@ -44,7 +44,7 @@ using namespace std;
 
 // Choose the efficiency type.
 // Possible values: MUIDTRG, TRK, STA, MUID, TRG
-#define STA 
+#define TRG
 
 // pp or PbPb?
 bool isPbPb = true; // if true, will compute the centrality dependence
@@ -204,20 +204,16 @@ TString cutLegend("Trigger");
 const double effmin = 0.6;
 const double sfrange = 0.1;
 const char* fDataName[nSyst] = { 
-	"./v3/tnp_Ana_RD_L3Mu12_PbPb_0_v3_nominal.root",
-	/*
-	"./v3/tnp_Ana_RD_L3Mu12_PbPb_0_v3_bkg.root",
-	"./v3/tnp_Ana_RD_L3Mu12_PbPb_0_v3_mass.root",
-	"./v3/tnp_Ana_RD_L3Mu12_PbPb_0_v3_signal.root",
-	*/
+	"/afs/cern.ch/user/g/gbak/public/html/cms_private/TnP_PbPb2018/Trg/Files/tnp_Ana_RD_L3Mu12_PbPb_0_v2.root",
+	"/afs/cern.ch/user/g/gbak/public/html/cms_private/TnP_PbPb2018/Trg/Files/tnp_Ana_RD_L3Mu12_PbPb_0_v2_background.root",
+	"/afs/cern.ch/user/g/gbak/public/html/cms_private/TnP_PbPb2018/Trg/Files/tnp_Ana_RD_L3Mu12_PbPb_0_v2_mass.root",
+	"/afs/cern.ch/user/g/gbak/public/html/cms_private/TnP_PbPb2018/Trg/Files/tnp_Ana_RD_L3Mu12_PbPb_0_v2_signal.root",
 	};
 const char* fMCName[nSyst] = { 
-	"./v3/tnp_Ana_MC_L3Mu12_PbPb_0_v3_nominal.root",
-	/*
-	"./v3/tnp_Ana_MC_L3Mu12_PbPb_0_v3_bkg.root",
-	"./v3/tnp_Ana_MC_L3Mu12_PbPb_0_v3_mass.root",
-	"./v3/tnp_Ana_MC_L3Mu12_PbPb_0_v3_signal.root",
-	*/
+	"/afs/cern.ch/user/g/gbak/public/html/cms_private/TnP_PbPb2018/Trg/Files/tnp_Ana_MC_L3Mu12_PbPb_0_v2.root",
+	"/afs/cern.ch/user/g/gbak/public/html/cms_private/TnP_PbPb2018/Trg/Files/tnp_Ana_MC_L3Mu12_PbPb_0_v2_background.root",
+	"/afs/cern.ch/user/g/gbak/public/html/cms_private/TnP_PbPb2018/Trg/Files/tnp_Ana_MC_L3Mu12_PbPb_0_v2_mass.root",
+	"/afs/cern.ch/user/g/gbak/public/html/cms_private/TnP_PbPb2018/Trg/Files/tnp_Ana_MC_L3Mu12_PbPb_0_v2_signal.root",
 	};
 #endif
 
@@ -578,6 +574,7 @@ void TnPEffDraw_singleFile_hwan() {
 
 
 	pad1->cd();
+        double errSystMCVec[nbins_abseta][20][nSyst], errSystRDVec[nbins_abseta][20][nSyst];
 
 	// draw pt dependence in abseta bins 
 	TString header;
@@ -683,6 +680,8 @@ void TnPEffDraw_singleFile_hwan() {
 				yr[j] = ComPt_RD[k][i]->GetY()[j] / ComPt0_forRatio->GetY()[j];
 				yrlo[j] = ComPt_RD[k][i]->GetErrorYlow(j) / ComPt0_forRatio->GetY()[j];
 				yrhi[j] = ComPt_RD[k][i]->GetErrorYhigh(j) / ComPt0_forRatio->GetY()[j];
+                                errSystMCVec[i][j][k] = (ComPt_MC[k][i]->GetY()[j] - ComPt_MC[0][i]->GetY()[j]);
+                                errSystRDVec[i][j][k] = (ComPt_RD[k][i]->GetY()[j] - ComPt_RD[0][i]->GetY()[j]);
 			}
 			TGraphAsymmErrors *gratio = new TGraphAsymmErrors(nbins, xr, yr, xrlo, xrhi, yrlo, yrhi);
 			gratio->SetMarkerStyle(20);
@@ -797,14 +796,6 @@ void TnPEffDraw_singleFile_hwan() {
 				file_sfs << "MC " << etamin << " " << etamax << endl;
 				file_sfs << formula(fmc, 5) << endl;
 				file_sfs << endl;
-
-				// print the binned ratio to the other file
-				file_binnedsfs << "// " << etamin << " < |eta| < " << etamax << endl;
-				for (int i = 0; i<gratio->GetN(); i++) {
-					if (i>0) file_binnedsfs << "else ";
-					file_binnedsfs << "if (pt<" << gratio->GetX()[i] + gratio->GetEXhigh()[i] << ") return " << gratio->GetY()[i] << ";" << endl;
-				}
-				file_binnedsfs << endl;
 			}
 		}
 
@@ -826,7 +817,153 @@ void TnPEffDraw_singleFile_hwan() {
 #else
 	}
 #endif // ifdef MUIDTRG or STA
-	}
+        }
+
+        // Compute the systematic uncertainties
+        double errSystMC[nbins_abseta][20], errSystRD[nbins_abseta][20];
+        for (int i = 0; i < nbins_abseta; i++) {
+          TH1D histMC("tmpMC","tmpMC",ComPt_MC[0][i]->GetN(),
+                      ComPt_MC[0][i]->GetX()[0] - ComPt_MC[0][i]->GetEXlow()[0],
+                      ComPt_MC[0][i]->GetX()[ComPt_MC[0][i]->GetN()] - ComPt_MC[0][i]->GetEXlow()[ComPt_MC[0][i]->GetN()]);
+          TH1D histRD("tmpRD","tmpRD",ComPt_MC[0][i]->GetN(),
+                      ComPt_MC[0][i]->GetX()[0] - ComPt_MC[0][i]->GetEXlow()[0],
+                      ComPt_MC[0][i]->GetX()[ComPt_MC[0][i]->GetN()] - ComPt_MC[0][i]->GetEXlow()[ComPt_MC[0][i]->GetN()]);
+          for (int j = 0; j < ComPt_MC[0][i]->GetN(); j++) {
+            // Maximum
+            /*
+            double errMC=-99999., errRD=-99999.;
+            for (int k = 0; k < nSyst; k++) {
+              errMC = std::max(errMC, fabs(errSystMCVec[i][j][k]));
+              errRD = std::max(errRD, fabs(errSystRDVec[i][j][k]));
+            }
+            */
+            // Average
+            double errMC=0., errRD=0.;
+            for (int k = 0; k < nSyst; k++) {
+              errMC += fabs(errSystMCVec[i][j][k]);
+              errRD += fabs(errSystRDVec[i][j][k]);
+            }
+            errMC /= (nSyst-1);
+            errRD /= (nSyst-1);
+            histMC.SetBinContent(j, errMC);
+            histRD.SetBinContent(j, errRD);
+          }
+          histRD.Smooth(); histMC.Smooth();
+          for (int j = 0; j < ComPt_MC[0][i]->GetN(); j++) {
+            errSystMC[i][j] = histMC.GetBinContent(j);
+            errSystRD[i][j] = histRD.GetBinContent(j);
+          }
+        }
+
+        // print the binned ratio to the other file
+        file_binnedsfs << "double tnp_weight_trig_pbpb(double pt, double eta, int idx)" << endl;
+        file_binnedsfs << "{" << endl;
+        file_binnedsfs << "  double num=1.0, den=1.0;" << endl;
+        // Nominal efficiencies
+        file_binnedsfs << endl;
+        file_binnedsfs << "  // MC" << endl;
+        for (int i = 0; i < nbins_abseta; i++) {
+          if (!rds_absetaPtDep_MC[0][i]->get()->find("abseta")) continue;
+          const auto& etamin = ((RooRealVar*)rds_absetaPtDep_MC[0][i]->get()->find("abseta"))->getBinning().binLow(0);
+          const auto& etamax = ((RooRealVar*)rds_absetaPtDep_MC[0][i]->get()->find("abseta"))->getBinning().binHigh(0);
+          if (!((etamin==0.0 && etamax==1.2) || (etamin==1.2 && etamax==2.1) || (etamin==2.1 && etamax==2.4))) continue;
+          file_binnedsfs << ((etamin==0) ? "  if " : "  else if ") << "(fabs(eta) > " << etamin << " && fabs(eta) <= " << etamax << ") { " << endl;
+          const auto& nbins_pt = ComPt_MC[0][i]->GetN();
+          for (int j = 0; j < nbins_pt; j++) {
+            const auto& ptmin = ComPt_MC[0][i]->GetX()[j] - ComPt_MC[0][i]->GetEXlow()[j];
+            const auto& ptmax = ComPt_MC[0][i]->GetX()[j+1] - ComPt_MC[0][i]->GetEXlow()[j+1];
+            file_binnedsfs << ((j==0) ? "    if " : "    else if ") << "(pt > " << ptmin << " && pt <= " << (j==(nbins_pt-1) ? 9999. : ptmax) << ") den = " << ComPt_MC[0][i]->GetY()[j] << ";" << endl;
+          }
+          file_binnedsfs << "  }" << endl;
+        }
+        file_binnedsfs << endl;
+        file_binnedsfs << "  // data" << endl;
+        file_binnedsfs << "  if (idx <= 0 || idx > 10) { // nominal" << endl;
+        for (int i = 0; i < nbins_abseta; i++) {
+          if (!rds_absetaPtDep_RD[0][i]->get()->find("abseta")) continue;
+          const auto& etamin = ((RooRealVar*)rds_absetaPtDep_RD[0][i]->get()->find("abseta"))->getBinning().binLow(0);
+          const auto& etamax = ((RooRealVar*)rds_absetaPtDep_RD[0][i]->get()->find("abseta"))->getBinning().binHigh(0);
+          if (!((etamin==0.0 && etamax==1.2) || (etamin==1.2 && etamax==2.1) || (etamin==2.1 && etamax==2.4))) continue;
+          file_binnedsfs << ((etamin==0) ? "    if " : "    else if ") << "(fabs(eta) > " << etamin << " && fabs(eta) <= " << etamax << ") { " << endl;
+          const auto& nbins_pt = ComPt_RD[0][i]->GetN();
+          for (int j = 0; j < nbins_pt; j++) {
+            const auto& ptmin = ComPt_RD[0][i]->GetX()[j] - ComPt_RD[0][i]->GetEXlow()[j];
+            const auto& ptmax = ComPt_RD[0][i]->GetX()[j+1] - ComPt_RD[0][i]->GetEXlow()[j+1];
+            file_binnedsfs << ((j==0) ? "      if " : "      else if ") << "(pt > " << ptmin << " && pt <= " << (j==(nbins_pt-1) ? 9999. : ptmax) << ") num = " << ComPt_RD[0][i]->GetY()[j] << ";" << endl;
+          }
+          file_binnedsfs << "    }" << endl;
+        }
+        file_binnedsfs << "  }" << endl;
+        file_binnedsfs << "  else if (idx == 1) { // stat up" << endl;
+        for (int i = 0; i < nbins_abseta; i++) {
+          if (!rds_absetaPtDep_RD[0][i]->get()->find("abseta")) continue;
+          const auto& etamin = ((RooRealVar*)rds_absetaPtDep_RD[0][i]->get()->find("abseta"))->getBinning().binLow(0);
+          const auto& etamax = ((RooRealVar*)rds_absetaPtDep_RD[0][i]->get()->find("abseta"))->getBinning().binHigh(0);
+          if (!((etamin==0.0 && etamax==1.2) || (etamin==1.2 && etamax==2.1) || (etamin==2.1 && etamax==2.4))) continue;
+          file_binnedsfs << ((etamin==0) ? "    if " : "    else if ") << "(fabs(eta) > " << etamin << " && fabs(eta) <= " << etamax << ") { " << endl;
+          const auto& nbins_pt = ComPt_RD[0][i]->GetN();
+          for (int j = 0; j < nbins_pt; j++) {
+            const auto& ptmin = ComPt_RD[0][i]->GetX()[j] - ComPt_RD[0][i]->GetEXlow()[j];
+            const auto& ptmax = ComPt_RD[0][i]->GetX()[j+1] - ComPt_RD[0][i]->GetEXlow()[j+1];
+            file_binnedsfs << ((j==0) ? "      if " : "      else if ") << "(pt > " << ptmin << " && pt <= " << (j==(nbins_pt-1) ? 9999. : ptmax) << ") num = " << ComPt_RD[0][i]->GetY()[j]+ComPt_RD[0][i]->GetErrorYhigh(j) << ";" << endl;
+          }
+          file_binnedsfs << "    }" << endl;
+        }
+        file_binnedsfs << "  }" << endl;
+        file_binnedsfs << "  else if (idx == 2) { // stat down" << endl;
+        for (int i = 0; i < nbins_abseta; i++) {
+          if (!rds_absetaPtDep_RD[0][i]->get()->find("abseta")) continue;
+          const auto& etamin = ((RooRealVar*)rds_absetaPtDep_RD[0][i]->get()->find("abseta"))->getBinning().binLow(0);
+          const auto& etamax = ((RooRealVar*)rds_absetaPtDep_RD[0][i]->get()->find("abseta"))->getBinning().binHigh(0);
+          if (!((etamin==0.0 && etamax==1.2) || (etamin==1.2 && etamax==2.1) || (etamin==2.1 && etamax==2.4))) continue;
+          file_binnedsfs << ((etamin==0) ? "    if " : "    else if ") << "(fabs(eta) > " << etamin << " && fabs(eta) <= " << etamax << ") { " << endl;
+          const auto& nbins_pt = ComPt_RD[0][i]->GetN();
+          for (int j = 0; j < nbins_pt; j++) {
+            const auto& ptmin = ComPt_RD[0][i]->GetX()[j] - ComPt_RD[0][i]->GetEXlow()[j];
+            const auto& ptmax = ComPt_RD[0][i]->GetX()[j+1] - ComPt_RD[0][i]->GetEXlow()[j+1];
+            file_binnedsfs << ((j==0) ? "      if " : "      else if ") << "(pt > " << ptmin << " && pt <= " << (j==(nbins_pt-1) ? 9999. : ptmax) << ") num = " << ComPt_RD[0][i]->GetY()[j]-ComPt_RD[0][i]->GetErrorYlow(j) << ";" << endl;
+          }
+          file_binnedsfs << "    }" << endl;
+        }
+        file_binnedsfs << "  }" << endl;
+        file_binnedsfs << "  else if (idx == -1) { // syst up" << endl;
+        for (int i = 0; i < nbins_abseta; i++) {
+          if (!rds_absetaPtDep_RD[0][i]->get()->find("abseta")) continue;
+          const auto& etamin = ((RooRealVar*)rds_absetaPtDep_RD[0][i]->get()->find("abseta"))->getBinning().binLow(0);
+          const auto& etamax = ((RooRealVar*)rds_absetaPtDep_RD[0][i]->get()->find("abseta"))->getBinning().binHigh(0);
+          if (!((etamin==0.0 && etamax==1.2) || (etamin==1.2 && etamax==2.1) || (etamin==2.1 && etamax==2.4))) continue;
+          file_binnedsfs << ((etamin==0) ? "    if " : "    else if ") << "(fabs(eta) > " << etamin << " && fabs(eta) <= " << etamax << ") { " << endl;
+          const auto& nbins_pt = ComPt_RD[0][i]->GetN();
+          for (int j = 0; j < nbins_pt; j++) {
+            const auto& ptmin = ComPt_RD[0][i]->GetX()[j] - ComPt_RD[0][i]->GetEXlow()[j];
+            const auto& ptmax = ComPt_RD[0][i]->GetX()[j+1] - ComPt_RD[0][i]->GetEXlow()[j+1];
+            file_binnedsfs << ((j==0) ? "      if " : "      else if ") << "(pt > " << ptmin << " && pt <= " << (j==(nbins_pt-1) ? 9999. : ptmax) << ") num = " << ComPt_RD[0][i]->GetY()[j]+errSystRD[i][j] << ";" << endl;
+          }
+          file_binnedsfs << "    }" << endl;
+        }
+        file_binnedsfs << "  }" << endl;
+        file_binnedsfs << "  else if (idx == -2) { // syst down" << endl;
+        for (int i = 0; i < nbins_abseta; i++) {
+          if (!rds_absetaPtDep_RD[0][i]->get()->find("abseta")) continue;
+          const auto& etamin = ((RooRealVar*)rds_absetaPtDep_RD[0][i]->get()->find("abseta"))->getBinning().binLow(0);
+          const auto& etamax = ((RooRealVar*)rds_absetaPtDep_RD[0][i]->get()->find("abseta"))->getBinning().binHigh(0);
+          if (!((etamin==0.0 && etamax==1.2) || (etamin==1.2 && etamax==2.1) || (etamin==2.1 && etamax==2.4))) continue;
+          file_binnedsfs << ((etamin==0) ? "    if " : "    else if ") << "(fabs(eta) > " << etamin << " && fabs(eta) <= " << etamax << ") { " << endl;
+          const auto& nbins_pt = ComPt_RD[0][i]->GetN();
+          for (int j = 0; j < nbins_pt; j++) {
+            const auto& ptmin = ComPt_RD[0][i]->GetX()[j] - ComPt_RD[0][i]->GetEXlow()[j];
+            const auto& ptmax = ComPt_RD[0][i]->GetX()[j+1] - ComPt_RD[0][i]->GetEXlow()[j+1];
+            file_binnedsfs << ((j==0) ? "      if " : "      else if ") << "(pt > " << ptmin << " && pt <= " << (j==(nbins_pt-1) ? 9999. : ptmax) << ") num = " << ComPt_RD[0][i]->GetY()[j]-errSystRD[i][j] << ";" << endl;
+          }
+          file_binnedsfs << "    }" << endl;
+        }
+        file_binnedsfs << "  }" << endl;
+        file_binnedsfs << endl;
+        file_binnedsfs << "  if (idx == 200) den = 1.0;" << endl;
+        file_binnedsfs << "  if (idx == 300) num = den * den;" << endl;
+        file_binnedsfs << endl;
+        file_binnedsfs << "  return (num/den);" << endl;
+        file_binnedsfs << "}" << endl;
 
 	//---------- This is for eta dependence
 	TLegend *leg1 = new TLegend(0.43, 0.05, 0.66, 0.26);
