@@ -204,16 +204,16 @@ TString cutLegend("Trigger");
 const double effmin = 0.6;
 const double sfrange = 0.1;
 const char* fDataName[nSyst] = { 
-	"/afs/cern.ch/user/g/gbak/public/html/cms_private/TnP_PbPb2018/Trg/Files/tnp_Ana_RD_L3Mu12_PbPb_0_v2.root",
-	"/afs/cern.ch/user/g/gbak/public/html/cms_private/TnP_PbPb2018/Trg/Files/tnp_Ana_RD_L3Mu12_PbPb_0_v2_background.root",
-	"/afs/cern.ch/user/g/gbak/public/html/cms_private/TnP_PbPb2018/Trg/Files/tnp_Ana_RD_L3Mu12_PbPb_0_v2_mass.root",
-	"/afs/cern.ch/user/g/gbak/public/html/cms_private/TnP_PbPb2018/Trg/Files/tnp_Ana_RD_L3Mu12_PbPb_0_v2_signal.root",
+	"/afs/cern.ch/user/g/gbak/public/html/cms_private/TnP_PbPb2018/Trg/Files/tnp_Ana_RD_L3Mu12_PbPb_0_v3_nominal.root",
+	"/afs/cern.ch/user/g/gbak/public/html/cms_private/TnP_PbPb2018/Trg/Files/tnp_Ana_RD_L3Mu12_PbPb_0_v3_bkg.root",
+	"/afs/cern.ch/user/g/gbak/public/html/cms_private/TnP_PbPb2018/Trg/Files/tnp_Ana_RD_L3Mu12_PbPb_0_v3_mass.root",
+	"/afs/cern.ch/user/g/gbak/public/html/cms_private/TnP_PbPb2018/Trg/Files/tnp_Ana_RD_L3Mu12_PbPb_0_v3_signal.root",
 	};
 const char* fMCName[nSyst] = { 
-	"/afs/cern.ch/user/g/gbak/public/html/cms_private/TnP_PbPb2018/Trg/Files/tnp_Ana_MC_L3Mu12_PbPb_0_v2.root",
-	"/afs/cern.ch/user/g/gbak/public/html/cms_private/TnP_PbPb2018/Trg/Files/tnp_Ana_MC_L3Mu12_PbPb_0_v2_background.root",
-	"/afs/cern.ch/user/g/gbak/public/html/cms_private/TnP_PbPb2018/Trg/Files/tnp_Ana_MC_L3Mu12_PbPb_0_v2_mass.root",
-	"/afs/cern.ch/user/g/gbak/public/html/cms_private/TnP_PbPb2018/Trg/Files/tnp_Ana_MC_L3Mu12_PbPb_0_v2_signal.root",
+	"/afs/cern.ch/user/g/gbak/public/html/cms_private/TnP_PbPb2018/Trg/Files/tnp_Ana_MC_L3Mu12_PbPb_0_v3_nominal.root",
+	"/afs/cern.ch/user/g/gbak/public/html/cms_private/TnP_PbPb2018/Trg/Files/tnp_Ana_MC_L3Mu12_PbPb_0_v3_bkg.root",
+	"/afs/cern.ch/user/g/gbak/public/html/cms_private/TnP_PbPb2018/Trg/Files/tnp_Ana_MC_L3Mu12_PbPb_0_v3_mass.root",
+	"/afs/cern.ch/user/g/gbak/public/html/cms_private/TnP_PbPb2018/Trg/Files/tnp_Ana_MC_L3Mu12_PbPb_0_v3_signal.root",
 	};
 #endif
 
@@ -830,14 +830,13 @@ void TnPEffDraw_singleFile_hwan() {
                       ComPt_MC[0][i]->GetX()[ComPt_MC[0][i]->GetN()] - ComPt_MC[0][i]->GetEXlow()[ComPt_MC[0][i]->GetN()]);
           for (int j = 0; j < ComPt_MC[0][i]->GetN(); j++) {
             // Maximum
-            /*
             double errMC=-99999., errRD=-99999.;
             for (int k = 0; k < nSyst; k++) {
               errMC = std::max(errMC, fabs(errSystMCVec[i][j][k]));
               errRD = std::max(errRD, fabs(errSystRDVec[i][j][k]));
             }
-            */
             // Average
+            /*
             double errMC=0., errRD=0.;
             for (int k = 0; k < nSyst; k++) {
               errMC += fabs(errSystMCVec[i][j][k]);
@@ -845,6 +844,7 @@ void TnPEffDraw_singleFile_hwan() {
             }
             errMC /= (nSyst-1);
             errRD /= (nSyst-1);
+            */
             histMC.SetBinContent(j, errMC);
             histRD.SetBinContent(j, errRD);
           }
@@ -926,7 +926,7 @@ void TnPEffDraw_singleFile_hwan() {
           file_binnedsfs << "    }" << endl;
         }
         file_binnedsfs << "  }" << endl;
-        file_binnedsfs << "  else if (idx == -1) { // syst up" << endl;
+        file_binnedsfs << "  if (idx == -1) { // TnP fit syst up" << endl;
         for (int i = 0; i < nbins_abseta; i++) {
           if (!rds_absetaPtDep_RD[0][i]->get()->find("abseta")) continue;
           const auto& etamin = ((RooRealVar*)rds_absetaPtDep_RD[0][i]->get()->find("abseta"))->getBinning().binLow(0);
@@ -942,7 +942,7 @@ void TnPEffDraw_singleFile_hwan() {
           file_binnedsfs << "    }" << endl;
         }
         file_binnedsfs << "  }" << endl;
-        file_binnedsfs << "  else if (idx == -2) { // syst down" << endl;
+        file_binnedsfs << "  else if (idx == -2) { // TnP fit syst down" << endl;
         for (int i = 0; i < nbins_abseta; i++) {
           if (!rds_absetaPtDep_RD[0][i]->get()->find("abseta")) continue;
           const auto& etamin = ((RooRealVar*)rds_absetaPtDep_RD[0][i]->get()->find("abseta"))->getBinning().binLow(0);
@@ -958,6 +958,8 @@ void TnPEffDraw_singleFile_hwan() {
           file_binnedsfs << "    }" << endl;
         }
         file_binnedsfs << "  }" << endl;
+        file_binnedsfs << "  else if (idx == -3) { num *= (1.0+0.006); } // run-dependence syst up" << endl;
+        file_binnedsfs << "  else if (idx == -4) { num *= (1.0-0.006); } // run-dependence syst down" << endl;
         file_binnedsfs << endl;
         file_binnedsfs << "  if (idx == 200) den = 1.0;" << endl;
         file_binnedsfs << "  if (idx == 300) num = den * den;" << endl;
