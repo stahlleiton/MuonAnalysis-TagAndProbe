@@ -13,12 +13,14 @@
 //   * idx = +1: stat variation,  +1 sigma
 //   * idx = +2: stat variation,  -1 sigma
 //
-// - Trigger: (tnp_weight_trg_pbpb)   NOT UPDATED
+// - Trigger: (tnp_weight_trg_pbpb)  Preliminary
 //   * idx = 0:  nominal
-//   * idx = 1..100: toy variations, stat. only
-//   * idx = -1: syst variation, "new_MAX", +1 sigma
-//   * idx = -2: syst variation, "new_MAX", -1 sigma
-//   * idx = -10: binned
+//   * idx = -1: TnP syst variation,  +1 sigma
+//   * idx = -2: TnP syst variation,  -1 sigma
+//   * idx = +1: stat variation,  +1 sigma
+//   * idx = +2: stat variation,  -1 sigma
+//   * idx = -3: run variation,  +1 sigma
+//   * idx = -4: run variation,  -1 sigma
 
 // For all:
 //   * idx = +200: tnp efficiency for data
@@ -27,7 +29,7 @@
 // THE INDIVIDUAL SFs
 // ++++++++++++++++++
 double tnp_weight_muid_pbpb(double eta, int idx=0);
-double tnp_weight_trg_pbpb(double pt, double eta, int idx=0);  // NOT UPDATED
+double tnp_weight_trig_pbpb(double pt, double eta, int idx=0);
 
 
 
