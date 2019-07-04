@@ -27,6 +27,7 @@ VEFFICIENCYSET =cms.VPSet(
             pt  = cms.vdouble(0,30),
             eta = cms.vdouble(-2.4,2.4),
             isSTA = cms.vstring("true"),
+            InAcceptance_2018_Tight = cms.vstring("true"),
             ),
          BinToPDFmap = cms.vstring(PDFName)
          )
@@ -39,6 +40,7 @@ VEFFICIENCYSET =cms.VPSet(
             pt = cms.vdouble(0, 3.5, 7., 10.5, 14.5, 30.0),
             eta = cms.vdouble(-2.4,2.4),
             isSTA = cms.vstring("true"),
+            InAcceptance_2018_Tight = cms.vstring("true"),
             ),
          BinToPDFmap = cms.vstring(PDFName)
          )
@@ -51,6 +53,7 @@ VEFFICIENCYSET =cms.VPSet(
             pt = cms.vdouble(0, 3.5, 7., 10.5, 14.5, 30.0),
             abseta = cms.vdouble(0.0,1.2),
             isSTA = cms.vstring("true"),
+            InAcceptance_2018_Tight = cms.vstring("true"),
             ),
          BinToPDFmap = cms.vstring(PDFName)
          )
@@ -63,6 +66,7 @@ VEFFICIENCYSET =cms.VPSet(
             pt = cms.vdouble(0, 5., 10., 30.0),
             abseta = cms.vdouble(1.2,1.8),
             isSTA = cms.vstring("true"),
+            InAcceptance_2018_Tight = cms.vstring("true"),
             ),
          BinToPDFmap = cms.vstring(PDFName)
          )
@@ -75,6 +79,7 @@ VEFFICIENCYSET =cms.VPSet(
             pt = cms.vdouble(0, 5., 10., 30.0),
             abseta = cms.vdouble(1.8,2.1),
             isSTA = cms.vstring("true"),
+            InAcceptance_2018_Tight = cms.vstring("true"),
             ),
          BinToPDFmap = cms.vstring(PDFName)
          )
@@ -87,6 +92,7 @@ VEFFICIENCYSET =cms.VPSet(
             pt = cms.vdouble(0, 5., 10., 30.0),
             abseta = cms.vdouble(2.1,2.4),
             isSTA = cms.vstring("true"),
+            InAcceptance_2018_Tight = cms.vstring("true"),
             ),
          BinToPDFmap = cms.vstring(PDFName)
          )
@@ -99,6 +105,7 @@ VEFFICIENCYSET =cms.VPSet(
             eta = cms.vdouble(-2.4,-1.6,-1.2,-0.9,-0.6,-0.3,0.3,0.6,0.9,1.2,1.6,2.4),
             pt = cms.vdouble(0.,30.0),
             isSTA = cms.vstring("true"),
+            InAcceptance_2018_Tight = cms.vstring("true"),
             ),
          BinToPDFmap = cms.vstring(PDFName)
          )
@@ -111,6 +118,7 @@ VEFFICIENCYSET =cms.VPSet(
             abseta = cms.vdouble(0,1.2,1.8,2.1,2.4),
             pt = cms.vdouble(0,30.0),
             isSTA = cms.vstring("true"),
+            InAcceptance_2018_Tight = cms.vstring("true"),
             ),
          BinToPDFmap = cms.vstring(PDFName)
          )
@@ -124,6 +132,7 @@ VEFFICIENCYSET =cms.VPSet(
             pt = cms.vdouble(0.,30.0),
             tag_hiBin = cms.vdouble(0,10,20,40,60,80,100,150,200),
             isSTA = cms.vstring("true"),
+            InAcceptance_2018_Tight = cms.vstring("true"),
             ),
          BinToPDFmap = cms.vstring(PDFName)
          )
@@ -141,10 +150,10 @@ if scenario == "0": EFFICIENCYSET = cms.PSet(VEFFICIENCYSET[0],VEFFICIENCYSET[1]
 
 process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     # IO parameters:
-    InputFileNames = cms.vstring("file:/eos/cms/store/group/phys_heavyions/dileptons/TNPTagAndProbe2018/MC2018/PbPb502TeV/tnpJpsi_MC_PbPb_mod.root"),
+    InputFileNames = cms.vstring("file:/eos/cms/store/group/phys_heavyions/dileptons/TNPTagAndProbe2018/MC2018/PbPb502TeV/tnpJpsi_MC_PbPb_Official_mod_v3.root"),
     InputDirectoryName = cms.string("tpTreeSta"),
     InputTreeName = cms.string("fitter_tree"),
-    OutputFileName = cms.string("Output/Trk/tnp_Ana_MC_PbPb_Trk_%s_%s.root" % ("mass2545", scenario)),
+    OutputFileName = cms.string("Output/Trk/tnp_Ana_MC_PbPb_Trk_%s_%s.root" % ("mass2347", scenario)),
     #numbrer of CPUs to use for fitting
     NumCPU = cms.uint32(16),
     # specifies wether to save the RooWorkspace containing the data for each bin and
@@ -157,7 +166,7 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     
     # defines all the real variables of the probes available in the input tree; can be used to select a subset of the probes
     Variables = cms.PSet(
-        mass             = cms.vstring("Tag-Probe Mass", "2.5", "4.5", "GeV/c^{2}"),  # mass range syst:  2.5-4.5 nominal: 2.0-5.0
+        mass             = cms.vstring("Tag-Probe Mass", "2.3", "4.7", "GeV/c^{2}"),  # mass range syst:  2.3-4.7 nominal: 2.0-5.0
         pt               = cms.vstring("Probe p_{T}", "0.0", "1000", "GeV/c"),
         p                = cms.vstring("Probe p", "0", "1000", "GeV/c"),
         eta              = cms.vstring("Probe #eta", "-2.4", "2.4", ""),
@@ -168,8 +177,9 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     ),
     # defines all the Flags on which one can test the probe against (if true, is 'pass', if false is 'failed')
     Categories = cms.PSet(
-        Glb        = cms.vstring("Glb", "dummy[true=1,false=0]"),
-        isSTA      = cms.vstring("isSTA", "dummy[true=1,false=0]"),
+       Glb        = cms.vstring("Glb", "dummy[true=1,false=0]"),
+       isSTA      = cms.vstring("isSTA", "dummy[true=1,false=0]"),
+       InAcceptance_2018_Tight = cms.vstring("InAcceptance_2018_Tight", "dummy[true=1,false=0]"),
     ),
 
     # defines all the PDFs that will be available for the efficiency calculations; uses RooFit's "factory" syntax;

@@ -15,117 +15,126 @@ process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1) )
 PDFName = "cbPlusPol1" # cbPlusPol1, cbPlusPol2, cbGausPlusPol1, cbGausPlusPol2 
 
 VEFFICIENCYSET =cms.VPSet(
-# Order: 0 total, 1 pT, 2-5 pT fits in abseta bins, 6 abseta, 7 eta, 8 centrality NOTE: IS NOT SAME AS SCENARIO
-    cms.PSet(
-        MuId_1bin = cms.PSet(
-            EfficiencyCategoryAndState = cms.vstring("isHybridSoftMuon2015","true"),
-            UnbinnedVariables = cms.vstring("mass","weight"),
-            BinnedVariables = cms.PSet(
-                pt = cms.vdouble(1.8, 30),
-                eta = cms.vdouble(-2.4, 2.4),
-                Glb = cms.vstring("true"),
+   # Order: 0 total, 1 pT, 2-5 pT fits in abseta bins, 6 abseta, 7 eta, 8 centrality NOTE: IS NOT SAME AS SCENARIO
+   cms.PSet(
+      MuId_1bin = cms.PSet(
+         EfficiencyCategoryAndState = cms.vstring("isHybridSoftMuon2018","true"),
+         UnbinnedVariables = cms.vstring("mass","weight"),
+         BinnedVariables = cms.PSet(
+            pt = cms.vdouble(1.8, 30),
+            eta = cms.vdouble(-2.4, 2.4),
+            Glb = cms.vstring("true"),
+            InAcceptance_2018_Tight = cms.vstring("true"),
             ),
-            BinToPDFmap = cms.vstring(PDFName)
-            )
-        ),
-    cms.PSet(
-        MuId_pt = cms.PSet(
-            EfficiencyCategoryAndState = cms.vstring("isHybridSoftMuon2015","true"),
-            UnbinnedVariables = cms.vstring("mass","weight"),
-            BinnedVariables = cms.PSet(
-                pt = cms.vdouble(1.8, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6.5, 8., 10.5, 14, 18, 30.),
-                abseta = cms.vdouble(-2.4, 2.4),
-                Glb = cms.vstring("true"),
+         BinToPDFmap = cms.vstring(PDFName)
+         )
+      ),
+   cms.PSet(
+      MuId_pt = cms.PSet(
+         EfficiencyCategoryAndState = cms.vstring("isHybridSoftMuon2018","true"),
+         UnbinnedVariables = cms.vstring("mass","weight"),
+         BinnedVariables = cms.PSet(
+            pt = cms.vdouble(1.8, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6.5, 8., 10.5, 14, 18, 30.),
+            abseta = cms.vdouble(-2.4, 2.4),
+            Glb = cms.vstring("true"),
+            InAcceptance_2018_Tight = cms.vstring("true"),
             ),
-            BinToPDFmap = cms.vstring(PDFName)
-            )
-        ),
-    cms.PSet(
-        MuId_abseta00_12 = cms.PSet(
-            EfficiencyCategoryAndState = cms.vstring("isHybridSoftMuon2015","true"),
-            UnbinnedVariables = cms.vstring("mass","weight"),
-            BinnedVariables = cms.PSet(
-                pt = cms.vdouble(3.5, 4, 4.5, 5, 5.5, 6.5, 8., 10.5, 14, 18, 30.),
-                abseta = cms.vdouble(0, 1.2),
-                Glb = cms.vstring("true"),
+         BinToPDFmap = cms.vstring(PDFName)
+         )
+      ),
+   cms.PSet(
+      MuId_abseta00_12 = cms.PSet(
+         EfficiencyCategoryAndState = cms.vstring("isHybridSoftMuon2018","true"),
+         UnbinnedVariables = cms.vstring("mass","weight"),
+         BinnedVariables = cms.PSet(
+            pt = cms.vdouble(3.5, 4, 4.5, 5, 5.5, 6.5, 8., 10.5, 14, 18, 30.),
+            abseta = cms.vdouble(0, 1.2),
+            Glb = cms.vstring("true"),
+            InAcceptance_2018_Tight = cms.vstring("true"),
             ),
-            BinToPDFmap = cms.vstring(PDFName)
-            )
-        ),
-    cms.PSet(    
-         MuId_abseta12_18 = cms.PSet(
-             EfficiencyCategoryAndState = cms.vstring("isHybridSoftMuon2015","true"),
-             UnbinnedVariables = cms.vstring("mass","weight"),
-             BinnedVariables = cms.PSet(
-                 pt = cms.vdouble(2.37, 3.0, 3.5, 4, 4.5, 5., 6., 7.5, 10, 15, 30),
-                 abseta = cms.vdouble(1.2,1.8),
-                 Glb = cms.vstring("true"),
-             ),
-             BinToPDFmap = cms.vstring(PDFName)
-             )
-         ),
-    cms.PSet(
-         MuId_abseta18_21 = cms.PSet(
-             EfficiencyCategoryAndState = cms.vstring("isHybridSoftMuon2015","true"),
-             UnbinnedVariables = cms.vstring("mass","weight"),
-             BinnedVariables = cms.PSet(
-                 pt = cms.vdouble(1.8, 2.5, 3, 3.5, 4, 4.5, 5.5, 7., 9, 12, 20),
-                 abseta = cms.vdouble(1.8,2.1),
-                 Glb = cms.vstring("true"),
-             ),
-             BinToPDFmap = cms.vstring(PDFName)
-             )
-         ),
-    cms.PSet(
-         MuId_abseta21_24 = cms.PSet(
-             EfficiencyCategoryAndState = cms.vstring("isHybridSoftMuon2015","true"),
-             UnbinnedVariables = cms.vstring("mass","weight"),
-             BinnedVariables = cms.PSet(
-                 pt = cms.vdouble(1.8, 2.2, 2.7, 3.2, 3.7, 4.7, 8.,11, 14, 20.),
-                 abseta = cms.vdouble(2.1,2.4),
-                 Glb = cms.vstring("true"),
-             ),
-             BinToPDFmap = cms.vstring(PDFName)
-             )
-         ),
-    cms.PSet(
-          MuId_absetadep = cms.PSet(
-             EfficiencyCategoryAndState = cms.vstring("isHybridSoftMuon2015","true"),
-             UnbinnedVariables = cms.vstring("mass","weight"),
-             BinnedVariables = cms.PSet(
-                 pt = cms.vdouble(1.8, 30),
-                 abseta = cms.vdouble(0,1.2,1.8,2.1,2.4),
-                 Glb = cms.vstring("true"),
-             ),
-             BinToPDFmap = cms.vstring(PDFName)
-             )
-         ),   
-    cms.PSet(     
-         MuId_etadep = cms.PSet(
-             EfficiencyCategoryAndState = cms.vstring("isHybridSoftMuon2015","true"),
-             UnbinnedVariables = cms.vstring("mass","weight"),
-             BinnedVariables = cms.PSet(
-                 pt = cms.vdouble(1.8, 30),
-                 eta = cms.vdouble(-2.4,-2.1,-1.6,-1.2,-0.9,-0.6,-0.3,0,0.3,0.6,0.9,1.2,1.6,2.1,2.4),
-                 Glb = cms.vstring("true"),
-             ),
-             BinToPDFmap = cms.vstring(PDFName)
-             )
-         ),
-    cms.PSet(
-         MuId_centdep = cms.PSet(
-                EfficiencyCategoryAndState = cms.vstring("isHybridSoftMuon2015","true"),
-                UnbinnedVariables = cms.vstring("mass","weight"),
-                BinnedVariables = cms.PSet(
-                    pt = cms.vdouble(1.8, 30),
-                    eta = cms.vdouble(-2.4,2.4),
-                    tag_hiBin = cms.vdouble(0,10,20,40,60,80,100,150,200),
-                    Glb = cms.vstring("true"),
-                ),
-                BinToPDFmap = cms.vstring(PDFName)
-                )
-         ),
-    )
+         BinToPDFmap = cms.vstring(PDFName)
+         )
+      ),
+   cms.PSet(    
+      MuId_abseta12_18 = cms.PSet(
+         EfficiencyCategoryAndState = cms.vstring("isHybridSoftMuon2018","true"),
+         UnbinnedVariables = cms.vstring("mass","weight"),
+         BinnedVariables = cms.PSet(
+            pt = cms.vdouble(2.37, 3.0, 3.5, 4, 4.5, 5., 6., 7.5, 10, 15, 30),
+            abseta = cms.vdouble(1.2,1.8),
+            Glb = cms.vstring("true"),
+            InAcceptance_2018_Tight = cms.vstring("true"),
+            ),
+         BinToPDFmap = cms.vstring(PDFName)
+         )
+      ),
+   cms.PSet(
+      MuId_abseta18_21 = cms.PSet(
+         EfficiencyCategoryAndState = cms.vstring("isHybridSoftMuon2018","true"),
+         UnbinnedVariables = cms.vstring("mass","weight"),
+         BinnedVariables = cms.PSet(
+            pt = cms.vdouble(1.8, 2.5, 3, 3.5, 4, 4.5, 5.5, 7., 9, 12, 20),
+            abseta = cms.vdouble(1.8,2.1),
+            Glb = cms.vstring("true"),
+            InAcceptance_2018_Tight = cms.vstring("true"),
+            ),
+         BinToPDFmap = cms.vstring(PDFName)
+         )
+      ),
+   cms.PSet(
+      MuId_abseta21_24 = cms.PSet(
+         EfficiencyCategoryAndState = cms.vstring("isHybridSoftMuon2018","true"),
+         UnbinnedVariables = cms.vstring("mass","weight"),
+         BinnedVariables = cms.PSet(
+            pt = cms.vdouble(1.8, 2.2, 2.7, 3.2, 3.7, 4.7, 8.,11, 14, 20.),
+            abseta = cms.vdouble(2.1,2.4),
+            Glb = cms.vstring("true"),
+            InAcceptance_2018_Tight = cms.vstring("true"),
+            ),
+         BinToPDFmap = cms.vstring(PDFName)
+         )
+      ),
+   cms.PSet(
+      MuId_absetadep = cms.PSet(
+         EfficiencyCategoryAndState = cms.vstring("isHybridSoftMuon2018","true"),
+         UnbinnedVariables = cms.vstring("mass","weight"),
+         BinnedVariables = cms.PSet(
+            pt = cms.vdouble(1.8, 30),
+            abseta = cms.vdouble(0,1.2,1.8,2.1,2.4),
+            Glb = cms.vstring("true"),
+            InAcceptance_2018_Tight = cms.vstring("true"),
+            ),
+         BinToPDFmap = cms.vstring(PDFName)
+         )
+      ),   
+   cms.PSet(     
+      MuId_etadep = cms.PSet(
+         EfficiencyCategoryAndState = cms.vstring("isHybridSoftMuon2018","true"),
+         UnbinnedVariables = cms.vstring("mass","weight"),
+         BinnedVariables = cms.PSet(
+            pt = cms.vdouble(1.8, 30),
+            eta = cms.vdouble(-2.4,-2.1,-1.6,-1.2,-0.9,-0.6,-0.3,0,0.3,0.6,0.9,1.2,1.6,2.1,2.4),
+            Glb = cms.vstring("true"),
+            InAcceptance_2018_Tight = cms.vstring("true"),
+            ),
+         BinToPDFmap = cms.vstring(PDFName)
+         )
+      ),
+   cms.PSet(
+      MuId_centdep = cms.PSet(
+         EfficiencyCategoryAndState = cms.vstring("isHybridSoftMuon2018","true"),
+         UnbinnedVariables = cms.vstring("mass","weight"),
+         BinnedVariables = cms.PSet(
+            pt = cms.vdouble(1.8, 30),
+            eta = cms.vdouble(-2.4,2.4),
+            tag_hiBin = cms.vdouble(0,10,20,40,60,80,100,150,200),
+            Glb = cms.vstring("true"),
+            InAcceptance_2018_Tight = cms.vstring("true"),
+            ),
+         BinToPDFmap = cms.vstring(PDFName)
+         )
+      ),
+   )
 
 #Actual selection
 if scenario == "1": EFFICIENCYSET = cms.PSet(VEFFICIENCYSET[0], VEFFICIENCYSET[1])
@@ -139,10 +148,10 @@ if scenario == "0": EFFICIENCYSET = cms.PSet(VEFFICIENCYSET[0],VEFFICIENCYSET[1]
 
 process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     # IO parameters:
-    InputFileNames = cms.vstring("file:/eos/cms/store/group/phys_heavyions/dileptons/TNPTagAndProbe2018/MC2018/PbPb502TeV/tnpJpsi_MC_PbPb_mod.root"),
+    InputFileNames = cms.vstring("file:/eos/cms/store/group/phys_heavyions/dileptons/TNPTagAndProbe2018/MC2018/PbPb502TeV/tnpJpsi_MC_PbPb_Official_mod_v3.root"),
     InputDirectoryName = cms.string("tpTree"),
     InputTreeName = cms.string("fitter_tree"),
-    OutputFileName = cms.string("Output/MuonID/tnp_Ana_MC_PbPb_MuonID_%s_%s.root" % ("mass2834", scenario)),
+    OutputFileName = cms.string("Output/MuonID/tnp_Ana_MC_PbPb_MuonID_%s_%s.root" % ("mass2834", scenario)), #"mass2834" for mass range systematics
     #numbrer of CPUs to use for fitting
     NumCPU = cms.uint32(25),
     # specifies whether to save the RooWorkspace containing the data for each bin and
@@ -164,8 +173,9 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     ),
     # defines all the discrete variables of the probes available in the input tree and intended for use in the efficiency calculations
     Categories = cms.PSet(
-                          isHybridSoftMuon2015 = cms.vstring("isHybridSoftMuon2015", "dummy[true=1,false=0]"),
+                          isHybridSoftMuon2018 = cms.vstring("isHybridSoftMuon2018", "dummy[true=1,false=0]"),
                           Glb = cms.vstring("Glb", "dummy[true=1,false=0]"),
+                          InAcceptance_2018_Tight = cms.vstring("InAcceptance_2018_Tight", "dummy[true=1,false=0]"),
     ),
 
     # defines all the PDFs that will be available for the efficiency calculations; uses RooFit's "factory" syntax;
