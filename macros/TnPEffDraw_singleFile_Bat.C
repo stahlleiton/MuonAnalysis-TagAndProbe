@@ -807,7 +807,7 @@ void TnPEffDraw_singleFile_Bat() {
 		if (j==ComPt_RD[k][i]->GetN()-1) 
 		  file_binnedsfs << "{num = " << ComPt_RD[k][i]->GetY()[j] << ";" << " den = " << ComPt_MC[k][i]->GetY()[j] << ";}" << endl;
 		else
-		  file_binnedsfs << "if (pt<" << ComPt_RD[k][i]->GetX()[j] + ComPt_RD[k][i]->GetEXhigh()[j] << ") {num = " << ComPt_RD[k][i]->GetY()[j] << ";" << " den = " << ComPt_MC[k][i]->GetY()[j] << ";}" <<endl;
+		  file_binnedsfs << "if (x >= "<< ComPt_RD[k][i]->GetX()[j] - ComPt_RD[k][i]->GetEXlow()[j] << " && x <" << ComPt_RD[k][i]->GetX()[j] + ComPt_RD[k][i]->GetEXhigh()[j] << ") {num = " << ComPt_RD[k][i]->GetY()[j] << ";" << " den = " << ComPt_MC[k][i]->GetY()[j] << ";}" <<endl;
 	      }
 	      file_binnedsfs << "}"<< endl;
 	      /*
@@ -924,8 +924,8 @@ for (int k = 0; k < nSyst; k++)
 	  ErrDown = ComEta_RD[k]->GetErrorYlow(bin);
 	  ErrUp = ComEta_RD[k]->GetErrorYhigh(bin);
 	  //file_Eta << xVal << " " << yVal << " " << ErrDown << " " << ErrUp << endl;
-	  file_Eta <<"if (eta >= " <<(ComEta_RD[k]->GetX()[bin])-(ComEta_RD[k]->GetErrorXlow(bin));
-	  file_Eta << " && eta < "<<(ComEta_RD[k]->GetX()[bin])+(ComEta_RD[k]->GetErrorXhigh(bin));
+	  file_Eta <<"if (x >= " <<(ComEta_RD[k]->GetX()[bin])-(ComEta_RD[k]->GetErrorXlow(bin));
+	  file_Eta << " && x < "<<(ComEta_RD[k]->GetX()[bin])+(ComEta_RD[k]->GetErrorXhigh(bin));
 	  file_Eta <<") {num = " << yVal <<";";
 	  ComEta_MC[k]->GetPoint(bin, xVal, yVal);
 	  file_Eta <<" den = " << yVal <<";}"<< endl;
@@ -1449,7 +1449,7 @@ void plotSysts(TGraphAsymmErrors *graphs[nSyst], TCanvas *c1, TPad *p1, TH1F *h1
 	double diff = fabs(graphs[k]->GetY()[j] - ComPt0_forRatio->GetY()[j]);
 	if (diff>maxdiff) maxdiff = diff;
       }
-      file_syst << "if (x > " << ComPt0_forRatio->GetX()[j] - ComPt0_forRatio->GetEXlow()[j] <<" && x <= "<< ComPt0_forRatio->GetX()[j] + ComPt0_forRatio->GetEXhigh()[j] << ") syst = " << maxdiff <<";"<<endl;
+      file_syst << "if (x >= " << ComPt0_forRatio->GetX()[j] - ComPt0_forRatio->GetEXlow()[j] <<" && x < "<< ComPt0_forRatio->GetX()[j] + ComPt0_forRatio->GetEXhigh()[j] << ") syst = " << maxdiff <<";"<<endl;
     }
   file_syst.close();
   // save
