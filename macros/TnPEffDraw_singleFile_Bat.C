@@ -44,7 +44,7 @@ using namespace std;
 
 // Choose the efficiency type.
 // Possible values: MUIDTRG, TRK, STA, MUID, TRGL2JPSI, TRGL3JPSI, TRGL2UPSI, TRGL3UPSI
-#define TRK
+#define TRGL3UPSI
 // pp or PbPb?
 bool isPbPb = true; // if true, will compute the centrality dependence
 TString collTag = "PbPb"; // isPbPb ? "PbPb" : "pp";
@@ -805,9 +805,9 @@ void TnPEffDraw_singleFile_Bat() {
 	      for (int j = 0; j<ComPt_RD[k][i]->GetN(); j++) {
 		if (j>0) file_binnedsfs << "else ";
 		if (j==ComPt_RD[k][i]->GetN()-1) 
-		  file_binnedsfs << "{num = " << ComPt_RD[k][i]->GetY()[j] << ";" << " den = " << ComPt_MC[k][i]->GetY()[j] << ";}" << endl;
+		  file_binnedsfs << "{num = " << ComPt_RD[k][i]->GetY()[j] << ";" << " den = " << ComPt_MC[k][i]->GetY()[j] << "; statUp = "<< ComPt_RD[k][i]->GetEYhigh()[j] <<"; statDown = "<<ComPt_RD[k][i]->GetEYlow()[j]<< ";}" << endl;
 		else
-		  file_binnedsfs << "if (x >= "<< ComPt_RD[k][i]->GetX()[j] - ComPt_RD[k][i]->GetEXlow()[j] << " && x <" << ComPt_RD[k][i]->GetX()[j] + ComPt_RD[k][i]->GetEXhigh()[j] << ") {num = " << ComPt_RD[k][i]->GetY()[j] << ";" << " den = " << ComPt_MC[k][i]->GetY()[j] << ";}" <<endl;
+		  file_binnedsfs << "if (x >= "<< ComPt_RD[k][i]->GetX()[j] - ComPt_RD[k][i]->GetEXlow()[j] << " && x <" << ComPt_RD[k][i]->GetX()[j] + ComPt_RD[k][i]->GetEXhigh()[j] << ") {num = " << ComPt_RD[k][i]->GetY()[j] << ";" << " den = " << ComPt_MC[k][i]->GetY()[j] << "; statUp = "<< ComPt_RD[k][i]->GetEYhigh()[j] <<"; statDown = "<<ComPt_RD[k][i]->GetEYlow()[j]<<";}" <<endl;
 	      }
 	      file_binnedsfs << "}"<< endl;
 	      /*
@@ -928,7 +928,8 @@ for (int k = 0; k < nSyst; k++)
 	  file_Eta << " && x < "<<(ComEta_RD[k]->GetX()[bin])+(ComEta_RD[k]->GetErrorXhigh(bin));
 	  file_Eta <<") {num = " << yVal <<";";
 	  ComEta_MC[k]->GetPoint(bin, xVal, yVal);
-	  file_Eta <<" den = " << yVal <<";}"<< endl;
+	  file_Eta <<" den = " << yVal<<";";
+	  file_Eta <<" statUp = " <<ComEta_RD[k]->GetErrorYhigh(bin)<<"; statDown = "<<ComEta_RD[k]->GetErrorYlow(bin)<<";}"<< endl;
 	}
       /*
       file_Eta << endl << endl << "//MC " << endl << endl;
