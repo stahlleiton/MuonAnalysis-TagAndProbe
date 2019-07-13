@@ -19,8 +19,6 @@
 //   * idx = -2: TnP syst variation,  -1 sigma
 //   * idx = +1: stat variation,  +1 sigma
 //   * idx = +2: stat variation,  -1 sigma
-//   * idx = -3: run variation,  +1 sigma
-//   * idx = -4: run variation,  -1 sigma
 
 // For all:
 //   * idx = +200: tnp efficiency for data
