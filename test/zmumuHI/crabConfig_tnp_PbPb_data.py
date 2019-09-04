@@ -2,7 +2,7 @@ from CRABClient.UserUtilities import config, getUsernameFromSiteDB
 config = config()
 
 config.section_('General')
-config.General.requestName = 'TnP_HISingleMuon_ReReco_PbPb5TeV_2018_ZBoson_Data_20190428'
+config.General.requestName = 'TnP_HISingleMuon_ReReco_PbPb5TeV_2018_ZBoson_Data_20190808'
 config.General.workArea = 'crab_projects'
 config.General.transferOutputs = True
 config.General.transferLogs = False
@@ -18,7 +18,7 @@ config.section_('Data')
 config.Data.inputDataset ='/HISingleMuon/HIRun2018A-04Apr2019-v1/AOD'
 config.Data.allowNonValidInputDataset = True
 config.Data.inputDBS = 'global'
-config.Data.unitsPerJob = 10
+config.Data.unitsPerJob = 14
 config.Data.splitting = 'LumiBased'
 config.Data.lumiMask = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions18/HI/PromptReco/Cert_326381-327564_HI_PromptReco_Collisions18_JSON_HF_and_MuonPhys.txt'
 config.Data.runRange = '326381-327564'

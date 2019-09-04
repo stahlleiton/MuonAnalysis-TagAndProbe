@@ -8,7 +8,7 @@ process.options   = cms.untracked.PSet( wantSummary = cms.untracked.bool(True))
 process.MessageLogger.cerr.FwkReport.reportEvery = 1000
 
 process.source = cms.Source("PoolSource",
-    fileNames = cms.untracked.vstring('/store/user/anstahll/Dilepton/MC/Embedded/ZMM_5p02TeV_TuneCP5_Embd_RECO_22032019/ZMM_5p02TeV_TuneCP5_Embd/ZMM_5p02TeV_TuneCP5_Embd_RECO_22032019/190322_060727/0001/HIN-HINPbPbAutumn18DRHIMix-00049_1325.root'),
+    fileNames = cms.untracked.vstring('/store/himc/HINPbPbAutumn18DR/DYJetsToLL_MLL-50_TuneCP5_HydjetDrumMB_5p02TeV-amcatnloFXFX-pythia8/AODSIM/mva98_103X_upgrade2018_realistic_HI_v11-v1/70003/FABA33C0-C8C5-9E4D-AEDB-48A33CC53415.root'),
 )
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
 
@@ -17,14 +17,14 @@ process.load('Configuration.StandardSequences.MagneticField_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_condDBv2_cff')
 process.load("Configuration.StandardSequences.Reconstruction_cff")
 
-process.GlobalTag.globaltag = cms.string('103X_upgrade2018_realistic_HI_v12')
+process.GlobalTag.globaltag = cms.string('103X_upgrade2018_realistic_HI_v11')
 
 ## PbPb centrality bin producer
 process.load("RecoHI.HiCentralityAlgos.CentralityBin_cfi")
 process.GlobalTag.snapshotTime = cms.string("9999-12-31 23:59:59.000")
 process.GlobalTag.toGet.extend([
     cms.PSet(record = cms.string("HeavyIonRcd"),
-        tag = cms.string("CentralityTable_HFtowers200_HydjetDrum5F_v1032x01_mc"),
+        tag = cms.string("CentralityTable_HFtowers200_HydjetDrum5F_v1032x02_mc"),
         connect = cms.string("frontier://FrontierProd/CMS_CONDITIONS"),
         label = cms.untracked.string("HFtowers")
         ),
@@ -110,7 +110,7 @@ TRACK_CUTS = "track.isNonnull && track.hitPattern.trackerLayersWithMeasurement >
 ## ==== Tag muons
 process.tagMuons = cms.EDFilter("PATMuonSelector",
     src = cms.InputTag("patMuonsWithTrigger"),
-    cut = cms.string("(pt > 15 && abs(eta) < 2.4) && "+TightId+" && !triggerObjectMatchesByPath('HLT_HIL3Mu15_v*',1,0).empty()"),
+    cut = cms.string("(pt > 15 && abs(eta) < 2.4) && "+TightId+" && !triggerObjectMatchesByPath('HLT_HIL3Mu12_v*',1,0).empty()"),
 )
 process.oneTag = cms.EDFilter("CandViewCountFilter", src = cms.InputTag("tagMuons"), minNumber = cms.uint32(1))
 process.pseudoTag = cms.EDFilter("MuonSelector",
@@ -309,8 +309,8 @@ process.staToTkMatchNoZ.maxDeltaPtRel = 2.
 process.load("MuonAnalysis.TagAndProbe.tracking_reco_info_cff")
 
 process.tpTreeSta = process.tpTree.clone(
-    tagProbePairs = "tpPairsSta",
-    arbitration   = "OneProbe",
+    tagProbePairs = cms.InputTag("tpPairsSta"),
+    arbitration   = cms.string("None"), #was OneProbe
     variables = cms.PSet(
         KinematicVariables,
         StaOnlyVariables,
@@ -389,7 +389,7 @@ process.tagAndProbeSta = cms.Path(
 
 process.probeMuonsTrk = cms.EDFilter("PATMuonSelector",
     src = cms.InputTag("patMuonsWithTrigger"),
-    cut = cms.string(TRACK_CUTS + ' && ' + '(pt>10 && abs(eta) < 2.4)' + ' &&' + 'innerTrack.isNonnull && innerTrack.originalAlgo<13'), #   muonSeededStepInOut = 13
+    cut = cms.string('track.isNonnull && (pt>10 && abs(eta) < 2.4)'),
 )
 process.oneProbeTrk = cms.EDFilter("CandViewCountFilter", src = cms.InputTag("probeMuonsTrk"), minNumber = cms.uint32(1))
 process.pseudoProbeTrk = cms.EDFilter("MuonSelector",
@@ -413,18 +413,25 @@ process.fastPseudoTnPTrk = cms.Sequence(process.mergedMuons + process.twoMuons +
 process.tpTreeTrk = cms.EDAnalyzer("TagProbeFitTreeProducer",
     # choice of tag and probe pairs, and arbitration
     tagProbePairs = cms.InputTag("tpPairsTrk"),
-    arbitration   = cms.string("OneProbe"),
+    arbitration   = cms.string("None"), #was OneProbe
     # probe variables: all useful ones
     variables = cms.PSet(
       KinematicVariables,
       StaOnlyVariables,
+      MuonIDVariables,
+      TrackQualityVariables,
+      GlobalTrackQualityVariables,
       dxyPVdzmin = cms.InputTag("muonDxyPVdzminTrk","dxyPVdzmin"),
       dzPV = cms.InputTag("muonDxyPVdzminTrk","dzPV"),
       dxyPV = cms.InputTag("muonDxyPVdzminTrk","dxyPV"),
+      trackAlgo = cms.string("? innerTrack.isNull() ? 0 : innerTrack.originalAlgo"),
     ),
     flags = cms.PSet(
       isSTA = cms.string("isStandAloneMuon"),
-      Glb   = cms.string("isGlobalMuon"),
+      TM  = cms.string("isTrackerMuon"),
+      Glb = cms.string("isGlobalMuon"),
+      PF  = cms.string("isPFMuon"),
+      TightId = cms.string(TightId),
       TrackCuts = cms.string(TRACK_CUTS),
       outerValidHits = cms.string("? outerTrack.isNull() ? 0 : outerTrack.numberOfValidHits > 0"),
     ),
@@ -450,6 +457,7 @@ process.tpTreeTrk = cms.EDAnalyzer("TagProbeFitTreeProducer",
       pt = cms.string("pt"),
       y = cms.string("rapidity"),
       absy = cms.string("abs(rapidity)"),
+      dz = cms.string("daughter(0).vz - daughter(1).vz"),
       deltaR = cms.string("deltaR(daughter(0).eta, daughter(0).phi, daughter(1).eta, daughter(1).phi)"),
       genWeight = cms.InputTag("genWeightInfoTrk", "genWeight"),
     ),

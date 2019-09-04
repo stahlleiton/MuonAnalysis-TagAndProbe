@@ -21,10 +21,10 @@ TTree* copyTreeAndAddWeight(TTree* told, int nentries=0)
   TTree *tnew = told->CloneTree(0);
   tnew->SetAutoSave(0);
   tnew->SetAutoFlush(0);
-  int TightId=-1, SoftId=-1;
+  int TightId=-1, SoftId=-1, isNonMuonSeeded=-1;
   int isTightMuon=-1, passedDXY_TIGHT=-1, passedDZ_TIGHT=-1, passedValidPixelHits=-1, passedTrackerLayers=-1, passedMatchedStations=-1, passedMuHits=-1, passedglbChi2=-1, Glb=-1, PF=-1;
-  int isSoftMuon=-1, isHybridSoftMuon2015=-1, isHybridSoftMuon2018=-1, passedDXY_SOFT=-1, passedDZ_SOFT=-1, passedPixelLayers=-1, TMOST=-1, Track_HP=-1, TM=-1;
-  float dzPV=-999., dxyPV=-999., dB=-999., tkValidPixelHits=-1., tkPixelLay=-1., tkTrackerLay=-1., numberOfMatchedStations=-1., glbValidMuHits=-1., glbChi2=999., hiBin=-1., genWeight=-999., weight=1., pT=-999.;
+  int isSoftMuon=-1, isHybridSoftMuon2015=-1, isHybridSoftMuon2018=-1, isHybridSoftMuon2018And10NHits=-1, passedDXY_SOFT=-1, passedDZ_SOFT=-1, passedPixelLayers=-1, TMOST=-1, Track_HP=-1, TM=-1;
+  float dzPV=-999., dxyPV=-999., dB=-999., tkValidPixelHits=-1., tkPixelLay=-1., tkTrackerLay=-1., tkNHits=-1., numberOfMatchedStations=-1., glbValidMuHits=-1., glbChi2=999., hiBin=-1., genWeight=-999., weight=1., pT=-999., trackAlgo=-1.;
 
   auto hist = pres();
   uint run=-1, ls=-1;
@@ -32,6 +32,11 @@ TTree* copyTreeAndAddWeight(TTree* told, int nentries=0)
   told->SetBranchAddress("run",&run);
   told->SetBranchAddress("lumi",&ls);
   tnew->Branch("isUnprescaled", &isUnprescaled, "isUnprescaled/I");
+  
+  if (told->GetBranch("trackAlgo")!=NULL) {
+    told->SetBranchAddress("trackAlgo", &trackAlgo);
+    tnew->Branch("isNonMuonSeeded", &isNonMuonSeeded, "isNonMuonSeeded/I");
+  }
 
   told->SetBranchAddress("pt",&pT);
   told->SetBranchAddress("dzPV",&dzPV);
@@ -40,14 +45,15 @@ TTree* copyTreeAndAddWeight(TTree* told, int nentries=0)
   told->SetBranchAddress("tkValidPixelHits", &tkValidPixelHits);
   told->SetBranchAddress("tkPixelLay", &tkPixelLay);
   told->SetBranchAddress("tkTrackerLay", &tkTrackerLay);
+  told->SetBranchAddress("tkValidHits", &tkNHits);
   told->SetBranchAddress("numberOfMatchedStations", &numberOfMatchedStations);
   told->SetBranchAddress("glbValidMuHits", &glbValidMuHits);
   told->SetBranchAddress("glbChi2", &glbChi2);
   told->SetBranchAddress("Glb", &Glb);
   told->SetBranchAddress("PF", &PF);
   told->SetBranchAddress("TM", &TM);
-  told->SetBranchAddress("TMOST", &TMOST);
-  told->SetBranchAddress("Track_HP", &Track_HP);
+  if (told->GetBranch("TMOST")!=NULL) { told->SetBranchAddress("TMOST", &TMOST); }
+  if (told->GetBranch("Track_HP")!=NULL) { told->SetBranchAddress("Track_HP", &Track_HP); }
   told->SetBranchAddress("TightId", &TightId);
   if (told->GetBranch("SoftId")!=NULL) { told->SetBranchAddress("SoftId", &SoftId); }
   if (told->GetBranch("tag_hiBin")!=NULL) { told->SetBranchAddress("tag_hiBin", &hiBin); }
@@ -64,6 +70,7 @@ TTree* copyTreeAndAddWeight(TTree* told, int nentries=0)
   tnew->Branch("isSoftMuon", &isSoftMuon, "isSoftMuon/I");
   tnew->Branch("isHybridSoftMuon2015", &isHybridSoftMuon2015, "isHybridSoftMuon2015/I");
   tnew->Branch("isHybridSoftMuon2018", &isHybridSoftMuon2018, "isHybridSoftMuon2018/I");
+  tnew->Branch("isHybridSoftMuon2018And10NHits", &isHybridSoftMuon2018And10NHits, "isHybridSoftMuon2018And10NHits/I");
   tnew->Branch("passedDXY_SOFT", &passedDXY_SOFT, "passedDXY_SOFT/I");
   tnew->Branch("passedDZ_SOFT", &passedDZ_SOFT, "passedDZ_SOFT/I");
   tnew->Branch("passedPixelLayers", &passedPixelLayers, "passedPixelLayers/I");
@@ -91,7 +98,7 @@ TTree* copyTreeAndAddWeight(TTree* told, int nentries=0)
     if (TightId>-1 && isTightMuon!=TightId) {
         std::cout << "Tight ID muon with pT="<<pT<<" GeV/c is not consistent: Official " << TightId << " and Custom " << isTightMuon << std::endl;
         std::cout << Glb << "(==1)  " << PF << "(==1)  " << fabs(dB) << "(<0.2)  " << fabs(dxyPV) << "(<0.2)  " << fabs(dzPV) << "(<0.5)  " << tkValidPixelHits << "(>0)  " << tkTrackerLay << "(>5)  " << numberOfMatchedStations << "(>1) " << glbValidMuHits << "(>0)  " << glbChi2 << "(<10) "<< std::endl;
-        isTightMuon = TightId;
+        //isTightMuon = TightId;
     }
     passedDXY_TIGHT = (fabs(dB) < DXYCUT_TIGHT);
     passedDZ_TIGHT = (fabs(dzPV) < DZCUT_TIGHT);
@@ -119,11 +126,14 @@ TTree* copyTreeAndAddWeight(TTree* told, int nentries=0)
     //HybridSoftMuonID PbPb
     isHybridSoftMuon2015 = (Glb==1 && TM==1 && TMOST==1 && fabs(dxyPV)<DXYCUT_SOFT && fabs(dzPV)<DZCUT_SOFT && tkPixelLay>0.1 && tkTrackerLay>5.1);
     isHybridSoftMuon2018 = (Glb==1 && TM==1 && fabs(dxyPV)<DXYCUT_SOFT && fabs(dzPV)<DZCUT_SOFT && tkPixelLay>0.1 && tkTrackerLay>5.1);
+    isHybridSoftMuon2018And10NHits = (isHybridSoftMuon2018 && tkNHits>=10);
 
     //Weight
     weight = (nentries/sumWeight);
     const float nColl = ((hiBin>=0 && hiBin<200) ? findNcoll(hiBin) : 1.);
     if (genWeight!=-999.) { weight *= genWeight*nColl; }
+    if (trackAlgo!=-1.) { isNonMuonSeeded = ((trackAlgo>0. && trackAlgo<13.) || (trackAlgo>14. && trackAlgo<18.) || (trackAlgo>21. && trackAlgo<37.)); }
+    if (isNonMuonSeeded==0) continue;
 
     tnew->Fill();
   }
@@ -135,11 +145,16 @@ TTree* justCopyTreeAndAddWeight(TTree* told, int nentries=0) {
   TTree *tnew = told->CloneTree(0);
   tnew->SetAutoSave(0);
   tnew->SetAutoFlush(0);
-  float hiBin=-1., genWeight=-999., weight=1.0;
+  int isNonMuonSeeded=-1;
+  float hiBin=-1., genWeight=-999., weight=1.0, trackAlgo=-1.;
 
   if (told->GetBranch("tag_hiBin")!=NULL) { told->SetBranchAddress("tag_hiBin", &hiBin); }
   if (told->GetBranch("pair_genWeight")!=NULL) { told->SetBranchAddress("pair_genWeight", &genWeight); }
   tnew->Branch("weight", &weight, "weight/F");
+  if (told->GetBranch("trackAlgo")!=NULL) {
+    told->SetBranchAddress("trackAlgo", &trackAlgo);
+    tnew->Branch("isNonMuonSeeded", &isNonMuonSeeded, "isNonMuonSeeded/I");
+  }
 
   if (nentries == 0) nentries = told->GetEntries();
   float sumWeight = nentries;
@@ -161,6 +176,8 @@ TTree* justCopyTreeAndAddWeight(TTree* told, int nentries=0) {
     weight = (nentries/sumWeight);
     const float nColl = ((hiBin>=0 && hiBin<200) ? findNcoll(hiBin) : 1.);
     if (genWeight!=-999.) { weight *= genWeight*nColl; }
+    if (trackAlgo!=-1.) { isNonMuonSeeded = ((trackAlgo>0. && trackAlgo<13.) || (trackAlgo>14. && trackAlgo<18.) || (trackAlgo>21. && trackAlgo<37.)); }
+    if (isNonMuonSeeded==0) continue;
     tnew->Fill();
   }
 
@@ -186,7 +203,7 @@ void addFlagsToFile(const std::string filein, const std::string fileout) {
   fout->cd();
   TDirectory *tdir_sta = fout->mkdir("tpTreeTrk");
   tdir_sta->cd();
-  TTree *tr_sta = justCopyTreeAndAddWeight((TTree*)fin->Get("tpTreeTrk/fitter_tree"),0);
+  TTree *tr_sta = copyTreeAndAddWeight((TTree*)fin->Get("tpTreeTrk/fitter_tree"),0);
 
   fout->Write();
   fout->Close();
