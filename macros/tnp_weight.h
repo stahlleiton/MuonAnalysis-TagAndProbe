@@ -2,6 +2,7 @@
 #define tnp_weight_h
 
 #include "TMath.h"
+#include <iostream>
 
 // IN THIS FILE YOU WILL FIND:
 // ++++++++++++++
