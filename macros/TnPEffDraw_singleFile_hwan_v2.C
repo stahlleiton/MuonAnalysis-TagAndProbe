@@ -400,9 +400,9 @@ void TnPEffDraw_singleFile_hwan_v2() {
 
 	      // save (nominal only)
 	      if (k == 0) {
-		c1->SaveAs("./Efficiency/EtaCent/" + treeTag + Form("Eff%i_", i) + collTag + "_RD_MC_PT.root");
-		c1->SaveAs("./Efficiency/EtaCent/" + treeTag + Form("Eff%i_", i) + collTag + "_RD_MC_PT.pdf");
-		c1->SaveAs("./Efficiency/EtaCent/" + treeTag + Form("Eff%i_", i) + collTag + "_RD_MC_PT.png");
+		c1->SaveAs("./Efficiency/EtaCent/" + treeTag + Form("Eff%i_%i_", i, j) + collTag + "_RD_MC_PT.root");
+		c1->SaveAs("./Efficiency/EtaCent/" + treeTag + Form("Eff%i_%i_", i, j) + collTag + "_RD_MC_PT.pdf");
+		c1->SaveAs("./Efficiency/EtaCent/" + treeTag + Form("Eff%i_%i_", i, j) + collTag + "_RD_MC_PT.png");
 	      }
 
 	      cout << "Done with the first part of abseta fitting" << endl;
