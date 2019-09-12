@@ -43,8 +43,8 @@ using namespace std;
 /////////////////////////////////////////////////
 
 // Choose the efficiency type.
-// Possible values: MUIDTRG, TRK, STA, MUID, TRGL2JPSI, TRGL3JPSI, TRGL2UPSI, TRGL3UPSI
-#define TRGL3UPSI
+// Possible values: MUIDTRG, TRK, STA, MUID, TRGL2JPSI, TRGL3JPSI, TRGL2UPSI, TRGL3UPSI, TRGDMOPEN
+#define TRGDMOPEN
 // pp or PbPb?
 bool isPbPb = true; // if true, will compute the centrality dependence
 TString collTag = "PbPb"; // isPbPb ? "PbPb" : "pp";
@@ -243,6 +243,42 @@ const char* fMCName[nSyst] = { "../test/jpsiHI/Output/Trg/tnp_Ana_MC_PbPb_Trg_L3
 			       "../test/jpsiHI/Output/Trg/tnp_Ana_MC_PbPb_Trg_L3Upsi_cbGausPlusPol1.root",
 			       "../test/jpsiHI/Output/Trg/tnp_Ana_MC_PbPb_Trg_L3Upsi_cbPlusPol2.root",
 			       "../test/jpsiHI/Output/Trg/tnp_Ana_MC_PbPb_Trg_L3Upsi_mass2834.root"};
+int fitfcn = 1;
+#endif
+
+#ifdef TRGDMOPEN
+const int nSyst = 4;
+const char* systName[nSyst] = {
+  "nominal",
+  "signal syst",
+  "bkg syst",
+  "mass range syst"};
+TString outputTag = "Effplots/Trg/DoubleMuOpen/";
+TString etaTag("Trg_etadep");
+TString absetaTag("Trg_absetadep");
+TString centTag("Trg_centdep");
+const int nAbsEtaBins = 5;
+TString ptTag[nAbsEtaBins] = { "Trg_pt", "Trg_abseta00_12", "Trg_abseta12_18", "Trg_abseta18_21", "Trg_abseta21_24" };
+TString allTag("Trg_1bin");
+TString absetaVar("abseta");
+TString centVar("tag_hiBin");
+ofstream file_sfs(outputTag + "correction_functions.txt");
+ofstream file_Eta(outputTag + "EtaValues_Trg.txt");
+ofstream file_Cent(outputTag + "CentValues_Trg.txt");
+ofstream file_TestErr(outputTag + "Trg_ExpErr.txt");
+ofstream file_binnedsfs(outputTag +"correction_binned.txt");
+TString treeTag("tpTree");
+TString cutLegend("DoubleMuOpen");
+const double effmin = 0.;
+const double sfrange = 0.35;
+const char* fDataName[nSyst] = { "../test/jpsiHI/Output/Trg/tnp_Ana_RD_PbPb_Trg_DoubleMuOpen_cbPlusPol1.root", 
+				 "../test/jpsiHI/Output/Trg/tnp_Ana_RD_PbPb_Trg_DoubleMuOpen_cbGausPlusPol1.root",
+				 "../test/jpsiHI/Output/Trg/tnp_Ana_RD_PbPb_Trg_DoubleMuOpen_cbPlusPol2.root",
+				 "../test/jpsiHI/Output/Trg/tnp_Ana_RD_PbPb_Trg_DoubleMuOpen_mass2834.root"};
+const char* fMCName[nSyst] = { "../test/jpsiHI/Output/Trg/tnp_Ana_MC_PbPb_Trg_DoubleMuOpen_cbPlusPol1.root",
+			       "../test/jpsiHI/Output/Trg/tnp_Ana_MC_PbPb_Trg_DoubleMuOpen_cbGausPlusPol1.root",
+			       "../test/jpsiHI/Output/Trg/tnp_Ana_MC_PbPb_Trg_DoubleMuOpen_cbPlusPol2.root",
+			       "../test/jpsiHI/Output/Trg/tnp_Ana_MC_PbPb_Trg_DoubleMuOpen_mass2834.root"};
 int fitfcn = 1;
 #endif
 
@@ -701,7 +737,7 @@ void TnPEffDraw_singleFile_Bat() {
 	  cout << "Done with the first part of abseta fitting" << endl;
 	  
 	  // in case we are looking at muon Id + trigger: get the scale factor at the same time
-#if defined MUIDTRG || defined STA || defined MUID || defined TRG || defined TRGL2JPSI || defined TRGL3JPSI || defined TRGL2UPSI || defined TRGL3UPSI
+#if defined MUIDTRG || defined STA || defined MUID || defined TRG || defined TRGL2JPSI || defined TRGL3JPSI || defined TRGL2UPSI || defined TRGL3UPSI || defined TRGDMOPEN
 	  pad1->cd();
 	  ptmax = ((RooRealVar*)rds_absetaPtDep_MC[k][i]->get()->find("pt"))->getMax();
 	  TLatex tchi; tchi.SetNDC();
