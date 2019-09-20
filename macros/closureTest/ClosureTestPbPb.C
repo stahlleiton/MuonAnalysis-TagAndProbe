@@ -100,23 +100,24 @@ void ClosureTestPbPb::Loop(const char* filename, int centmin, int centmax, int t
     // centrality filter
     Centrality = getMCHiBinFromhiHF(hiHF);
     if (Centrality < centmin || Centrality > centmax) continue;
-    //cout <<"centrality = "<<Centrality<<endl;
 
     // if there's no reco muon is that event, just skip it
     if (Reco_mu_size==0) continue;
 
-    //cout <<"Reco_mu_size = "<<Reco_mu_size<<endl;
     // Get weighting factors
     weight = Gen_weight;
     double NcollWeight = findNcoll(Centrality);
+    //cout <<"got the weights"<<endl;
 
     hcent->Fill(Centrality/2,weight*NcollWeight);
 
     // loop on the generated dimuons
     for (int igen=0; igen<Gen_QQ_size; igen++) {
+
       TLorentzVector genpl = *((TLorentzVector*) Gen_mu_4mom->At(Gen_QQ_mupl_idx[igen]));
       TLorentzVector genmi = *((TLorentzVector*) Gen_mu_4mom->At(Gen_QQ_mumi_idx[igen]));
       TLorentzVector genmumu = *((TLorentzVector*) Gen_QQ_4mom->At(igen));
+
       if (igen==0) hpt->Fill(genmumu.Pt(),weight*NcollWeight);
 
       // is the gen muon associated to a tag? loop on the reco single muons to figure out
@@ -130,7 +131,6 @@ void ClosureTestPbPb::Loop(const char* filename, int centmin, int centmax, int t
 
       if (recomuplIdx>-1){
 	TLorentzVector recomu = *((TLorentzVector*) Reco_mu_4mom->At(recomuplIdx));
-
 	if (CutSgMuon(recomuplIdx) &&
 	    (
 	     ((HLTriggers&trg_tag1)>0 && (Reco_mu_trig[recomuplIdx]&trg_tag1)>0) ||
@@ -140,13 +140,12 @@ void ClosureTestPbPb::Loop(const char* filename, int centmin, int centmax, int t
 	     ((HLTriggers&trg_tag5)>0 && (Reco_mu_trig[recomuplIdx]&trg_tag5)>0) ||
 	     ((HLTriggers&trg_tag6)>0 && (Reco_mu_trig[recomuplIdx]&trg_tag6)>0))
 	    && isGlobalMuonInTightAccept2018(&recomu)) {  
-	  //cout << " mupl is tag" << endl;
 	  isgenpltag = true; tlvrecomatchtagpl = recomu;
 	}
       }
+
       if (recomumiIdx>-1){
 	TLorentzVector recomu = *((TLorentzVector*) Reco_mu_4mom->At(recomumiIdx));
-
 	if (CutSgMuon(recomumiIdx) &&
 	    (
 	     ((HLTriggers&trg_tag1)>0 && (Reco_mu_trig[recomumiIdx]&trg_tag1)>0) ||
@@ -156,7 +155,6 @@ void ClosureTestPbPb::Loop(const char* filename, int centmin, int centmax, int t
 	     ((HLTriggers&trg_tag5)>0 && (Reco_mu_trig[recomumiIdx]&trg_tag5)>0) ||
 	     ((HLTriggers&trg_tag6)>0 && (Reco_mu_trig[recomumiIdx]&trg_tag6)>0))
 	    && isGlobalMuonInTightAccept2018(&recomu)) {
-	  //cout << " mumi is tag" << endl;
 	  isgenmitag = true; tlvrecomatchtagmi = recomu;
 	}
       }
@@ -166,7 +164,7 @@ void ClosureTestPbPb::Loop(const char* filename, int centmin, int centmax, int t
 	double totweight = weight*NcollWeight; 
 	if (fabs(geneta)<1.2) {
 	  hden_0_12->Fill(genpt,totweight);
-	  //totweight *= tnp_mc_sta_pbpb()*tnp_mc_trk_pbpb(geneta);
+	  totweight *= tnp_mc_sta_pbpb()*tnp_mc_trk_pbpb(geneta);
 	  hden_trkwt_0_12->Fill(genpt,totweight);
 	  totweight *= tnp_mc_muid_pbpb(genpt,geneta);
 	  hden_trkIDwt_0_12->Fill(genpt,totweight);
@@ -174,7 +172,7 @@ void ClosureTestPbPb::Loop(const char* filename, int centmin, int centmax, int t
 	  hden_trkIDtrgwt_0_12->Fill(genpt,totweight);
 	} else if (fabs(geneta)<1.8) {
 	  hden_12_18->Fill(genpt,weight*NcollWeight);
-	  //totweight *= tnp_mc_sta_pbpb()*tnp_mc_trk_pbpb(geneta);
+	  totweight *= tnp_mc_sta_pbpb(genpt,geneta)*tnp_mc_trk_pbpb(geneta);
 	  hden_trkwt_12_18->Fill(genpt,totweight);
 	  totweight *= tnp_mc_muid_pbpb(genpt,geneta);
 	  hden_trkIDwt_12_18->Fill(genpt,totweight);
@@ -182,7 +180,7 @@ void ClosureTestPbPb::Loop(const char* filename, int centmin, int centmax, int t
 	  hden_trkIDtrgwt_12_18->Fill(genpt,totweight);
 	} else if (fabs(geneta)<2.1) {
 	  hden_18_21->Fill(genpt,weight*NcollWeight);
-	  //totweight *= tnp_mc_sta_pbpb()*tnp_mc_trk_pbpb(geneta);
+	  totweight *= tnp_mc_sta_pbpb(genpt,geneta)*tnp_mc_trk_pbpb(geneta);
 	  hden_trkwt_18_21->Fill(genpt,totweight);
 	  totweight *= tnp_mc_muid_pbpb(genpt,geneta);
 	  hden_trkIDwt_18_21->Fill(genpt,totweight);
@@ -190,7 +188,7 @@ void ClosureTestPbPb::Loop(const char* filename, int centmin, int centmax, int t
 	  hden_trkIDtrgwt_18_21->Fill(genpt,totweight);
 	} else if (fabs(geneta)<2.4) {
 	  hden_21_24->Fill(genpt,weight*NcollWeight);
-	  //totweight *= tnp_mc_sta_pbpb()*tnp_mc_trk_pbpb(geneta);
+	  totweight *= tnp_mc_sta_pbpb(genpt,geneta)*tnp_mc_trk_pbpb(geneta);
 	  hden_trkwt_21_24->Fill(genpt,totweight);
 	  totweight *= tnp_mc_muid_pbpb(genpt,geneta);
 	  hden_trkIDwt_21_24->Fill(genpt,totweight);
@@ -204,7 +202,7 @@ void ClosureTestPbPb::Loop(const char* filename, int centmin, int centmax, int t
 	double totweight = weight*NcollWeight;
 	if (fabs(geneta)<1.2) {
 	  hden_0_12->Fill(genpt,totweight);
-	  //totweight *= tnp_mc_sta_pbpb()*tnp_mc_trk_pbpb(geneta);
+	  totweight *= tnp_mc_sta_pbpb(genpt,geneta)*tnp_mc_trk_pbpb(geneta);
 	  hden_trkwt_0_12->Fill(genpt,totweight);
 	  totweight *= tnp_mc_muid_pbpb(genpt,geneta);
 	  hden_trkIDwt_0_12->Fill(genpt,totweight);
@@ -212,7 +210,7 @@ void ClosureTestPbPb::Loop(const char* filename, int centmin, int centmax, int t
 	  hden_trkIDtrgwt_0_12->Fill(genpt,totweight);
 	} else if (fabs(geneta)<1.8) {
 	  hden_12_18->Fill(genpt,weight*NcollWeight);
-	  //totweight *= tnp_mc_sta_pbpb()*tnp_mc_trk_pbpb(geneta);
+	  totweight *= tnp_mc_sta_pbpb(genpt,geneta)*tnp_mc_trk_pbpb(geneta);
 	  hden_trkwt_12_18->Fill(genpt,totweight);
 	  totweight *= tnp_mc_muid_pbpb(genpt,geneta);
 	  hden_trkIDwt_12_18->Fill(genpt,totweight);
@@ -220,7 +218,7 @@ void ClosureTestPbPb::Loop(const char* filename, int centmin, int centmax, int t
 	  hden_trkIDtrgwt_12_18->Fill(genpt,totweight);
 	} else if (fabs(geneta)<2.1) {
 	  hden_18_21->Fill(genpt,weight*NcollWeight);
-	  //totweight *= tnp_mc_sta_pbpb()*tnp_mc_trk_pbpb(geneta);
+	  totweight *= tnp_mc_sta_pbpb(genpt,geneta)*tnp_mc_trk_pbpb(geneta);
 	  hden_trkwt_18_21->Fill(genpt,totweight);
 	  totweight *= tnp_mc_muid_pbpb(genpt,geneta);
 	  hden_trkIDwt_18_21->Fill(genpt,totweight);
@@ -228,7 +226,7 @@ void ClosureTestPbPb::Loop(const char* filename, int centmin, int centmax, int t
 	  hden_trkIDtrgwt_18_21->Fill(genpt,totweight);
 	} else if (fabs(geneta)<2.4) {
 	  hden_21_24->Fill(genpt,weight*NcollWeight);
-	  //totweight *= tnp_mc_sta_pbpb()*tnp_mc_trk_pbpb(geneta);
+	  totweight *= tnp_mc_sta_pbpb(genpt,geneta)*tnp_mc_trk_pbpb(geneta);
 	  hden_trkwt_21_24->Fill(genpt,totweight);
 	  totweight *= tnp_mc_muid_pbpb(genpt,geneta);
 	  hden_trkIDwt_21_24->Fill(genpt,totweight);
@@ -236,105 +234,68 @@ void ClosureTestPbPb::Loop(const char* filename, int centmin, int centmax, int t
 	  hden_trkIDtrgwt_21_24->Fill(genpt,totweight);
 	}
       }
-         
-      // loop on QQ's: they should be 
-      // - opposite sign, 
-      // - one leg corresponding to the +/- tag muon found above, 
-      // - within [2.7,3.3], 
-      // - matched to the trigger, 
-      // - and the other leg than the tag should be in acceptance
-      for (int ireco=0; ireco<Reco_QQ_size; ireco++) {
-	// does it match our tag(s)? and if yes, is the other leg in acceptance?
-	TLorentzVector *tlvrecomupl = (TLorentzVector*) Reco_mu_4mom->At(Reco_QQ_mupl_idx[ireco]);
-	TLorentzVector *tlvrecomumi = (TLorentzVector*) Reco_mu_4mom->At(Reco_QQ_mupl_idx[ireco]);
-	TLorentzVector *tlvrecoqq = (TLorentzVector*) Reco_QQ_4mom->At(ireco);
-	// dimuon cuts
-	if (tlvrecoqq->M()<2.7 || tlvrecoqq->M()>3.3) continue;
-	if (Reco_QQ_sign[ireco] != 0) continue;
+    }//end of gen QQ loop       
 
-	bool okTrg=false;
+    for (int iReco=0; iReco<Reco_mu_size; iReco++) {
+      // does it match our tag(s)? and if yes, is the other leg in acceptance?
+      bool isTag = false;
+      TLorentzVector tagrecomu = *((TLorentzVector*) Reco_mu_4mom->At(iReco));
+      if (CutSgMuon(iReco) &&
+	  (
+	   ((HLTriggers&trg_tag1)>0 && (Reco_mu_trig[iReco]&trg_tag1)>0) ||
+	   ((HLTriggers&trg_tag2)>0 && (Reco_mu_trig[iReco]&trg_tag2)>0) ||
+	   ((HLTriggers&trg_tag3)>0 && (Reco_mu_trig[iReco]&trg_tag3)>0) ||
+	   ((HLTriggers&trg_tag4)>0 && (Reco_mu_trig[iReco]&trg_tag4)>0) ||
+	   ((HLTriggers&trg_tag5)>0 && (Reco_mu_trig[iReco]&trg_tag5)>0) ||
+	   ((HLTriggers&trg_tag6)>0 && (Reco_mu_trig[iReco]&trg_tag6)>0))
+	  && isGlobalMuonInTightAccept2018(&tagrecomu)) {
+	isTag = true;
+	for (int iGen=0; iGen<Gen_mu_size; iGen++) {
 
-	// trigger
-	if ((Reco_QQ_trig[ireco]&trg_probe_QQ) == trg_probe_QQ && (HLTriggers&trg_probe_QQ)>0) 
-	  okTrg=true;
+	  if (Reco_mu_whichGen[iReco] == iGen) continue;
 
-	// increment the counter
-	if (isgenpltag && tlvrecomupl->DeltaR(tlvrecomatchtagpl)<1e-2 && isGlobalMuonInTightAccept2018(tlvrecomumi) && (Reco_mu_SelectionType[Reco_QQ_mumi_idx[ireco]]&4)>0) {
-	  if (fabs(tlvrecomumi->Eta())<1.2) hnum_0_12->Fill(tlvrecomumi->Pt(),weight*NcollWeight);
-	  else if (fabs(tlvrecomumi->Eta())<1.8) hnum_12_18->Fill(tlvrecomumi->Pt(),weight*NcollWeight);
-	  else if (fabs(tlvrecomumi->Eta())<2.1) hnum_18_21->Fill(tlvrecomumi->Pt(),weight*NcollWeight);
-	  else if (fabs(tlvrecomumi->Eta())<2.4) hnum_21_24->Fill(tlvrecomumi->Pt(),weight*NcollWeight);
-	  //Trk //check if global
-	  if ((Reco_mu_SelectionType[Reco_QQ_mumi_idx[ireco]]&2)>0){
-	    if (fabs(tlvrecomumi->Eta())<1.2) hnumtrk_0_12->Fill(tlvrecomumi->Pt(),weight*NcollWeight);
-	    else if (fabs(tlvrecomumi->Eta())<1.8) hnumtrk_12_18->Fill(tlvrecomumi->Pt(),weight*NcollWeight);
-	    else if (fabs(tlvrecomumi->Eta())<2.1) hnumtrk_18_21->Fill(tlvrecomumi->Pt(),weight*NcollWeight);
-	    else if (fabs(tlvrecomumi->Eta())<2.4) hnumtrk_21_24->Fill(tlvrecomumi->Pt(),weight*NcollWeight);
-	      
-	    // ID
-	    if (Cut_muplmi(Reco_QQ_mumi_idx[ireco])) {
-	      if (fabs(tlvrecomumi->Eta())<1.2) hnumtrkID_0_12->Fill(tlvrecomumi->Pt(),weight*NcollWeight);
-	      else if (fabs(tlvrecomumi->Eta())<1.8) hnumtrkID_12_18->Fill(tlvrecomumi->Pt(),weight*NcollWeight);
-	      else if (fabs(tlvrecomumi->Eta())<2.1) hnumtrkID_18_21->Fill(tlvrecomumi->Pt(),weight*NcollWeight);
-	      else if (fabs(tlvrecomumi->Eta())<2.4) hnumtrkID_21_24->Fill(tlvrecomumi->Pt(),weight*NcollWeight);
-	      
-	      // trigger: do it on the single muon
-	      bool oktrig=false;
-	      /*
-	      for (int ireco2=0; ireco2<Reco_mu_size; ireco2++) {
-		TLorentzVector recomu = *((TLorentzVector*) Reco_mu_4mom->At(ireco2));
-		if (tlvrecomumi->DeltaR(recomu)<1e-2 && (Reco_mu_trig[ireco2]&((ULong64_t)trg_probe)) == ((ULong64_t)trg_probe)) oktrig=true;
-	      }
-	      */
-	      if ((Reco_mu_trig[Reco_QQ_mupl_idx[ireco]]&((ULong64_t)trg_probe)) == ((ULong64_t)trg_probe)) oktrig=true;
-	      if (oktrig && okTrg) {
-		if (fabs(tlvrecomumi->Eta())<1.2) hnumtrkIDtrg_0_12->Fill(tlvrecomumi->Pt(),weight*NcollWeight);
-		else if (fabs(tlvrecomumi->Eta())<1.8) hnumtrkIDtrg_12_18->Fill(tlvrecomumi->Pt(),weight*NcollWeight);
-		else if (fabs(tlvrecomumi->Eta())<2.1) hnumtrkIDtrg_18_21->Fill(tlvrecomumi->Pt(),weight*NcollWeight);
-		else if (fabs(tlvrecomumi->Eta())<2.4) hnumtrkIDtrg_21_24->Fill(tlvrecomumi->Pt(),weight*NcollWeight);
-	      }
-	    }
-	  }
-	} // isgenpltag
-	if (isgenmitag && tlvrecomumi->DeltaR(tlvrecomatchtagmi)<1e-2 && isGlobalMuonInTightAccept2018(tlvrecomupl) && (Reco_mu_SelectionType[Reco_QQ_mupl_idx[ireco]]&4)>0) {
-	  if (fabs(tlvrecomupl->Eta())<1.2) hnum_0_12->Fill(tlvrecomupl->Pt(),weight*NcollWeight);
-	  else if (fabs(tlvrecomupl->Eta())<1.8) hnum_12_18->Fill(tlvrecomupl->Pt(),weight*NcollWeight);
-	  else if (fabs(tlvrecomupl->Eta())<2.1) hnum_18_21->Fill(tlvrecomupl->Pt(),weight*NcollWeight);
-	  else if (fabs(tlvrecomupl->Eta())<2.4) hnum_21_24->Fill(tlvrecomupl->Pt(),weight*NcollWeight);
-	  //Trk //check if global
-	  if ((Reco_mu_SelectionType[Reco_QQ_mupl_idx[ireco]]&2)>0){
-	    if (fabs(tlvrecomupl->Eta())<1.2) hnumtrk_0_12->Fill(tlvrecomupl->Pt(),weight*NcollWeight);
-	    else if (fabs(tlvrecomupl->Eta())<1.8) hnumtrk_12_18->Fill(tlvrecomupl->Pt(),weight*NcollWeight);
-	    else if (fabs(tlvrecomupl->Eta())<2.1) hnumtrk_18_21->Fill(tlvrecomupl->Pt(),weight*NcollWeight);
-	    else if (fabs(tlvrecomupl->Eta())<2.4) hnumtrk_21_24->Fill(tlvrecomupl->Pt(),weight*NcollWeight);
+	  TLorentzVector probegenmu = *((TLorentzVector*) Gen_mu_4mom->At(iGen));
+	  if (!isGlobalMuonInTightAccept2018(&probegenmu)) continue;
+
+	  TLorentzVector mumu = tagrecomu + probegenmu;
+	  if (mumu.M()<2.7 || mumu.M()>3.3) continue;
+	  if (Reco_mu_charge[iReco] + Gen_mu_charge[iGen] !=0) continue;
+
+	  if (fabs(probegenmu.Eta())<1.2) hnum_0_12->Fill(probegenmu.Pt(),weight*NcollWeight);
+	  else if (fabs(probegenmu.Eta())<1.8) hnum_12_18->Fill(probegenmu.Pt(),weight*NcollWeight);
+	  else if (fabs(probegenmu.Eta())<2.1) hnum_18_21->Fill(probegenmu.Pt(),weight*NcollWeight);
+	  else if (fabs(probegenmu.Eta())<2.4) hnum_21_24->Fill(probegenmu.Pt(),weight*NcollWeight);
+
+	  if (Gen_mu_whichRec[iGen]<0) continue;
+	  TLorentzVector proberecomu = *((TLorentzVector*) Reco_mu_4mom->At(Gen_mu_whichRec[iGen]));
+
+	  if ((Reco_mu_SelectionType[Gen_mu_whichRec[iGen]]&2)>0){
+	    if (fabs(probegenmu.Eta())<1.2) hnumtrk_0_12->Fill(probegenmu.Pt(),weight*NcollWeight);
+	    else if (fabs(probegenmu.Eta())<1.8) hnumtrk_12_18->Fill(probegenmu.Pt(),weight*NcollWeight);
+	    else if (fabs(probegenmu.Eta())<2.1) hnumtrk_18_21->Fill(probegenmu.Pt(),weight*NcollWeight);
+	    else if (fabs(probegenmu.Eta())<2.4) hnumtrk_21_24->Fill(probegenmu.Pt(),weight*NcollWeight);
 	    
-	    // ID
-	    if (Cut_muplmi(Reco_QQ_mupl_idx[ireco])) {
-	      if (fabs(tlvrecomupl->Eta())<1.2) hnumtrkID_0_12->Fill(tlvrecomupl->Pt(),weight*NcollWeight);
-	      else if (fabs(tlvrecomupl->Eta())<1.8) hnumtrkID_12_18->Fill(tlvrecomupl->Pt(),weight*NcollWeight);
-	      else if (fabs(tlvrecomupl->Eta())<2.1) hnumtrkID_18_21->Fill(tlvrecomupl->Pt(),weight*NcollWeight);
-	      else if (fabs(tlvrecomupl->Eta())<2.4) hnumtrkID_21_24->Fill(tlvrecomupl->Pt(),weight*NcollWeight);
+	    if (Cut_muplmi(Gen_mu_whichRec[iGen])) {
+	      if (fabs(probegenmu.Eta())<1.2) hnumtrkID_0_12->Fill(probegenmu.Pt(),weight*NcollWeight);
+	      else if (fabs(probegenmu.Eta())<1.8) hnumtrkID_12_18->Fill(probegenmu.Pt(),weight*NcollWeight);
+	      else if (fabs(probegenmu.Eta())<2.1) hnumtrkID_18_21->Fill(probegenmu.Pt(),weight*NcollWeight);
+	      else if (fabs(probegenmu.Eta())<2.4) hnumtrkID_21_24->Fill(probegenmu.Pt(),weight*NcollWeight);
 	      
-	      // trigger: do it on the single muon
-	      bool oktrig=false;
-	      /*
-	      for (int ireco2=0; ireco2<Reco_mu_size; ireco2++) {
-		TLorentzVector recomu = *((TLorentzVector*) Reco_mu_4mom->At(ireco2));
-		if (tlvrecomupl->DeltaR(recomu)<1e-2 && (Reco_mu_trig[ireco2]&((ULong64_t)trg_probe)) == ((ULong64_t)trg_probe)) oktrig=true;
-	      }
-	      */
-	      if ((Reco_mu_trig[Reco_QQ_mupl_idx[ireco]]&((ULong64_t)trg_probe)) == ((ULong64_t)trg_probe)) oktrig=true;
-	      if (oktrig && okTrg) {
-		if (fabs(tlvrecomupl->Eta())<1.2) hnumtrkIDtrg_0_12->Fill(tlvrecomupl->Pt(),weight*NcollWeight);
-		else if (fabs(tlvrecomupl->Eta())<1.8) hnumtrkIDtrg_12_18->Fill(tlvrecomupl->Pt(),weight*NcollWeight);
-		else if (fabs(tlvrecomupl->Eta())<2.1) hnumtrkIDtrg_18_21->Fill(tlvrecomupl->Pt(),weight*NcollWeight);
-		else if (fabs(tlvrecomupl->Eta())<2.4) hnumtrkIDtrg_21_24->Fill(tlvrecomupl->Pt(),weight*NcollWeight);
-	      }
-	    }
-	  }
-	} // isgenmitag
-      } // recoQQsize (probe) loop
-    } // genQQsize loop
+	      bool oktrig = true;
+	      oktrig = oktrig && ((Reco_mu_trig[Gen_mu_whichRec[iGen]]&((ULong64_t)trg_probe)) == ((ULong64_t)trg_probe));
+	      oktrig = oktrig && ((HLTriggers&trg_probe_QQ)>0);
+	      
+	      if (oktrig) {
+		if (fabs(probegenmu.Eta())<1.2) hnumtrkIDtrg_0_12->Fill(probegenmu.Pt(),weight*NcollWeight);
+		else if (fabs(probegenmu.Eta())<1.8) hnumtrkIDtrg_12_18->Fill(probegenmu.Pt(),weight*NcollWeight);
+		else if (fabs(probegenmu.Eta())<2.1) hnumtrkIDtrg_18_21->Fill(probegenmu.Pt(),weight*NcollWeight);
+		else if (fabs(probegenmu.Eta())<2.4) hnumtrkIDtrg_21_24->Fill(probegenmu.Pt(),weight*NcollWeight);
+	      } //end of trg condition
+	    } //end of Id cuts
+	  }//end of glb cond
+	} //end of gen loop
+      }// end of Tag condition
+    } // end of reco loop
   } // event loop
   f->Write();
   f->Close();

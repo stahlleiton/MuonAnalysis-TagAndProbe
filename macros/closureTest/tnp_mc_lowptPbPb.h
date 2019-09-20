@@ -722,6 +722,48 @@ double tnp_mc_trk_pbpb(double eta, int idx) {
   return den;
 }
 
+///////////////////////////////////////////////////
+//              S T A     P b P b                //
+///////////////////////////////////////////////////
+
+double tnp_mc_sta_pbpb(double pt, double eta) {
+  double x = pt;
+  double num=1, den=1, syst=0, statUp=0, statDown=0;
+  // SF for 0 < |eta| < 1.2
+  if (fabs(eta) >= 0 && fabs(eta) < 1.2) { //3.5, 4.0, 4.5, 5.0, 6.0, 7.0, 10.0, 30.0
+    if (x >= 3.5 && x <4) den = 0.739054;
+    else if (x >= 4 && x <4.5) den = 0.905737;
+    else if (x >= 4.5 && x <5) den = 0.963057;
+    else if (x >= 5 && x <6.0) den = 0.982289;
+    else if (x >= 6.0 && x <7.0) den = 0.986841;
+    else if (x >= 7.0 && x <10.) den = 0.985982;
+    else if (x >= 10. && x <30.) den = 0.982475;
+  }
+  // SF for 1.2 < |eta| < 2.1
+  if (fabs(eta) >= 1.2 && fabs(eta) < 2.1) { //1.8,2,2.5,3,3.5,4, 5,8, 30
+    if (x >= 1.8 && x <2.0) den = 0.644152;
+    else if (x >= 2.0 && x <2.5) den = 0.723569;
+    else if (x >= 2.5 && x <3.0) den = 0.893255;
+    else if (x >= 3.0 && x <3.5) den = 0.942866;
+    else if (x >= 3.5 && x <4.0) den = 0.967526;
+    else if (x >= 4.0 && x <5.0) den = 0.973284;
+    else if (x >= 5.0 && x <8.0) den = 0.97505;
+    else if (x >= 8.0 && x <30.) den = 0.972026;
+  }
+  // SF for 2.1 < |eta| < 2.4
+  if (fabs(eta) >= 2.1 && fabs(eta) < 2.4) { //1.8,2,2.5,3,3.5,4, 5,8, 30
+    if (x >= 1.8 && x <2.0) den = 0.846662;
+    else if (x >= 2.0 && x <2.5) den = 0.881301;
+    else if (x >= 2.5 && x <3.0) den = 0.936703;
+    else if (x >= 3.0 && x <3.5) den = 0.944303;
+    else if (x >= 3.5 && x <4.0) den = 0.972745;
+    else if (x >= 4.0 && x <5.0) den = 0.979965;
+    else if (x >= 5.0 && x <8.0) den = 0.982186;
+    else if (x >= 8.0 && x <30.) den = 0.978924;
+  }
+  return den;
+}
+
 double tnp_mc_sta_pbpb() {
   return 1;
 }

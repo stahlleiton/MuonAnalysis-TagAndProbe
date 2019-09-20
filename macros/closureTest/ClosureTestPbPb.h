@@ -348,7 +348,7 @@ void ClosureTestPbPb::Init(TTree *tree)
   if (fChain->GetBranch("Reco_QQ_4mom")) fChain->SetBranchStatus("Reco_QQ_4mom",1);
   if (fChain->GetBranch("Reco_QQ_mupl_idx")) fChain->SetBranchStatus("Reco_QQ_mupl_idx",1);
   if (fChain->GetBranch("Reco_QQ_mumi_idx")) fChain->SetBranchStatus("Reco_QQ_mumi_idx",1);
-  fChain->SetBranchStatus("Reco_mu*",1);
+  fChain->SetBranchStatus("Reco*",1);
   fChain->SetBranchStatus("Gen*",1);
   if (fChain->GetBranch("hiBin")) fChain->SetBranchStatus("hiBin",1);
   if (fChain->GetBranch("hiHF")) fChain->SetBranchStatus("hiHF",1);

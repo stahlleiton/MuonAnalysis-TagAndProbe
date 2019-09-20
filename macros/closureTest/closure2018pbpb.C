@@ -40,6 +40,7 @@ void closure2018pbpb(int centmin, int centmax, int trigIdx) {
 
    string caseTag [] = {"","trk", "trkID", "trkIDtrg"};
    string plotTag [] = {"tracking", "MuonID", "trigger"};
+
    double rapBins [] = {0, 1.2, 1.8, 2.1, 2.4};
    // Trg eff comparison: Trd vs Tnp (functions)
    for (int i=1; i<4; i++) {
@@ -85,14 +86,12 @@ void closure2018pbpb(int centmin, int centmax, int trigIdx) {
    for (int j=0; j<4; j++) {
      c1->cd(); c1->Clear();
      hnum = (TH1D*) f->Get(Form("hnum%s_%d_%d",caseTag[3].c_str(), (int) (10*rapBins[j]), (int) (10*rapBins[j+1])));
-     //hden = (TH1D*) f->Get(Form("hnum%s_%d_%d",caseTag[0].c_str(), (int) (10*rapBins[j]), (int) (10*rapBins[j+1])));
-     hden = (TH1D*) f->Get(Form("hden_%d_%d", (int) (10*rapBins[j]), (int) (10*rapBins[j+1])));
+     hden = (TH1D*) f->Get(Form("hnum%s_%d_%d",caseTag[0].c_str(), (int) (10*rapBins[j]), (int) (10*rapBins[j+1])));
      eff->Divide(hnum,hden,"pois");
      eff->SetLineColor(kBlack);
      eff->SetMarkerColor(kBlack);
      eff->SetMarkerStyle(kFullSquare);
      hnum2 = (TH1D*) f->Get(Form("hden_%swt_%d_%d",caseTag[3].c_str(), (int) (10*rapBins[j]), (int) (10*rapBins[j+1])));
-     //hden2 = (TH1D*) f->Get(Form("hden_%d_%d", (int) (10*rapBins[j]), (int) (10*rapBins[j+1])));
      hden2 = (TH1D*) f->Get(Form("hden_%d_%d", (int) (10*rapBins[j]), (int) (10*rapBins[j+1])));
      eff2->Divide(hnum2,hden2,"pois");
      eff2->SetLineColor(kMagenta);
@@ -103,6 +102,6 @@ void closure2018pbpb(int centmin, int centmax, int trigIdx) {
      c1->Update();
      tr->GetUpperPad()->cd();
      tleg->Draw();
-     c1->SaveAs(Form("plots/pbpb_%s_full_%d_%d_cetn%d%d_usingDen.pdf", trgTag.c_str(), (int) (10*rapBins[j]), (int) (10*rapBins[j+1]), centmin, centmax));
+     c1->SaveAs(Form("plots/pbpb_%s_full_%d_%d_cetn%d%d.pdf", trgTag.c_str(), (int) (10*rapBins[j]), (int) (10*rapBins[j+1]), centmin, centmax));
    }
 }
