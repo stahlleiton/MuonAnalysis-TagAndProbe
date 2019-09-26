@@ -48,11 +48,14 @@ double tnp_weight_trig_pbpb(double pt, double eta, double cent, int idx=0);
 double tnp_weight_glbtrk_pbpb(double eta, double cent, int idx) //cent 0-100%
 {
 	double x = eta;
-	double syst = 0.6e-1;  //TO BE UPDATED
+	double syst = 0.0e-1;  //TO BE UPDATED
 
 	double num = 1, den = 1;
 
-	if (cent > 0 && cent < 40)
+	if (fabs(eta)) { cout << "[WARNING] Muon pseudo-rapidity (" << eta << ") outside [-2.4, 2.4]" << endl; return 1.0; }
+	if (cent < 0 || cent>100) { cout << "[ERROR] Centrality (" << cent << ") outside [0%, 100%]" << endl; return 1.0; }
+
+	if (cent >= 0 && cent < 40)
 	{
 		// MC
 		if (eta > -2.4 && eta <= -2.1) { den = 0.955981; }
@@ -106,7 +109,7 @@ double tnp_weight_glbtrk_pbpb(double eta, double cent, int idx) //cent 0-100%
 			else if (eta > 2.1 && eta <= 2.4) { num = 0.921065; }
 		}
 	}
-	else if (cent > 40 && cent < 100)
+	else if (cent >= 40 && cent <= 100)
 	{
 		// MC
 		if (eta > -2.4 && eta <= -2.1) { den = 0.985973; }
@@ -159,7 +162,6 @@ double tnp_weight_glbtrk_pbpb(double eta, double cent, int idx) //cent 0-100%
 			else if (eta > 2.1 && eta <= 2.4) { num = 0.92457; }
 		}
 	}
-	else cout << "cent out of range" << endl;
 
 	if (idx == 200) den = 1.;
 	if (idx == 300) num = den * den;
