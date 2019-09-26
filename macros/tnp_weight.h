@@ -48,14 +48,17 @@ double tnp_weight_trig_pbpb(double pt, double eta, double cent, int idx=0);
 double tnp_weight_glbtrk_pbpb(double eta, double cent, int idx) //cent 0-100%
 {
 	double x = eta;
-	double syst = 0.6e-1;  //TO BE UPDATED
+	double syst = 0.0e-1;  //TO BE UPDATED
 
 	double num = 1, den = 1;
 
-	if (cent > 0 && cent < 40)
+	if (fabs(eta)) { cout << "[WARNING] Muon pseudo-rapidity (" << eta << ") outside [-2.4, 2.4]" << endl; return 1.0; }
+	if (cent < 0 || cent>100) { cout << "[ERROR] Centrality (" << cent << ") outside [0%, 100%]" << endl; return 1.0; }
+
+	if (cent >= 0 && cent < 40)
 	{
 		// MC
-		if (eta > -2.4 && eta <= -2.1) { den = 0.955981; }
+		if (eta >= -2.4 && eta <= -2.1) { den = 0.955981; }
 		else if (eta > -2.1 && eta <= -1.6) { den = 0.976366; }
 		else if (eta > -1.6 && eta <= -1.2) { den = 0.977068; }
 		else if (eta > -1.2 && eta <= -0.9) { den = 0.973544; }
@@ -68,7 +71,7 @@ double tnp_weight_glbtrk_pbpb(double eta, double cent, int idx) //cent 0-100%
 
 		// data
 		if (idx <= 0 || idx > 10) { // nominal
-			if (eta > -2.4 && eta <= -2.1) { num = 0.895748; }
+			if (eta >= -2.4 && eta <= -2.1) { num = 0.895748; }
 			else if (eta > -2.1 && eta <= -1.6) { num = 0.961812; }
 			else if (eta > -1.6 && eta <= -1.2) { num = 0.963615; }
 			else if (eta > -1.2 && eta <= -0.9) { num = 0.953689; }
@@ -81,7 +84,7 @@ double tnp_weight_glbtrk_pbpb(double eta, double cent, int idx) //cent 0-100%
 		}
 
 		if (idx == 1) { // stat up
-			if (eta > -2.4 && eta <= -2.1) { num = 0.912779; }
+			if (eta >= -2.4 && eta <= -2.1) { num = 0.912779; }
 			else if (eta > -2.1 && eta <= -1.6) { num = 0.96884; }
 			else if (eta > -1.6 && eta <= -1.2) { num = 0.968562; }
 			else if (eta > -1.2 && eta <= -0.9) { num = 0.960157; }
@@ -94,7 +97,7 @@ double tnp_weight_glbtrk_pbpb(double eta, double cent, int idx) //cent 0-100%
 		}
 
 		if (idx == 2) { // stat down
-			if (eta > -2.4 && eta <= -2.1) { num = 0.878718; }
+			if (eta >= -2.4 && eta <= -2.1) { num = 0.878718; }
 			else if (eta > -2.1 && eta <= -1.6) { num = 0.954599; }
 			else if (eta > -1.6 && eta <= -1.2) { num = 0.958397; }
 			else if (eta > -1.2 && eta <= -0.9) { num = 0.946923; }
@@ -106,10 +109,10 @@ double tnp_weight_glbtrk_pbpb(double eta, double cent, int idx) //cent 0-100%
 			else if (eta > 2.1 && eta <= 2.4) { num = 0.921065; }
 		}
 	}
-	else if (cent > 40 && cent < 100)
+	else if (cent >= 40 && cent <= 100)
 	{
 		// MC
-		if (eta > -2.4 && eta <= -2.1) { den = 0.985973; }
+		if (eta >= -2.4 && eta <= -2.1) { den = 0.985973; }
 		else if (eta > -2.1 && eta <= -1.6) { den = 0.99412; }
 		else if (eta > -1.6 && eta <= -1.2) { den = 0.996646; }
 		else if (eta > -1.2 && eta <= -0.9) { den = 0.991832; }
@@ -122,7 +125,7 @@ double tnp_weight_glbtrk_pbpb(double eta, double cent, int idx) //cent 0-100%
 
 		// data
 		if (idx == 0) { // nominal
-			if (eta > -2.4 && eta <= -2.1) { num = 1; }
+			if (eta >= -2.4 && eta <= -2.1) { num = 1; }
 			else if (eta > -2.1 && eta <= -1.6) { num = 0.986484; }
 			else if (eta > -1.6 && eta <= -1.2) { num = 0.998253; }
 			else if (eta > -1.2 && eta <= -0.9) { num = 0.987887; }
@@ -135,7 +138,7 @@ double tnp_weight_glbtrk_pbpb(double eta, double cent, int idx) //cent 0-100%
 		}
 
 		if (idx == 1) { // stat up
-			if (eta > -2.4 && eta <= -2.1) { num = 1; }
+			if (eta >= -2.4 && eta <= -2.1) { num = 1; }
 			else if (eta > -2.1 && eta <= -1.6) { num = 0.99644; }
 			else if (eta > -1.6 && eta <= -1.2) { num = 1; }
 			else if (eta > -1.2 && eta <= -0.9) { num = 0.994144; }
@@ -147,7 +150,7 @@ double tnp_weight_glbtrk_pbpb(double eta, double cent, int idx) //cent 0-100%
 			else if (eta > 2.1 && eta <= 2.4) { num = 0.979823; }
 		}
 		if (idx == 2) { // stat down
-			if (eta > -2.4 && eta <= -2.1) { num = 0.979675; }
+			if (eta >= -2.4 && eta <= -2.1) { num = 0.979675; }
 			else if (eta > -2.1 && eta <= -1.6) { num = 0.974748; }
 			else if (eta > -1.6 && eta <= -1.2) { num = 0.993399; }
 			else if (eta > -1.2 && eta <= -0.9) { num = 0.978866; }
@@ -159,7 +162,6 @@ double tnp_weight_glbtrk_pbpb(double eta, double cent, int idx) //cent 0-100%
 			else if (eta > 2.1 && eta <= 2.4) { num = 0.92457; }
 		}
 	}
-	else cout << "cent out of range" << endl;
 
 	if (idx == 200) den = 1.;
 	if (idx == 300) num = den * den;
@@ -183,7 +185,7 @@ double tnp_weight_muid_pbpb(double eta, int idx)
    
 
    // MC
-   if (x > -2.4&&x <= -2.1) den = 0.994717;
+   if (x >= -2.4&&x <= -2.1) den = 0.994717;
    if (x > -2.1&&x <= -1.6) den = 0.993653;
    if (x > -1.6&&x <= -1.2) den = 0.982687;
    if (x > -1.2&&x <= -0.9) den = 0.962992;
@@ -201,7 +203,7 @@ double tnp_weight_muid_pbpb(double eta, int idx)
 
    // data
    if (idx <= 0 || idx > 10) { // nominal
-	   if (x > -2.4&&x <= -2.1) num = 0.983734;
+	   if (x >= -2.4&&x <= -2.1) num = 0.983734;
 	   if (x > -2.1&&x <= -1.6) num = 0.993892;
 	   if (x > -1.6&&x <= -1.2) num = 0.979222;
 	   if (x > -1.2&&x <= -0.9) num = 0.955529;
@@ -217,7 +219,7 @@ double tnp_weight_muid_pbpb(double eta, int idx)
 	   if (x > 2.1&&x <= 2.4) num = 0.993082;
    }
    else if (idx == 1) { // stat up
-	   if (x > -2.4&&x <= -2.1) num = 0.98710825;
+	   if (x >= -2.4&&x <= -2.1) num = 0.98710825;
 	   if (x > -2.1&&x <= -1.6) num = 0.99575701;
 	   if (x > -1.6&&x <= -1.2) num = 0.98250043;
 	   if (x > -1.2&&x <= -0.9) num = 0.96029298;
@@ -233,7 +235,7 @@ double tnp_weight_muid_pbpb(double eta, int idx)
 	   if (x > 2.1&&x <= 2.4) num = 0.9961665;
    }
    else if (idx == 2) { // stat down
-	   if (x > -2.4&&x <= -2.1) num = 0.98075691;
+	   if (x >= -2.4&&x <= -2.1) num = 0.98075691;
 	   if (x > -2.1&&x <= -1.6) num = 0.99224693;
 	   if (x > -1.6&&x <= -1.2) num = 0.97618383;
 	   if (x > -1.2&&x <= -0.9) num = 0.95101985;
