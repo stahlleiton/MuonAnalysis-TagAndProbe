@@ -179,7 +179,7 @@ double tnp_weight_glbtrk_pbpb(double eta, double cent, int idx) //cent 0-100%
 double tnp_weight_muid_pbpb(double eta, int idx)
 {
    double x = eta;
-   double syst = 0.6e-2;  //preliminary
+   double syst = 0.6e-2;    //preliminary
 
    double num=1,den=1;
    
