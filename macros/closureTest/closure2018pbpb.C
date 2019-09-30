@@ -1,108 +1,70 @@
 #include "TFile.h"
-//#include "tnp_weight.h"
-//#include "tnp_mc.h"
 #include "helper.h"
 #include "TEfficiency.h"
 #include "TGraphAsymmErrors.h"
-//#include "TRatioPlot.h"
 #include "TCanvas.h"
-//#include "TH1.h"
 #include "TLegend.h"
+#include <iostream>
 
-float ptmin(float etamax) {
-   float ans=0;
-   if (etamax<1.2) ans = 3.5;
-   else if (etamax<2.1) ans = 5.77-1.89*fabs(etamax);
-   else ans = 1.8;
-   // ans = (int) (ans*10.);
-   // ans = ans/10.;
-   return ans;
-}
 
-void closure2018pbpb(int centmin, int centmax, int trigIdx) {
+void closure2018pbpb() {
 
-  string trgTag = (trigIdx==0)?"L2Jpsi":(trigIdx==1)?"L3Jpsi":(trigIdx==2)?"L2Upsi":(trigIdx==3)?"L3Upsi":"DMOpen";
+  // Open the input file
+  TFile f("eff_PbPb_HighPt.root", "READ");
+  if (!f.IsOpen() || f.IsZombie()) { std::cout << "[ERROR] File eff_PbPb_HighPt.root was not open" << std::endl; return; }
 
-  TFile *f = new TFile(Form("histos_trd_pbpb_cent%d%d_%s.root",centmin, centmax, trgTag.c_str()));
-   // Trg eff comparison: Trd vs Tnp (binned)
-   TCanvas *c1 = new TCanvas();
-   //TFile *ftnp_trg = new TFile("../../test/jpsiHI/Output/MuonID/tnp_Ana_MC_PbPb_MuonID_cbPlusPol1.root");
-   RooDataSet *da_trg=NULL;
+  // Extract the TEfficiency objects
+  std::map< std::string , std::map< std::string , std::map< anaBinT , TEfficiency > > > effM;
+  for (const auto& e : {"Trd", "TnP"}) {
+    for (const auto& t : effType) {
+      for (const auto& c : centBins) {
+	for (const auto& b : etaPtBins) {
+	  const auto& bin = anaBinT({c, b.first});
+	  const auto& etaMin = (b.first.first>2.4 ? b.second[0] : b.first.first);
+	  const auto& etaMax = (b.first.first>2.4 ? b.second[b.second.size()-1] : b.first.second);
+	  const auto& name = Form("eff%s_%s_Cent_%.0f_%.0f_Eta_%.0f_%.0f", e, t.c_str(), c.first, c.second, etaMin*10., etaMax*10.);
+	  const auto& eff = dynamic_cast<TEfficiency*>(f.Get(name));
+	  if (!eff) { std::cout << "[ERROR] Efficiency object " << name << " was not found!" << std::endl; return; }
+	  effM[e][t][bin] = *eff;
+	}
+      }
+    }
+  }
 
-   TGraphAsymmErrors *gtrg=NULL;
-   TH1D *hnum=NULL, *hden=NULL;
-   TH1D *hnum2=NULL, *hden2=NULL;
-   TGraphAsymmErrors *eff=new TGraphAsymmErrors();
-   TGraphAsymmErrors *eff2=new TGraphAsymmErrors();
-   TRatioPlot *tr = NULL;
-   TLegend *tleg = new TLegend(0.6,0.2,0.9,0.5);
-   tleg->SetBorderSize(0); tleg->SetFillColor(0);
+  // Initialize the canvas
+  TCanvas c1("c", "c", 800, 800);
 
-   string caseTag [] = {"","trk", "trkID", "trkIDtrg"};
-   string plotTag [] = {"tracking", "MuonID", "trigger"};
-   double rapBins [] = {0, 1.2, 1.8, 2.1, 2.4};
-   // Trg eff comparison: Trd vs Tnp (functions)
-   for (int i=1; i<4; i++) {
-       for (int j=0; j<4; j++) {
-	 c1->cd(); c1->Clear();
-	 /*if (i==2) {
-	   da_trg = (RooDataSet*)ftnp_trg->Get(Form("tpTree/MuId_abseta%s/fit_eff",j==0?Form("00_%d",(int) (10*rapBins[j+1])):Form("%d_%d",(int) (10*rapBins[j]), (int) (10*rapBins[j+1]) )));
-	   gtrg = plotEff(da_trg,1,"pt");
-	   gtrg->SetLineColor(kRed);
-	   gtrg->SetMarkerColor(kRed);
-	   }*/
-	 hnum = (TH1D*) f->Get(Form("hnum%s_%d_%d",caseTag[i].c_str(), (int) (10*rapBins[j]), (int) (10*rapBins[j+1])));
-	 hden = (TH1D*) f->Get(Form("hnum%s_%d_%d",caseTag[i-1].c_str(), (int) (10*rapBins[j]), (int) (10*rapBins[j+1])));
-	 //hden = (TH1D*) f->Get(Form("hden_%d_%d", (int) (10*rapBins[j]), (int) (10*rapBins[j+1])));
-	 eff->Divide(hnum,hden,"pois");
-	 eff->SetLineColor(kBlack);
-	 eff->SetMarkerColor(kBlack);
-	 eff->SetMarkerStyle(kFullSquare);
-
-	 hnum2 = (TH1D*) f->Get(Form("hden_%swt_%d_%d",caseTag[i].c_str(), (int) (10*rapBins[j]), (int) (10*rapBins[j+1])));
-	 hden2 = (TH1D*) f->Get((i==1)?Form("hden_%d_%d", (int) (10*rapBins[j]), (int) (10*rapBins[j+1])):Form("hden_%swt_%d_%d",caseTag[i-1].c_str(), (int) (10*rapBins[j]), (int) (10*rapBins[j+1])));
-	 //hden2 = (TH1D*) f->Get(Form("hden_%d_%d", (int) (10*rapBins[j]), (int) (10*rapBins[j+1])));
-	 eff2->Divide(hnum2,hden2,"pois");
-	 eff2->SetLineColor(kMagenta);
-	 eff2->SetMarkerColor(kMagenta);
-	 if (i==1 && j==0) {
-	   tleg->AddEntry(eff2,"Tag and probe (weights)","lp");
-	   tleg->AddEntry(eff,"Traditional","lp");
-	 }
-	 tleg->SetHeader(Form("pbpb, %s, %f<|y|<%f",plotTag[i-1].c_str(),rapBins[j], rapBins[j+1]));
-	 tr = new TRatioPlot(g2h(eff,20),g2h(eff2,2));
-	 setTRatioPlotStyle(tr);
-	 c1->Update();
-	 tr->GetUpperPad()->cd();
-	 //if (i==2) gtrg->Draw("same");
-	 tleg->Draw();
-	 c1->SaveAs(Form("plots/pbpb_%s_%s_%d_%d_cent%d%d.pdf",trgTag.c_str(), plotTag[i-1].c_str(), (int) (10*rapBins[j]), (int) (10*rapBins[j+1]), centmin, centmax));
-       }
-   }
-
-   
-   // Full eff comparison: Trd vs Tnp (functions)
-   for (int j=0; j<4; j++) {
-     c1->cd(); c1->Clear();
-     hnum = (TH1D*) f->Get(Form("hnum%s_%d_%d",caseTag[3].c_str(), (int) (10*rapBins[j]), (int) (10*rapBins[j+1])));
-     //hden = (TH1D*) f->Get(Form("hnum%s_%d_%d",caseTag[0].c_str(), (int) (10*rapBins[j]), (int) (10*rapBins[j+1])));
-     hden = (TH1D*) f->Get(Form("hden_%d_%d", (int) (10*rapBins[j]), (int) (10*rapBins[j+1])));
-     eff->Divide(hnum,hden,"pois");
-     eff->SetLineColor(kBlack);
-     eff->SetMarkerColor(kBlack);
-     eff->SetMarkerStyle(kFullSquare);
-     hnum2 = (TH1D*) f->Get(Form("hden_%swt_%d_%d",caseTag[3].c_str(), (int) (10*rapBins[j]), (int) (10*rapBins[j+1])));
-     //hden2 = (TH1D*) f->Get(Form("hden_%d_%d", (int) (10*rapBins[j]), (int) (10*rapBins[j+1])));
-     hden2 = (TH1D*) f->Get(Form("hden_%d_%d", (int) (10*rapBins[j]), (int) (10*rapBins[j+1])));
-     eff2->Divide(hnum2,hden2,"pois");
-     eff2->SetLineColor(kMagenta);
-     eff2->SetMarkerColor(kMagenta);
-     tleg->SetHeader(Form("pbpb, %s, %f<|y|<%f",plotTag[0].c_str(),rapBins[j], rapBins[j+1]));
-     tr = new TRatioPlot(g2h(eff,20),g2h(eff2,2));
-     setTRatioPlotStyle(tr);
-     c1->Update();
-     tr->GetUpperPad()->cd();
-     tleg->Draw();
-     c1->SaveAs(Form("plots/pbpb_%s_full_%d_%d_cetn%d%d_usingDen.pdf", trgTag.c_str(), (int) (10*rapBins[j]), (int) (10*rapBins[j+1]), centmin, centmax));
-   }
+  // Loop over the efficiencies
+  for (const auto& t : effM.at("Trd")) {
+    for (const auto& b : t.second) {
+      c1.cd(); c1.Clear();
+      const auto& type = t.first;
+      const auto& bin = b.first;
+      const auto& cntBin = bin.first;
+      const auto& varBin = bin.second;
+      auto& eff_Trd = effM.at("Trd").at(type).at(bin);
+      auto& eff_TnP = effM.at("TnP").at(type).at(bin);
+      // Format the efficiencies
+      eff_Trd.SetLineColor(kBlack);
+      eff_Trd.SetMarkerColor(kBlack);
+      eff_Trd.SetMarkerStyle(kFullSquare);
+      eff_TnP.SetLineColor(kMagenta);
+      eff_TnP.SetMarkerColor(kMagenta);
+      // Crate the legend
+      TLegend leg(0.2, 0.2, 0.7, 0.5);
+      leg.SetBorderSize(0); leg.SetFillColor(0); leg.SetTextSize(0.05);
+      if (varBin.first>2.4) { leg.SetHeader(Form("PbPb, %s, %.1f<p_{T}<%.1f, Cent.[%.0f-%.0f]", type.c_str(), varBin.first, varBin.second, cntBin.first, cntBin.second)); }
+      else { leg.SetHeader(Form("PbPb, %s, %.1f<|#eta|<%.1f, Cent.[%.0f-%.0f]", type.c_str(), varBin.first, varBin.second, cntBin.first, cntBin.second)); }
+      leg.AddEntry(&eff_Trd, "Traditional", "lp");
+      leg.AddEntry(&eff_TnP, "Tag and probe (weights)", "lp");
+      // Create the ratio plot
+      TRatioPlot tr(g2h(eff_Trd.CreateGraph(), 20), g2h(eff_TnP.CreateGraph(), 2));
+      setTRatioPlotStyle(&tr);
+      // Draw the ratio plot
+      c1.Update();
+      tr.GetUpperPad()->cd();
+      leg.Draw();
+      c1.SaveAs(Form("plots/PbPb_%s_Eta_%.0f_%.0fd_Cent_%.0f_%.0f.pdf", type.c_str(), 10.*varBin.first, 10.*varBin.second, cntBin.first, cntBin.second));
+    }
+  }
 }

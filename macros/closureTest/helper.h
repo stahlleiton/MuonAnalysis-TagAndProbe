@@ -1,67 +1,33 @@
 #ifndef helper_h
 #define helper_h
 
+#include "TStyle.h"
 #include "TGraphAsymmErrors.h"
-#include "RooDataSet.h"
-#include "RooRealVar.h"
 #include "TAxis.h"
 #include "TRandom3.h"
 #include "TH1.h"
 #include "TRatioPlot.h"
+#include <map>
 
-TGraphAsymmErrors *plotEff(RooDataSet *a, int aa, const char* varx){
-  const RooArgSet *set = a->get();
-  RooRealVar *xAx = (RooRealVar*)set->find(varx);
-  RooRealVar *eff = (RooRealVar*)set->find("efficiency");
+// define the efficiency types
+const std::vector<std::string> effType = { "Track", "TrackID", "TrackerMuon", "PFGlobalMuon", "MuonID", "Trigger", "Full" };
 
-  const int nbins = xAx->getBinning().numBins();
-
-  double tx[nbins], txhi[nbins], txlo[nbins];
-  double ty[nbins], tyhi[nbins], tylo[nbins];
-
-  for (int i=0; i<nbins; i++) {
-    a->get(i);
-    ty[i] = eff->getVal();
-    tx[i] = xAx->getVal();
-    txhi[i] = fabs(xAx->getErrorHi());
-    txlo[i] = fabs(xAx->getErrorLo());
-    tyhi[i] = fabs(eff->getErrorHi());
-    tylo[i] = fabs(eff->getErrorLo());
-  }
-
-  cout<<"NBins : "<<nbins<<endl;
-
-  const double *x = tx;
-  const double *xhi = txhi;
-  const double *xlo = txlo;
-  const double *y = ty;
-  const double *yhi = tyhi;
-  const double *ylo = tylo;
-
-
-  TGraphAsymmErrors *b = new TGraphAsymmErrors();
-  if(aa == 1) {*b = TGraphAsymmErrors(nbins,x,y,xlo,xhi,ylo,yhi);}
-  if(aa == 0) {*b = TGraphAsymmErrors(nbins,x,y,0,0,ylo,yhi);}
-
-  b->SetMaximum(1.1);
-  b->SetMinimum(0.0);
-  b->SetMarkerStyle(20);
-  b->SetMarkerColor(kRed+2);
-  b->SetMarkerSize(1.0);
-  b->SetTitle("");
-  b->GetXaxis()->SetTitleSize(0.1);
-  b->GetYaxis()->SetTitleSize(0.1);
-  b->GetXaxis()->SetTitle("#eta");
-  b->GetYaxis()->SetTitle("Efficiency");
-  b->GetXaxis()->CenterTitle();
-
-  for (int i=0; i<nbins; i++) {
-    cout << x[i] << " " << y[i] << " " << yhi[i] << " " << ylo[i] << endl;
-  }
-
-  return b;
-
-};
+// define the bins
+typedef std::pair<double, double> binT;
+typedef std::pair<binT, binT> anaBinT;
+const std::vector<double> ptBins = {15., 20., 25., 30., 40., 50., 60., 70., 80., 100.};
+const std::map<binT, std::vector<double> > etaPtBins =
+  {
+   { {0.0, 0.9} , ptBins },
+   { {0.9, 1.2} , ptBins },
+   { {0.0, 1.2} , ptBins },
+   { {1.2, 1.6} , ptBins },
+   { {1.6, 2.1} , ptBins },
+   { {1.2, 2.1} , ptBins },
+   { {2.1, 2.4} , ptBins },
+   { {15., 200.}, {-2.4, -2.1, -1.6, -1.2, -0.9, 0.9, 1.2, 1.6, 2.1, 2.4} }
+  };
+const std::vector<binT> centBins = { {0., 10.}, {10., 20.}, {0., 20.}, {20., 100.}, {0., 100.} };
 
 bool IsAccept(Double_t pt, Double_t eta)
 {
@@ -74,6 +40,20 @@ bool IsAccept(Double_t pt, Double_t eta)
               (  1.0 <= TMath::Abs(eta) && TMath::Abs(eta) < 1.5 && pt >= 5.8-2.4*TMath::Abs(eta) ) ||
               (  1.5 <= TMath::Abs(eta) && pt >= 3.3667 - 7.0/9.0*TMath::Abs(eta)) ));
 };
+
+Int_t getMCHiBinFromhiHF(const Double_t hiHF) {
+  const Int_t nBins = 200; // table of bin edges
+  const Double_t binTable[nBins+1] = {0, 12.2187, 13.0371, 13.7674, 14.5129, 15.2603, 16.0086, 16.7623, 17.5335, 18.3283, 19.1596, 19.9989, 20.8532, 21.7297, 22.6773, 23.6313, 24.6208, 25.6155, 26.6585, 27.7223, 28.8632, 30.041, 31.2865, 32.5431, 33.8655, 35.2539, 36.6912, 38.2064, 39.7876, 41.4818, 43.2416, 45.0605, 46.9652, 48.9918, 51.1, 53.2417, 55.5094, 57.9209, 60.3817, 62.9778, 65.6099, 68.4352, 71.3543, 74.4154, 77.6252, 80.8425, 84.1611, 87.7395, 91.3973, 95.1286, 99.0571, 103.185, 107.482, 111.929, 116.45, 121.178, 126.081, 130.995, 136.171, 141.612, 147.298, 153.139, 159.419, 165.633, 172.114, 178.881, 185.844, 192.845, 200.244, 207.83, 215.529, 223.489, 231.878, 240.254, 249.319, 258.303, 267.508, 277.037, 286.729, 296.845, 307.458, 317.882, 328.787, 340.074, 351.295, 362.979, 375.125, 387.197, 399.604, 412.516, 425.683, 439.001, 452.667, 466.816, 481.007, 495.679, 510.588, 526.138, 541.782, 557.641, 574.141, 591.071, 608.379, 626.068, 643.616, 661.885, 680.288, 699.449, 718.925, 738.968, 758.983, 779.459, 800.376, 821.638, 843.555, 865.771, 888.339, 911.031, 934.979, 958.56, 982.582, 1007.02, 1031.9, 1057.81, 1084.01, 1111.71, 1138.21, 1165.72, 1193.73, 1221.65, 1251.51, 1281.23, 1311.01, 1341.1, 1372.4, 1404.29, 1436.52, 1468.65, 1501.91, 1535.56, 1569.69, 1604.69, 1640.65, 1676.05, 1712.62, 1749.28, 1787.43, 1825.89, 1866.07, 1906.58, 1947.84, 1989.66, 2031.4, 2072.8, 2115.32, 2159.5, 2205.23, 2252.68, 2298.58, 2345.65, 2393.36, 2442.87, 2491.45, 2541.04, 2592.81, 2645.52, 2699.1, 2753.29, 2807.93, 2864.37, 2922.6, 2979.42, 3038.68, 3098.72, 3159.29, 3221.66, 3285.9, 3350.95, 3415.81, 3482.69, 3552.62, 3623.61, 3694.63, 3767.25, 3840.28, 3917.04, 3993.66, 4073.36, 4154.33, 4238.13, 4322.21, 4409.83, 4498.89, 4589.72, 4681.56, 4777.09, 4877.95, 4987.05, 5113.04, 5279.58, 6242.82};
+  Int_t binPos = -1;
+  for(int i = 0; i < nBins; ++i){
+    if(hiHF >= binTable[i] && hiHF < binTable[i+1]){
+      binPos = i;
+      break;
+    }
+  }
+  binPos = nBins - 1 - binPos;
+  return (Int_t)(200*((Double_t)binPos)/((Double_t)nBins));
+}
 
 double findCenWeight(const int Bin) {
   double NCollArray[40]={
@@ -100,7 +80,7 @@ TH1F *g2h(TGraphAsymmErrors *g, double def=1e-3) {
    double *eyl = g->GetEYlow();
    double *eyh = g->GetEYhigh();
    double *bins = new double[n+2];
-   bins[0] = 0;
+   bins[0] = (x[0]>=0. ? 0. : x[0]*1.1);
    for (int i=0; i<n; i++) bins[i+1] = x[i]-exl[i];
    bins[n+1] = x[n-1]+exh[n-1];
    TH1F *ans = new TH1F(Form("tmp%i",gRandom->Integer(1e9)),"tmp",n+1,bins);
@@ -108,28 +88,30 @@ TH1F *g2h(TGraphAsymmErrors *g, double def=1e-3) {
    ans->SetBinError(1,def/5.);
    for (int i=0; i<n; i++) {
       ans->SetBinContent(i+2,y[i]);
-      ans->SetBinError(i+2,(eyl[i]+eyh[i])/2);
+      ans->SetBinError(i+2,(eyl[i]+eyh[i])/2.);
    }
    ans->SetLineColor(g->GetLineColor());
    ans->SetMarkerColor(g->GetMarkerColor());
    ans->SetMarkerStyle(g->GetMarkerStyle());
    ans->GetYaxis()->SetTitle("Efficiency");
-   ans->GetXaxis()->SetTitle("p_{T} [GeV/c]");
+   if (x[0]>2.4) { ans->GetXaxis()->SetTitle("p_{T} [GeV/c]"); }
+   else { ans->GetXaxis()->SetTitle("#eta"); }
    delete[] bins;
    return ans;
 };
 
 void setTRatioPlotStyle(TRatioPlot *tr) {
-   tr->SetH1DrawOpt("");
-   tr->SetH2DrawOpt("");
+   gStyle->SetOptStat(0);
+   tr->SetH1DrawOpt("E");
+   tr->SetH2DrawOpt("E");
    tr->Draw();
    tr->GetLowerRefXaxis()->SetTitleOffset(0.9);
    tr->SetLowBottomMargin(0.4);
    tr->SetRightMargin(0.05);
    tr->GetUpperRefYaxis()->SetRangeUser(0,1.1);
-   tr->GetUpperRefXaxis()->SetRangeUser(0,30);
+   tr->GetUpperRefXaxis()->SetRangeUser(15, 100);
    tr->GetLowerRefYaxis()->SetRangeUser(0.89,1.11);
-   tr->GetLowerRefXaxis()->SetRangeUser(0,30);
+   tr->GetLowerRefXaxis()->SetRangeUser(15, 200);
    tr->GetLowerRefYaxis()->SetNdivisions(503,kFALSE);
    tr->GetUpperRefYaxis()->SetTitle("Efficiency");
    tr->GetLowerRefYaxis()->SetTitle("trd / tnp");

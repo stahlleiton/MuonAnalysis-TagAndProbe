@@ -35,70 +35,88 @@ class ClosureTestPbPb {
   Int_t           NpixelTracks;
   Int_t           Ntracks;
   Int_t           nTrig;
-  Int_t           trigPrescale[28];   //[nTrig]
+  Int_t           trigPrescale[100];   //[nTrig]
   ULong64_t       HLTriggers;
   Int_t           Reco_QQ_size;
-  Int_t           Reco_QQ_type[66];   //[Reco_QQ_size]
-  Int_t           Reco_QQ_sign[66];   //[Reco_QQ_size]
+  Int_t           Reco_QQ_type[100];   //[Reco_QQ_size]
+  Int_t           Reco_QQ_sign[100];   //[Reco_QQ_size]
   TClonesArray    *Reco_QQ_4mom;
-  Int_t           Reco_QQ_mupl_idx[66];   //[Reco_QQ_size]
-  Int_t           Reco_QQ_mumi_idx[66];   //[Reco_QQ_size]
-  ULong64_t       Reco_QQ_trig[66];   //[Reco_QQ_size]
-  Bool_t          Reco_QQ_isCowboy[66];   //[Reco_QQ_size]
-  Float_t         Reco_QQ_ctau[66];   //[Reco_QQ_size]
-  Float_t         Reco_QQ_ctauErr[66];   //[Reco_QQ_size]
-  Float_t         Reco_QQ_cosAlpha[66];   //[Reco_QQ_size]
-  Float_t         Reco_QQ_ctau3D[66];   //[Reco_QQ_size]
-  Float_t         Reco_QQ_ctauErr3D[66];   //[Reco_QQ_size]
-  Float_t         Reco_QQ_cosAlpha3D[66];   //[Reco_QQ_size]
-  Int_t           Reco_QQ_whichGen[66];   //[Reco_QQ_size]
-  Float_t         Reco_QQ_VtxProb[66];   //[Reco_QQ_size]
-  Float_t         Reco_QQ_dca[66];   //[Reco_QQ_size]
-  Float_t         Reco_QQ_MassErr[66];   //[Reco_QQ_size]
+  Int_t           Reco_QQ_mupl_idx[100];   //[Reco_QQ_size]
+  Int_t           Reco_QQ_mumi_idx[100];   //[Reco_QQ_size]
+  ULong64_t       Reco_QQ_trig[100];   //[Reco_QQ_size]
+  Bool_t          Reco_QQ_isCowboy[100];   //[Reco_QQ_size]
+  Float_t         Reco_QQ_ctau[100];   //[Reco_QQ_size]
+  Float_t         Reco_QQ_ctauErr[100];   //[Reco_QQ_size]
+  Float_t         Reco_QQ_cosAlpha[100];   //[Reco_QQ_size]
+  Float_t         Reco_QQ_ctau3D[100];   //[Reco_QQ_size]
+  Float_t         Reco_QQ_ctauErr3D[100];   //[Reco_QQ_size]
+  Float_t         Reco_QQ_cosAlpha3D[100];   //[Reco_QQ_size]
+  Int_t           Reco_QQ_whichGen[100];   //[Reco_QQ_size]
+  Float_t         Reco_QQ_VtxProb[100];   //[Reco_QQ_size]
+  Float_t         Reco_QQ_dca[100];   //[Reco_QQ_size]
+  Float_t         Reco_QQ_MassErr[100];   //[Reco_QQ_size]
   TClonesArray    *Reco_QQ_vtx;
-  Int_t           Reco_QQ_Ntrk[66];   //[Reco_QQ_size]
+  Int_t           Reco_QQ_Ntrk[100];   //[Reco_QQ_size]
   Int_t           Reco_mu_size;
-  Int_t           Reco_mu_type[12];   //[Reco_mu_size]
-  Int_t           Reco_mu_whichGen[12];   //[Reco_mu_size]
-  Int_t           Reco_mu_SelectionType[12];   //[Reco_mu_size]
-  Int_t           Reco_mu_charge[12];   //[Reco_mu_size]
+  Int_t           Reco_mu_type[100];   //[Reco_mu_size]
+  Int_t           Reco_mu_whichGen[100];   //[Reco_mu_size]
+  Int_t           Reco_mu_SelectionType[100];   //[Reco_mu_size]
+  Int_t           Reco_mu_charge[100];   //[Reco_mu_size]
   TClonesArray    *Reco_mu_4mom;
-  ULong64_t       Reco_mu_trig[12];   //[Reco_mu_size]
-  Bool_t          Reco_mu_highPurity[12];   //[Reco_mu_size]
-  Bool_t          Reco_mu_TrkMuArb[12];   //[Reco_mu_size]
-  Bool_t          Reco_mu_TMOneStaTight[12];   //[Reco_mu_size]
-  Int_t           Reco_mu_nPixValHits[12];   //[Reco_mu_size]
-  Int_t           Reco_mu_nMuValHits[12];   //[Reco_mu_size]
-  Int_t           Reco_mu_nTrkHits[12];   //[Reco_mu_size]
-  Float_t         Reco_mu_normChi2_inner[12];   //[Reco_mu_size]
-  Float_t         Reco_mu_normChi2_global[12];   //[Reco_mu_size]
-  Int_t           Reco_mu_nPixWMea[12];   //[Reco_mu_size]
-  Int_t           Reco_mu_nTrkWMea[12];   //[Reco_mu_size]
-  Int_t           Reco_mu_StationsMatched[12];   //[Reco_mu_size]
-  Float_t         Reco_mu_dxy[12];   //[Reco_mu_size]
-  Float_t         Reco_mu_dxyErr[12];   //[Reco_mu_size]
-  Float_t         Reco_mu_dz[12];   //[Reco_mu_size]
-  Float_t         Reco_mu_dzErr[12];   //[Reco_mu_size]
-  Float_t         Reco_mu_pt_inner[12];   //[Reco_mu_size]
-  Float_t         Reco_mu_pt_global[12];   //[Reco_mu_size]
-  Float_t         Reco_mu_ptErr_inner[12];   //[Reco_mu_size]
-  Float_t         Reco_mu_ptErr_global[12];   //[Reco_mu_size]
+  ULong64_t       Reco_mu_trig[100];   //[Reco_mu_size]
+  Bool_t          Reco_mu_isPF[100];   //[Reco_mu_size]
+  Bool_t          Reco_mu_highPurity[100];   //[Reco_mu_size]
+  Bool_t          Reco_mu_TrkMuArb[100];   //[Reco_mu_size]
+  Bool_t          Reco_mu_TMOneStaTight[100];   //[Reco_mu_size]
+  Int_t           Reco_mu_nPixValHits[100];   //[Reco_mu_size]
+  Int_t           Reco_mu_nMuValHits[100];   //[Reco_mu_size]
+  Int_t           Reco_mu_nTrkHits[100];   //[Reco_mu_size]
+  Float_t         Reco_mu_normChi2_inner[100];   //[Reco_mu_size]
+  Float_t         Reco_mu_normChi2_global[100];   //[Reco_mu_size]
+  Int_t           Reco_mu_nPixWMea[100];   //[Reco_mu_size]
+  Int_t           Reco_mu_nTrkWMea[100];   //[Reco_mu_size]
+  Int_t           Reco_mu_StationsMatched[100];   //[Reco_mu_size]
+  Float_t         Reco_mu_dxy[100];   //[Reco_mu_size]
+  Float_t         Reco_mu_dxyErr[100];   //[Reco_mu_size]
+  Float_t         Reco_mu_dz[100];   //[Reco_mu_size]
+  Float_t         Reco_mu_dzErr[100];   //[Reco_mu_size]
+  Float_t         Reco_mu_pt_inner[100];   //[Reco_mu_size]
+  Float_t         Reco_mu_pt_global[100];   //[Reco_mu_size]
+  Float_t         Reco_mu_ptErr_inner[100];   //[Reco_mu_size]
+  Float_t         Reco_mu_ptErr_global[100];   //[Reco_mu_size]
+  Int_t           Reco_trk_size;
+  Int_t           Reco_trk_genIdx[100];   //[Reco_trk_size]
+  Int_t           Reco_trk_charge[100];   //[Reco_trk_size]
+  TClonesArray    *Reco_trk_4mom;
+  Bool_t          Reco_trk_highPurity[100];   //[Reco_trk_size]
+  Int_t           Reco_trk_nPixValHits[100];   //[Reco_trk_size]
+  Int_t           Reco_trk_nTrkHits[100];   //[Reco_trk_size]
+  Float_t         Reco_trk_normChi2[100];   //[Reco_trk_size]
+  Int_t           Reco_trk_nPixWMea[100];   //[Reco_trk_size]
+  Int_t           Reco_trk_nTrkWMea[100];   //[Reco_trk_size]
+  Float_t         Reco_trk_dxy[100];   //[Reco_trk_size]
+  Float_t         Reco_trk_dxyError[100];   //[Reco_trk_size]
+  Float_t         Reco_trk_dz[100];   //[Reco_trk_size]
+  Float_t         Reco_trk_dzError[100];   //[Reco_trk_size]
+  Float_t         Reco_trk_ptErr[100];   //[Reco_trk_size]
+  Int_t           Reco_trk_algo[100];   //[Reco_trk_size]
+  Int_t           Reco_trk_origAlgo[100];   //[Reco_trk_size]
   Float_t         Gen_weight;
   Float_t         Gen_pthat;
   Int_t           Gen_QQ_size;
-  Int_t           Gen_QQ_type[4];   //[Gen_QQ_size]
+  Int_t           Gen_QQ_type[100];   //[Gen_QQ_size]
   TClonesArray    *Gen_QQ_4mom;
-  Int_t           Gen_QQ_momId[4];   //[Gen_QQ_size]
-  Float_t         Gen_QQ_ctau[4];   //[Gen_QQ_size]
-  Float_t         Gen_QQ_ctau3D[4];   //[Gen_QQ_size]
-  Int_t           Gen_QQ_mupl_idx[4];   //[Gen_QQ_size]
-  Int_t           Gen_QQ_mumi_idx[4];   //[Gen_QQ_size]
-  Int_t           Gen_QQ_whichRec[4];   //[Gen_QQ_size]
+  Int_t           Gen_QQ_momId[100];   //[Gen_QQ_size]
+  Float_t         Gen_QQ_ctau[100];   //[Gen_QQ_size]
+  Float_t         Gen_QQ_ctau3D[100];   //[Gen_QQ_size]
+  Int_t           Gen_QQ_mupl_idx[100];   //[Gen_QQ_size]
+  Int_t           Gen_QQ_mumi_idx[100];   //[Gen_QQ_size]
+  Int_t           Gen_QQ_whichRec[100];   //[Gen_QQ_size]
   Int_t           Gen_mu_size;
-  Int_t           Gen_mu_type[19];   //[Gen_mu_size]
-  Int_t           Gen_mu_charge[19];   //[Gen_mu_size]
+  Int_t           Gen_mu_type[100];   //[Gen_mu_size]
+  Int_t           Gen_mu_charge[100];   //[Gen_mu_size]
   TClonesArray    *Gen_mu_4mom;
-  Int_t           Gen_mu_whichRec[19];   //[Gen_mu_size]
+  Int_t           Gen_mu_whichRec[100];   //[Gen_mu_size]
 
   Int_t           hiBin;
   Float_t         hiHF;
@@ -144,6 +162,7 @@ class ClosureTestPbPb {
   TBranch        *b_Reco_mu_charge;   //!
   TBranch        *b_Reco_mu_4mom;   //!
   TBranch        *b_Reco_mu_trig;   //!
+  TBranch        *b_Reco_mu_isPF;   //!
   TBranch        *b_Reco_mu_highPurity;   //!
   TBranch        *b_Reco_mu_TrkMuArb;   //!
   TBranch        *b_Reco_mu_TMOneStaTight;   //!
@@ -163,6 +182,23 @@ class ClosureTestPbPb {
   TBranch        *b_Reco_mu_pt_global;   //!
   TBranch        *b_Reco_mu_ptErr_inner;   //!
   TBranch        *b_Reco_mu_ptErr_global;   //!
+  TBranch        *b_Reco_trk_size;   //!
+  TBranch        *b_Reco_trk_genIdx;   //!
+  TBranch        *b_Reco_trk_charge;   //!
+  TBranch        *b_Reco_trk_4mom;   //!
+  TBranch        *b_Reco_trk_highPurity;   //!
+  TBranch        *b_Reco_trk_nPixValHits;   //!
+  TBranch        *b_Reco_trk_nTrkHits;   //!
+  TBranch        *b_Reco_trk_normChi2;   //!
+  TBranch        *b_Reco_trk_nPixWMea;   //!
+  TBranch        *b_Reco_trk_nTrkWMea;   //!
+  TBranch        *b_Reco_trk_dxy;   //!
+  TBranch        *b_Reco_trk_dxyError;   //!
+  TBranch        *b_Reco_trk_dz;   //!
+  TBranch        *b_Reco_trk_dzError;   //!
+  TBranch        *b_Reco_trk_ptErr;   //!
+  TBranch        *b_Reco_trk_algo;   //!
+  TBranch        *b_Reco_trk_origAlgo;   //!
   TBranch        *b_Gen_weight;   //!
   TBranch        *b_Gen_pthat;   //!
   TBranch        *b_Gen_QQ_size;   //!
@@ -191,10 +227,12 @@ class ClosureTestPbPb {
   virtual Bool_t   areMuonsInAcceptance2015 (Int_t iRecoQQ);
   virtual Bool_t   passQualityCuts2015 (Int_t iRecoQQ);
   virtual Bool_t   Cut_muplmi (Int_t iRecoQQ);
+  virtual Bool_t   isTightID (Int_t iMu);
+  virtual Bool_t   isTriggerMatched (Int_t iMu, Int_t iTrg, Int_t iMuTrg);
   virtual Int_t    GetEntry(Long64_t entry);
   virtual Long64_t LoadTree(Long64_t entry);
   virtual void     Init(TTree *tree);
-  virtual void     Loop(const char* filename, int centmin=0, int centmax=200, int trigIdx=0);
+  virtual void     Loop(const std::string& filename);
   virtual Bool_t   Notify();
   virtual void     Show(Long64_t entry = -1);
 };
@@ -256,6 +294,7 @@ void ClosureTestPbPb::Init(TTree *tree)
   Reco_QQ_4mom = 0;
   Reco_QQ_vtx = 0;
   Reco_mu_4mom = 0;
+  Reco_trk_4mom = 0;
   Gen_QQ_4mom = 0;
   Gen_mu_4mom = 0;
   // Set branch addresses and branch pointers
@@ -303,6 +342,7 @@ void ClosureTestPbPb::Init(TTree *tree)
    if (fChain->GetBranch("Reco_mu_charge")) fChain->SetBranchAddress("Reco_mu_charge", Reco_mu_charge, &b_Reco_mu_charge);
    if (fChain->GetBranch("Reco_mu_4mom")) fChain->SetBranchAddress("Reco_mu_4mom", &Reco_mu_4mom, &b_Reco_mu_4mom);
    if (fChain->GetBranch("Reco_mu_trig")) fChain->SetBranchAddress("Reco_mu_trig", Reco_mu_trig, &b_Reco_mu_trig);
+   if (fChain->GetBranch("Reco_mu_isPF")) fChain->SetBranchAddress("Reco_mu_isPF", Reco_mu_isPF, &b_Reco_mu_isPF);
    if (fChain->GetBranch("Reco_mu_highPurity")) fChain->SetBranchAddress("Reco_mu_highPurity", Reco_mu_highPurity, &b_Reco_mu_highPurity);
    if (fChain->GetBranch("Reco_mu_TrkMuArb")) fChain->SetBranchAddress("Reco_mu_TrkMuArb", Reco_mu_TrkMuArb, &b_Reco_mu_TrkMuArb);
    if (fChain->GetBranch("Reco_mu_TMOneStaTight")) fChain->SetBranchAddress("Reco_mu_TMOneStaTight", Reco_mu_TMOneStaTight, &b_Reco_mu_TMOneStaTight);
@@ -322,6 +362,23 @@ void ClosureTestPbPb::Init(TTree *tree)
    if (fChain->GetBranch("Reco_mu_pt_global")) fChain->SetBranchAddress("Reco_mu_pt_global", Reco_mu_pt_global, &b_Reco_mu_pt_global);
    if (fChain->GetBranch("Reco_mu_ptErr_inner")) fChain->SetBranchAddress("Reco_mu_ptErr_inner", Reco_mu_ptErr_inner, &b_Reco_mu_ptErr_inner);
    if (fChain->GetBranch("Reco_mu_ptErr_global")) fChain->SetBranchAddress("Reco_mu_ptErr_global", Reco_mu_ptErr_global, &b_Reco_mu_ptErr_global);
+   if (fChain->GetBranch("Reco_trk_size")) fChain->SetBranchAddress("Reco_trk_size", &Reco_trk_size, &b_Reco_trk_size);
+   if (fChain->GetBranch("Reco_trk_genIdx")) fChain->SetBranchAddress("Reco_trk_genIdx", Reco_trk_genIdx, &b_Reco_trk_genIdx);
+   if (fChain->GetBranch("Reco_trk_charge")) fChain->SetBranchAddress("Reco_trk_charge", Reco_trk_charge, &b_Reco_trk_charge);
+   if (fChain->GetBranch("Reco_trk_4mom")) fChain->SetBranchAddress("Reco_trk_4mom", &Reco_trk_4mom, &b_Reco_trk_4mom);
+   if (fChain->GetBranch("Reco_trk_highPurity")) fChain->SetBranchAddress("Reco_trk_highPurity", Reco_trk_highPurity, &b_Reco_trk_highPurity);
+   if (fChain->GetBranch("Reco_trk_nPixValHits")) fChain->SetBranchAddress("Reco_trk_nPixValHits", Reco_trk_nPixValHits, &b_Reco_trk_nPixValHits);
+   if (fChain->GetBranch("Reco_trk_nTrkHits")) fChain->SetBranchAddress("Reco_trk_nTrkHits", Reco_trk_nTrkHits, &b_Reco_trk_nTrkHits);
+   if (fChain->GetBranch("Reco_trk_normChi2")) fChain->SetBranchAddress("Reco_trk_normChi2", Reco_trk_normChi2, &b_Reco_trk_normChi2);
+   if (fChain->GetBranch("Reco_trk_nPixWMea")) fChain->SetBranchAddress("Reco_trk_nPixWMea", Reco_trk_nPixWMea, &b_Reco_trk_nPixWMea);
+   if (fChain->GetBranch("Reco_trk_nTrkWMea")) fChain->SetBranchAddress("Reco_trk_nTrkWMea", Reco_trk_nTrkWMea, &b_Reco_trk_nTrkWMea);
+   if (fChain->GetBranch("Reco_trk_dxy")) fChain->SetBranchAddress("Reco_trk_dxy", Reco_trk_dxy, &b_Reco_trk_dxy);
+   if (fChain->GetBranch("Reco_trk_dxyError")) fChain->SetBranchAddress("Reco_trk_dxyError", Reco_trk_dxyError, &b_Reco_trk_dxyError);
+   if (fChain->GetBranch("Reco_trk_dz")) fChain->SetBranchAddress("Reco_trk_dz", Reco_trk_dz, &b_Reco_trk_dz);
+   if (fChain->GetBranch("Reco_trk_dzError")) fChain->SetBranchAddress("Reco_trk_dzError", Reco_trk_dzError, &b_Reco_trk_dzError);
+   if (fChain->GetBranch("Reco_trk_ptErr")) fChain->SetBranchAddress("Reco_trk_ptErr", Reco_trk_ptErr, &b_Reco_trk_ptErr);
+   if (fChain->GetBranch("Reco_trk_algo")) fChain->SetBranchAddress("Reco_trk_algo", Reco_trk_algo, &b_Reco_trk_algo);
+   if (fChain->GetBranch("Reco_trk_origAlgo")) fChain->SetBranchAddress("Reco_trk_origAlgo", Reco_trk_origAlgo, &b_Reco_trk_origAlgo);
    if (fChain->GetBranch("Gen_weight")) fChain->SetBranchAddress("Gen_weight", &Gen_weight, &b_Gen_weight);
    if (fChain->GetBranch("Gen_pthat")) fChain->SetBranchAddress("Gen_pthat", &Gen_pthat, &b_Gen_pthat);
    if (fChain->GetBranch("Gen_QQ_size")) fChain->SetBranchAddress("Gen_QQ_size", &Gen_QQ_size, &b_Gen_QQ_size);
@@ -338,20 +395,8 @@ void ClosureTestPbPb::Init(TTree *tree)
    if (fChain->GetBranch("Gen_mu_charge")) fChain->SetBranchAddress("Gen_mu_charge", Gen_mu_charge, &b_Gen_mu_charge);
    if (fChain->GetBranch("Gen_mu_4mom")) fChain->SetBranchAddress("Gen_mu_4mom", &Gen_mu_4mom, &b_Gen_mu_4mom);
    if (fChain->GetBranch("Gen_mu_whichRec")) fChain->SetBranchAddress("Gen_mu_whichRec", Gen_mu_whichRec, &b_Gen_mu_whichRec);
-
-  if (fChain->GetBranch("hiBin")) fChain->SetBranchAddress("hiBin", &hiBin, &b_hiBin);
-  if (fChain->GetBranch("hiHF")) fChain->SetBranchAddress("hiHF", &hiHF, &b_hiHF);
-
-  fChain->SetBranchStatus("*",0);
-  if (fChain->GetBranch("Reco_QQ_size")) fChain->SetBranchStatus("Reco_QQ_size",1);
-  if (fChain->GetBranch("Reco_QQ_sign")) fChain->SetBranchStatus("Reco_QQ_sign",1);
-  if (fChain->GetBranch("Reco_QQ_4mom")) fChain->SetBranchStatus("Reco_QQ_4mom",1);
-  if (fChain->GetBranch("Reco_QQ_mupl_idx")) fChain->SetBranchStatus("Reco_QQ_mupl_idx",1);
-  if (fChain->GetBranch("Reco_QQ_mumi_idx")) fChain->SetBranchStatus("Reco_QQ_mumi_idx",1);
-  fChain->SetBranchStatus("Reco_mu*",1);
-  fChain->SetBranchStatus("Gen*",1);
-  if (fChain->GetBranch("hiBin")) fChain->SetBranchStatus("hiBin",1);
-  if (fChain->GetBranch("hiHF")) fChain->SetBranchStatus("hiHF",1);
+  if (fChain->GetBranch("Centrality")) fChain->SetBranchAddress("Centrality", &hiBin, &b_hiBin);
+  if (fChain->GetBranch("SumET_HF")) fChain->SetBranchAddress("SumET_HF", &hiHF, &b_hiHF);
   Notify();
 }
 
@@ -451,25 +496,29 @@ Bool_t ClosureTestPbPb::Cut_muplmi (Int_t irec)
   return cond;
 }; 
 
-Int_t getMCHiBinFromhiHF(const Double_t hiHF) {
-  const Int_t nBins = 200; // table of bin edges
-  const Double_t binTable[nBins+1] = {0, 12.2187, 13.0371, 13.7674, 14.5129, 15.2603, 16.0086, 16.7623, 17.5335, 18.3283, 19.1596, 19.9989, 20.8532, 21.7297, 22.6773, 23.6313, 24.6208, 25.6155, 26.6585, 27.7223, 28.8632, 30.041, 31.2865, 32.5431, 33.8655, 35.2539, 36.6912, 38.2064, 39.7876, 41.4818, 43.2416, 45.0605, 46.9652, 48.9918, 51.1, 53.2417, 55.5094, 57.9209, 60.3817, 62.9778, 65.6099, 68.4352, 71.3543, 74.4154, 77.6252, 80.8425, 84.1611, 87.7395, 91.3973, 95.1286, 99.0571, 103.185, 107.482, 111.929, 116.45, 121.178, 126.081, 130.995, 136.171, 141.612, 147.298, 153.139, 159.419, 165.633, 172.114, 178.881, 185.844, 192.845, 200.244, 207.83, 215.529, 223.489, 231.878, 240.254, 249.319, 258.303, 267.508, 277.037, 286.729, 296.845, 307.458, 317.882, 328.787, 340.074, 351.295, 362.979, 375.125, 387.197, 399.604, 412.516, 425.683, 439.001, 452.667, 466.816, 481.007, 495.679, 510.588, 526.138, 541.782, 557.641, 574.141, 591.071, 608.379, 626.068, 643.616, 661.885, 680.288, 699.449, 718.925, 738.968, 758.983, 779.459, 800.376, 821.638, 843.555, 865.771, 888.339, 911.031, 934.979, 958.56, 982.582, 1007.02, 1031.9, 1057.81, 1084.01, 1111.71, 1138.21, 1165.72, 1193.73, 1221.65, 1251.51, 1281.23, 1311.01, 1341.1, 1372.4, 1404.29, 1436.52, 1468.65, 1501.91, 1535.56, 1569.69, 1604.69, 1640.65, 1676.05, 1712.62, 1749.28, 1787.43, 1825.89, 1866.07, 1906.58, 1947.84, 1989.66, 2031.4, 2072.8, 2115.32, 2159.5, 2205.23, 2252.68, 2298.58, 2345.65, 2393.36, 2442.87, 2491.45, 2541.04, 2592.81, 2645.52, 2699.1, 2753.29, 2807.93, 2864.37, 2922.6, 2979.42, 3038.68, 3098.72, 3159.29, 3221.66, 3285.9, 3350.95, 3415.81, 3482.69, 3552.62, 3623.61, 3694.63, 3767.25, 3840.28, 3917.04, 3993.66, 4073.36, 4154.33, 4238.13, 4322.21, 4409.83, 4498.89, 4589.72, 4681.56, 4777.09, 4877.95, 4987.05, 5113.04, 5279.58, 6242.82};
-  Int_t binPos = -1;
-  for(int i = 0; i < nBins; ++i){
-    if(hiHF >= binTable[i] && hiHF < binTable[i+1]){
-      binPos = i;
-      break;
-    }
-  }
-  binPos = nBins - 1 - binPos;
-  return (Int_t)(200*((Double_t)binPos)/((Double_t)nBins));
-}
-
-Double_t findNcoll(int hiBin) {
-   const int nbins = 200;
-   const Double_t Ncoll[nbins] = {1976.95, 1944.02, 1927.29, 1891.9, 1845.3, 1807.2, 1760.45, 1729.18, 1674.8, 1630.3, 1590.52, 1561.72, 1516.1, 1486.5, 1444.68, 1410.88, 1376.4, 1347.32, 1309.71, 1279.98, 1255.31, 1219.89, 1195.13, 1165.96, 1138.92, 1113.37, 1082.26, 1062.42, 1030.6, 1009.96, 980.229, 955.443, 936.501, 915.97, 892.063, 871.289, 847.364, 825.127, 806.584, 789.163, 765.42, 751.187, 733.001, 708.31, 690.972, 677.711, 660.682, 640.431, 623.839, 607.456, 593.307, 576.364, 560.967, 548.909, 530.475, 519.575, 505.105, 490.027, 478.133, 462.372, 451.115, 442.642, 425.76, 416.364, 405.154, 392.688, 380.565, 371.167, 360.28, 348.239, 340.587, 328.746, 320.268, 311.752, 300.742, 292.172, 281.361, 274.249, 267.025, 258.625, 249.931, 240.497, 235.423, 228.63, 219.854, 214.004, 205.425, 199.114, 193.618, 185.644, 180.923, 174.289, 169.641, 161.016, 157.398, 152.151, 147.425, 140.933, 135.924, 132.365, 127.017, 122.127, 117.817, 113.076, 109.055, 105.16, 101.323, 98.098, 95.0548, 90.729, 87.6495, 84.0899, 80.2237, 77.2201, 74.8848, 71.3554, 68.7745, 65.9911, 63.4136, 61.3859, 58.1903, 56.4155, 53.8486, 52.0196, 49.2921, 47.0735, 45.4345, 43.8434, 41.7181, 39.8988, 38.2262, 36.4435, 34.8984, 33.4664, 31.8056, 30.351, 29.2074, 27.6924, 26.7754, 25.4965, 24.2802, 22.9651, 22.0059, 21.0915, 19.9129, 19.1041, 18.1487, 17.3218, 16.5957, 15.5323, 14.8035, 14.2514, 13.3782, 12.8667, 12.2891, 11.61, 11.0026, 10.3747, 9.90294, 9.42648, 8.85324, 8.50121, 7.89834, 7.65197, 7.22768, 6.7755, 6.34855, 5.98336, 5.76555, 5.38056, 5.11024, 4.7748, 4.59117, 4.23247, 4.00814, 3.79607, 3.68702, 3.3767, 3.16309, 2.98282, 2.8095, 2.65875, 2.50561, 2.32516, 2.16357, 2.03235, 1.84061, 1.72628, 1.62305, 1.48916, 1.38784, 1.28366, 1.24693, 1.18552, 1.16085, 1.12596, 1.09298, 1.07402, 1.06105, 1.02954};
-   return Ncoll[hiBin];
+Bool_t ClosureTestPbPb::isTightID(Int_t irec) 
+{
+  if (irec<0) return false;
+  Bool_t cond = true;
+  cond = cond && ((Reco_mu_SelectionType[irec]&2) > 0); //isGlobal
+  cond = cond && Reco_mu_isPF[irec];
+  cond = cond && (Reco_mu_normChi2_global[irec] < 10.0);
+  cond = cond && (Reco_mu_nMuValHits[irec] > 0);
+  cond = cond && (Reco_mu_StationsMatched[irec] > 1);
+  cond = cond && (fabs(Reco_mu_dxy[irec]) < 0.2);
+  cond = cond && (fabs(Reco_mu_dz[irec]) < 0.5);
+  cond = cond && (Reco_mu_nPixValHits[irec] > 0);
+  cond = cond && (Reco_mu_nTrkWMea[irec] > 5);
+  return cond;
 };
 
+Bool_t ClosureTestPbPb::isTriggerMatched(Int_t irec, Int_t itrg, Int_t iMuTrg) 
+{
+  if (irec<0 || itrg<0 || iMuTrg<0) return false;
+  const auto& bit = ULong64_t(std::pow(2,itrg));
+  const auto& mubit = ULong64_t(std::pow(2,iMuTrg));
+  const bool& isTrig = ((HLTriggers & bit) > 0) && ((Reco_mu_trig[irec] & mubit) > 0);
+  return isTrig;
+};
 
 #endif // #ifdef ClosureTestPbPb_cxx
