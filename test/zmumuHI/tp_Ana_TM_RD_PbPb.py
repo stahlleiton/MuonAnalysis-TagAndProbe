@@ -11,7 +11,7 @@ process = cms.Process("TagProbe")
 process.load('FWCore.MessageService.MessageLogger_cfi')
 process.source = cms.Source("EmptySource")
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1) )    
-PDFName = "VoigtPol2" #VoigtExp, BWResCBExp, BWResCBCheb, VoigtPol2, BWResCBPol2
+PDFName = "BWConvCBExpPol3" #VoigtExp, BWResCBExp, BWResCBCheb, VoigtPol2, BWResCBPol2
 
 VEFFICIENCYSET =cms.VPSet(
 
@@ -217,24 +217,24 @@ if scenario == "0": EFFICIENCYSET = cms.PSet(VEFFICIENCYSET[0],VEFFICIENCYSET[1]
 
 process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     # IO parameters:
-    InputFileNames = cms.vstring("file:./tnpZ_Data_PbPb_mod_v5.root"),
+    InputFileNames = cms.vstring("file:/afs/cern.ch/work/o/okukral/TnP_PbPb/CMSSW_10_3_2/src/MuonAnalysis/TagAndProbe/test/zmumuHI/tnpZ_Data_PbPb_mod_v5_1.root"),
     InputDirectoryName = cms.string("tpTreeTrk"),
     InputTreeName = cms.string("fitter_tree"),
     #OutputFileName = cms.string("tnp_Ana_Data_RecoTM_PbPb.root"),
-    OutputFileName = cms.string("tnp_Ana_RD_TM_PbPb_moreEta_v5_nominal_%s.root" % scenario),
+    OutputFileName = cms.string("tnp_Ana_RD_TM_PbPb_OK_nominal_%s.root" % scenario),
     #numbrer of CPUs to use for fitting
     NumCPU = cms.uint32(24),
     # specifies whether to save the RooWorkspace containing the data for each bin and
     # the pdf object with the initial and final state snapshots
-    binnedFit = cms.bool(False),
-    binsForFit = cms.uint32(100),
-    binsForMassPlots = cms.uint32(100),
+    binnedFit = cms.bool(True),
+    binsForFit = cms.uint32(65),
+    binsForMassPlots = cms.uint32(65),
     SaveWorkspace = cms.bool(False),
 #	WeightVariable = cms.string("weight"),
     
     # defines all the real variables of the probes available in the input tree and intended for use in the efficiencies
     Variables = cms.PSet(
-                         mass             = cms.vstring("Tag-Probe Mass", "60.0", "120.0", "GeV/c^{2}"), # mass range syst: 2.8-3.4
+                         mass             = cms.vstring("Tag-Probe Mass", "65.0", "130.0", "GeV/c^{2}"), # mass range syst: 2.8-3.4
                          #mass             = cms.vstring("Tag-Probe Mass", "50.0", "130.0", "GeV/c^{2}"), # Syst_mass
                          pt               = cms.vstring("Probe p_{T}", "0.0", "1000", "GeV/c"),
                          eta              = cms.vstring("Probe #eta", "-2.4", "2.4", ""),
@@ -310,6 +310,15 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
 	        "Chebychev::backgroundFail(mass, {c1f[0,-10,10], c2f[0,-10,10]})",
 	        "efficiency[0.9,0.5,1]",
 	        "signalFractionInPassing[0.9]",
+	),
+    BWConvCBExpPol3 = cms.vstring( #n fixed to integrated bin in MC
+		"BreitWigner::bw(mass, m0[91.2,81.2,101.2], width[2.495,1,10])",
+		"RooCBShape::res(mass, peak[0], sigma[1.7,0.01,10], alpha[1.8,0,3], n[1.92])",
+		"FCONV::signal(mass, bw, res)",
+        "Exponential::backgroundPass(mass, lp[0,-5,5])",
+        "Chebychev::backgroundFail(mass, {cFail[-0.3,-1.5,1.5], cFail2[0.01,-0.5,0.5], cFail3[0.01,-0.2,0.2]})",
+		"efficiency[0.9,0.5,1]",
+		"signalFractionInPassing[0.9]",
 	),
       #  #nominal:
       #cbPlusPol1 = cms.vstring(

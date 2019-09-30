@@ -522,6 +522,22 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
 		"efficiency[0.9,0.5,1]",
 		"signalFractionInPassing[0.9]",
 	),
+    BWConvCBPol1Exp = cms.vstring( #n fixed to integrated bin in MC
+		"BreitWigner::bw(mass, m0[91.2,81.2,101.2], width[2.495,1,10])",
+		"RooCBShape::res(mass, peak[0], sigma[1.7,0.01,10], alpha[1.8,0,3], n[1.92])",
+		"FCONV::signal(mass, bw, res)",
+        "Chebychev::backgroundPass(mass, {cPass[0.0,-1.5,1.5]})",
+ 		"Exponential::backgroundFail(mass, lf[0,-5,5])",
+		"efficiency[0.9,0.5,1]",
+		"signalFractionInPassing[0.9]",
+	),
+    CBExpPol2 = cms.vstring( 
+		"RooCBShape::res(mass, m0[91.2,81.2,101.2], sigma[1.7,0.01,10], alpha[1.8,0,3], n[1.92, 0.2, 50])",
+        "Exponential::backgroundPass(mass, lp[0,-5,5])",
+        "Chebychev::backgroundFail(mass, {cFail[-0.3,-1.5,1.5], cFail2[0.01,-0.5,0.5]})",
+		"efficiency[0.9,0.5,1]",
+		"signalFractionInPassing[0.9]",
+	),
       #  #nominal:
       #cbPlusPol1 = cms.vstring(
       #  "CBShape::signal(mass, mean[3.08,3.00,3.3], sigma[0.03, 0.01, 0.10], alpha[1.85, 0.1, 50], n[1.7, 0.2, 50])",

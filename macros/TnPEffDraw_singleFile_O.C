@@ -59,7 +59,7 @@ TString collTag = "PbPb"; // isPbPb ? "PbPb" : "pp";
 int fitfcn = 2;
 
 // Location of the files
-const int nSyst = 1;
+const int nSyst = 4;
 // the first file is for the nominal case, the following ones are for the systematics
 /*const char* fDataName[nSyst] = {
 	//"tnp_Ana_RD_PbPb_MuonIDTrg_AllMB.root",
@@ -71,7 +71,7 @@ const char* fMCName[nSyst] = {
 };//*/
 
 const bool bPlotAbseta = true;
-bool bPlotSyst = false;
+bool bPlotSyst = true;
 
 // do the toy study for the correction factors?
 bool doToys = false;
@@ -88,7 +88,7 @@ bool doToys = false;
 bool doSF = true;
 TString saveDirName = "MuId_Eff";
 TString etaTag("MuId_etadep");
-//TString etaTag("MuId_etadep_passedglbChi2");
+//TString etaTag("MuId_etadep_passedMatchedStations_minus1");
 TString absetaTag("MuId_absetadep");
 TString centTag("MuId_centdep");
 //TString centTag("MuId_centdepHF");
@@ -103,9 +103,9 @@ ofstream file_Eta("EtaValues_MuId.txt");
 ofstream file_Cent("CentValues_MuId.txt");
 ofstream file_TestErr("MuId_ExpErr.txt");
 TString treeTag("tpTree");
-TString cutLegend("Tight ID");
-//TString cutLegend("glbChi2");
-const double effmin = 0.9;
+//TString cutLegend("Tight ID");
+TString cutLegend("Matched Stations");
+const double effmin = 0.85;
 const double effmax = 1.02;
 const double sfrange = 0.02;
 const double c_ptRange = 200; // how far to plot the pt
@@ -196,11 +196,11 @@ bool doSF = false;
 TString saveDirName = "Trk_Eff";
 //TString etaTag("Trk_etadep");
 TString etaTag("Trk_etadep_cent40100");
-//TString absetaTag("Trk_absetadep");
-TString absetaTag("Trk_absetadep_cent40100");
+TString absetaTag("Trk_absetadep");
+//TString absetaTag("Trk_absetadep_cent40100");
 TString centTag("Trk_centdep");
-const int nAbsEtaBins = 11;
-TString ptTag[nAbsEtaBins] = {"Trk_abseta00_09", "Trk_abseta09_12", "Trk_abseta12_16", "Trk_abseta16_21", "Trk_abseta21_24", "Trk_abseta00_12", "Trk_abseta12_21", "Trk_pt", "Trk_pt_cent0010", "Trk_pt_cent1040", "Trk_pt_cent40100" };
+const int nAbsEtaBins = 8;
+TString ptTag[nAbsEtaBins] = {"Trk_abseta00_09", "Trk_abseta09_12", "Trk_abseta12_16", "Trk_abseta16_21", "Trk_abseta21_24", "Trk_abseta00_12", "Trk_abseta12_21", "Trk_pt"};
 TString allTag("Trk_1bin");
 TString absetaVar("abseta");
 TString centVar("tag_hiBin");
@@ -213,17 +213,17 @@ TString treeTag("tpTreeTrk");
 TString cutLegend("Global Muon Tracking && PF");
 const double effmin = 0.8;
 const double effmax = 1.05;
-const double sfrange = 0.10;
+const double sfrange = 0.03;
 const double c_ptRange = 100; // how far to plot the pt
 const double c_centralityRange = 100; // how far to plot the centrality (hibin goes to 200)
-//const char* fDataName[nSyst] = { "tnp_Ana_RD_Trk_PbPb_0.root", "tnp_Ana_RD_Trk_PbPb_mass_0.root", "tnp_Ana_RD_Trk_PbPb_sig_0.root", "tnp_Ana_RD_Trk_PbPb_bkg_0.root" };
-//const char* fMCName[nSyst] = { "tnp_Ana_MC_Trk_PbPb_0.root", "tnp_Ana_MC_Trk_PbPb_mass_0.root", "tnp_Ana_MC_Trk_PbPb_sig_0.root", "tnp_Ana_MC_Trk_PbPb_bkg_0.root" };
-//const char* systName[nSyst] = {"Nominal", "Mass range 65-145", "Sig - Conv(CB,Gauss)", "Bkg - pol2"}; //name for systematics
+const char* fDataName[nSyst] = { "tnp_Ana_RD_TrkfromTrkM5_PbPb.root", "tnp_Ana_RD_TrkfromTrkM5_PbPb_mass.root", "tnp_Ana_RD_TrkfromTrkM5_PbPb_sig.root", "tnp_Ana_RD_TrkfromTrkM5_PbPb_bkg.root" };
+const char* fMCName[nSyst] = { "tnp_Ana_MC_TrkfromTrkM5_PbPb.root", "tnp_Ana_MC_TrkfromTrkM5_PbPb_mass.root", "tnp_Ana_MC_TrkfromTrkM5_PbPb_sig.root", "tnp_Ana_MC_TrkfromTrkM5_PbPb_bkg.root" };
+const char* systName[nSyst] = {"Nominal", "Mass range 65-135", "Sig - CB+Gauss", "Bkg - pol1, exp"}; //name for systematics
 
 
-const char* fDataName[nSyst] = { "tnp_Ana_RD_TrkfromTrkM5_PbPb.root" };
-const char* fMCName[nSyst] = { "tnp_Ana_MC_TrkfromTrkM5_PbPb.root" };
-const char* systName[nSyst] = {"Nominal"};
+//const char* fDataName[nSyst] = { "tnp_Ana_RD_TrkfromTrkM5_PbPb.root" };
+//const char* fMCName[nSyst] = { "tnp_Ana_MC_TrkfromTrkM5_PbPb.root" };
+//const char* systName[nSyst] = {"Nominal"};
 
 #endif
 
@@ -958,6 +958,7 @@ void TnPEffDraw_singleFile_O() {
 
 			// print the eta dependence to file
 			double xVal, yVal, ErrDown, ErrUp, etamin, etamax;
+			int nbins_eta = ComEta_RD[k]->GetN();
 			file_Eta << "Data " << endl << endl;
 			file_Eta << "Eta Value ErrDown ErrUp" << endl;
 			for (int bin = 0; bin < ComEta_RD[k]->GetN(); bin++)
@@ -980,7 +981,7 @@ void TnPEffDraw_singleFile_O() {
 			file_Eta << endl;
 
 			file_Eta << "  // MC" << endl;
-			for (int bin = 0; bin < ComEta_RD[k]->GetN(); bin++) {
+			for (int bin = 0; bin < nbins_eta; bin++) {
 				ComEta_MC[k]->GetPoint(bin, xVal, yVal);
 				etamin = xVal - ComEta_MC[k]->GetErrorXlow(bin);
 				etamax = xVal + ComEta_MC[k]->GetErrorXhigh(bin);
@@ -988,7 +989,7 @@ void TnPEffDraw_singleFile_O() {
 			}
 			file_Eta << endl<<  "  // data" << endl;
 			file_Eta << "  if (idx == 0) { // nominal" << endl;
-			for (int bin = 0; bin < ComEta_RD[k]->GetN(); bin++) {
+			for (int bin = 0; bin < nbins_eta; bin++) {
 				ComEta_RD[k]->GetPoint(bin, xVal, yVal);
 				etamin = xVal - ComEta_RD[k]->GetErrorXlow(bin);
 				etamax = xVal + ComEta_RD[k]->GetErrorXhigh(bin);
@@ -997,7 +998,7 @@ void TnPEffDraw_singleFile_O() {
 			file_Eta << "}" << endl<<endl;
 
 			file_Eta << "  if (idx == 1) { // stat up" << endl;
-			for (int bin = 0; bin < ComEta_RD[k]->GetN(); bin++) {
+			for (int bin = 0; bin < nbins_eta; bin++) {
 				ComEta_RD[k]->GetPoint(bin, xVal, yVal);
 				ErrDown = ComEta_RD[k]->GetErrorYlow(bin);
 				ErrUp = ComEta_RD[k]->GetErrorYhigh(bin);
@@ -1008,7 +1009,7 @@ void TnPEffDraw_singleFile_O() {
 			file_Eta << "}" << endl;
 
 			file_Eta << "  if (idx == 2) { // stat down" << endl;
-			for (int bin = 0; bin < ComEta_RD[k]->GetN(); bin++) {
+			for (int bin = 0; bin < nbins_eta; bin++) {
 				ComEta_RD[k]->GetPoint(bin, xVal, yVal);
 				ErrDown = ComEta_RD[k]->GetErrorYlow(bin);
 				ErrUp = ComEta_RD[k]->GetErrorYhigh(bin);
@@ -1018,11 +1019,53 @@ void TnPEffDraw_singleFile_O() {
 			}
 			file_Eta << "}" << endl;
 
+			// if doing systematics, output the maximum deviation
+			if (bPlotSyst)
+			{
+				// Compute the systematic uncertainties - symmetric (max deviation taken up/down)
+				double errSyst[nbins_eta];
+
+				for (int bin = 0; bin < nbins_eta; bin++) {
+					// Maximum
+					double errRD = -99999., errMC = -99999., yValNomRD, yValNomMC, xValNomAux; //getting max deviation
+					ComEta_RD[0]->GetPoint(bin, xValNomAux, yValNomRD);//nominal
+					ComEta_MC[0]->GetPoint(bin, xValNomAux, yValNomMC);//nominal
+					for (int k = 0; k < nSyst; k++) {
+						ComEta_RD[k]->GetPoint(bin, xVal, yVal);
+						errRD = std::max(errRD, fabs(yValNomRD - yVal));
+						ComEta_MC[k]->GetPoint(bin, xVal, yVal);
+						errMC = std::max(errMC, fabs(yValNomMC - yVal));
+					}
+					errSyst[bin] = sqrt(errRD*errRD + errMC * errMC); //MC probably negligible
+				}
+
+				file_Eta << "  if (idx == -1) { // syst up" << endl;
+				for (int bin = 0; bin < ComEta_RD[k]->GetN(); bin++) {
+					ComEta_RD[k]->GetPoint(bin, xVal, yVal);
+					ErrUp = errSyst[bin];
+					etamin = xVal - ComEta_RD[k]->GetErrorXlow(bin);
+					etamax = xVal + ComEta_RD[k]->GetErrorXhigh(bin);
+					file_Eta << ((etamin == -2.4) ? "    if " : "    else if ") << "(eta > " << etamin << " && eta <= " << etamax << ") { num = " << yVal + ErrUp << ";}" << endl;
+				}
+				file_Eta << "}" << endl;
+
+				file_Eta << "  if (idx == -2) { // syst down" << endl;
+				for (int bin = 0; bin < ComEta_RD[k]->GetN(); bin++) {
+					ComEta_RD[k]->GetPoint(bin, xVal, yVal);
+					ErrDown = errSyst[bin];
+					etamin = xVal - ComEta_RD[k]->GetErrorXlow(bin);
+					etamax = xVal + ComEta_RD[k]->GetErrorXhigh(bin);
+					file_Eta << ((etamin == -2.4) ? "    if " : "    else if ") << "(eta > " << etamin << " && eta <= " << etamax << ") { num = " << yVal - ErrDown << ";}" << endl;
+				}
+				file_Eta << "}" << endl;
+			}
 			file_Eta.close();
+
+
 		}
 	}
 
-	// plot systematics
+	// plot eta systematics
 	if (bPlotSyst)
 	{
 		//data

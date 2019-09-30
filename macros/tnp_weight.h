@@ -47,9 +47,6 @@ double tnp_weight_trig_pbpb(double pt, double eta, double cent, int idx=0);
 
 double tnp_weight_glbtrk_pbpb(double eta, double cent, int idx) //cent 0-100%
 {
-	double x = eta;
-	double syst = 0.0e-1;  //TO BE UPDATED
-
 	double num = 1, den = 1;
 
 	if (fabs(eta)>2.4) { cout << "[WARNING] Muon pseudo-rapidity (" << eta << ") outside [-2.4, 2.4]" << endl; return 1.0; }
@@ -108,6 +105,30 @@ double tnp_weight_glbtrk_pbpb(double eta, double cent, int idx) //cent 0-100%
 			else if (eta > 1.6 && eta <= 2.1) { num = 0.968032; }
 			else if (eta > 2.1 && eta <= 2.4) { num = 0.921065; }
 		}
+		if (idx == -1) { // syst up
+			if (eta > -2.4 && eta <= -2.1) { num = 0.912388; }
+			else if (eta > -2.1 && eta <= -1.6) { num = 0.965296; }
+			else if (eta > -1.6 && eta <= -1.2) { num = 0.965531; }
+			else if (eta > -1.2 && eta <= -0.9) { num = 0.955926; }
+			else if (eta > -0.9 && eta <= 0) { num = 0.961333; }
+			else if (eta > 0 && eta <= 0.9) { num = 0.960196; }
+			else if (eta > 0.9 && eta <= 1.2) { num = 0.937628; }
+			else if (eta > 1.2 && eta <= 1.6) { num = 0.971776; }
+			else if (eta > 1.6 && eta <= 2.1) { num = 0.97886; }
+			else if (eta > 2.1 && eta <= 2.4) { num = 0.947469; }
+		}
+		if (idx == -2) { // syst down
+			if (eta > -2.4 && eta <= -2.1) { num = 0.879108; }
+			else if (eta > -2.1 && eta <= -1.6) { num = 0.958329; }
+			else if (eta > -1.6 && eta <= -1.2) { num = 0.961699; }
+			else if (eta > -1.2 && eta <= -0.9) { num = 0.951452; }
+			else if (eta > -0.9 && eta <= 0) { num = 0.959441; }
+			else if (eta > 0 && eta <= 0.9) { num = 0.958675; }
+			else if (eta > 0.9 && eta <= 1.2) { num = 0.934239; }
+			else if (eta > 1.2 && eta <= 1.6) { num = 0.964993; }
+			else if (eta > 1.6 && eta <= 2.1) { num = 0.97052; }
+			else if (eta > 2.1 && eta <= 2.4) { num = 0.932779; }
+		}
 	}
 	else if (cent >= 40 && cent <= 100)
 	{
@@ -161,15 +182,37 @@ double tnp_weight_glbtrk_pbpb(double eta, double cent, int idx) //cent 0-100%
 			else if (eta > 1.6 && eta <= 2.1) { num = 0.974474; }
 			else if (eta > 2.1 && eta <= 2.4) { num = 0.92457; }
 		}
+		if (idx == -1) { // syst up
+			if (eta > -2.4 && eta <= -2.1) { num = 1.0107; }
+			else if (eta > -2.1 && eta <= -1.6) { num = 0.992138; }
+			else if (eta > -1.6 && eta <= -1.2) { num = 0.999945; }
+			else if (eta > -1.2 && eta <= -0.9) { num = 0.988701; }
+			else if (eta > -0.9 && eta <= 0) { num = 0.988734; }
+			else if (eta > 0 && eta <= 0.9) { num = 0.985979; }
+			else if (eta > 0.9 && eta <= 1.2) { num = 0.987238; }
+			else if (eta > 1.2 && eta <= 1.6) { num = 0.994278; }
+			else if (eta > 1.6 && eta <= 2.1) { num = 0.98701; }
+			else if (eta > 2.1 && eta <= 2.4) { num = 0.960013; }
+		}
+		if (idx == -2) { // syst down
+			if (eta > -2.4 && eta <= -2.1) { num = 0.989305; }
+			else if (eta > -2.1 && eta <= -1.6) { num = 0.980829; }
+			else if (eta > -1.6 && eta <= -1.2) { num = 0.99656; }
+			else if (eta > -1.2 && eta <= -0.9) { num = 0.987074; }
+			else if (eta > -0.9 && eta <= 0) { num = 0.986119; }
+			else if (eta > 0 && eta <= 0.9) { num = 0.976872; }
+			else if (eta > 0.9 && eta <= 1.2) { num = 0.982088; }
+			else if (eta > 1.2 && eta <= 1.6) { num = 0.991312; }
+			else if (eta > 1.6 && eta <= 2.1) { num = 0.980103; }
+			else if (eta > 2.1 && eta <= 2.4) { num = 0.949328; }
+		}
 	}
 
 	if (idx == 200) den = 1.;
 	if (idx == 300) num = den * den;
 
-	double syst_factor = 1.;
-	if (idx == -1) syst_factor = 1 + syst;
-	if (idx == -2) syst_factor = 1 - syst;
-	return (num / den)*syst_factor;
+
+	return (num / den);
 
 }
 
@@ -183,6 +226,7 @@ double tnp_weight_muid_pbpb(double eta, int idx)
 
    double num=1,den=1;
    
+   if (fabs(eta) > 2.4) { cout << "[WARNING] Muon pseudo-rapidity (" << eta << ") outside [-2.4, 2.4]" << endl; return 1.0; }
 
    // MC
    if (x >= -2.4&&x <= -2.1) den = 0.994717;
