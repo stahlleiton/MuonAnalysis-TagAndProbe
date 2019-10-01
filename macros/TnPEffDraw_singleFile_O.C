@@ -44,7 +44,7 @@ using namespace std;
 
 // Choose the efficiency type.
 // Possible values: MUIDTRG, TRK, STA, MUID, TRG
-#define TRK
+#define MUID
 
 // pp or PbPb?
 bool isPbPb = true; // if true, will compute the centrality dependence
@@ -59,7 +59,7 @@ TString collTag = "PbPb"; // isPbPb ? "PbPb" : "pp";
 int fitfcn = 2;
 
 // Location of the files
-const int nSyst = 4;
+const int nSyst = 1;
 // the first file is for the nominal case, the following ones are for the systematics
 /*const char* fDataName[nSyst] = {
 	//"tnp_Ana_RD_PbPb_MuonIDTrg_AllMB.root",
@@ -71,7 +71,7 @@ const char* fMCName[nSyst] = {
 };//*/
 
 const bool bPlotAbseta = true;
-bool bPlotSyst = true;
+bool bPlotSyst = false;
 
 // do the toy study for the correction factors?
 bool doToys = false;
@@ -103,8 +103,8 @@ ofstream file_Eta("EtaValues_MuId.txt");
 ofstream file_Cent("CentValues_MuId.txt");
 ofstream file_TestErr("MuId_ExpErr.txt");
 TString treeTag("tpTree");
-//TString cutLegend("Tight ID");
-TString cutLegend("Matched Stations");
+TString cutLegend("Tight ID");
+//TString cutLegend("Matched Stations");
 const double effmin = 0.85;
 const double effmax = 1.02;
 const double sfrange = 0.02;

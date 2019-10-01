@@ -106,7 +106,7 @@ double tnp_weight_glbtrk_pbpb(double eta, double cent, int idx) //cent 0-100%
 			else if (eta > 2.1 && eta <= 2.4) { num = 0.921065; }
 		}
 		if (idx == -1) { // syst up
-			if (eta > -2.4 && eta <= -2.1) { num = 0.912388; }
+			if (eta >= -2.4 && eta <= -2.1) { num = 0.912388; }
 			else if (eta > -2.1 && eta <= -1.6) { num = 0.965296; }
 			else if (eta > -1.6 && eta <= -1.2) { num = 0.965531; }
 			else if (eta > -1.2 && eta <= -0.9) { num = 0.955926; }
@@ -118,7 +118,7 @@ double tnp_weight_glbtrk_pbpb(double eta, double cent, int idx) //cent 0-100%
 			else if (eta > 2.1 && eta <= 2.4) { num = 0.947469; }
 		}
 		if (idx == -2) { // syst down
-			if (eta > -2.4 && eta <= -2.1) { num = 0.879108; }
+			if (eta >= -2.4 && eta <= -2.1) { num = 0.879108; }
 			else if (eta > -2.1 && eta <= -1.6) { num = 0.958329; }
 			else if (eta > -1.6 && eta <= -1.2) { num = 0.961699; }
 			else if (eta > -1.2 && eta <= -0.9) { num = 0.951452; }
@@ -183,7 +183,7 @@ double tnp_weight_glbtrk_pbpb(double eta, double cent, int idx) //cent 0-100%
 			else if (eta > 2.1 && eta <= 2.4) { num = 0.92457; }
 		}
 		if (idx == -1) { // syst up
-			if (eta > -2.4 && eta <= -2.1) { num = 1.0107; }
+			if (eta >= -2.4 && eta <= -2.1) { num = 1.0107; }
 			else if (eta > -2.1 && eta <= -1.6) { num = 0.992138; }
 			else if (eta > -1.6 && eta <= -1.2) { num = 0.999945; }
 			else if (eta > -1.2 && eta <= -0.9) { num = 0.988701; }
@@ -195,7 +195,7 @@ double tnp_weight_glbtrk_pbpb(double eta, double cent, int idx) //cent 0-100%
 			else if (eta > 2.1 && eta <= 2.4) { num = 0.960013; }
 		}
 		if (idx == -2) { // syst down
-			if (eta > -2.4 && eta <= -2.1) { num = 0.989305; }
+			if (eta >= -2.4 && eta <= -2.1) { num = 0.989305; }
 			else if (eta > -2.1 && eta <= -1.6) { num = 0.980829; }
 			else if (eta > -1.6 && eta <= -1.2) { num = 0.99656; }
 			else if (eta > -1.2 && eta <= -0.9) { num = 0.987074; }
@@ -221,7 +221,6 @@ double tnp_weight_glbtrk_pbpb(double eta, double cent, int idx) //cent 0-100%
 ///////////////////////////////////////////////////
 double tnp_weight_muid_pbpb(double eta, int idx)
 {
-   double x = eta;
    double syst = 0.6e-2;    //preliminary
 
    double num=1,den=1;
@@ -229,70 +228,70 @@ double tnp_weight_muid_pbpb(double eta, int idx)
    if (fabs(eta) > 2.4) { cout << "[WARNING] Muon pseudo-rapidity (" << eta << ") outside [-2.4, 2.4]" << endl; return 1.0; }
 
    // MC
-   if (x >= -2.4&&x <= -2.1) den = 0.994717;
-   if (x > -2.1&&x <= -1.6) den = 0.993653;
-   if (x > -1.6&&x <= -1.2) den = 0.982687;
-   if (x > -1.2&&x <= -0.9) den = 0.962992;
-   if (x > -0.9&&x <= -0.6) den = 0.970103;
-   if (x > -0.6&&x <= -0.3) den = 0.982073;
-   if (x > -0.3&&x <= 0) den = 0.968219;
-   if (x > 0 && x <= 0.3) den = 0.961703;
-   if (x > 0.3&&x <= 0.6) den = 0.978947;
-   if (x > 0.6&&x <= 0.9) den = 0.970324;
-   if (x > 0.9&&x <= 1.2) den = 0.956433;
-   if (x > 1.2&&x <= 1.6) den = 0.982577;
-   if (x > 1.6&&x <= 2.1) den = 0.995146;
-   if (x > 2.1&&x <= 2.4) den = 0.994106;
+   if (eta >= -2.4 && eta <= -2.1) { den = 0.994139; }
+   else if (eta > -2.1 && eta <= -1.6) { den = 0.99449; }
+   else if (eta > -1.6 && eta <= -1.2) { den = 0.983536; }
+   else if (eta > -1.2 && eta <= -0.9) { den = 0.964562; }
+   else if (eta > -0.9 && eta <= -0.6) { den = 0.973316; }
+   else if (eta > -0.6 && eta <= -0.3) { den = 0.981446; }
+   else if (eta > -0.3 && eta <= 0) { den = 0.968189; }
+   else if (eta > 0 && eta <= 0.3) { den = 0.9617; }
+   else if (eta > 0.3 && eta <= 0.6) { den = 0.979738; }
+   else if (eta > 0.6 && eta <= 0.9) { den = 0.969536; }
+   else if (eta > 0.9 && eta <= 1.2) { den = 0.960259; }
+   else if (eta > 1.2 && eta <= 1.6) { den = 0.983279; }
+   else if (eta > 1.6 && eta <= 2.1) { den = 0.99477; }
+   else if (eta > 2.1 && eta <= 2.4) { den = 0.994065; }
 
 
    // data
    if (idx <= 0 || idx > 10) { // nominal
-	   if (x >= -2.4&&x <= -2.1) num = 0.983734;
-	   if (x > -2.1&&x <= -1.6) num = 0.993892;
-	   if (x > -1.6&&x <= -1.2) num = 0.979222;
-	   if (x > -1.2&&x <= -0.9) num = 0.955529;
-	   if (x > -0.9&&x <= -0.6) num = 0.966578;
-	   if (x > -0.6&&x <= -0.3) num = 0.983958;
-	   if (x > -0.3&&x <= 0) num = 0.959491;
-	   if (x > 0 && x <= 0.3) num = 0.959744;
-	   if (x > 0.3&&x <= 0.6) num = 0.976402;
-	   if (x > 0.6&&x <= 0.9) num = 0.96839;
-	   if (x > 0.9&&x <= 1.2) num = 0.961177;
-	   if (x > 1.2&&x <= 1.6) num = 0.98078;
-	   if (x > 1.6&&x <= 2.1) num = 0.991852;
-	   if (x > 2.1&&x <= 2.4) num = 0.993082;
+	   if (eta >= -2.4 && eta <= -2.1) { num = 0.984278; }
+	   else if (eta > -2.1 && eta <= -1.6) { num = 0.994031; }
+	   else if (eta > -1.6 && eta <= -1.2) { num = 0.978562; }
+	   else if (eta > -1.2 && eta <= -0.9) { num = 0.954321; }
+	   else if (eta > -0.9 && eta <= -0.6) { num = 0.966508; }
+	   else if (eta > -0.6 && eta <= -0.3) { num = 0.98402; }
+	   else if (eta > -0.3 && eta <= 0) { num = 0.958369; }
+	   else if (eta > 0 && eta <= 0.3) { num = 0.959429; }
+	   else if (eta > 0.3 && eta <= 0.6) { num = 0.976528; }
+	   else if (eta > 0.6 && eta <= 0.9) { num = 0.967646; }
+	   else if (eta > 0.9 && eta <= 1.2) { num = 0.961046; }
+	   else if (eta > 1.2 && eta <= 1.6) { num = 0.980274; }
+	   else if (eta > 1.6 && eta <= 2.1) { num = 0.991677; }
+	   else if (eta > 2.1 && eta <= 2.4) { num = 0.993007; }
    }
    else if (idx == 1) { // stat up
-	   if (x >= -2.4&&x <= -2.1) num = 0.98710825;
-	   if (x > -2.1&&x <= -1.6) num = 0.99575701;
-	   if (x > -1.6&&x <= -1.2) num = 0.98250043;
-	   if (x > -1.2&&x <= -0.9) num = 0.96029298;
-	   if (x > -0.9&&x <= -0.6) num = 0.97057735;
-	   if (x > -0.6&&x <= -0.3) num = 0.98705592;
-	   if (x > -0.3&&x <= 0) num = 0.96370511;
-	   if (x > 0 && x <= 0.3) num = 0.96396652;
-	   if (x > 0.3&&x <= 0.6) num = 0.97980996;
-	   if (x > 0.6&&x <= 0.9) num = 0.97234624;
-	   if (x > 0.9&&x <= 1.2) num = 0.9659164;
-	   if (x > 1.2&&x <= 1.6) num = 0.98388187;
-	   if (x > 1.6&&x <= 2.1) num = 0.99371692;
-	   if (x > 2.1&&x <= 2.4) num = 0.9961665;
+	   if (eta >= -2.4 && eta <= -2.1) { num = 0.987203; }
+	   else if (eta > -2.1 && eta <= -1.6) { num = 0.995641; }
+	   else if (eta > -1.6 && eta <= -1.2) { num = 0.981641; }
+	   else if (eta > -1.2 && eta <= -0.9) { num = 0.958889; }
+	   else if (eta > -0.9 && eta <= -0.6) { num = 0.970274; }
+	   else if (eta > -0.6 && eta <= -0.3) { num = 0.986882; }
+	   else if (eta > -0.3 && eta <= 0) { num = 0.962433; }
+	   else if (eta > 0 && eta <= 0.3) { num = 0.96344; }
+	   else if (eta > 0.3 && eta <= 0.6) { num = 0.979706; }
+	   else if (eta > 0.6 && eta <= 0.9) { num = 0.971414; }
+	   else if (eta > 0.9 && eta <= 1.2) { num = 0.965537; }
+	   else if (eta > 1.2 && eta <= 1.6) { num = 0.983167; }
+	   else if (eta > 1.6 && eta <= 2.1) { num = 0.99336; }
+	   else if (eta > 2.1 && eta <= 2.4) { num = 0.995579; }
    }
    else if (idx == 2) { // stat down
-	   if (x >= -2.4&&x <= -2.1) num = 0.98075691;
-	   if (x > -2.1&&x <= -1.6) num = 0.99224693;
-	   if (x > -1.6&&x <= -1.2) num = 0.97618383;
-	   if (x > -1.2&&x <= -0.9) num = 0.95101985;
-	   if (x > -0.9&&x <= -0.6) num = 0.96279449;
-	   if (x > -0.6&&x <= -0.3) num = 0.98108946;
-	   if (x > -0.3&&x <= 0) num = 0.95550071;
-	   if (x > 0 && x <= 0.3) num = 0.95575316;
-	   if (x > 0.3&&x <= 0.6) num = 0.97322907;
-	   if (x > 0.6&&x <= 0.9) num = 0.96468663;
-	   if (x > 0.9&&x <= 1.2) num = 0.9567025;
-	   if (x > 1.2&&x <= 1.6) num = 0.9779218;
-	   if (x > 1.6&&x <= 2.1) num = 0.99018962;
-	   if (x > 2.1&&x <= 2.4) num = 0.9905424;
+	   if (eta >= -2.4 && eta <= -2.1) { num = 0.98094; }
+	   else if (eta > -2.1 && eta <= -1.6) { num = 0.992199; }
+	   else if (eta > -1.6 && eta <= -1.2) { num = 0.975247; }
+	   else if (eta > -1.2 && eta <= -0.9) { num = 0.949482; }
+	   else if (eta > -0.9 && eta <= -0.6) { num = 0.962497; }
+	   else if (eta > -0.6 && eta <= -0.3) { num = 0.980916; }
+	   else if (eta > -0.3 && eta <= 0) { num = 0.954075; }
+	   else if (eta > 0 && eta <= 0.3) { num = 0.955169; }
+	   else if (eta > 0.3 && eta <= 0.6) { num = 0.973111; }
+	   else if (eta > 0.6 && eta <= 0.9) { num = 0.963634; }
+	   else if (eta > 0.9 && eta <= 1.2) { num = 0.956295; }
+	   else if (eta > 1.2 && eta <= 1.6) { num = 0.977135; }
+	   else if (eta > 1.6 && eta <= 2.1) { num = 0.987932; }
+	   else if (eta > 2.1 && eta <= 2.4) { num = 0.989895; }
    }
 
    if (idx == 200) den = 1.;
