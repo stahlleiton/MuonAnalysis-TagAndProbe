@@ -405,6 +405,70 @@ VEFFICIENCYSET =cms.VPSet(
              BinToPDFmap = cms.vstring(PDFName)
         )
     ),
+    cms.PSet(
+          Trk_etadepPF_cent0040 = cms.PSet(
+             EfficiencyCategoryAndState = cms.vstring("PF","true"),
+             UnbinnedVariables = cms.vstring("mass", "weight"),
+             BinnedVariables = cms.PSet(
+#                 tag_nVertices = cms.vdouble(0, 1, 2, 6),
+                 pt = cms.vdouble(15, 100),
+                 eta = cms.vdouble(-2.4,-2.1,-1.6,-1.2,-0.9,0,0.9,1.2,1.6,2.1,2.4),
+                 tag_hiBin = cms.vdouble(00, 80),
+                 TM = cms.vstring("true"),
+                 #TrackCuts = cms.vstring("true"),
+                 #isRndProbe = cms.vstring("true"),
+             ),
+             BinToPDFmap = cms.vstring(PDFName)
+        )
+    ),
+    cms.PSet(
+          Trk_etadepPF_cent40100 = cms.PSet(
+             EfficiencyCategoryAndState = cms.vstring("PF","true"),
+             UnbinnedVariables = cms.vstring("mass", "weight"),
+             BinnedVariables = cms.PSet(
+#                 tag_nVertices = cms.vdouble(0, 1, 2, 6),
+                 pt = cms.vdouble(15, 100),
+                 eta = cms.vdouble(-2.4,-2.1,-1.6,-1.2,-0.9,0,0.9,1.2,1.6,2.1,2.4),
+                 tag_hiBin = cms.vdouble(80, 200),
+                 TM = cms.vstring("true"),
+                 #TrackCuts = cms.vstring("true"),
+                 #isRndProbe = cms.vstring("true"),
+             ),
+             BinToPDFmap = cms.vstring(PDFName)
+        )
+    ),
+    cms.PSet(
+          Trk_etadepGlb_cent0040 = cms.PSet(
+             EfficiencyCategoryAndState = cms.vstring("Glb","true"),
+             UnbinnedVariables = cms.vstring("mass", "weight"),
+             BinnedVariables = cms.PSet(
+#                 tag_nVertices = cms.vdouble(0, 1, 2, 6),
+                 pt = cms.vdouble(15, 100),
+                 eta = cms.vdouble(-2.4,-2.1,-1.6,-1.2,-0.9,0,0.9,1.2,1.6,2.1,2.4),
+                 tag_hiBin = cms.vdouble(00, 80),
+                 TM = cms.vstring("true"),
+                 #TrackCuts = cms.vstring("true"),
+                 #isRndProbe = cms.vstring("true"),
+             ),
+             BinToPDFmap = cms.vstring(PDFName)
+        )
+    ),
+    cms.PSet(
+          Trk_etadepGlb_cent40100 = cms.PSet(
+             EfficiencyCategoryAndState = cms.vstring("Glb","true"),
+             UnbinnedVariables = cms.vstring("mass", "weight"),
+             BinnedVariables = cms.PSet(
+#                 tag_nVertices = cms.vdouble(0, 1, 2, 6),
+                 pt = cms.vdouble(15, 100),
+                 eta = cms.vdouble(-2.4,-2.1,-1.6,-1.2,-0.9,0,0.9,1.2,1.6,2.1,2.4),
+                 tag_hiBin = cms.vdouble(80, 200),
+                 TM = cms.vstring("true"),
+                 #TrackCuts = cms.vstring("true"),
+                 #isRndProbe = cms.vstring("true"),
+             ),
+             BinToPDFmap = cms.vstring(PDFName)
+        )
+    ),
 
 )
 
@@ -421,6 +485,8 @@ if scenario == "9": EFFICIENCYSET = cms.PSet(VEFFICIENCYSET[15], VEFFICIENCYSET[
 if scenario == "10": EFFICIENCYSET = cms.PSet(VEFFICIENCYSET[18], VEFFICIENCYSET[19])
 if scenario == "11": EFFICIENCYSET = cms.PSet(VEFFICIENCYSET[20], VEFFICIENCYSET[21], VEFFICIENCYSET[22])
 if scenario == "12": EFFICIENCYSET = cms.PSet(VEFFICIENCYSET[23], VEFFICIENCYSET[24])
+if scenario == "13": EFFICIENCYSET = cms.PSet(VEFFICIENCYSET[25], VEFFICIENCYSET[26])
+if scenario == "14": EFFICIENCYSET = cms.PSet(VEFFICIENCYSET[27], VEFFICIENCYSET[28])
 if scenario == "0": EFFICIENCYSET = cms.PSet(VEFFICIENCYSET[0],VEFFICIENCYSET[1],VEFFICIENCYSET[2], VEFFICIENCYSET[3],VEFFICIENCYSET[4], VEFFICIENCYSET[5],VEFFICIENCYSET[6], VEFFICIENCYSET[7],VEFFICIENCYSET[8], VEFFICIENCYSET[9], VEFFICIENCYSET[10],VEFFICIENCYSET[11])#,VEFFICIENCYSET[12])
 
 

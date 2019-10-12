@@ -44,7 +44,7 @@ using namespace std;
 
 // Choose the efficiency type.
 // Possible values: MUIDTRG, TRK, STA, MUID, TRG
-#define MUID
+#define TRG
 
 // pp or PbPb?
 bool isPbPb = true; // if true, will compute the centrality dependence
@@ -128,34 +128,34 @@ const char* systName[nSyst] = {
 
 
 #ifdef TRG
-bool doSF = true;
+bool doSF = false;
 TString saveDirName = "Trg_Eff";
-TString etaTag("MuIdTrg_etadep");
-TString absetaTag("MuIdTrg_absetadep");
-TString centTag("MuIdTrg_centdep");
-const int nAbsEtaBins = 4;
-TString ptTag[nAbsEtaBins] = { "MuIdTrg_abseta00_12", "MuIdTrg_abseta12_18", "MuIdTrg_abseta18_21", "MuIdTrg_abseta21_24" };
-TString allTag("MuIdTrg_1bin");
+TString etaTag("Trg_etadep");
+TString absetaTag("Trg_absetadep");
+TString centTag("Trg_centdep");
+const int nAbsEtaBins = 3;
+TString ptTag[nAbsEtaBins] = { "Trg_abseta00_12", "Trg_abseta12_21", "Trg_abseta21_24"  };
+TString allTag("Trg_1bin");
 TString absetaVar("abseta");
 TString centVar("tag_hiBin");
-ofstream file_sfs("correction_functions.txt");
+ofstream file_sfs("correction_functions_Trg.txt");
 ofstream file_Eta("EtaValues_Trg.txt");
 ofstream file_Cent("CentValues_Trg.txt");
 ofstream file_TestErr("Trg_ExpErr.txt");
 TString treeTag("tpTree");
 TString cutLegend("Trigger");
-const double effmin = 0.;
+const double effmin = 0.6;
 const double effmax = 1.05;
-const double sfrange = 0.35;
+const double sfrange = 0.1;
 const double c_ptRange = 200; // how far to plot the pt
-const double c_centralityRange = 200; // how far to plot the centrality (hibin goes to 200)
-const char* fDataName[nSyst] = { "tnp_Ana_RD_PbPb_Trg_AllMB.root" };
-const char* fMCName[nSyst] = { "tnp_Ana_MC_PbPb_Trg_AllMB.root" };
+const double c_centralityRange = 100; // how far to plot the centrality (hibin goes to 200)
+const char* fDataName[nSyst] = { "tnp_Ana_RD_L3Mu12_PbPb_0_v5.root" };
+const char* fMCName[nSyst] = { "tnp_Ana_MC_L3Mu12_PbPb_0_v5.root" };
 const char* systName[nSyst] = {
-   "Nominal",
-   "Mass range 65-110",
-   "Sig - CB+Gauss",
-   "Bkg - pol2",
+   "Nominal"
+   //"Mass range 65-110",
+   //"Sig - CB+Gauss",
+   //"Bkg - pol2",
 };
 #endif
 
@@ -195,7 +195,7 @@ const char* systName[nSyst] = {
 bool doSF = false;
 TString saveDirName = "Trk_Eff";
 //TString etaTag("Trk_etadep");
-TString etaTag("Trk_etadep_cent40100");
+TString etaTag("Trk_etadepPF_cent40100");
 TString absetaTag("Trk_absetadep");
 //TString absetaTag("Trk_absetadep_cent40100");
 TString centTag("Trk_centdep");
@@ -209,21 +209,21 @@ ofstream file_Eta("EtaValues_Trk.txt");
 ofstream file_Cent("CentValues_Trk.txt");
 //TString treeTag("tpTreeSta");
 TString treeTag("tpTreeTrk");
-//TString cutLegend("Inner tracking");
+//TString cutLegend("PF");
 TString cutLegend("Global Muon Tracking && PF");
 const double effmin = 0.8;
 const double effmax = 1.05;
 const double sfrange = 0.03;
 const double c_ptRange = 100; // how far to plot the pt
 const double c_centralityRange = 100; // how far to plot the centrality (hibin goes to 200)
-const char* fDataName[nSyst] = { "tnp_Ana_RD_TrkfromTrkM5_PbPb.root", "tnp_Ana_RD_TrkfromTrkM5_PbPb_mass.root", "tnp_Ana_RD_TrkfromTrkM5_PbPb_sig.root", "tnp_Ana_RD_TrkfromTrkM5_PbPb_bkg.root" };
-const char* fMCName[nSyst] = { "tnp_Ana_MC_TrkfromTrkM5_PbPb.root", "tnp_Ana_MC_TrkfromTrkM5_PbPb_mass.root", "tnp_Ana_MC_TrkfromTrkM5_PbPb_sig.root", "tnp_Ana_MC_TrkfromTrkM5_PbPb_bkg.root" };
-const char* systName[nSyst] = {"Nominal", "Mass range 65-135", "Sig - CB+Gauss", "Bkg - pol1, exp"}; //name for systematics
+//const char* fDataName[nSyst] = { "tnp_Ana_RD_TrkfromTrkM5_PbPb.root", "tnp_Ana_RD_TrkfromTrkM5_PbPb_mass.root", "tnp_Ana_RD_TrkfromTrkM5_PbPb_sig.root", "tnp_Ana_RD_TrkfromTrkM5_PbPb_bkg.root" };
+//const char* fMCName[nSyst] = { "tnp_Ana_MC_TrkfromTrkM5_PbPb.root", "tnp_Ana_MC_TrkfromTrkM5_PbPb_mass.root", "tnp_Ana_MC_TrkfromTrkM5_PbPb_sig.root", "tnp_Ana_MC_TrkfromTrkM5_PbPb_bkg.root" };
+//const char* systName[nSyst] = {"Nominal", "Mass range 65-135", "Sig - CB+Gauss", "Bkg - pol1, exp"}; //name for systematics
 
 
-//const char* fDataName[nSyst] = { "tnp_Ana_RD_TrkfromTrkM5_PbPb.root" };
-//const char* fMCName[nSyst] = { "tnp_Ana_MC_TrkfromTrkM5_PbPb.root" };
-//const char* systName[nSyst] = {"Nominal"};
+const char* fDataName[nSyst] = { "tnp_Ana_RD_TrkfromTrkM5_PbPb.root" };
+const char* fMCName[nSyst] = { "tnp_Ana_MC_TrkfromTrkM5_PbPb.root" };
+const char* systName[nSyst] = {"Nominal"};
 
 #endif
 
@@ -431,8 +431,11 @@ void TnPEffDraw_singleFile_O() {
 
 		CalEffErr(eff1bin_MC[k], Trk0[k]);
 		CalEffErr(eff1bin_RD[k], Trk1[k]);
-		CalEffErr(effAbsEta_MC[k], TrkAbsEta0[k]);
-		CalEffErr(effAbsEta_RD[k], TrkAbsEta1[k]);
+		cout << "Testuji" << k << endl;
+		//CalEffErr(effAbsEta_MC[k], TrkAbsEta0[k]);
+		cout << "Testuji1" << k << endl;
+		//CalEffErr(effAbsEta_RD[k], TrkAbsEta1[k]);
+		cout << "Testuji2" << k << endl;
 	}
 
 	///////////////////////////////////////////////
