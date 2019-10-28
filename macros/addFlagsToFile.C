@@ -1,5 +1,6 @@
 #include "TTree.h"
 #include "TFile.h"
+#include "TRandom3.h"
 #include <iostream>
 #include <memory>
 #include "pres.C"
@@ -16,15 +17,16 @@ float findNcoll(const int hiBin)
   return Ncoll[hiBin];
 }
 
+
 TTree* copyTreeAndAddWeight(TTree* told, int nentries=0)
 {
-  TTree *tnew = told->CloneTree(0);
+  const auto& tnew = told->CloneTree(0);
   tnew->SetAutoSave(0);
   tnew->SetAutoFlush(0);
-  int TightId=-1, SoftId=-1, isNonMuonSeeded=-1;
+  int TightId=-1, SoftId=-1, isNonMuonSeeded=-1, isNonFake=-1;
   int isTightMuon=-1, passedDXY_TIGHT=-1, passedDZ_TIGHT=-1, passedValidPixelHits=-1, passedTrackerLayers=-1, passedMatchedStations=-1, passedMuHits=-1, passedglbChi2=-1, Glb=-1, PF=-1;
   int isSoftMuon=-1, isHybridSoftMuon2015=-1, isHybridSoftMuon2018=-1, isHybridSoftMuon2018And10NHits=-1, passedDXY_SOFT=-1, passedDZ_SOFT=-1, passedPixelLayers=-1, TMOST=-1, Track_HP=-1, TM=-1;
-  float dzPV=-999., dxyPV=-999., dB=-999., tkValidPixelHits=-1., tkPixelLay=-1., tkTrackerLay=-1., tkNHits=-1., numberOfMatchedStations=-1., glbValidMuHits=-1., glbChi2=999., hiBin=-1., genWeight=-999., weight=1., pT=-999., trackAlgo=-1.;
+  float dzPV=-999., dxyPV=-999., dB=-999., tkValidPixelHits=-1., tkPixelLay=-1., tkTrackerLay=-1., tkNHits=-1., numberOfMatchedStations=-1., glbValidMuHits=-1., glbChi2=999., hiBin=-1., genWeight=-999., weight=1., NCollWeight=1., pT=-999., hiBinS=-1.;
 
   auto hist = pres();
   uint run=-1, ls=-1;
@@ -33,9 +35,15 @@ TTree* copyTreeAndAddWeight(TTree* told, int nentries=0)
   told->SetBranchAddress("lumi",&ls);
   tnew->Branch("isUnprescaled", &isUnprescaled, "isUnprescaled/I");
   
+  float trackOrigAlgo=-1, trackAlgo=-1, dxyError=-1, dzError=-1;
   if (told->GetBranch("trackAlgo")!=NULL) {
     told->SetBranchAddress("trackAlgo", &trackAlgo);
+    const auto& brName = (told->GetBranch("trackOrigAlgo")!=NULL ? "trackOrigAlgo" : "trackAlgo");
+    told->SetBranchAddress(brName, &trackOrigAlgo);
+    told->SetBranchAddress("dxyError", &dxyError);
+    told->SetBranchAddress("dzError", &dzError);
     tnew->Branch("isNonMuonSeeded", &isNonMuonSeeded, "isNonMuonSeeded/I");
+    tnew->Branch("isNonFake", &isNonFake, "isNonFake/I");
   }
 
   told->SetBranchAddress("pt",&pT);
@@ -74,8 +82,12 @@ TTree* copyTreeAndAddWeight(TTree* told, int nentries=0)
   tnew->Branch("passedDXY_SOFT", &passedDXY_SOFT, "passedDXY_SOFT/I");
   tnew->Branch("passedDZ_SOFT", &passedDZ_SOFT, "passedDZ_SOFT/I");
   tnew->Branch("passedPixelLayers", &passedPixelLayers, "passedPixelLayers/I");
-  tnew->Branch("weight", &weight, "weight/F");
-  
+  tnew->Branch("hiBinS", &hiBinS, "hiBinS/F");
+  if (told->GetBranch("pair_genWeight")!=NULL) {
+    tnew->Branch("weight", &weight, "weight/F");
+    tnew->Branch("NCollWeight", &NCollWeight, "NCollWeight/F");
+  }
+
   if (nentries == 0) nentries = told->GetEntries();
   float sumWeight = nentries;
   if (told->GetBranch("pair_genWeight")!=NULL) {
@@ -85,7 +97,7 @@ TTree* copyTreeAndAddWeight(TTree* told, int nentries=0)
     sumWeight = 0.;
     for (int i=0; i<nentries; i++) {
       told->GetEntry(i);
-      const float nColl = ((hiBin>=0 && hiBin<200) ? findNcoll(hiBin) : 1.);
+      const float& nColl = ((hiBin>=0 && hiBin<200) ? findNcoll(hiBin) : 1.);
       sumWeight += genWeight*nColl;
     }
     told->SetBranchStatus("*", 1);
@@ -108,8 +120,11 @@ TTree* copyTreeAndAddWeight(TTree* told, int nentries=0)
     passedMuHits = (glbValidMuHits > 0.1);
     passedglbChi2 = (glbChi2 < 10.);
 
-    const auto& val = hist->GetBinContent(hist->FindBin(ls, run));
-    isUnprescaled = (val>0.9 && val<1.1);
+    isUnprescaled = 1.0;
+    if (genWeight==-999.) {
+      const auto& val = hist->GetBinContent(hist->FindBin(ls, run));
+      isUnprescaled = (val>0.9 && val<1.1);
+    }
       
     //SoftMuonID
     isSoftMuon = (TMOST==1 && Track_HP==1 && fabs(dxyPV)<DXYCUT_SOFT && fabs(dzPV)<DZCUT_SOFT && tkPixelLay>0.1 && tkTrackerLay>5.1);
@@ -126,14 +141,21 @@ TTree* copyTreeAndAddWeight(TTree* told, int nentries=0)
     //HybridSoftMuonID PbPb
     isHybridSoftMuon2015 = (Glb==1 && TM==1 && TMOST==1 && fabs(dxyPV)<DXYCUT_SOFT && fabs(dzPV)<DZCUT_SOFT && tkPixelLay>0.1 && tkTrackerLay>5.1);
     isHybridSoftMuon2018 = (Glb==1 && TM==1 && fabs(dxyPV)<DXYCUT_SOFT && fabs(dzPV)<DZCUT_SOFT && tkPixelLay>0.1 && tkTrackerLay>5.1);
-    isHybridSoftMuon2018And10NHits = (isHybridSoftMuon2018 && tkNHits>=10);
+    isHybridSoftMuon2018And10NHits = (isHybridSoftMuon2018 && tkNHits>10);
 
     //Weight
     weight = (nentries/sumWeight);
-    const float nColl = ((hiBin>=0 && hiBin<200) ? findNcoll(hiBin) : 1.);
-    if (genWeight!=-999.) { weight *= genWeight*nColl; }
-    if (trackAlgo!=-1.) { isNonMuonSeeded = ((trackAlgo>0. && trackAlgo<13.) || (trackAlgo>14. && trackAlgo<18.) || (trackAlgo>21. && trackAlgo<37.)); }
-    if (isNonMuonSeeded==0) continue;
+    if (genWeight!=-999.) {
+      NCollWeight = ((hiBin>=0 && hiBin<200) ? findNcoll(hiBin) : 1.);
+      weight *= genWeight*NCollWeight;
+    }
+    if (trackOrigAlgo!=-1.) {
+      isNonMuonSeeded = ((trackOrigAlgo>0. && trackOrigAlgo<13.) || (trackOrigAlgo>14. && trackOrigAlgo<18.) || (trackOrigAlgo>21. && trackOrigAlgo<37.));
+      if (dxyError!=-1. && dzError!=-1.) {
+        isNonFake = (trackOrigAlgo!=14) && ((trackAlgo==13 || trackAlgo==14) ? (fabs(dxyPV)/dxyError <= 5. && fabs(dzPV)/dzError <= 5.) : true);
+      }
+    }
+    hiBinS = hiBin - 10.;
 
     tnew->Fill();
   }
@@ -149,16 +171,20 @@ TTree* justCopyTreeAndAddWeight(TTree* told, int nentries=0) {
   float hiBin=-1., genWeight=-999., weight=1.0, trackAlgo=-1.;
 
   if (told->GetBranch("tag_hiBin")!=NULL) { told->SetBranchAddress("tag_hiBin", &hiBin); }
-  if (told->GetBranch("pair_genWeight")!=NULL) { told->SetBranchAddress("pair_genWeight", &genWeight); }
-  tnew->Branch("weight", &weight, "weight/F");
+  if (told->GetBranch("pair_genWeight")!=NULL) {
+    told->SetBranchAddress("pair_genWeight", &genWeight);
+    tnew->Branch("weight", &weight, "weight/F");
+  }
   if (told->GetBranch("trackAlgo")!=NULL) {
-    told->SetBranchAddress("trackAlgo", &trackAlgo);
+    const auto& brName = (told->GetBranch("trackOrigAlgo")!=NULL ? "trackOrigAlgo" : "trackAlgo");
+    told->SetBranchAddress(brName, &trackAlgo);
     tnew->Branch("isNonMuonSeeded", &isNonMuonSeeded, "isNonMuonSeeded/I");
   }
 
   if (nentries == 0) nentries = told->GetEntries();
   float sumWeight = nentries;
   if (told->GetBranch("pair_genWeight")!=NULL) {
+    std::cout << "[INFO] Deriving the MC weight" << std::endl;
     told->SetBranchStatus("*", 0);
     told->SetBranchStatus("pair_genWeight", 1);
     if (told->GetBranch("tag_hiBin")!=NULL) { told->SetBranchStatus("tag_hiBin", 1); }
@@ -170,6 +196,41 @@ TTree* justCopyTreeAndAddWeight(TTree* told, int nentries=0) {
     }
     told->SetBranchStatus("*", 1);
   }
+  std::map<int, bool> oneProbe, rndProbe;
+  int isOneProbe=-1, isRndProbe=-1;
+  if (false) {
+    std::cout << "[INFO] Performing the pair arbitration" << std::endl;
+    tnew->Branch("isOneProbe", &isOneProbe, "isOneProbe/I");
+    tnew->Branch("isRndProbe", &isRndProbe, "isRndProbe/I");
+    told->SetBranchStatus("*", 0);
+    UInt_t run=0, lumi=0; ULong64_t event=0;
+    told->SetBranchStatus("run", 1); told->SetBranchStatus("lumi", 1); told->SetBranchStatus("event", 1);
+    told->SetBranchAddress("run", &run); told->SetBranchAddress("lumi", &lumi); told->SetBranchAddress("event", &event);
+    Float_t tag_pt=-99., tag_eta=-99., tag_phi=-99.;
+    told->SetBranchStatus("tag_pt", 1); told->SetBranchStatus("tag_eta", 1); told->SetBranchStatus("tag_phi", 1);
+    told->SetBranchAddress("tag_pt", &tag_pt); told->SetBranchAddress("tag_eta", &tag_eta); told->SetBranchAddress("tag_phi", &tag_phi);
+    typedef std::tuple<UInt_t, UInt_t, ULong64_t> EvtBin;
+    typedef std::tuple<Float_t, Float_t, Float_t> MuBin;
+    std::map<EvtBin, std::map<MuBin, std::vector<int> > > pairMap;
+    for (int i=0; i<nentries; i++) {
+      told->GetEntry(i);
+      const auto& evtBin = std::make_tuple(run, lumi, event);
+      const auto& muBin = std::make_tuple(tag_pt, tag_eta, tag_phi);
+      pairMap[evtBin][muBin].push_back(i);
+    }
+    told->SetBranchStatus("*", 1);
+    TRandom3 rnd;
+    for (const auto& evt : pairMap) {
+      for (const auto& tag : evt.second) {
+        const uint& iF = 0;
+        const uint& iR = int(rnd.Uniform(tag.second.size()));
+        for (uint i=0; i<tag.second.size(); i++) {
+          oneProbe[tag.second[i]] = (i==iF);
+          rndProbe[tag.second[i]] = (i==iR);
+        }
+      }
+    }
+  }
   for (int i=0; i<nentries; i++) {
     told->GetEntry(i);
     //Weight
@@ -178,6 +239,8 @@ TTree* justCopyTreeAndAddWeight(TTree* told, int nentries=0) {
     if (genWeight!=-999.) { weight *= genWeight*nColl; }
     if (trackAlgo!=-1.) { isNonMuonSeeded = ((trackAlgo>0. && trackAlgo<13.) || (trackAlgo>14. && trackAlgo<18.) || (trackAlgo>21. && trackAlgo<37.)); }
     if (isNonMuonSeeded==0) continue;
+    if (!oneProbe.empty()) isOneProbe = oneProbe.at(i);
+    if (!rndProbe.empty()) isRndProbe = rndProbe.at(i);
     tnew->Fill();
   }
 
@@ -203,7 +266,7 @@ void addFlagsToFile(const std::string filein, const std::string fileout) {
   fout->cd();
   TDirectory *tdir_sta = fout->mkdir("tpTreeTrk");
   tdir_sta->cd();
-  TTree *tr_sta = copyTreeAndAddWeight((TTree*)fin->Get("tpTreeTrk/fitter_tree"),0);
+  TTree *tr_sta = justCopyTreeAndAddWeight((TTree*)fin->Get("tpTreeTrk/fitter_tree"),0);
 
   fout->Write();
   fout->Close();
