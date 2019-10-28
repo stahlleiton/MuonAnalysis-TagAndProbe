@@ -44,7 +44,7 @@ using namespace std;
 
 // Choose the efficiency type.
 // Possible values: MUIDTRG, TRK, STA, MUID, TRGL2JPSI, TRGL3JPSI, TRGL2UPSI, TRGL3UPSI, TRGDMOPEN
-#define TRGDMOPEN
+#define TRK
 // pp or PbPb?
 bool isPbPb = true; // if true, will compute the centrality dependence
 TString collTag = "PbPb"; // isPbPb ? "PbPb" : "pp";
@@ -113,7 +113,7 @@ TString etaTag("Trg_etadep");
 TString absetaTag("Trg_absetadep");
 TString centTag("Trg_centdep");
 const int nAbsEtaBins = 5;
-TString ptTag[nAbsEtaBins] = { "Trg_pt", "Trg_abseta00_12", "Trg_abseta12_18", "Trg_abseta18_21", "Trg_abseta21_24" };
+TString ptTag[nAbsEtaBins] = { "Trg_pt", "Trg_abseta00_12", "Trg_abseta12_18", "Trg_abseta18_21", "Trg_abseta21_24"};
 TString allTag("Trg_1bin");
 TString absetaVar("abseta");
 TString centVar("tag_hiBin");
@@ -247,18 +247,18 @@ int fitfcn = 1;
 #endif
 
 #ifdef TRGDMOPEN
-const int nSyst = 4;
+const int nSyst = 1;
 const char* systName[nSyst] = {
-  "nominal",
+  "nominal"};/*,
   "signal syst",
   "bkg syst",
-  "mass range syst"};
+  "mass range syst"};*/
 TString outputTag = "Effplots/Trg/DoubleMuOpen/";
 TString etaTag("Trg_etadep");
 TString absetaTag("Trg_absetadep");
 TString centTag("Trg_centdep");
-const int nAbsEtaBins = 5;
-TString ptTag[nAbsEtaBins] = { "Trg_pt", "Trg_abseta00_12", "Trg_abseta12_18", "Trg_abseta18_21", "Trg_abseta21_24" };
+const int nAbsEtaBins = 4;
+TString ptTag[nAbsEtaBins] = { "Trg_pt", "Trg_abseta00_12", "Trg_abseta12_18", "Trg_abseta18_24" };
 TString allTag("Trg_1bin");
 TString absetaVar("abseta");
 TString centVar("tag_hiBin");
@@ -271,14 +271,14 @@ TString treeTag("tpTree");
 TString cutLegend("DoubleMuOpen");
 const double effmin = 0.;
 const double sfrange = 0.35;
-const char* fDataName[nSyst] = { "../test/jpsiHI/Output/Trg/tnp_Ana_RD_PbPb_Trg_DoubleMuOpen_cbPlusPol1.root", 
+const char* fDataName[nSyst] = { "../test/jpsiHI/Output/Trg/tnp_Ana_RD_PbPb_Trg_DoubleMuOpen_cbPlusPol1.root"};/*, 
 				 "../test/jpsiHI/Output/Trg/tnp_Ana_RD_PbPb_Trg_DoubleMuOpen_cbGausPlusPol1.root",
 				 "../test/jpsiHI/Output/Trg/tnp_Ana_RD_PbPb_Trg_DoubleMuOpen_cbPlusPol2.root",
-				 "../test/jpsiHI/Output/Trg/tnp_Ana_RD_PbPb_Trg_DoubleMuOpen_mass2834.root"};
-const char* fMCName[nSyst] = { "../test/jpsiHI/Output/Trg/tnp_Ana_MC_PbPb_Trg_DoubleMuOpen_cbPlusPol1.root",
+				 "../test/jpsiHI/Output/Trg/tnp_Ana_RD_PbPb_Trg_DoubleMuOpen_mass2834.root"};*/
+const char* fMCName[nSyst] = { "../test/jpsiHI/Output/Trg/tnp_Ana_MC_PbPb_Trg_DoubleMuOpen_cbPlusPol1.root"};/*,
 			       "../test/jpsiHI/Output/Trg/tnp_Ana_MC_PbPb_Trg_DoubleMuOpen_cbGausPlusPol1.root",
 			       "../test/jpsiHI/Output/Trg/tnp_Ana_MC_PbPb_Trg_DoubleMuOpen_cbPlusPol2.root",
-			       "../test/jpsiHI/Output/Trg/tnp_Ana_MC_PbPb_Trg_DoubleMuOpen_mass2834.root"};
+			       "../test/jpsiHI/Output/Trg/tnp_Ana_MC_PbPb_Trg_DoubleMuOpen_mass2834.root"};*/
 int fitfcn = 1;
 #endif
 
@@ -406,8 +406,10 @@ void TnPEffDraw_singleFile_Bat() {
     for (unsigned int i = 0; i < rds_absetaPtDep_MC[k].size(); i++)
       {
 	cout << k << " " << i << " " << rds_absetaPtDep_RD[k][i] << endl;
+	cout <<"start MC 1"<<endl;
 	ComPt_MC[k].push_back(plotEff_1bin(rds_absetaPtDep_MC[k][i], 1, "pt"));
 	cout << k << " " << i << " " << rds_absetaPtDep_RD[k][i] << endl;
+	cout <<"done with MC start RD 1"<<endl;
 	ComPt_RD[k].push_back(plotEff_1bin(rds_absetaPtDep_RD[k][i], 1, "pt"));
       }
   }
@@ -458,21 +460,26 @@ void TnPEffDraw_singleFile_Bat() {
   TGraphAsymmErrors* effCentMC = NULL;
   TGraphAsymmErrors* effCentData = NULL;
   cout << "HERE2" << endl;
+  
   for (int k = 0; k < nSyst; k++) {
     eff1bin_MC[k] = plotEff_1bin(rds_bin0_MC[k], 0, "eta");
     eff1bin_RD[k] = plotEff_1bin(rds_bin0_RD[k], 0, "eta");
+    cout <<"start MC"<<endl;
     effAbsEta_MC[k] = plotEff_Nbins(rds_abseta_MC[k], 0, "pt", absetaVar);
+    cout <<"done with MC start RD"<<endl;
     effAbsEta_RD[k] = plotEff_Nbins(rds_abseta_RD[k], 0, "pt", absetaVar);
     if (isPbPb && k == 0) {
+      cout <<"start centrality dependence for MC"<<endl;
       effCentMC = plotEff_1bin(rds_cent_MC[k], 0, centVar);
+      cout <<"start centrality dependence for RD"<<endl;
       effCentData = plotEff_1bin(rds_cent_RD[k], 0, centVar);
     }
   }
-
+  
   cout << endl<< "Loading of roo data sets and efficiencies done " << endl << endl;
 
   // loading done, set style
-  if (isPbPb) {
+    if (isPbPb) {
     effCentMC->SetMarkerStyle(20);
     effCentMC->SetMarkerSize(1.4);
     effCentMC->SetMarkerColor(kRed + 1);
@@ -482,7 +489,7 @@ void TnPEffDraw_singleFile_Bat() {
     effCentData->SetMarkerColor(kBlue + 1);
     effCentData->SetLineColor(kBlue + 1);
   }
-
+  
   int nbins_abseta = ComPt_MC[0].size();
   for (int k = 0; k < nSyst; k++)
     {
@@ -524,11 +531,11 @@ void TnPEffDraw_singleFile_Bat() {
 	TrkAbsEta0[k][i] = new double[4]; //	b[0] = sum / nBins;			b[1] = sqrt(sqSumHigh) / nBins; 		b[2] = sqrt(sqSumLow) / nBins;     b[3] unused
 	TrkAbsEta1[k][i] = new double[4];
       }
-
+    /*
     CalEffErr(eff1bin_MC[k], Trk0[k]);
     CalEffErr(eff1bin_RD[k], Trk1[k]);
     CalEffErr(effAbsEta_MC[k], TrkAbsEta0[k]);
-    CalEffErr(effAbsEta_RD[k], TrkAbsEta1[k]);
+    CalEffErr(effAbsEta_RD[k], TrkAbsEta1[k]);*/
   }
 
   ///////////////////////////////////////////////
@@ -1486,7 +1493,11 @@ void plotSysts(TGraphAsymmErrors *graphs[nSyst], TCanvas *c1, TPad *p1, TH1F *h1
 	double diff = fabs(graphs[k]->GetY()[j] - ComPt0_forRatio->GetY()[j]);
 	if (diff>maxdiff) maxdiff = diff;
       }
-      file_syst << "if (x >= " << ComPt0_forRatio->GetX()[j] - ComPt0_forRatio->GetEXlow()[j] <<" && x < "<< ComPt0_forRatio->GetX()[j] + ComPt0_forRatio->GetEXhigh()[j] << ") syst = " << maxdiff <<";"<<endl;
+      if (j>0) file_syst <<"else ";
+      if (j<nbins-1)
+	file_syst << "if (x >= " << ComPt0_forRatio->GetX()[j] - ComPt0_forRatio->GetEXlow()[j] <<" && x < "<< ComPt0_forRatio->GetX()[j] + ComPt0_forRatio->GetEXhigh()[j] << ") syst = " << maxdiff <<";"<<endl;
+      else 
+	file_syst << "syst = " << maxdiff <<";"<<endl;
     }
   file_syst.close();
   // save

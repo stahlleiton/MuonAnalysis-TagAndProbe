@@ -6,9 +6,8 @@
 
 Double_t tnp_weight_pbpb_wrapper(Double_t *x, Double_t *par) {
    if (par[2]<0.5) return tnp_weight_muid_pbpb(x[0], par[1]);
-   else if (par[2]<1.5) return tnp_weight_trg_pbpb(x[0],par[0],par[1]);
-   else return 0;
-   //else return tnp_weight_iso_pbpb(x[0],par[0],par[1]);
+   else if (par[2]<1.5) return tnp_weight_trig_pbpb(x[0],par[2],par[0],par[1]);
+   else return tnp_weight_glbtrk_pbpb(x[0],60, par[1]); //cent
 }
 
 float ptmin(float etamax) {
@@ -25,6 +24,7 @@ void plotSFs() {
    TCanvas *c1 = new TCanvas();
    TH1F *haxes = new TH1F("haxes",";p_{T} [GeV/c];Scale factor",1,0,200);
    TH1F *haxeseta = new TH1F("haxes20",";#eta;Scale factor",1,-2.4,2.4);
+   gStyle->SetOptStat(0);
 
    float *etamin=NULL, *etamax=NULL;
    float eta, ptminval, ptmaxval;
@@ -32,29 +32,34 @@ void plotSFs() {
    etamin = new float[3]; etamin[0]=0.; etamin[1]=1.2; etamin[2]=2.1;
    etamax = new float[3]; etamax[0]=1.2; etamax[1]=2.1; etamax[2]=2.4;;
 
-   const char* tags[3] = {"muid_","trg_","iso_"};
-   const char* names[3] = {"MuId","Trg","Iso"};
+   const char* tags[3] = {"muid_","trg_","glbtrk_"};
+   const char* names[3] = {"MuId","Trg","GlbTrk"};
    const double range[3] = {0.05,0.1,0.1};
 
-   for (int j=0; j<2; j++) {
+   for (int j=0; j<3; j++) {
       // pbpb
-      int ietamax = (j==0) ? 0 : 2; // for muid, only 1 plot (eta dependence)
+      int ietamax = (j==0||j==2) ? 0 : 2; // for muid and glbtrk, only 1 plot (eta dependence)
       for (int ieta=0; ieta<=ietamax; ieta++) {
-         if (j>0) {
+         if (j==1) {
             haxes->GetYaxis()->SetRangeUser(1-2.*range[j],1+range[j]);
             haxes->Draw();
-         } else {
-            haxeseta->GetYaxis()->SetRangeUser(0.93,1.03);
+         } 
+		 else if (j==0) {
+			 haxeseta->GetYaxis()->SetRangeUser(0.93, 1.03);
+			 haxeseta->Draw();
+		 }
+		 else {
+            haxeseta->GetYaxis()->SetRangeUser(0.88,1.03);
             haxeseta->Draw();
          }
 
-         TLegend *tleg = new TLegend(0.58,0.16,0.91,0.47);
+         TLegend *tleg = new TLegend(0.58,0.16,0.89,0.47);
          tleg->SetBorderSize(0);
 
          eta = (etamax[ieta]+etamin[ieta])/2.;
-         ptminval = j==0 ? -2.4 : ptmin(etamax[ieta]);
-         ptmaxval = j==0 ? 2.4 : 200;
-         int imax = (j>0) ? 100 : 2;
+         ptminval = (j==0||j==2) ? -2.4 : ptmin(etamax[ieta]);
+         ptmaxval = (j==0||j==2) ? 2.4 : 200;
+         int imax = (j==1) ? 100 : 2;
          for (int i=1; i<=imax; i++) {
             TF1 *fnom = new TF1(Form("f%i",i),tnp_weight_pbpb_wrapper,ptminval,ptmaxval,3);
             fnom->SetParameters(eta,i,j);
@@ -72,20 +77,20 @@ void plotSFs() {
          TF1 *fbinned = new TF1("fbinned",tnp_weight_pbpb_wrapper,ptminval,ptmaxval,3);
          fbinned->SetParameters(eta,-10,j);
          fbinned->SetLineColor(kGreen+2);
-         if (j>0) fbinned->Draw("same"); // binned only for Trg and Iso
+         if (j==1) fbinned->Draw("same"); // binned only for Trg
          TF1 *fnom = new TF1("fnom",tnp_weight_pbpb_wrapper,ptminval,ptmaxval,3);
          fnom->SetParameters(eta,0,j);
          fnom->SetLineColor(kRed);
          fnom->Draw("same");
 
-         if (j==0) tleg->SetHeader(Form("#splitline{PbPb, %s}{#eta #in [-2.4,2.4], p_{T}>15 GeV/c}",names[j]));
+         if (j==0||j==2) tleg->SetHeader(Form("#splitline{PbPb, %s}{#eta #in [-2.4,2.4], p_{T}>15 GeV/c}",names[j]));
          else tleg->SetHeader(Form("#splitline{PbPb, %s}{#eta #in [%.1f,%.1f], p_{T}>15 GeV/c}",names[j],etamin[ieta],etamax[ieta]));
 
          tleg->AddEntry(fnom,"Nominal","l");
-         if (j>0) tleg->AddEntry("f1","stat (100 toys)","l");
+         if (j==1) tleg->AddEntry("f1","stat (100 toys)","l");
          else tleg->AddEntry("f1","stat","l");
          tleg->AddEntry(fp,"syst (+/1#sigma)","l");
-         if (j>0) tleg->AddEntry(fbinned,"binned","l");
+         if (j==1) tleg->AddEntry(fbinned,"binned","l");
          tleg->Draw();
          c1->SaveAs(Form("tnp_pbpb_%seta%.1f-%.1f.pdf",tags[j],etamin[ieta],etamax[ieta]));
          c1->SaveAs(Form("tnp_pbpb_%seta%.1f-%.1f.png",tags[j],etamin[ieta],etamax[ieta]));
