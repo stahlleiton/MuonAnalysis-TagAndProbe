@@ -7,27 +7,27 @@
 // IN THIS FILE YOU WILL FIND:
 // ++++++++++++++
 //
-// - GlbTrk: (tnp_weight_glbPFtrk_pbpb)   Preliminary
+// - GlbTrk: (tnp_weight_glbPFtrk_pbpb) 
 //   * idx = 0: nominal
 //   * idx = -1: syst variation,  +1 sigma
 //   * idx = -2: syst variation,  -1 sigma
 //   * idx = +1: stat variation,  +1 sigma
 //   * idx = +2: stat variation,  -1 sigma
 
-//   * idx = -3: syst variation, no PF included  +1 sigma
-//   * idx = -4: syst variation, no PF included  -1 sigma
-//   * idx = -5: syst variation, only PF included +1 sigma
-//   * idx = -6: syst variation, only PF included -1 sigma
+//   * idx = -3: syst variation, no PF uncertainty included  +1 sigma
+//   * idx = -4: syst variation, no PF uncertainty included  -1 sigma
+//   * idx = -5: only PF uncertainty included (1 +1 sigma)
+//   * idx = -6: only PF uncertainty included (1 -1 sigma)
 
 
-// - MuID: (tnp_weight_muid_pbpb)   Preliminary
+// - MuID: (tnp_weight_muid_pbpb) 
 //   * idx = 0: nominal
 //   * idx = -1: syst variation,  +1 sigma
 //   * idx = -2: syst variation,  -1 sigma
 //   * idx = +1: stat variation,  +1 sigma
 //   * idx = +2: stat variation,  -1 sigma
 //
-// - Trigger: (tnp_weight_trig_pbpb)  Preliminary
+// - Trigger: (tnp_weight_trig_pbpb) 
 //   * idx = 0:  nominal
 //   * idx = -1: TnP syst variation,  +1 sigma
 //   * idx = -2: TnP syst variation,  -1 sigma
