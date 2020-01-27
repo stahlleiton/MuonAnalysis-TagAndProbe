@@ -59,7 +59,7 @@ double tnp_weight_glbtrk_pbpb(double eta, double cent, int idx) //cent 0-100%
 	if (cent >= 0 && cent < 40)
 	{
 		// MC
-		if (abseta > 0 && abseta <= 0.9) { den = 0.978912; }
+		if (abseta >= 0 && abseta <= 0.9) { den = 0.978912; }
 		else if (abseta > 0.9 && abseta <= 1.2) { den = 0.980928; }
 		else if (abseta > 1.2 && abseta <= 1.6) { den = 0.99245; }
 		else if (abseta > 1.6 && abseta <= 2.1) { den = 0.986688; }
@@ -67,7 +67,7 @@ double tnp_weight_glbtrk_pbpb(double eta, double cent, int idx) //cent 0-100%
 
 		// data
 		if (idx == 0|| idx == 200) { // nominal
-			if (abseta > 0 && abseta <= 0.9) { num = 0.971173; }
+			if (abseta >= 0 && abseta <= 0.9) { num = 0.971173; }
 			else if (abseta > 0.9 && abseta <= 1.2) { num = 0.958148; }
 			else if (abseta > 1.2 && abseta <= 1.6) { num = 0.987326; }
 			else if (abseta > 1.6 && abseta <= 2.1) { num = 0.983108; }
@@ -75,28 +75,28 @@ double tnp_weight_glbtrk_pbpb(double eta, double cent, int idx) //cent 0-100%
 		}
 
 		if (idx == 1) { // stat up
-			if (abseta > 0 && abseta <= 0.9) { num = 0.972533; }
+			if (abseta >= 0 && abseta <= 0.9) { num = 0.972533; }
 			else if (abseta > 0.9 && abseta <= 1.2) { num = 0.963009; }
 			else if (abseta > 1.2 && abseta <= 1.6) { num = 0.988907; }
 			else if (abseta > 1.6 && abseta <= 2.1) { num = 0.984995; }
 			else if (abseta > 2.1 && abseta <= 2.4) { num = 0.96963; }
 		}
 		if (idx == 2) { // stat down
-			if (abseta > 0 && abseta <= 0.9) { num = 0.969776; }
+			if (abseta >= 0 && abseta <= 0.9) { num = 0.969776; }
 			else if (abseta > 0.9 && abseta <= 1.2) { num = 0.954932; }
 			else if (abseta > 1.2 && abseta <= 1.6) { num = 0.985623; }
 			else if (abseta > 1.6 && abseta <= 2.1) { num = 0.981102; }
 			else if (abseta > 2.1 && abseta <= 2.4) { num = 0.96104; }
 		}
 		if (idx == -1) { // syst up
-		if (abseta > 0 && abseta <= 0.9) { num = 0.971762; }
+		if (abseta >= 0 && abseta <= 0.9) { num = 0.971762; }
 		else if (abseta > 0.9 && abseta <= 1.2) { num = 0.959959; }
 		else if (abseta > 1.2 && abseta <= 1.6) { num = 0.988186; }
 		else if (abseta > 1.6 && abseta <= 2.1) { num = 0.983305; }
 		else if (abseta > 2.1 && abseta <= 2.4) { num = 0.966265; }
 		}
 		if (idx == -2) { // syst down
-		if (abseta > 0 && abseta <= 0.9) { num = 0.970584; }
+		if (abseta >= 0 && abseta <= 0.9) { num = 0.970584; }
 		else if (abseta > 0.9 && abseta <= 1.2) { num = 0.956336; }
 		else if (abseta > 1.2 && abseta <= 1.6) { num = 0.986467; }
 		else if (abseta > 1.6 && abseta <= 2.1) { num = 0.982912; }
@@ -108,7 +108,7 @@ double tnp_weight_glbtrk_pbpb(double eta, double cent, int idx) //cent 0-100%
 	{
 
 		// MC
-		if (abseta > 0 && abseta <= 0.9) { den = 0.98744; }
+		if (abseta >= 0 && abseta <= 0.9) { den = 0.98744; }
 		else if (abseta > 0.9 && abseta <= 1.2) { den = 0.99433; }
 		else if (abseta > 1.2 && abseta <= 1.6) { den = 0.998913; }
 		else if (abseta > 1.6 && abseta <= 2.1) { den = 0.996517; }
@@ -116,7 +116,7 @@ double tnp_weight_glbtrk_pbpb(double eta, double cent, int idx) //cent 0-100%
 
 		// data
 		if (idx == 0 || idx == 200) { // nominal
-			if (abseta > 0 && abseta <= 0.9) { num = 0.985895; }
+			if (abseta >= 0 && abseta <= 0.9) { num = 0.985895; }
 			else if (abseta > 0.9 && abseta <= 1.2) { num = 0.994328; }
 			else if (abseta > 1.2 && abseta <= 1.6) { num = 0.997029; }
 			else if (abseta > 1.6 && abseta <= 2.1) { num = 0.993172; }
@@ -124,28 +124,28 @@ double tnp_weight_glbtrk_pbpb(double eta, double cent, int idx) //cent 0-100%
 		}
 
 		if (idx == 1) { // stat up
-			if (abseta > 0 && abseta <= 0.9) { num = 0.988874; }
+			if (abseta >= 0 && abseta <= 0.9) { num = 0.988874; }
 			else if (abseta > 0.9 && abseta <= 1.2) { num = 0.997005; }
 			else if (abseta > 1.2 && abseta <= 1.6) { num = 0.999124; }
 			else if (abseta > 1.6 && abseta <= 2.1) { num = 0.996226; }
 			else if (abseta > 2.1 && abseta <= 2.4) { num = 0.995055; }
 		}
 		if (idx == 2) { // stat down
-			if (abseta > 0 && abseta <= 0.9) { num = 0.982558; }
+			if (abseta >= 0 && abseta <= 0.9) { num = 0.982558; }
 			else if (abseta > 0.9 && abseta <= 1.2) { num = 0.990409; }
 			else if (abseta > 1.2 && abseta <= 1.6) { num = 0.993971; }
 			else if (abseta > 1.6 && abseta <= 2.1) { num = 0.989008; }
 			else if (abseta > 2.1 && abseta <= 2.4) { num = 0.984224; }
 		}
 		if (idx == -1) { // syst up
-		if (abseta > 0 && abseta <= 0.9) { num = 0.986813; }
+		if (abseta >= 0 && abseta <= 0.9) { num = 0.986813; }
 		else if (abseta > 0.9 && abseta <= 1.2) { num = 0.994583; }
 		else if (abseta > 1.2 && abseta <= 1.6) { num = 0.997692; }
 		else if (abseta > 1.6 && abseta <= 2.1) { num = 0.994297; }
 		else if (abseta > 2.1 && abseta <= 2.4) { num = 0.991597; }
 		}
 		if (idx == -2) { // syst down
-		if (abseta > 0 && abseta <= 0.9) { num = 0.984977; }
+		if (abseta >= 0 && abseta <= 0.9) { num = 0.984977; }
 		else if (abseta > 0.9 && abseta <= 1.2) { num = 0.994074; }
 		else if (abseta > 1.2 && abseta <= 1.6) { num = 0.996367; }
 		else if (abseta > 1.6 && abseta <= 2.1) { num = 0.992047; }
@@ -186,37 +186,37 @@ double tnp_weight_pf_pbpb(double eta, double cent, int idx = 0)
 	if (cent >= 0 && cent < 40)
 	{
 		// MC
-		if (eta > 0 && eta <= 0.9) { den = 0.990737; }
-		else if (eta > 0.9 && eta <= 1.2) { den = 0.991441; }
-		else if (eta > 1.2 && eta <= 1.6) { den = 0.98534; }
-		else if (eta > 1.6 && eta <= 2.1) { den = 0.991639; }
-		else if (eta > 2.1 && eta <= 2.4) { den = 0.978643; }
+		if (abseta >= 0 && abseta <= 0.9) { den = 0.990737; }
+		else if (abseta > 0.9 && abseta <= 1.2) { den = 0.991441; }
+		else if (abseta > 1.2 && abseta <= 1.6) { den = 0.98534; }
+		else if (abseta > 1.6 && abseta <= 2.1) { den = 0.991639; }
+		else if (abseta > 2.1 && abseta <= 2.4) { den = 0.978643; }
 
 	
 		if (idx == 0 || idx == 200) { 
-			if (eta > 0 && eta <= 0.9) { num = 0.989266; }
-			else if (eta > 0.9 && eta <= 1.2) { num = 0.984868; }
-			else if (eta > 1.2 && eta <= 1.6) { num = 0.981871; }
-			else if (eta > 1.6 && eta <= 2.1) { num = 0.984655; }
-			else if (eta > 2.1 && eta <= 2.4) { num = 0.949866; }
+			if (abseta >= 0 && abseta <= 0.9) { num = 0.989266; }
+			else if (abseta > 0.9 && abseta <= 1.2) { num = 0.984868; }
+			else if (abseta > 1.2 && abseta <= 1.6) { num = 0.981871; }
+			else if (abseta > 1.6 && abseta <= 2.1) { num = 0.984655; }
+			else if (abseta > 2.1 && abseta <= 2.4) { num = 0.949866; }
 		}
 
 	}
 	else if (cent >= 40 && cent <= 100)
 	{
 		// MC
-		if (eta > 0 && eta <= 0.9) { den = 0.997979; }
-		else if (eta > 0.9 && eta <= 1.2) { den = 0.997599; }
-		else if (eta > 1.2 && eta <= 1.6) { den = 0.997771; }
-		else if (eta > 1.6 && eta <= 2.1) { den = 0.997692; }
-		else if (eta > 2.1 && eta <= 2.4) { den = 0.994569; }
+		if (abseta >= 0 && abseta <= 0.9) { den = 0.997979; }
+		else if (abseta > 0.9 && abseta <= 1.2) { den = 0.997599; }
+		else if (abseta > 1.2 && abseta <= 1.6) { den = 0.997771; }
+		else if (abseta > 1.6 && abseta <= 2.1) { den = 0.997692; }
+		else if (abseta > 2.1 && abseta <= 2.4) { den = 0.994569; }
 
 		if (idx == 0 || idx == 200) {
-			if (eta > 0 && eta <= 0.9) { num = 0.998014; }
-			else if (eta > 0.9 && eta <= 1.2) { num = 0.992184; }
-			else if (eta > 1.2 && eta <= 1.6) { num = 0.996689; }
-			else if (eta > 1.6 && eta <= 2.1) { num = 0.991708; }
-			else if (eta > 2.1 && eta <= 2.4) { num = 0.969514; }
+			if (abseta >= 0 && abseta <= 0.9) { num = 0.998014; }
+			else if (abseta > 0.9 && abseta <= 1.2) { num = 0.992184; }
+			else if (abseta > 1.2 && abseta <= 1.6) { num = 0.996689; }
+			else if (abseta > 1.6 && abseta <= 2.1) { num = 0.991708; }
+			else if (abseta > 2.1 && abseta <= 2.4) { num = 0.969514; }
 		}
 	}
 
