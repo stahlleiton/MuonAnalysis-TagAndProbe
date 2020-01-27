@@ -7,14 +7,17 @@
 // IN THIS FILE YOU WILL FIND:
 // ++++++++++++++
 //
-// - GlbTrk: (tnp_weight_glbtrk_pbpb)   Preliminary
+// - GlbTrk: (tnp_weight_glbPFtrk_pbpb)   Preliminary
 //   * idx = 0: nominal
 //   * idx = -1: syst variation,  +1 sigma
 //   * idx = -2: syst variation,  -1 sigma
 //   * idx = +1: stat variation,  +1 sigma
 //   * idx = +2: stat variation,  -1 sigma
-//
 
+//   * idx = -3: syst variation, no PF included  +1 sigma
+//   * idx = -4: syst variation, no PF included  -1 sigma
+//   * idx = -5: syst variation, only PF included +1 sigma
+//   * idx = -6: syst variation, only PF included -1 sigma
 
 
 // - MuID: (tnp_weight_muid_pbpb)   Preliminary
@@ -37,18 +40,18 @@
 
 // THE INDIVIDUAL SFs
 // ++++++++++++++++++
-double tnp_weight_glbtrk_pbpb(double eta, double cent, int idx = 0);
+double tnp_weight_glbPFtrk_pbpb(double eta, double cent, int idx = 0);
 double tnp_weight_muid_pbpb(double eta, int idx=0);
 double tnp_weight_trig_pbpb(double pt, double eta, double cent, int idx=0);
 
 
 ///////////////////////////////////////////////////
-//              G l b T r k    P b P b           //
+//              G l b P F  T r k    P b P b           //
 ///////////////////////////////////////////////////
 
-double tnp_uncertainty_pf_pbpb(double eta, double cent, int idx = 0); //not a standalone efficiency - only systematic uncertainty is provided, and added to the values of glbtrk (as it started by taking PF out of glbtrk). No need to call, the syst uncertainty is included in the glbtrk by default
+double tnp_uncertainty_pf_pbpb(double eta, double cent, int idx = 0); //not a standalone efficiency - only systematic uncertainty is provided, and added to the values of glbpftrk (as it started by taking PF out of glbtrk). No need to call, the syst uncertainty is included in the glbtrk by default
 
-double tnp_weight_glbtrk_pbpb(double eta, double cent, int idx) //cent 0-100%
+double tnp_weight_glbPFtrk_pbpb(double eta, double cent, int idx) //cent 0-100%
 {
 	double num = 1, den = 1;
 
@@ -89,14 +92,14 @@ double tnp_weight_glbtrk_pbpb(double eta, double cent, int idx) //cent 0-100%
 			else if (abseta > 1.6 && abseta <= 2.1) { num = 0.981102; }
 			else if (abseta > 2.1 && abseta <= 2.4) { num = 0.96104; }
 		}
-		if (idx == -1) { // syst up
+		if (idx == -1|| idx == -3) { // syst up
 		if (abseta >= 0 && abseta <= 0.9) { num = 0.971762; }
 		else if (abseta > 0.9 && abseta <= 1.2) { num = 0.959959; }
 		else if (abseta > 1.2 && abseta <= 1.6) { num = 0.988186; }
 		else if (abseta > 1.6 && abseta <= 2.1) { num = 0.983305; }
 		else if (abseta > 2.1 && abseta <= 2.4) { num = 0.966265; }
 		}
-		if (idx == -2) { // syst down
+		if (idx == -2 || idx == -4) { // syst down
 		if (abseta >= 0 && abseta <= 0.9) { num = 0.970584; }
 		else if (abseta > 0.9 && abseta <= 1.2) { num = 0.956336; }
 		else if (abseta > 1.2 && abseta <= 1.6) { num = 0.986467; }
@@ -138,14 +141,14 @@ double tnp_weight_glbtrk_pbpb(double eta, double cent, int idx) //cent 0-100%
 			else if (abseta > 1.6 && abseta <= 2.1) { num = 0.989008; }
 			else if (abseta > 2.1 && abseta <= 2.4) { num = 0.984224; }
 		}
-		if (idx == -1) { // syst up
+		if (idx == -1 || idx == -3) { // syst up
 		if (abseta >= 0 && abseta <= 0.9) { num = 0.986813; }
 		else if (abseta > 0.9 && abseta <= 1.2) { num = 0.994583; }
 		else if (abseta > 1.2 && abseta <= 1.6) { num = 0.997692; }
 		else if (abseta > 1.6 && abseta <= 2.1) { num = 0.994297; }
 		else if (abseta > 2.1 && abseta <= 2.4) { num = 0.991597; }
 		}
-		if (idx == -2) { // syst down
+		if (idx == -2 || idx == -4) { // syst down
 		if (abseta >= 0 && abseta <= 0.9) { num = 0.984977; }
 		else if (abseta > 0.9 && abseta <= 1.2) { num = 0.994074; }
 		else if (abseta > 1.2 && abseta <= 1.6) { num = 0.996367; }
@@ -156,7 +159,7 @@ double tnp_weight_glbtrk_pbpb(double eta, double cent, int idx) //cent 0-100%
 
 	if (idx == -1 || idx == -2) //add systematic from PF
 	{
-		double glbtrkNomRD = tnp_weight_glbtrk_pbpb(eta, cent, 200); //get the nominal RD value
+		double glbtrkNomRD = tnp_weight_glbPFtrk_pbpb(eta, cent, 200); //get the nominal RD value
 		double pfSyst = (tnp_uncertainty_pf_pbpb(eta, cent, 200) - tnp_uncertainty_pf_pbpb(eta, cent, 300)) / tnp_uncertainty_pf_pbpb(eta, cent, 300); //relative pf syst uncertainty
 		double glbtrkSyst = ((num - glbtrkNomRD) / glbtrkNomRD); //relative glbtrk syst uncertainty on RD
 		double totalglbtrkSyst = TMath::Sqrt(pfSyst*pfSyst + glbtrkSyst * glbtrkSyst); //relative total uncertainty
@@ -164,6 +167,14 @@ double tnp_weight_glbtrk_pbpb(double eta, double cent, int idx) //cent 0-100%
 		else { num = glbtrkNomRD - totalglbtrkSyst * glbtrkNomRD; }
 		if (num > 1) num = 1; //with addition of PF, numerator could be higher than 1 - unphysical 
 	}
+
+	if (idx == -5 || idx == -6) //return 1+- PF syst
+	{
+		double pfSyst = (tnp_uncertainty_pf_pbpb(eta, cent, 200) - tnp_uncertainty_pf_pbpb(eta, cent, 300)) / tnp_uncertainty_pf_pbpb(eta, cent, 300);
+		if (idx == -5) { num = den + pfSyst * den; }
+		else { num = den - pfSyst * den; }
+	}
+
 
 	if (idx == 200) den = 1.;
 	if (idx == 300) num = den * den;

@@ -7,7 +7,7 @@
 Double_t tnp_weight_pbpb_wrapper(Double_t *x, Double_t *par) {
    if (par[2]<0.5) return tnp_weight_muid_pbpb(x[0], par[1]);
    else if (par[2]<1.5) return tnp_weight_trig_pbpb(x[0],par[2],par[0],par[1]);
-   else return tnp_weight_glbtrk_pbpb(x[0],80, par[1]); //cent
+   else return tnp_weight_glbPFtrk_pbpb(x[0],80, par[1]); //cent
 }
 
 float ptmin(float etamax) {
