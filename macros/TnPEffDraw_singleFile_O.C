@@ -44,10 +44,10 @@ using namespace std;
 
 // Choose the efficiency type.
 // Possible values: MUIDTRG, TRK, STA, MUID, TRG
-#define TRG
+#define TRK
 
 // pp or PbPb?
-bool isPbPb = true; // if true, will compute the centrality dependence
+bool isPbPb = false; // if true, will compute the centrality dependence
 TString collTag = "PbPb"; // isPbPb ? "PbPb" : "pp";
 
 // how to fit efficiencies?
@@ -58,23 +58,6 @@ TString collTag = "PbPb"; // isPbPb ? "PbPb" : "pp";
 // 
 int fitfcn = 2;
 
-// Location of the files
-const int nSyst = 1;
-// the first file is for the nominal case, the following ones are for the systematics
-/*const char* fDataName[nSyst] = {
-	//"tnp_Ana_RD_PbPb_MuonIDTrg_AllMB.root",
-	"tnp_Ana_RD_PbPb_MuonTrk_AllMB_isGlbPol2.root", 
-};
-const char* fMCName[nSyst] = {
-   //"tnp_Ana_MC_PbPb_MuonIDTrg_AllMB.root",
-	"tnp_Ana_MC_PbPb_MuonTrk_AllMB_isGlbPol2.root",
-};//*/
-
-const bool bPlotAbseta = true;
-bool bPlotSyst = false;
-
-// do the toy study for the correction factors?
-bool doToys = false;
 
 
 
@@ -86,6 +69,10 @@ bool doToys = false;
 
 #ifdef MUID
 bool doSF = true;
+const bool bPlotAbseta = true;
+bool bPlotSyst = true;
+bool doToys = false; // do the toy study for the correction factors?
+
 TString saveDirName = "MuId_Eff";
 TString etaTag("MuId_etadep");
 //TString etaTag("MuId_etadep_passedMatchedStations_minus1");
@@ -100,6 +87,7 @@ TString absetaVar("abseta");
 TString centVar("tag_hiBin");
 ofstream file_sfs("correction_functions.txt");
 ofstream file_Eta("EtaValues_MuId.txt");
+ofstream file_Abseta("AbsEtaValues_MuId.txt");
 ofstream file_Cent("CentValues_MuId.txt");
 ofstream file_TestErr("MuId_ExpErr.txt");
 TString treeTag("tpTree");
@@ -110,6 +98,7 @@ const double effmax = 1.02;
 const double sfrange = 0.02;
 const double c_ptRange = 200; // how far to plot the pt
 const double c_centralityRange = 100; // how far to plot the centrality (hibin goes to 200)
+const int nSyst = 1;
 const char* fDataName[nSyst] = { "tnp_Ana_RD_MuId_PbPb.root" };
 const char* fMCName[nSyst] = { "tnp_Ana_MC_MuId_PbPb.root" };
 const char* systName[nSyst] = {
@@ -124,11 +113,16 @@ const char* systName[nSyst] = {
 //   "Bkg - pol2",
 //};
 
+
 #endif
 
 
 #ifdef TRG
 bool doSF = false;
+const bool bPlotAbseta = true;
+bool bPlotSyst = true;
+bool doToys = false; // do the toy study for the correction factors?
+
 TString saveDirName = "Trg_Eff";
 TString etaTag("Trg_etadep");
 TString absetaTag("Trg_absetadep");
@@ -140,6 +134,7 @@ TString absetaVar("abseta");
 TString centVar("tag_hiBin");
 ofstream file_sfs("correction_functions_Trg.txt");
 ofstream file_Eta("EtaValues_Trg.txt");
+ofstream file_Abseta("AbsEtaValues_Trg.txt");
 ofstream file_Cent("CentValues_Trg.txt");
 ofstream file_TestErr("Trg_ExpErr.txt");
 TString treeTag("tpTree");
@@ -149,6 +144,7 @@ const double effmax = 1.05;
 const double sfrange = 0.1;
 const double c_ptRange = 200; // how far to plot the pt
 const double c_centralityRange = 100; // how far to plot the centrality (hibin goes to 200)
+const int nSyst = 1;
 const char* fDataName[nSyst] = { "tnp_Ana_RD_L3Mu12_PbPb_0_v5.root" };
 const char* fMCName[nSyst] = { "tnp_Ana_MC_L3Mu12_PbPb_0_v5.root" };
 const char* systName[nSyst] = {
@@ -162,6 +158,10 @@ const char* systName[nSyst] = {
 
 #ifdef STA
 bool doSF = true;
+const bool bPlotAbseta = true;
+bool bPlotSyst = true;
+bool doToys = false; // do the toy study for the correction factors?
+
 TString saveDirName = "Sta_Eff";
 TString etaTag("STA_etadep");
 TString absetaTag("STA_absetadep");
@@ -173,6 +173,7 @@ TString absetaVar("abseta");
 TString centVar("tag_hiBin");
 ofstream file_sfs("correction_functions.txt");
 ofstream file_Eta("EtaValues_Sta.txt");
+ofstream file_Abseta("AbsEtaValues_Sta.txt");
 ofstream file_Cent("CentValues_Sta.txt");
 TString treeTag("tpTreeTrk");
 TString cutLegend("Standalone");
@@ -181,6 +182,7 @@ const double effmax = 1.05;
 const double sfrange = 0.2;
 const double c_ptRange = 80; // how far to plot the pt
 const double c_centralityRange = 200; // how far to plot the centrality (hibin goes to 200)
+const int nSyst = 1;
 const char* fDataName[nSyst] = { "tnp_Ana_Data_RecoSTA_PbPb.root" };
 const char* fMCName[nSyst] = { "tnp_Ana_MC_STA_PbPb.root" };
 const char* systName[nSyst] = {
@@ -191,39 +193,50 @@ const char* systName[nSyst] = {
 };
 #endif
 
+
+
 #ifdef TRK  //TrkSta
 bool doSF = false;
+const bool bPlotAbseta = true;
+bool bPlotSyst = true;
+bool doToys = false; // do the toy study for the correction factors?
+
 TString saveDirName = "Trk_Eff";
-//TString etaTag("Trk_etadep");
-TString etaTag("Trk_etadepPF_cent40100");
-TString absetaTag("Trk_absetadep");
-//TString absetaTag("Trk_absetadep_cent40100");
+TString etaTag("Trk_etadep");
+//TString etaTag("Trk_etadep_cent40100");
+//TString absetaTag("Trk_absetadep");
+TString absetaTag("Trk_absetadepPF_cent0040");
+//TString nameAppendix("");
+TString nameAppendix("_cent0040");
 TString centTag("Trk_centdep");
 const int nAbsEtaBins = 8;
 TString ptTag[nAbsEtaBins] = {"Trk_abseta00_09", "Trk_abseta09_12", "Trk_abseta12_16", "Trk_abseta16_21", "Trk_abseta21_24", "Trk_abseta00_12", "Trk_abseta12_21", "Trk_pt"};
+//TString ptTag[nAbsEtaBins] = {"PFTrk_cent_ptdep", "PFTrk_peri_ptdep", "PFGlbTrk_cent_ptdep", "PFGlbTrk_peri_ptdep", "GlbTrk_cent_ptdep", "GlbTrk_peri_ptdep", "Trk_abseta12_21", "Trk_pt"};
 TString allTag("Trk_1bin");
 TString absetaVar("abseta");
 TString centVar("tag_hiBin");
 ofstream file_sfs("correction_functions.txt");
 ofstream file_Eta("EtaValues_Trk.txt");
+ofstream file_Abseta("AbsEtaValues_PF.txt");
 ofstream file_Cent("CentValues_Trk.txt");
 //TString treeTag("tpTreeSta");
 TString treeTag("tpTreeTrk");
 //TString cutLegend("PF");
-TString cutLegend("Global Muon Tracking && PF");
+TString cutLegend("Global Muon");
 const double effmin = 0.8;
 const double effmax = 1.05;
-const double sfrange = 0.03;
+const double sfrange = 0.10;
 const double c_ptRange = 100; // how far to plot the pt
 const double c_centralityRange = 100; // how far to plot the centrality (hibin goes to 200)
-//const char* fDataName[nSyst] = { "tnp_Ana_RD_TrkfromTrkM5_PbPb.root", "tnp_Ana_RD_TrkfromTrkM5_PbPb_mass.root", "tnp_Ana_RD_TrkfromTrkM5_PbPb_sig.root", "tnp_Ana_RD_TrkfromTrkM5_PbPb_bkg.root" };
-//const char* fMCName[nSyst] = { "tnp_Ana_MC_TrkfromTrkM5_PbPb.root", "tnp_Ana_MC_TrkfromTrkM5_PbPb_mass.root", "tnp_Ana_MC_TrkfromTrkM5_PbPb_sig.root", "tnp_Ana_MC_TrkfromTrkM5_PbPb_bkg.root" };
-//const char* systName[nSyst] = {"Nominal", "Mass range 65-135", "Sig - CB+Gauss", "Bkg - pol1, exp"}; //name for systematics
+const int nSyst = 4;
+const char* fDataName[nSyst] = { "tnp_Ana_RD_TrkfromTrkM9_PbPb_0.root", "tnp_Ana_RD_TrkfromTrkM9_PbPb_mass_0.root", "tnp_Ana_RD_TrkfromTrkM9_PbPb_sig_0.root", "tnp_Ana_RD_TrkfromTrkM9_PbPb_bkg_0.root" };
+const char* fMCName[nSyst] = { "tnp_Ana_MC_TrkfromTrkM9_PbPb_0.root", "tnp_Ana_MC_TrkfromTrkM9_PbPb_mass_0.root", "tnp_Ana_MC_TrkfromTrkM9_PbPb_sig_0.root", "tnp_Ana_MC_TrkfromTrkM9_PbPb_bkg_0.root" };
+const char* systName[nSyst] = {"Nominal", "Mass range 65-135", "Sig - CB+Gauss", "Bkg - pol1"}; //name for systematics
 
 
-const char* fDataName[nSyst] = { "tnp_Ana_RD_TrkfromTrkM5_PbPb.root" };
-const char* fMCName[nSyst] = { "tnp_Ana_MC_TrkfromTrkM5_PbPb.root" };
-const char* systName[nSyst] = {"Nominal"};
+//const char* fDataName[nSyst] = { "tnp_Ana_RD_TrkfromTrkM9_PbPb_M.root" };
+//const char* fMCName[nSyst] = { "tnp_Ana_MC_TrkfromTrkM9_PbPb_M.root" };
+//const char* systName[nSyst] = {"Nominal"};
 
 #endif
 
@@ -431,11 +444,11 @@ void TnPEffDraw_singleFile_O() {
 
 		CalEffErr(eff1bin_MC[k], Trk0[k]);
 		CalEffErr(eff1bin_RD[k], Trk1[k]);
-		cout << "Testuji" << k << endl;
-		//CalEffErr(effAbsEta_MC[k], TrkAbsEta0[k]);
-		cout << "Testuji1" << k << endl;
-		//CalEffErr(effAbsEta_RD[k], TrkAbsEta1[k]);
-		cout << "Testuji2" << k << endl;
+		//cout << "Testuji" << k << endl;
+		CalEffErr(effAbsEta_MC[k], TrkAbsEta0[k]);
+		//cout << "Testuji1" << k << endl;
+		CalEffErr(effAbsEta_RD[k], TrkAbsEta1[k]);
+		//cout << "Testuji2" << k << endl;
 	}
 
 	///////////////////////////////////////////////
@@ -875,10 +888,101 @@ void TnPEffDraw_singleFile_O() {
 			gratio1->Draw("pz same");
 
 			if (k == 0) {
-				c1->SaveAs(saveDirName + "/" + treeTag + "Eff_" + collTag + "_RD_MC_AbsEta.root");
-				c1->SaveAs(saveDirName + "/" + treeTag + "Eff_" + collTag + "_RD_MC_AbsEta.pdf");
-				c1->SaveAs(saveDirName + "/" + treeTag + "Eff_" + collTag + "_RD_MC_AbsEta.png");
+				c1->SaveAs(saveDirName + "/" + treeTag + "Eff_" + collTag + "_RD_MC_AbsEta" + nameAppendix + ".root");
+				c1->SaveAs(saveDirName + "/" + treeTag + "Eff_" + collTag + "_RD_MC_AbsEta" + nameAppendix + ".pdf");
+				c1->SaveAs(saveDirName + "/" + treeTag + "Eff_" + collTag + "_RD_MC_AbsEta" + nameAppendix + ".png");
+
+				// print the eta dependence to file
+				double xVal, yVal, ErrDown, ErrUp, absetamin, absetamax;
+				int nbins_abseta = ComAbsEta_RD[k]->GetN();
+
+
+				file_Abseta << "  // MC" << endl;
+				for (int bin = 0; bin < nbins_abseta; bin++) {
+					ComAbsEta_MC[k]->GetPoint(bin, xVal, yVal);
+					absetamin = xVal - ComAbsEta_MC[k]->GetErrorXlow(bin);
+					absetamax = xVal + ComAbsEta_MC[k]->GetErrorXhigh(bin);
+					file_Abseta << ((absetamin == 0.0) ? "    if " : "    else if ") << "(eta > " << absetamin << " && eta <= " << absetamax << ") { den = " << yVal << ";}" << endl;
+				}
+				file_Abseta << endl << "  // data" << endl;
+				file_Abseta << "  if (idx == 0) { // nominal" << endl;
+				for (int bin = 0; bin < nbins_abseta; bin++) {
+					ComAbsEta_RD[k]->GetPoint(bin, xVal, yVal);
+					absetamin = xVal - ComAbsEta_RD[k]->GetErrorXlow(bin);
+					absetamax = xVal + ComAbsEta_RD[k]->GetErrorXhigh(bin);
+					file_Abseta << ((absetamin == 0.0) ? "    if " : "    else if ") << "(eta > " << absetamin << " && eta <= " << absetamax << ") { num = " << yVal << ";}" << endl;
+				}
+				file_Abseta << "}" << endl << endl;
+
+				file_Abseta << "  if (idx == 1) { // stat up" << endl;
+				for (int bin = 0; bin < nbins_abseta; bin++) {
+					ComAbsEta_RD[k]->GetPoint(bin, xVal, yVal);
+					ErrDown = ComAbsEta_RD[k]->GetErrorYlow(bin);
+					ErrUp = ComAbsEta_RD[k]->GetErrorYhigh(bin);
+					absetamin = xVal - ComAbsEta_RD[k]->GetErrorXlow(bin);
+					absetamax = xVal + ComAbsEta_RD[k]->GetErrorXhigh(bin);
+					file_Abseta << ((absetamin == 0.0) ? "    if " : "    else if ") << "(eta > " << absetamin << " && eta <= " << absetamax << ") { num = " << yVal + ErrUp << ";}" << endl;
+				}
+				file_Abseta << "}" << endl;
+
+				file_Abseta << "  if (idx == 2) { // stat down" << endl;
+				for (int bin = 0; bin < nbins_abseta; bin++) {
+					ComAbsEta_RD[k]->GetPoint(bin, xVal, yVal);
+					ErrDown = ComAbsEta_RD[k]->GetErrorYlow(bin);
+					ErrUp = ComAbsEta_RD[k]->GetErrorYhigh(bin);
+					absetamin = xVal - ComAbsEta_RD[k]->GetErrorXlow(bin);
+					absetamax = xVal + ComAbsEta_RD[k]->GetErrorXhigh(bin);
+					file_Abseta << ((absetamin == 0.0) ? "    if " : "    else if ") << "(eta > " << absetamin << " && eta <= " << absetamax << ") { num = " << yVal - ErrDown << ";}" << endl;
+				}
+				file_Abseta << "}" << endl;
+
+				// if doing systematics, output the maximum deviation
+				if (bPlotSyst)
+				{
+					// Compute the systematic uncertainties - symmetric (max deviation taken up/down)
+					double errSyst[nbins_abseta];
+
+					for (int bin = 0; bin < nbins_abseta; bin++) {
+						// Maximum
+						double errRD = -99999., errMC = -99999., yValNomRD, yValNomMC, xValNomAux; //getting max deviation
+						ComAbsEta_RD[0]->GetPoint(bin, xValNomAux, yValNomRD);//nominal
+						ComAbsEta_MC[0]->GetPoint(bin, xValNomAux, yValNomMC);//nominal
+						for (int k = 0; k < nSyst; k++) {
+							ComAbsEta_RD[k]->GetPoint(bin, xVal, yVal);
+							errRD = std::max(errRD, fabs(yValNomRD - yVal));
+							ComAbsEta_MC[k]->GetPoint(bin, xVal, yVal);
+							errMC = std::max(errMC, fabs(yValNomMC - yVal));
+						}
+						errSyst[bin] = sqrt(errRD*errRD + errMC * errMC); //MC probably negligible
+					}
+
+					file_Abseta << "  if (idx == -1) { // syst up" << endl;
+					for (int bin = 0; bin < ComAbsEta_RD[k]->GetN(); bin++) {
+						ComAbsEta_RD[k]->GetPoint(bin, xVal, yVal);
+						ErrUp = errSyst[bin];
+						absetamin = xVal - ComAbsEta_RD[k]->GetErrorXlow(bin);
+						absetamax = xVal + ComAbsEta_RD[k]->GetErrorXhigh(bin);
+						file_Abseta << ((absetamin == -2.4) ? "    if " : "    else if ") << "(eta > " << absetamin << " && eta <= " << absetamax << ") { num = " << yVal + ErrUp << ";}" << endl;
+					}
+					file_Abseta << "}" << endl;
+
+					file_Abseta << "  if (idx == -2) { // syst down" << endl;
+					for (int bin = 0; bin < ComAbsEta_RD[k]->GetN(); bin++) {
+						ComAbsEta_RD[k]->GetPoint(bin, xVal, yVal);
+						ErrDown = errSyst[bin];
+						absetamin = xVal - ComAbsEta_RD[k]->GetErrorXlow(bin);
+						absetamax = xVal + ComAbsEta_RD[k]->GetErrorXhigh(bin);
+						file_Abseta << ((absetamin == -2.4) ? "    if " : "    else if ") << "(eta > " << absetamin << " && eta <= " << absetamax << ") { num = " << yVal - ErrDown << ";}" << endl;
+					}
+					file_Abseta << "}" << endl;
+				}
+
+
+
+
+
 			}
+			file_Abseta.close();
 		}
 
 
@@ -954,9 +1058,9 @@ void TnPEffDraw_singleFile_O() {
 		gratio1->Draw("pz same");
 
 		if (k == 0) {
-			c1->SaveAs(saveDirName + "/" + treeTag + "Eff_" + collTag + "_RD_MC_Eta.root");
-			c1->SaveAs(saveDirName + "/" + treeTag + "Eff_" + collTag + "_RD_MC_Eta.pdf");
-			c1->SaveAs(saveDirName + "/" + treeTag + "Eff_" + collTag + "_RD_MC_Eta.png");
+			c1->SaveAs(saveDirName + "/" + treeTag + "Eff_" + collTag + "_RD_MC_Eta" + nameAppendix + ".root");
+			c1->SaveAs(saveDirName + "/" + treeTag + "Eff_" + collTag + "_RD_MC_Eta" + nameAppendix + ".pdf");
+			c1->SaveAs(saveDirName + "/" + treeTag + "Eff_" + collTag + "_RD_MC_Eta" + nameAppendix + ".png");
 
 
 			// print the eta dependence to file
@@ -1072,9 +1176,12 @@ void TnPEffDraw_singleFile_O() {
 	if (bPlotSyst)
 	{
 		//data
-		plotSysts(ComEta_RD, c1, pad1, hPad1_syst, pad2, hPad1r_syst, header, saveDirName + "/" + "syst_data_eta");
+		plotSysts(ComEta_RD, c1, pad1, hPad1_syst, pad2, hPad1r_syst, header, saveDirName + "/" + "syst_data_eta" + nameAppendix);
+		plotSysts(ComAbsEta_RD, c1, pad1, hPad3_syst, pad2, hPad3r_syst, header, saveDirName + "/" + "syst_data_abseta" + nameAppendix);
 		//mc
-		plotSysts(ComEta_MC, c1, pad1, hPad1_syst, pad2, hPad1r_syst, header, saveDirName + "/" + "syst_mc_eta");
+		plotSysts(ComEta_MC, c1, pad1, hPad1_syst, pad2, hPad1r_syst, header, saveDirName + "/" + "syst_mc_eta" + nameAppendix);
+		plotSysts(ComAbsEta_MC, c1, pad1, hPad3_syst, pad2, hPad3r_syst, header, saveDirName + "/" + "syst_mc_abseta" + nameAppendix);
+
 	}
 
 	//-------- This is for centrality dependence

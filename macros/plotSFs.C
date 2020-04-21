@@ -7,7 +7,7 @@
 Double_t tnp_weight_pbpb_wrapper(Double_t *x, Double_t *par) {
    if (par[2]<0.5) return tnp_weight_muid_pbpb(x[0], par[1]);
    else if (par[2]<1.5) return tnp_weight_trig_pbpb(x[0],par[2],par[0],par[1]);
-   else return tnp_weight_glbtrk_pbpb(x[0],60, par[1]); //cent
+   else return tnp_weight_glbPFtrk_pbpb(x[0],80, par[1]); //cent
 }
 
 float ptmin(float etamax) {
@@ -24,6 +24,7 @@ void plotSFs() {
    TCanvas *c1 = new TCanvas();
    TH1F *haxes = new TH1F("haxes",";p_{T} [GeV/c];Scale factor",1,0,200);
    TH1F *haxeseta = new TH1F("haxes20",";#eta;Scale factor",1,-2.4,2.4);
+   TH1F *haxesabseta = new TH1F("haxesabs20", ";#abseta;Scale factor", 1, 0.0, 2.4);
    gStyle->SetOptStat(0);
 
    float *etamin=NULL, *etamax=NULL;
@@ -49,15 +50,16 @@ void plotSFs() {
 			 haxeseta->Draw();
 		 }
 		 else {
-            haxeseta->GetYaxis()->SetRangeUser(0.88,1.03);
-            haxeseta->Draw();
+            haxesabseta->GetYaxis()->SetRangeUser(0.93,1.03);
+            haxesabseta->Draw();
          }
 
          TLegend *tleg = new TLegend(0.58,0.16,0.89,0.47);
          tleg->SetBorderSize(0);
 
          eta = (etamax[ieta]+etamin[ieta])/2.;
-         ptminval = (j==0||j==2) ? -2.4 : ptmin(etamax[ieta]);
+         //ptminval = (j==0||j==2) ? -2.4 : ptmin(etamax[ieta]);
+		 ptminval = (j==0||j==2) ? 0.0 : ptmin(etamax[ieta]);
          ptmaxval = (j==0||j==2) ? 2.4 : 200;
          int imax = (j==1) ? 100 : 2;
          for (int i=1; i<=imax; i++) {
@@ -83,7 +85,7 @@ void plotSFs() {
          fnom->SetLineColor(kRed);
          fnom->Draw("same");
 
-         if (j==0||j==2) tleg->SetHeader(Form("#splitline{PbPb, %s}{#eta #in [-2.4,2.4], p_{T}>15 GeV/c}",names[j]));
+         if (j==0||j==2) tleg->SetHeader(Form("#splitline{PbPb, %s}{|#eta| #in [0.0,2.4], p_{T}>15 GeV/c}",names[j]));
          else tleg->SetHeader(Form("#splitline{PbPb, %s}{#eta #in [%.1f,%.1f], p_{T}>15 GeV/c}",names[j],etamin[ieta],etamax[ieta]));
 
          tleg->AddEntry(fnom,"Nominal","l");
