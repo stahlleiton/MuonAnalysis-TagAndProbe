@@ -24,28 +24,27 @@ void getStaMCEff() {
 }
 
 void getTrig_ptcentBin() {
-  TFile *ftnp_RD = new TFile("../../test/jpsiHI/Output/Trg/tnp_Ana_RD_PbPb_Trg_L3Jpsi_cbPlusPol1_8.root");
-  TFile *ftnp_MC = new TFile("../../test/jpsiHI/Output/Trg/tnp_Ana_MC_PbPb_Trg_L3Jpsi_cbPlusPol1_8.root");
+  TFile *ftnp_RD = new TFile("../../test/jpsiHI/Output/Trg/tnp_Ana_RD_PbPb_Trg_HLT_HIL3Mu0NHitQ10_L2Mu0_MAXdR3p5_M1to5_L3Filter_cbPlusPol1_0_v3.root");
+  TFile *ftnp_MC = new TFile("../../test/jpsiHI/Output/Trg/tnp_Ana_MC_PbPb_Trg_HLT_HIL3Mu0NHitQ10_L2Mu0_MAXdR3p5_M1to5_L3Filter_cbPlusPol1_0_v3.root");
   RooDataSet *ds_RD=NULL;  RooDataSet *ds_MC=NULL;
   TGraphAsymmErrors *gRD=NULL;  TGraphAsymmErrors *gMC=NULL; TGraphAsymmErrors* pull=NULL;
   TCanvas* c = new TCanvas(); 
   TRatioPlot *tr = NULL;
 
-  TLegend* leg = new TLegend(0.6,0.2,0.9,0.5);
+  TLegend* leg = new TLegend(0.4,0.6,0.7,0.8);
   leg->SetBorderSize(0); leg->SetFillColor(0);
 
 
-  string plots [] = {"Trg_cent020","Trg_cent2060","Trg_cent60200", "Trg_eta012_cent020", "Trg_eta012_cent2060", "Trg_eta012_cent60200"};
-  int nPlots = 6;
-  //string plots [] = {"Trg_pt", "Trg_abseta00_12", "Trg_abseta12_18", "Trg_abseta18_21", "Trg_abseta21_24"};
-  //int nPlots = 5;
+  std::vector<string> plots = {"Trg_glbChi2", "Trg_glbTrackProb", "Trg_glbValidMuHits", "Trg_l3pt", "Trg_l3dr", "Trg_numberOfMatchedStations", "Trg_numberOfMatches", "Trg_eta", "Trg_phi", "Trg_tagPt"};
+  std::vector<string> vars = {"glbChi2", "glbTrackProb", "glbValidMuHits", "l3pt", "l3dr", "numberOfMatchedStations", "numberOfMatches", "eta", "phi", "tag_pt"};
 
-  for (int i=0; i<nPlots; i++) {
+  for (uint i=0; i<plots.size(); i++) {
     c->cd(); c->Clear();
     ds_RD = (RooDataSet*) ftnp_RD->Get(Form("tpTree/%s/fit_eff",plots[i].c_str()));
     ds_MC = (RooDataSet*) ftnp_MC->Get(Form("tpTree/%s/fit_eff",plots[i].c_str()));
-    gRD = plotEff(ds_RD,1,"pt");
-    gMC = plotEff(ds_MC,1,"pt");
+    if (!ds_RD || !ds_MC) continue;
+    gRD = plotEff(ds_RD,1,vars[i].c_str());
+    gMC = plotEff(ds_MC,1,vars[i].c_str());
     gRD->SetLineColor(kBlue);
     gRD->SetMarkerColor(kBlue);
     gRD->SetMarkerStyle(kOpenSquare);
@@ -58,9 +57,9 @@ void getTrig_ptcentBin() {
     }
     leg->SetHeader(Form("pbpb, trigger, %s",plots[i].c_str()));
 
-    tr = new TRatioPlot(g2h(gRD,1),g2h(gMC,1));
+    tr = new TRatioPlot(g2h(gRD,vars[i]),g2h(gMC,vars[i]));
     setTRatioPlotStyle(tr);
-    tr->GetLowerRefYaxis()->SetRangeUser(0.79,1.21);
+    tr->GetLowerRefYaxis()->SetRangeUser(0.69,1.41);
     tr->GetLowerRefYaxis()->SetTitle("trd / tnp");
     c->Update();
     tr->GetUpperPad()->cd();

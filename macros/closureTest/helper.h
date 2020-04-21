@@ -7,26 +7,33 @@
 #include "TAxis.h"
 #include "TRandom3.h"
 #include "TH1.h"
+#include "TStyle.h"
 #include "TRatioPlot.h"
 
 TGraphAsymmErrors *plotEff(RooDataSet *a, int aa, const char* varx){
-  const RooArgSet *set = a->get();
-  RooRealVar *xAx = (RooRealVar*)set->find(varx);
-  RooRealVar *eff = (RooRealVar*)set->find("efficiency");
+  const RooArgSet *set = (a ? a->get() : NULL);
+  RooRealVar *xAx = (set ? (RooRealVar*)set->find(varx) : NULL);
+  RooRealVar *eff = (set ? (RooRealVar*)set->find("efficiency") : NULL);
 
-  const int nbins = xAx->getBinning().numBins();
+  const int nbins = (xAx ? xAx->getBinning().numBins() : 0);
 
   double tx[nbins], txhi[nbins], txlo[nbins];
   double ty[nbins], tyhi[nbins], tylo[nbins];
 
-  for (int i=0; i<nbins; i++) {
-    a->get(i);
-    ty[i] = eff->getVal();
-    tx[i] = xAx->getVal();
-    txhi[i] = fabs(xAx->getErrorHi());
-    txlo[i] = fabs(xAx->getErrorLo());
-    tyhi[i] = fabs(eff->getErrorHi());
-    tylo[i] = fabs(eff->getErrorLo());
+  for (int i=0, j=0; i<nbins; i++) {
+    a->get(j);
+    const auto binCenter = xAx->getBinning().binCenter(i);
+    const auto binWidth = fabs(xAx->getBinning().binWidth(i)/2.);
+    const auto binValue = xAx->getVal();
+    const bool hasEff = (fabs(binValue - binCenter) <= binWidth);
+    tx[i] = binCenter;
+    txhi[i] = binWidth;
+    txlo[i] = binWidth;
+    ty[i] = (hasEff ? eff->getVal() : 0.0);
+    tyhi[i] = (hasEff ? fabs(eff->getErrorHi()) : 0.0);
+    tylo[i] = (hasEff ? fabs(eff->getErrorLo()) : 0.0);
+    if (hasEff) { j++; }
+    std::cout << xAx->getVal() << "  " << fabs(xAx->getBinning().binWidth(i)/2.) << "  " << xAx->getError() << "  " << tx[i] << "  " << ty[i] << std::endl;
   }
 
   cout<<"NBins : "<<nbins<<endl;
@@ -39,9 +46,9 @@ TGraphAsymmErrors *plotEff(RooDataSet *a, int aa, const char* varx){
   const double *ylo = tylo;
 
 
-  TGraphAsymmErrors *b = new TGraphAsymmErrors();
-  if(aa == 1) {*b = TGraphAsymmErrors(nbins,x,y,xlo,xhi,ylo,yhi);}
-  if(aa == 0) {*b = TGraphAsymmErrors(nbins,x,y,0,0,ylo,yhi);}
+  TGraphAsymmErrors *b = NULL;
+  if(aa == 1) {b = new TGraphAsymmErrors(nbins,x,y,xlo,xhi,ylo,yhi);}
+  if(aa == 0) {b = new TGraphAsymmErrors(nbins,x,y,0,0,ylo,yhi);}
 
   b->SetMaximum(1.1);
   b->SetMinimum(0.0);
@@ -56,7 +63,7 @@ TGraphAsymmErrors *plotEff(RooDataSet *a, int aa, const char* varx){
   b->GetXaxis()->CenterTitle();
 
   for (int i=0; i<nbins; i++) {
-    cout << x[i] << " " << y[i] << " " << yhi[i] << " " << ylo[i] << endl;
+    cout << "BIN: " <<  x[i] << " " << y[i] << " " << yhi[i] << " " << ylo[i] << endl;
   }
 
   return b;
@@ -91,7 +98,7 @@ Double_t findNcoll(int hiBin) {
    return Ncoll[hiBin];
 };
 
-TH1F *g2h(TGraphAsymmErrors *g, double def=1e-3) {
+TH1F *g2h(TGraphAsymmErrors *g, const std::string& varName="") {
    int n = g->GetN();
    double *x = g->GetX();
    double *y = g->GetY();
@@ -99,27 +106,25 @@ TH1F *g2h(TGraphAsymmErrors *g, double def=1e-3) {
    double *exh = g->GetEXhigh();
    double *eyl = g->GetEYlow();
    double *eyh = g->GetEYhigh();
-   double *bins = new double[n+2];
-   bins[0] = 0;
-   for (int i=0; i<n; i++) bins[i+1] = x[i]-exl[i];
-   bins[n+1] = x[n-1]+exh[n-1];
-   TH1F *ans = new TH1F(Form("tmp%i",gRandom->Integer(1e9)),"tmp",n+1,bins);
-   ans->SetBinContent(1,def);
-   ans->SetBinError(1,def/5.);
+   double bins[n+1];
+   //bins[0] = x[0]>=0. ? 0. : x[0]*1.2;
+   for (int i=0; i<n; i++) bins[i] = x[i]-exl[i];
+   bins[n] = x[n-1]+exh[n-1];
+   TH1F *ans = new TH1F(Form("tmp%i",gRandom->Integer(1e9)),"tmp",n,bins);
    for (int i=0; i<n; i++) {
-      ans->SetBinContent(i+2,y[i]);
-      ans->SetBinError(i+2,(eyl[i]+eyh[i])/2);
+      ans->SetBinContent(i+1,y[i]);
+      ans->SetBinError(i+1,(eyl[i]+eyh[i])/2);
    }
    ans->SetLineColor(g->GetLineColor());
    ans->SetMarkerColor(g->GetMarkerColor());
    ans->SetMarkerStyle(g->GetMarkerStyle());
    ans->GetYaxis()->SetTitle("Efficiency");
-   ans->GetXaxis()->SetTitle("p_{T} [GeV/c]");
-   delete[] bins;
+   ans->GetXaxis()->SetTitle(varName.c_str());
    return ans;
 };
 
 void setTRatioPlotStyle(TRatioPlot *tr) {
+   gStyle->SetOptStat(0);
    tr->SetH1DrawOpt("");
    tr->SetH2DrawOpt("");
    tr->Draw();
@@ -127,12 +132,12 @@ void setTRatioPlotStyle(TRatioPlot *tr) {
    tr->SetLowBottomMargin(0.4);
    tr->SetRightMargin(0.05);
    tr->GetUpperRefYaxis()->SetRangeUser(0,1.1);
-   tr->GetUpperRefXaxis()->SetRangeUser(0,30);
-   tr->GetLowerRefYaxis()->SetRangeUser(0.89,1.11);
-   tr->GetLowerRefXaxis()->SetRangeUser(0,30);
-   tr->GetLowerRefYaxis()->SetNdivisions(503,kFALSE);
+   //tr->GetUpperRefXaxis()->SetRangeUser(-2.5,2.5);
+   //tr->GetLowerRefYaxis()->SetRangeUser(0.,1.11);
+   //tr->GetLowerRefXaxis()->SetRangeUser(-2.5,2.5);
+   //tr->GetLowerRefYaxis()->SetNdivisions(503,kFALSE);
    tr->GetUpperRefYaxis()->SetTitle("Efficiency");
-   tr->GetLowerRefYaxis()->SetTitle("trd / tnp");
+   tr->GetLowerRefYaxis()->SetTitle("Data/MC");
    tr->GetUpperRefYaxis()->SetTitleOffset(0.9);
    tr->GetLowerRefYaxis()->SetTitleOffset(0.9);
    tr->RangeAxisChanged();

@@ -168,7 +168,7 @@ TTree* justCopyTreeAndAddWeight(TTree* told, int nentries=0) {
   tnew->SetAutoSave(0);
   tnew->SetAutoFlush(0);
   int isNonMuonSeeded=-1;
-  float hiBin=-1., genWeight=-999., weight=1.0, trackAlgo=-1.;
+  float hiBin=-1., genWeight=-999., weight=1.0, trackOrigAlgo=-1.;
 
   if (told->GetBranch("tag_hiBin")!=NULL) { told->SetBranchAddress("tag_hiBin", &hiBin); }
   if (told->GetBranch("pair_genWeight")!=NULL) {
@@ -177,7 +177,7 @@ TTree* justCopyTreeAndAddWeight(TTree* told, int nentries=0) {
   }
   if (told->GetBranch("trackAlgo")!=NULL) {
     const auto& brName = (told->GetBranch("trackOrigAlgo")!=NULL ? "trackOrigAlgo" : "trackAlgo");
-    told->SetBranchAddress(brName, &trackAlgo);
+    told->SetBranchAddress(brName, &trackOrigAlgo);
     tnew->Branch("isNonMuonSeeded", &isNonMuonSeeded, "isNonMuonSeeded/I");
   }
 
@@ -237,7 +237,7 @@ TTree* justCopyTreeAndAddWeight(TTree* told, int nentries=0) {
     weight = (nentries/sumWeight);
     const float nColl = ((hiBin>=0 && hiBin<200) ? findNcoll(hiBin) : 1.);
     if (genWeight!=-999.) { weight *= genWeight*nColl; }
-    if (trackAlgo!=-1.) { isNonMuonSeeded = ((trackAlgo>0. && trackAlgo<13.) || (trackAlgo>14. && trackAlgo<18.) || (trackAlgo>21. && trackAlgo<37.)); }
+    if (trackOrigAlgo!=-1.) { isNonMuonSeeded = ((trackOrigAlgo>0. && trackOrigAlgo<13.) || (trackOrigAlgo>14. && trackOrigAlgo<18.) || (trackOrigAlgo>21. && trackOrigAlgo<37.)); }
     if (isNonMuonSeeded==0) continue;
     if (!oneProbe.empty()) isOneProbe = oneProbe.at(i);
     if (!rndProbe.empty()) isRndProbe = rndProbe.at(i);

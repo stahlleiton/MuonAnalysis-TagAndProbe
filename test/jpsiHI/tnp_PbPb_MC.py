@@ -24,7 +24,7 @@ process.load("RecoHI.HiCentralityAlgos.CentralityBin_cfi")
 process.GlobalTag.snapshotTime = cms.string("9999-12-31 23:59:59.000")
 process.GlobalTag.toGet.extend([
     cms.PSet(record = cms.string("HeavyIonRcd"),
-        tag = cms.string("CentralityTable_HFtowers200_HydjetDrum5F_v1032x01_mc"),
+        tag = cms.string("CentralityTable_HFtowers200_HydjetDrum5F_v1032x02_mc"),
         connect = cms.string("frontier://FrontierProd/CMS_CONDITIONS"),
         label = cms.untracked.string("HFtowers")
         ),
@@ -136,8 +136,6 @@ LowPtTriggerProbeFlags = cms.PSet(
     HLT_HIL3Mu0NHitQ10_L2Mu0_MAXdR3p5_M1to5 = cms.string("!triggerObjectMatchesByPath('HLT_HIL3Mu0NHitQ10_L2Mu0_MAXdR3p5_M1to5_v*',1,0).empty()"),
     HLT_HIL3Mu2p5NHitQ10_L2Mu2_M7toinf = cms.string("!triggerObjectMatchesByPath('HLT_HIL3Mu2p5NHitQ10_L2Mu2_M7toinf_v*',1,0).empty()"),
     HLT_HIL3Mu3_L1TripleMuOpen = cms.string("!triggerObjectMatchesByPath('HLT_HIL3Mu3_L1TripleMuOpen_v*',1,0).empty()"),
-    HLT_HIL1MuOpen_Centrality_70_100 = cms.string("!triggerObjectMatchesByPath('HLT_HIL1MuOpen_Centrality_70_100_v*',1,0).empty()"),
-    HLT_HIL1MuOpen_Centrality_80_100 = cms.string("!triggerObjectMatchesByPath('HLT_HIL1MuOpen_Centrality_80_100_v*',1,0).empty()"),
     # Double Muon Trigger Filters
     HLT_HIL1DoubleMuOpen_Filter = cms.string("!triggerObjectMatchesByFilter('hltL1fL1sL1DoubleMuOpenL1Filtered0').empty()"),
     HLT_HIL1DoubleMuOpen_OS_Centrality_40_100_Filter = cms.string("!triggerObjectMatchesByFilter('hltL1fL1sL1DoubleMuOpenOSCentrality40100L1Filtered0').empty()"),
@@ -161,6 +159,12 @@ LowPtTriggerProbeFlags = cms.PSet(
     HLT_HIL3Mu2p5NHitQ10_L2Mu2_M7toinf_FilterL2 = cms.string("!triggerObjectMatchesByCollection('hltL2MuonCandidatesPPOnAA').empty() && !triggerObjectMatchesByCollection('hltL2MuonCandidatesPPOnAA').at(0).hasFilterLabel('hltL3f0L3Mu2p5NHitQ10L2Mu2FilteredM7toinf')"),
     HLT_HIL3Mu2p5NHitQ10_L2Mu2_M7toinf_FilterL3 = cms.string("!triggerObjectMatchesByCollection('hltIterL3MuonCandidatesPPOnAA').empty() && !triggerObjectMatchesByCollection('hltIterL3MuonCandidatesPPOnAA').at(0).hasFilterLabel('hltL3f0L3Mu2p5NHitQ10L2Mu2FilteredM7toinf')"),
     HLT_HIL3Mu3_L1TripleMuOpen_Filter = cms.string("!triggerObjectMatchesByFilter('hltL3fL1sL1DoubleMuOpenL1fN3L2f0L3Filtered3').empty()"),
+    # Single Muon Trigger Paths
+    HLT_HIL1MuOpen_Centrality_70_100 = cms.string("!triggerObjectMatchesByPath('HLT_HIL1MuOpen_Centrality_70_100_v*',1,0).empty()"),
+    HLT_HIL1MuOpen_Centrality_80_100 = cms.string("!triggerObjectMatchesByPath('HLT_HIL1MuOpen_Centrality_80_100_v*',1,0).empty()"),
+    # Single Muon Trigger Filters
+    HLT_HIL1MuOpen_Centrality_70_100_Filter = cms.string("!triggerObjectMatchesByFilter('hltL1fL1sL1MuOpenCentrality70100L1Filtered0').empty()"),
+    HLT_HIL1MuOpen_Centrality_80_100_Filter = cms.string("!triggerObjectMatchesByFilter('hltL1fL1sL1MuOpenCentrality80100L1Filtered0').empty()"),
 )
 LowPtTriggerTagFlags = cms.PSet(
     # Single Muon Trigger Paths
@@ -171,8 +175,6 @@ LowPtTriggerTagFlags = cms.PSet(
     HLT_HIL3Mu5_NHitQ10 = cms.string("!triggerObjectMatchesByPath('HLT_HIL3Mu5_NHitQ10*_v*',1,0).empty()"),
     HLT_HIL3Mu7_NHitQ10 = cms.string("!triggerObjectMatchesByPath('HLT_HIL3Mu7_NHitQ10*_v*',1,0).empty()"),
     # Single Muon Trigger Filters
-    HLT_HIL1MuOpen_Centrality_70_100_Filter = cms.string("!triggerObjectMatchesByFilter('hltL1fL1sL1MuOpenCentrality70100L1Filtered0').empty()"),
-    HLT_HIL1MuOpen_Centrality_80_100_Filter = cms.string("!triggerObjectMatchesByFilter('hltL1fL1sL1MuOpenCentrality80100L1Filtered0').empty()"),
     HLT_HIL2Mu3_NHitQ15_Filter = cms.string("!triggerObjectMatchesByFilter('hltL2fL1sMu*Open*L1f0L2Filtered3NHitQ15').empty()"),
     HLT_HIL2Mu5_NHitQ15_Filter = cms.string("!triggerObjectMatchesByFilter('hltL2fL1sMu*Open*L1f0L2Filtered5NHitQ15').empty()"),
     HLT_HIL2Mu7_NHitQ15_Filter = cms.string("!triggerObjectMatchesByFilter('hltL2fL1sMu*Open*L1f0L2Filtered7NHitQ15').empty()"),
@@ -196,12 +198,12 @@ TRACK_CUTS = "track.isNonnull && track.hitPattern.trackerLayersWithMeasurement >
 ## ==== Tag muons
 process.tagMuons = cms.EDFilter("PATMuonSelector",
     src = cms.InputTag("patMuonsWithTrigger"),
-    cut = cms.string(InAcceptance_2015+" && "+HybridSoftId_2015+" && (!triggerObjectMatchesByPath('HLT_HIL3Mu3_NHitQ10*_v*',1,0).empty() || !triggerObjectMatchesByPath('HLT_HIL3Mu5_NHitQ10*_v*',1,0).empty() || !triggerObjectMatchesByPath('HLT_HIL3Mu7_NHitQ10*_v*',1,0).empty() || !triggerObjectMatchesByPath('HLT_HIL3Mu12_v*',1,0).empty() || !triggerObjectMatchesByPath('HLT_HIL3Mu15_v*',1,0).empty() || !triggerObjectMatchesByPath('HLT_HIL3Mu20_v*',1,0).empty())"),
+    cut = cms.string(InAcceptance_2018_Tight+" && "+HybridSoftId_2018+" && (!triggerObjectMatchesByPath('HLT_HIL3Mu3_NHitQ10*_v*',1,0).empty() || !triggerObjectMatchesByPath('HLT_HIL3Mu5_NHitQ10*_v*',1,0).empty() || !triggerObjectMatchesByPath('HLT_HIL3Mu7_NHitQ10*_v*',1,0).empty() || !triggerObjectMatchesByPath('HLT_HIL3Mu12_v*',1,0).empty() || !triggerObjectMatchesByPath('HLT_HIL3Mu15_v*',1,0).empty() || !triggerObjectMatchesByPath('HLT_HIL3Mu20_v*',1,0).empty())"),
 )
 process.oneTag = cms.EDFilter("CandViewCountFilter", src = cms.InputTag("tagMuons"), minNumber = cms.uint32(1))
 process.pseudoTag = cms.EDFilter("MuonSelector",
     src = cms.InputTag("mergedMuons"),
-    cut = cms.string(InAcceptance_2015+" && "+HybridSoftIdReco_2015),
+    cut = cms.string(InAcceptance_2018_Tight+" && "+HybridSoftIdReco_2018),
 )
 process.onePseudoTag = process.oneTag.clone(src = cms.InputTag("pseudoTag"))
 
@@ -247,11 +249,17 @@ process.tpTree = cms.EDAnalyzer("TagProbeFitTreeProducer",
         dxyPVdzmin = cms.InputTag("muonDxyPVdzmin","dxyPVdzmin"),
         dzPV = cms.InputTag("muonDxyPVdzmin","dzPV"),
         dxyPV = cms.InputTag("muonDxyPVdzmin","dxyPV"),
+        dzError = cms.string("? innerTrack.isNull() ? -1 : innerTrack.dzError"),
+        dxyError = cms.string("? innerTrack.isNull() ? -1 : innerTrack.dxyError"),
+        trackOrigAlgo = cms.string("? innerTrack.isNull() ? -1 : innerTrack.originalAlgo"),
+        trackAlgo = cms.string("? innerTrack.isNull() ? -1 : innerTrack.algo"),
     ),
     flags = cms.PSet(
         TrackQualityFlags,
         MuonIDFlags,
         LowPtTriggerProbeFlags,
+        LowPtTriggerTagFlags,
+        HighPtTriggerTagFlags,
         TightId = cms.string(TightId),
         HybridSoftId_2015 = cms.string(HybridSoftId_2015),
         HybridSoftId_2018 = cms.string(HybridSoftId_2018),
@@ -272,6 +280,10 @@ process.tpTree = cms.EDAnalyzer("TagProbeFitTreeProducer",
         dxyPVdzmin = cms.InputTag("muonDxyPVdzminTags","dxyPVdzmin"),
         dzPV = cms.InputTag("muonDxyPVdzminTags","dzPV"),
         dxyPV = cms.InputTag("muonDxyPVdzminTags","dxyPV"),
+        dzError = cms.string("? innerTrack.isNull() ? -1 : innerTrack.dzError"),
+        dxyError = cms.string("? innerTrack.isNull() ? -1 : innerTrack.dxyError"),
+        trackOrigAlgo = cms.string("? innerTrack.isNull() ? -1 : innerTrack.originalAlgo"),
+        trackAlgo = cms.string("? innerTrack.isNull() ? -1 : innerTrack.algo"),
     ),
     tagFlags = cms.PSet(
         LowPtTriggerProbeFlags,
@@ -400,18 +412,15 @@ process.staToTkMatchNoBestJPsi.maxDeltaPtRel = 2.
 process.load("MuonAnalysis.TagAndProbe.tracking_reco_info_cff")
 
 process.tpTreeSta = process.tpTree.clone(
-    tagProbePairs = "tpPairsSta",
-    arbitration   = "OneProbe",
+    tagProbePairs = cms.InputTag("tpPairsSta"),
+    arbitration   = cms.string("OneProbe"),
     variables = cms.PSet(
         KinematicVariables,
         StaOnlyVariables,
-        ## track matching variables
-        #tk_deltaR = cms.InputTag("staToTkMatch","deltaR"),
-        #tk_deltaEta = cms.InputTag("staToTkMatch","deltaEta"),
-        #tk_deltaR_NoJPsi = cms.InputTag("staToTkMatchNoJPsi","deltaR"),
-        #tk_deltaEta_NoJPsi = cms.InputTag("staToTkMatchNoJPsi","deltaEta"),
-        #tk_deltaR_NoBestJPsi = cms.InputTag("staToTkMatchNoBestJPsi","deltaR"),
-        #tk_deltaEta_NoBestJPsi = cms.InputTag("staToTkMatchNoBestJPsi","deltaEta"),
+        dzError = cms.string("? innerTrack.isNull() ? -1 : innerTrack.dzError"),
+        dxyError = cms.string("? innerTrack.isNull() ? -1 : innerTrack.dxyError"),
+        trackOrigAlgo = cms.string("? innerTrack.isNull() ? -1 : innerTrack.originalAlgo"),
+        trackAlgo = cms.string("? innerTrack.isNull() ? -1 : innerTrack.algo"),
     ),
     flags = cms.PSet(
         outerValidHits = cms.string("outerTrack.numberOfValidHits > 0"),
@@ -432,6 +441,13 @@ process.tpTreeSta = process.tpTree.clone(
         eta = cms.string("eta"),
         phi = cms.string("phi"),
         nVertices = cms.InputTag("nverticesModule"),
+        dxyPVdzmin = cms.InputTag("muonDxyPVdzminTags","dxyPVdzmin"),
+        dzPV = cms.InputTag("muonDxyPVdzminTags","dzPV"),
+        dxyPV = cms.InputTag("muonDxyPVdzminTags","dxyPV"),
+        dzError = cms.string("? innerTrack.isNull() ? -1 : innerTrack.dzError"),
+        dxyError = cms.string("? innerTrack.isNull() ? -1 : innerTrack.dxyError"),
+        trackOrigAlgo = cms.string("? innerTrack.isNull() ? -1 : innerTrack.originalAlgo"),
+        trackAlgo = cms.string("? innerTrack.isNull() ? -1 : innerTrack.algo"),
     ),
     tagFlags = cms.PSet(
         LowPtTriggerProbeFlags,
@@ -460,6 +476,7 @@ process.tnpSimpleSequenceSta = cms.Sequence(
     process.tpPairsSta      +
     process.onePairSta      +
     process.nverticesModule +
+    process.muonDxyPVdzminTags +
     #process.staToTkMatchSequenceJPsi +
     process.centralityInfo +
     process.centralityBinInfo +
@@ -487,7 +504,7 @@ process.tagAndProbeSta = cms.Path(
 
 process.probeMuonsTrk = cms.EDFilter("PATMuonSelector",
     src = cms.InputTag("patMuonsWithTrigger"),
-    cut = cms.string(TRACK_CUTS + ' && ' + InAcceptance_2018_Loose + ' &&' + 'innerTrack.isNonnull && innerTrack.originalAlgo<13'), #   muonSeededStepInOut = 13
+    cut = cms.string(TRACK_CUTS + ' && ' + InAcceptance_2018_Loose),
 )
 process.oneProbeTrk = cms.EDFilter("CandViewCountFilter", src = cms.InputTag("probeMuonsTrk"), minNumber = cms.uint32(1))
 process.pseudoProbeTrk = cms.EDFilter("MuonSelector",
@@ -519,10 +536,16 @@ process.tpTreeTrk = cms.EDAnalyzer("TagProbeFitTreeProducer",
       dxyPVdzmin = cms.InputTag("muonDxyPVdzminTrk","dxyPVdzmin"),
       dzPV = cms.InputTag("muonDxyPVdzminTrk","dzPV"),
       dxyPV = cms.InputTag("muonDxyPVdzminTrk","dxyPV"),
+      dzError = cms.string("? innerTrack.isNull() ? -1 : innerTrack.dzError"),
+      dxyError = cms.string("? innerTrack.isNull() ? -1 : innerTrack.dxyError"),
+      trackOrigAlgo = cms.string("? innerTrack.isNull() ? -1 : innerTrack.originalAlgo"),
+      trackAlgo = cms.string("? innerTrack.isNull() ? -1 : innerTrack.algo"),
     ),
     flags = cms.PSet(
       isSTA = cms.string("isStandAloneMuon"),
       Glb   = cms.string("isGlobalMuon"),
+      PF    = cms.string("isPFMuon"),
+      TM    = cms.string("isTrackerMuon"),
       TrackCuts = cms.string(TRACK_CUTS),
       outerValidHits = cms.string("? outerTrack.isNull() ? 0 : outerTrack.numberOfValidHits > 0"),
       InAcceptance_2015 = cms.string(InAcceptance_2015),
@@ -542,7 +565,6 @@ process.tpTreeTrk = cms.EDAnalyzer("TagProbeFitTreeProducer",
         " deltaR( eta, phi, " +
         "         triggerObjectMatchesByCollection('hltL2MuonCandidatesPPOnAA').at(0).eta, "+
         "         triggerObjectMatchesByCollection('hltL2MuonCandidatesPPOnAA').at(0).phi ) "),
-
     ),
     tagFlags = cms.PSet(
        LowPtTriggerProbeFlags,
@@ -553,6 +575,7 @@ process.tpTreeTrk = cms.EDAnalyzer("TagProbeFitTreeProducer",
       pt = cms.string("pt"),
       y = cms.string("rapidity"),
       absy = cms.string("abs(rapidity)"),
+      dz = cms.string("daughter(0).vz - daughter(1).vz"),
       deltaR = cms.string("deltaR(daughter(0).eta, daughter(0).phi, daughter(1).eta, daughter(1).phi)"),
       genWeight = cms.InputTag("genWeightInfoTrk", "genWeight"),
     ),
