@@ -13,6 +13,7 @@ process.load('FWCore.MessageService.MessageLogger_cfi')
 process.source = cms.Source("EmptySource")
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1) )
 PDFName = "twoGausPlusPol2" #twoGausPlusPol2, twoGausPlusPol3, GausPlusPol2
+TagTrg = "TagMu5"
 
 # defines a set of efficiency calculations, what PDF to use for fitting and how to bin the data;
 # there will be a separate output directory for each calculation that includes a simultaneous fit, side band subtraction and counting. 
@@ -28,6 +29,7 @@ VEFFICIENCYSET =cms.VPSet(
             eta = cms.vdouble(-2.4,2.4),
             isSTA = cms.vstring("true"),
             InAcceptance_2018_Tight = cms.vstring("true"),
+            tag_HLT_HIL3Mu5_NHitQ10 = cms.vstring("true"),
             ),
          BinToPDFmap = cms.vstring(PDFName)
          )
@@ -41,6 +43,7 @@ VEFFICIENCYSET =cms.VPSet(
             eta = cms.vdouble(-2.4,2.4),
             isSTA = cms.vstring("true"),
             InAcceptance_2018_Tight = cms.vstring("true"),
+            tag_HLT_HIL3Mu5_NHitQ10 = cms.vstring("true"),
             ),
          BinToPDFmap = cms.vstring(PDFName)
          )
@@ -54,6 +57,7 @@ VEFFICIENCYSET =cms.VPSet(
             abseta = cms.vdouble(0.0,1.2),
             isSTA = cms.vstring("true"),
             InAcceptance_2018_Tight = cms.vstring("true"),
+            tag_HLT_HIL3Mu5_NHitQ10 = cms.vstring("true"),
             ),
          BinToPDFmap = cms.vstring(PDFName)
          )
@@ -67,6 +71,7 @@ VEFFICIENCYSET =cms.VPSet(
             abseta = cms.vdouble(1.2,1.8),
             isSTA = cms.vstring("true"),
             InAcceptance_2018_Tight = cms.vstring("true"),
+            tag_HLT_HIL3Mu5_NHitQ10 = cms.vstring("true"),
             ),
          BinToPDFmap = cms.vstring(PDFName)
          )
@@ -80,6 +85,7 @@ VEFFICIENCYSET =cms.VPSet(
             abseta = cms.vdouble(1.8,2.1),
             isSTA = cms.vstring("true"),
             InAcceptance_2018_Tight = cms.vstring("true"),
+            tag_HLT_HIL3Mu5_NHitQ10 = cms.vstring("true"),
             ),
          BinToPDFmap = cms.vstring(PDFName)
          )
@@ -93,6 +99,7 @@ VEFFICIENCYSET =cms.VPSet(
             abseta = cms.vdouble(2.1,2.4),
             isSTA = cms.vstring("true"),
             InAcceptance_2018_Tight = cms.vstring("true"),
+            tag_HLT_HIL3Mu5_NHitQ10 = cms.vstring("true"),
             ),
          BinToPDFmap = cms.vstring(PDFName)
          )
@@ -106,6 +113,7 @@ VEFFICIENCYSET =cms.VPSet(
             pt = cms.vdouble(0.,30.0),
             isSTA = cms.vstring("true"),
             InAcceptance_2018_Tight = cms.vstring("true"),
+            tag_HLT_HIL3Mu5_NHitQ10 = cms.vstring("true"),
             ),
          BinToPDFmap = cms.vstring(PDFName)
          )
@@ -119,6 +127,7 @@ VEFFICIENCYSET =cms.VPSet(
             pt = cms.vdouble(0,30.0),
             isSTA = cms.vstring("true"),
             InAcceptance_2018_Tight = cms.vstring("true"),
+            tag_HLT_HIL3Mu5_NHitQ10 = cms.vstring("true"),
             ),
          BinToPDFmap = cms.vstring(PDFName)
          )
@@ -133,6 +142,7 @@ VEFFICIENCYSET =cms.VPSet(
             tag_hiBin = cms.vdouble(0,10,20,40,60,80,100,150,200),
             isSTA = cms.vstring("true"),
             InAcceptance_2018_Tight = cms.vstring("true"),
+            tag_HLT_HIL3Mu5_NHitQ10 = cms.vstring("true"),
             ),
          BinToPDFmap = cms.vstring(PDFName)
          )
@@ -153,14 +163,14 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
     InputFileNames = cms.vstring("file:/eos/cms/store/group/phys_heavyions/dileptons/TNPTagAndProbe2018/MC2018/PbPb502TeV/tnpJpsi_MC_PbPb_Official_mod_v3.root"),
     InputDirectoryName = cms.string("tpTreeSta"),
     InputTreeName = cms.string("fitter_tree"),
-    OutputFileName = cms.string("Output/Trk/tnp_Ana_MC_PbPb_Trk_%s_%s.root" % ("mass2347", scenario)),
+    OutputFileName = cms.string("Output/Trk/tnp_Ana_MC_PbPb_Trk_%s_%sFilter_%s.root" % ("mass2347", TagTrg, scenario)), #"mass2347"
     #numbrer of CPUs to use for fitting
     NumCPU = cms.uint32(16),
     # specifies wether to save the RooWorkspace containing the data for each bin and
     # the pdf object with the initial and final state snapshots
     SaveWorkspace = cms.bool(False),
     binsForMassPlots = cms.uint32(50),
-    binnedFit = cms.bool(True),
+    binnedFit = cms.bool(False),
     binsForFit = cms.uint32(50),
     WeightVariable = cms.string("weight"),
     
@@ -180,6 +190,8 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer("TagProbeFitTreeAnalyzer",
        Glb        = cms.vstring("Glb", "dummy[true=1,false=0]"),
        isSTA      = cms.vstring("isSTA", "dummy[true=1,false=0]"),
        InAcceptance_2018_Tight = cms.vstring("InAcceptance_2018_Tight", "dummy[true=1,false=0]"),
+       tag_HLT_HIL3Mu5_NHitQ10 = cms.vstring("tag_HLT_HIL3Mu5_NHitQ10", "dummy[true=1,false=0]"),
+       tag_HLT_HIL3Mu3_NHitQ10 = cms.vstring("tag_HLT_HIL3Mu3_NHitQ10", "dummy[true=1,false=0]"),
     ),
 
     # defines all the PDFs that will be available for the efficiency calculations; uses RooFit's "factory" syntax;

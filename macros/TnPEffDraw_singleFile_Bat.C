@@ -43,8 +43,8 @@ using namespace std;
 /////////////////////////////////////////////////
 
 // Choose the efficiency type.
-// Possible values: MUIDTRG, TRK, STA, MUID, TRGL2JPSI, TRGL3JPSI, TRGL2UPSI, TRGL3UPSI, TRGDMOPEN
-#define TRK
+// Possible values: MUIDTRG, TRK, STA, MUID, TRGL2JPSI, TRGL3JPSI, TRGL2UPSI, TRGL3UPSI, TRGDMOPEN, MUIDTAG3, TRKTAG3, TRGL2JPSITAG3, TRGL3JPSITAG3 
+#define TRKTAG3
 // pp or PbPb?
 bool isPbPb = true; // if true, will compute the centrality dependence
 TString collTag = "PbPb"; // isPbPb ? "PbPb" : "pp";
@@ -68,6 +68,7 @@ const double c_centralityRange = 200; // how far to plot the centrality (hibin g
 const int nSyst = 4;
 const char* systName[nSyst] = {
   "nominal",
+  /*"tag syst",*/
   "signal syst",
   "bkg syst",
   "mass range syst"};
@@ -89,22 +90,55 @@ TString treeTag("tpTree");
 TString cutLegend("Hybrid Soft ID 2018");
 const double effmin = 0.801;
 const double sfrange = 0.026;
-const char* fDataName[nSyst] = { "../test/jpsiHI/Output/MuonID/tnp_Ana_RD_PbPb_MuonID_cbPlusPol1.root",
-				 "../test/jpsiHI/Output/MuonID/tnp_Ana_RD_PbPb_MuonID_cbGausPlusPol1.root",
-				 "../test/jpsiHI/Output/MuonID/tnp_Ana_RD_PbPb_MuonID_cbPlusPol2.root",
-				 "../test/jpsiHI/Output/MuonID/tnp_Ana_RD_PbPb_MuonID_mass2834.root"};
+const char* fDataName[nSyst] = { "../test/jpsiHI/Output/MuonID/tnp_Ana_RD_PbPb_MuonID_cbPlusPol1_TagMu5Filter.root",
+				 /*"../test/jpsiHI/Output/MuonID/tnp_Ana_RD_PbPb_MuonID_cbPlusPol1_TagMu3Filter.root",*/
+				 "../test/jpsiHI/Output/MuonID/tnp_Ana_RD_PbPb_MuonID_cbGausPlusPol1_TagMu5Filter.root",
+				 "../test/jpsiHI/Output/MuonID/tnp_Ana_RD_PbPb_MuonID_cbPlusPol2_TagMu5Filter.root",
+				 "../test/jpsiHI/Output/MuonID/tnp_Ana_RD_PbPb_MuonID_mass2834_TagMu5Filter.root"};
 
-const char* fMCName[nSyst] = { "../test/jpsiHI/Output/MuonID/tnp_Ana_MC_PbPb_MuonID_cbPlusPol1.root",
-			       "../test/jpsiHI/Output/MuonID/tnp_Ana_MC_PbPb_MuonID_cbGausPlusPol1.root",
-			       "../test/jpsiHI/Output/MuonID/tnp_Ana_MC_PbPb_MuonID_cbPlusPol2.root",
-			       "../test/jpsiHI/Output/MuonID/tnp_Ana_MC_PbPb_MuonID_mass2834.root"};
+const char* fMCName[nSyst] = { "../test/jpsiHI/Output/MuonID/tnp_Ana_MC_PbPb_MuonID_cbPlusPol1_TagMu5Filter.root",
+			       /*"../test/jpsiHI/Output/MuonID/tnp_Ana_MC_PbPb_MuonID_cbPlusPol1_TagMu3Filter.root",*/
+			       "../test/jpsiHI/Output/MuonID/tnp_Ana_MC_PbPb_MuonID_cbGausPlusPol1_TagMu5Filter.root",
+			       "../test/jpsiHI/Output/MuonID/tnp_Ana_MC_PbPb_MuonID_cbPlusPol2_TagMu5Filter.root",
+			       "../test/jpsiHI/Output/MuonID/tnp_Ana_MC_PbPb_MuonID_mass2834_TagMu5Filter.root"};
+int fitfcn = 1;
+#endif
+
+#ifdef MUIDTAG3
+const int nSyst = 2;
+const char* systName[nSyst] = {
+  "tag syst",
+  "nominal"};
+TString outputTag = "Effplots/MuonIDTag3/";
+TString etaTag("MuId_etadep");
+TString absetaTag("MuId_absetadep");
+TString centTag("MuId_centdep");
+const int nAbsEtaBins = 5;
+TString ptTag[nAbsEtaBins] = {"MuId_pt", "MuId_abseta00_12", "MuId_abseta12_18", "MuId_abseta18_21", "MuId_abseta21_24" };
+TString allTag("MuId_1bin");
+TString absetaVar("abseta");
+TString centVar("tag_hiBin");
+ofstream file_sfs(outputTag + "correction_functions.txt");
+ofstream file_Eta(outputTag + "EtaValues_MuId.txt");
+ofstream file_Cent(outputTag + "CentValues_MuId.txt");
+ofstream file_TestErr(outputTag + "MuId_ExpErr.txt");
+ofstream file_binnedsfs(outputTag +"correction_binned.txt");
+TString treeTag("tpTree");
+TString cutLegend("Hybrid Soft ID 2018");
+const double effmin = 0.801;
+const double sfrange = 0.026;
+const char* fDataName[nSyst] = { "../test/jpsiHI/Output/MuonID/tnp_Ana_RD_PbPb_MuonID_cbPlusPol1_TagMu3Filter.root",
+				 "../test/jpsiHI/Output/MuonID/tnp_Ana_RD_PbPb_MuonID_cbPlusPol1_TagMu5Filter.root"};
+
+const char* fMCName[nSyst] = { "../test/jpsiHI/Output/MuonID/tnp_Ana_MC_PbPb_MuonID_cbPlusPol1_TagMu3Filter.root",
+			       "../test/jpsiHI/Output/MuonID/tnp_Ana_MC_PbPb_MuonID_cbPlusPol1_TagMu5Filter.root"};
 int fitfcn = 1;
 #endif
 
 #ifdef TRGL2JPSI
 const int nSyst = 4;
 const char* systName[nSyst] = {
-  "nominal",
+"nominal",
   "signal syst",
   "bkg syst",
   "mass range syst"};
@@ -113,7 +147,7 @@ TString etaTag("Trg_etadep");
 TString absetaTag("Trg_absetadep");
 TString centTag("Trg_centdep");
 const int nAbsEtaBins = 5;
-TString ptTag[nAbsEtaBins] = { "Trg_pt", "Trg_abseta00_12", "Trg_abseta12_18", "Trg_abseta18_21", "Trg_abseta21_24"};
+TString ptTag[nAbsEtaBins] = { "Trg_pt", "Trg_abseta00_12", "Trg_abseta12_18", "Trg_abseta18_21", "Trg_abseta21_24_largerbins"};
 TString allTag("Trg_1bin");
 TString absetaVar("abseta");
 TString centVar("tag_hiBin");
@@ -126,14 +160,44 @@ TString treeTag("tpTree");
 TString cutLegend("L2 Jpsi Trigger");
 const double effmin = 0.;
 const double sfrange = 0.066;
-const char* fDataName[nSyst] = { "../test/jpsiHI/Output/Trg/tnp_Ana_RD_PbPb_Trg_L2Jpsi_cbPlusPol1.root",
-				 "../test/jpsiHI/Output/Trg/tnp_Ana_RD_PbPb_Trg_L2Jpsi_cbGausPlusPol1.root",
-				 "../test/jpsiHI/Output/Trg/tnp_Ana_RD_PbPb_Trg_L2Jpsi_cbPlusPol2.root",
-				 "../test/jpsiHI/Output/Trg/tnp_Ana_RD_PbPb_Trg_L2Jpsi_mass2834.root" };
-const char* fMCName[nSyst] = { "../test/jpsiHI/Output/Trg/tnp_Ana_MC_PbPb_Trg_L2Jpsi_cbPlusPol1.root",
-			       "../test/jpsiHI/Output/Trg/tnp_Ana_MC_PbPb_Trg_L2Jpsi_cbGausPlusPol1.root",
-			       "../test/jpsiHI/Output/Trg/tnp_Ana_MC_PbPb_Trg_L2Jpsi_cbPlusPol2.root",
-			       "../test/jpsiHI/Output/Trg/tnp_Ana_MC_PbPb_Trg_L2Jpsi_mass2834.root" };
+const char* fDataName[nSyst] = { "../test/jpsiHI/Output/Trg/tnp_Ana_RD_PbPb_Trg_L2Jpsi_cbPlusPol1_TagMu5Filter.root",
+				   "../test/jpsiHI/Output/Trg/tnp_Ana_RD_PbPb_Trg_L2Jpsi_cbGausPlusPol1_TagMu5Filter.root",
+				   "../test/jpsiHI/Output/Trg/tnp_Ana_RD_PbPb_Trg_L2Jpsi_cbPlusPol2_TagMu5Filter.root",
+				   "../test/jpsiHI/Output/Trg/tnp_Ana_RD_PbPb_Trg_L2Jpsi_mass2834_TagMu5Filter.root" };
+const char* fMCName[nSyst] = { "../test/jpsiHI/Output/Trg/tnp_Ana_MC_PbPb_Trg_L2Jpsi_cbPlusPol1_TagMu5Filter.root",
+				 "../test/jpsiHI/Output/Trg/tnp_Ana_MC_PbPb_Trg_L2Jpsi_cbGausPlusPol1_TagMu5Filter.root",
+				 "../test/jpsiHI/Output/Trg/tnp_Ana_MC_PbPb_Trg_L2Jpsi_cbPlusPol2_TagMu5Filter.root",
+				 "../test/jpsiHI/Output/Trg/tnp_Ana_MC_PbPb_Trg_L2Jpsi_mass2834_TagMu5Filter.root" };
+int fitfcn = 1;
+#endif
+
+#ifdef TRGL2JPSITAG3
+const int nSyst = 2;
+const char* systName[nSyst] = {
+"tag syst",
+  "nominal"};
+TString outputTag = "Effplots/TrgTag3/L2Jpsi/";
+TString etaTag("Trg_etadep");
+TString absetaTag("Trg_absetadep");
+TString centTag("Trg_centdep");
+const int nAbsEtaBins = 5;
+TString ptTag[nAbsEtaBins] = { "Trg_pt", "Trg_abseta00_12", "Trg_abseta12_18", "Trg_abseta18_21", "Trg_abseta21_24_largerbins"};
+TString allTag("Trg_1bin");
+TString absetaVar("abseta");
+TString centVar("tag_hiBin");
+ofstream file_sfs(outputTag + "correction_functions.txt");
+ofstream file_Eta(outputTag + "EtaValues_Trg.txt");
+ofstream file_Cent(outputTag + "CentValues_Trg.txt");
+ofstream file_TestErr(outputTag + "Trg_ExpErr.txt");
+ofstream file_binnedsfs(outputTag +"correction_binned.txt");
+TString treeTag("tpTree");
+TString cutLegend("L2 Jpsi Trigger");
+const double effmin = 0.;
+const double sfrange = 0.066;
+const char* fDataName[nSyst] = { "../test/jpsiHI/Output/Trg/tnp_Ana_RD_PbPb_Trg_L2Jpsi_cbPlusPol1_TagMu3Filter.root",
+				   "../test/jpsiHI/Output/Trg/tnp_Ana_RD_PbPb_Trg_L2Jpsi_cbPlusPol1_TagMu5Filter.root"};
+const char* fMCName[nSyst] = { "../test/jpsiHI/Output/Trg/tnp_Ana_MC_PbPb_Trg_L2Jpsi_cbPlusPol1_TagMu3Filter.root",
+				 "../test/jpsiHI/Output/Trg/tnp_Ana_MC_PbPb_Trg_L2Jpsi_cbPlusPol1_TagMu5Filter.root"};
 int fitfcn = 1;
 #endif
 
@@ -149,7 +213,7 @@ TString etaTag("Trg_etadep");
 TString absetaTag("Trg_absetadep");
 TString centTag("Trg_centdep");
 const int nAbsEtaBins = 5;
-TString ptTag[nAbsEtaBins] = { "Trg_pt", "Trg_abseta00_12", "Trg_abseta12_18", "Trg_abseta18_21", "Trg_abseta21_24" };
+TString ptTag[nAbsEtaBins] = { "Trg_pt", "Trg_abseta00_12", "Trg_abseta12_18", "Trg_abseta18_21", "Trg_abseta21_24_largerbins" };
 TString allTag("Trg_1bin");
 TString absetaVar("abseta");
 TString centVar("tag_hiBin");
@@ -162,14 +226,46 @@ TString treeTag("tpTree");
 TString cutLegend("L3 Jpsi Trigger");
 const double effmin = 0.;
 const double sfrange = 0.35;
-const char* fDataName[nSyst] = { "../test/jpsiHI/Output/Trg/tnp_Ana_RD_PbPb_Trg_L3Jpsi_cbPlusPol1.root",
-				 "../test/jpsiHI/Output/Trg/tnp_Ana_RD_PbPb_Trg_L3Jpsi_cbGausPlusPol1.root",
-				 "../test/jpsiHI/Output/Trg/tnp_Ana_RD_PbPb_Trg_L3Jpsi_cbPlusPol2.root",
-				 "../test/jpsiHI/Output/Trg/tnp_Ana_RD_PbPb_Trg_L3Jpsi_mass2834.root"};
-const char* fMCName[nSyst] = { "../test/jpsiHI/Output/Trg/tnp_Ana_MC_PbPb_Trg_L3Jpsi_cbPlusPol1.root",
-			       "../test/jpsiHI/Output/Trg/tnp_Ana_MC_PbPb_Trg_L3Jpsi_cbGausPlusPol1.root",
-			       "../test/jpsiHI/Output/Trg/tnp_Ana_MC_PbPb_Trg_L3Jpsi_cbPlusPol2.root",
-			       "../test/jpsiHI/Output/Trg/tnp_Ana_MC_PbPb_Trg_L3Jpsi_mass2834.root" };
+const char* fDataName[nSyst] = { "../test/jpsiHI/Output/Trg/tnp_Ana_RD_PbPb_Trg_L3Jpsi_cbPlusPol1_TagMu5Filter.root",
+				 "../test/jpsiHI/Output/Trg/tnp_Ana_RD_PbPb_Trg_L3Jpsi_cbGausPlusPol1_TagMu5Filter.root",
+				 "../test/jpsiHI/Output/Trg/tnp_Ana_RD_PbPb_Trg_L3Jpsi_cbPlusPol2_TagMu5Filter.root",
+				 "../test/jpsiHI/Output/Trg/tnp_Ana_RD_PbPb_Trg_L3Jpsi_mass2834_TagMu5Filter.root"};
+const char* fMCName[nSyst] = { "../test/jpsiHI/Output/Trg/tnp_Ana_MC_PbPb_Trg_L3Jpsi_cbPlusPol1_TagMu5Filter.root",
+			       "../test/jpsiHI/Output/Trg/tnp_Ana_MC_PbPb_Trg_L3Jpsi_cbGausPlusPol1_TagMu5Filter.root",
+			       "../test/jpsiHI/Output/Trg/tnp_Ana_MC_PbPb_Trg_L3Jpsi_cbPlusPol2_TagMu5Filter.root",
+			       "../test/jpsiHI/Output/Trg/tnp_Ana_MC_PbPb_Trg_L3Jpsi_mass2834_TagMu5Filter.root" };
+int fitfcn = 1;
+#endif
+
+#ifdef TRGL3JPSITAG3
+const int nSyst = 2;
+const char* systName[nSyst] = {
+  "tag syst",
+  "nominal"};
+
+TString outputTag = "Effplots/TrgTag3/L3Jpsi/";
+TString etaTag("Trg_etadep");
+TString absetaTag("Trg_absetadep");
+TString centTag("Trg_centdep");
+const int nAbsEtaBins = 5;
+TString ptTag[nAbsEtaBins] = { "Trg_pt", "Trg_abseta00_12", "Trg_abseta12_18", "Trg_abseta18_21", "Trg_abseta21_24_largerbins" };
+TString allTag("Trg_1bin");
+TString absetaVar("abseta");
+TString centVar("tag_hiBin");
+ofstream file_sfs(outputTag + "correction_functions.txt");
+ofstream file_Eta(outputTag + "EtaValues_Trg.txt");
+ofstream file_Cent(outputTag + "CentValues_Trg.txt");
+ofstream file_TestErr(outputTag + "Trg_ExpErr.txt");
+ofstream file_binnedsfs(outputTag +"correction_binned.txt");
+TString treeTag("tpTree");
+TString cutLegend("L3 Jpsi Trigger");
+const double effmin = 0.;
+const double sfrange = 0.35;
+const char* fDataName[nSyst] = { "../test/jpsiHI/Output/Trg/tnp_Ana_RD_PbPb_Trg_L3Jpsi_cbPlusPol1_TagMu3Filter.root",
+				 "../test/jpsiHI/Output/Trg/tnp_Ana_RD_PbPb_Trg_L3Jpsi_cbPlusPol1_TagMu5Filter.root"};
+const char* fMCName[nSyst] = { "../test/jpsiHI/Output/Trg/tnp_Ana_MC_PbPb_Trg_L3Jpsi_cbPlusPol1_TagMu3Filter.root",
+			       "../test/jpsiHI/Output/Trg/tnp_Ana_MC_PbPb_Trg_L3Jpsi_cbPlusPol1_TagMu5Filter.root"};
+
 int fitfcn = 1;
 #endif
 
@@ -332,14 +428,43 @@ TString treeTag("tpTreeSta");
 TString cutLegend("Inner tracking");
 const double effmin = 0.6;
 const double sfrange = 0.0199;
-const char* fDataName[nSyst] = { "../test/jpsiHI/Output/Trk/tnp_Ana_RD_PbPb_Trk_twoGausPlusPol2.root",
-				 "../test/jpsiHI/Output/Trk/tnp_Ana_RD_PbPb_Trk_GausPlusPol2.root",
-				 "../test/jpsiHI/Output/Trk/tnp_Ana_RD_PbPb_Trk_twoGausPlusPol3.root",
-				 "../test/jpsiHI/Output/Trk/tnp_Ana_RD_PbPb_Trk_mass2347.root" };
-const char* fMCName[nSyst] = { "../test/jpsiHI/Output/Trk/tnp_Ana_MC_PbPb_Trk_twoGausPlusPol2.root",
-			       "../test/jpsiHI/Output/Trk/tnp_Ana_MC_PbPb_Trk_GausPlusPol2.root",
-			       "../test/jpsiHI/Output/Trk/tnp_Ana_MC_PbPb_Trk_twoGausPlusPol3.root",
-			       "../test/jpsiHI/Output/Trk/tnp_Ana_MC_PbPb_Trk_mass2347.root" };
+const char* fDataName[nSyst] = { "../test/jpsiHI/Output/Trk/tnp_Ana_RD_PbPb_Trk_twoGausPlusPol2_TagMu5Filter.root",
+				 "../test/jpsiHI/Output/Trk/tnp_Ana_RD_PbPb_Trk_GausPlusPol2_TagMu5Filter.root",
+				 "../test/jpsiHI/Output/Trk/tnp_Ana_RD_PbPb_Trk_twoGausPlusPol3_TagMu5Filter.root",
+				 "../test/jpsiHI/Output/Trk/tnp_Ana_RD_PbPb_Trk_mass2347_TagMu5Filter.root" };
+const char* fMCName[nSyst] = { "../test/jpsiHI/Output/Trk/tnp_Ana_MC_PbPb_Trk_twoGausPlusPol2_TagMu5Filter.root",
+			       "../test/jpsiHI/Output/Trk/tnp_Ana_MC_PbPb_Trk_GausPlusPol2_TagMu5Filter.root",
+			       "../test/jpsiHI/Output/Trk/tnp_Ana_MC_PbPb_Trk_twoGausPlusPol3_TagMu5Filter.root",
+			       "../test/jpsiHI/Output/Trk/tnp_Ana_MC_PbPb_Trk_mass2347_TagMu5Filter.root" };
+int fitfcn = 1;
+#endif
+
+#ifdef TRKTAG3
+const int nSyst = 2;
+const char* systName[nSyst] = {
+  "tag syst",
+  "nominal"};
+TString outputTag = "Effplots/TrkTag3/";
+TString etaTag("Trk_etadep");
+TString absetaTag("Trk_absetadep");
+TString centTag("Trk_centdep");
+const int nAbsEtaBins = 5;
+TString ptTag[nAbsEtaBins] = {"Trk_pt", "Trk_abseta00_12", "Trk_abseta12_18", "Trk_abseta18_21", "Trk_abseta21_24" };
+TString allTag("Trk_1bin");
+TString absetaVar("abseta");
+TString centVar("tag_hiBin");
+ofstream file_sfs(outputTag + "correction_functions.txt");
+ofstream file_Eta(outputTag + "EtaValues_Trk.txt");
+ofstream file_Cent(outputTag + "CentValues_Trk.txt");
+ofstream file_binnedsfs(outputTag +"correction_binned.txt");
+TString treeTag("tpTreeSta");
+TString cutLegend("Inner tracking");
+const double effmin = 0.6;
+const double sfrange = 0.0199;
+const char* fDataName[nSyst] = { "../test/jpsiHI/Output/Trk/tnp_Ana_RD_PbPb_Trk_twoGausPlusPol2_TagMu3Filter.root",
+				 "../test/jpsiHI/Output/Trk/tnp_Ana_RD_PbPb_Trk_twoGausPlusPol2_TagMu5Filter.root"};
+const char* fMCName[nSyst] = { "../test/jpsiHI/Output/Trk/tnp_Ana_MC_PbPb_Trk_twoGausPlusPol2_TagMu3Filter.root",
+			       "../test/jpsiHI/Output/Trk/tnp_Ana_MC_PbPb_Trk_twoGausPlusPol2_TagMu5Filter.root"};
 int fitfcn = 1;
 #endif
 
@@ -362,7 +487,8 @@ TF1 *ratiofunc(const char* fname, TF1 *fnum, TF1 *fden);
 void TnPEffDraw_singleFile_Bat() {
 
   gSystem->mkdir("Effplots");
-  if (outputTag.Contains("Trg")) gSystem->mkdir("Effplots/Trg");
+  if (outputTag.Contains("TrgTag3")) gSystem->mkdir("Effplots/TrgTag3");
+  else if (outputTag.Contains("Trg")) gSystem->mkdir("Effplots/Trg");
   gSystem->mkdir(outputTag);
   gSystem->mkdir(outputTag+"/root");
   gSystem->mkdir(outputTag+"/pdf");
@@ -744,7 +870,7 @@ void TnPEffDraw_singleFile_Bat() {
 	  cout << "Done with the first part of abseta fitting" << endl;
 	  
 	  // in case we are looking at muon Id + trigger: get the scale factor at the same time
-#if defined MUIDTRG || defined STA || defined MUID || defined TRG || defined TRGL2JPSI || defined TRGL3JPSI || defined TRGL2UPSI || defined TRGL3UPSI || defined TRGDMOPEN
+#if defined MUIDTRG || defined STA || defined MUID || defined TRG || defined TRGL2JPSI || defined TRGL3JPSI || defined TRGL2UPSI || defined TRGL3UPSI || defined TRGDMOPEN ||defined MUIDTAG3 || defined TRGL2JPSITAG3 || defined TRGL3JPSITAG3
 	  pad1->cd();
 	  ptmax = ((RooRealVar*)rds_absetaPtDep_MC[k][i]->get()->find("pt"))->getMax();
 	  TLatex tchi; tchi.SetNDC();
