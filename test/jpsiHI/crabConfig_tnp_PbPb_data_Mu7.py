@@ -1,15 +1,15 @@
-from CRABClient.UserUtilities import config, getUsernameFromCRIC
+from CRABClient.UserUtilities import config
 config = config()
 
 config.section_('General')
-config.General.requestName = 'TnP_HISingleMuon_ReReco_PbPb5TeV_2018_JPsi_Data_20201024'
+config.General.requestName = 'TnP_HISingleMuon_ReReco_PbPb5TeV_2018_JPsi_Data_TagMu7_20200513'
 config.General.workArea = 'crab_projects'
 config.General.transferOutputs = True
 config.General.transferLogs = False
 
 config.section_('JobType')
 config.JobType.pluginName = 'Analysis'
-config.JobType.psetName = 'tnp_PbPb_data.py'
+config.JobType.psetName = 'tnp_PbPb_data_Mu7.py'
 config.JobType.maxMemoryMB = 2200
 config.JobType.maxJobRuntimeMin = 920
 config.JobType.allowUndistributedCMSSW = True
@@ -22,7 +22,7 @@ config.Data.unitsPerJob = 10
 config.Data.splitting = 'LumiBased'
 config.Data.lumiMask = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions18/HI/PromptReco/Cert_326381-327564_HI_PromptReco_Collisions18_JSON_HF_and_MuonPhys.txt'
 config.Data.runRange = '326381-327564'
-config.Data.outLFNDirBase = '/store/group/phys_heavyions/%s/TagAndProbe/PbPb2018/TnP/%s' % (getUsernameFromCRIC(), config.General.requestName)
+config.Data.outLFNDirBase = '/store/group/phys_heavyions/anstahll/TagAndProbe/PbPb2018/TnP/%s' % (config.General.requestName)
 config.Data.publication = False
 config.Data.outputDatasetTag = config.General.requestName
 

@@ -1,8 +1,8 @@
-from CRABClient.UserUtilities import config, getUsernameFromSiteDB
+from CRABClient.UserUtilities import config, getUsernameFromCRIC
 config = config()
 
 config.section_('General')
-config.General.requestName = 'TnP_HINPbPbAutumn18DR-mva98_JPsi_MC_20190927'
+config.General.requestName = 'TnP_HINPbPbAutumn18DR-mva98_JPsi_MC_20201024'
 config.General.workArea = 'crab_projects'
 config.General.transferOutputs = True
 config.General.transferLogs = False
@@ -19,7 +19,7 @@ config.Data.inputDataset = '/JPsi_pThat-2_TuneCP5_HydjetDrumMB_5p02TeV_Pythia8/H
 config.Data.inputDBS = 'global'
 config.Data.unitsPerJob = 4
 config.Data.splitting = 'FileBased'
-config.Data.outLFNDirBase = '/store/group/phys_heavyions/%s/TagAndProbe/PbPb2018/TnP/%s' % (getUsernameFromSiteDB(), config.General.requestName)
+config.Data.outLFNDirBase = '/store/group/phys_heavyions/%s/TagAndProbe/PbPb2018/TnP/%s' % (getUsernameFromCRIC(), config.General.requestName)
 config.Data.publication = False
 config.Data.allowNonValidInputDataset = True
 config.Data.outputDatasetTag = config.General.requestName
